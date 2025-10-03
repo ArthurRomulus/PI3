@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop - Promociones</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <script src="../barraNav.js"></script>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-coffee"></i>
+                <span>COFFEE SHOP</span>
+            </div>
+            <nav class="menu">
+                <a href="#"><i class="fas fa-home"></i> Inicio</a>
+                <a href="#"><i class="fas fa-box"></i> Productos</a>
+                <a href="#" class="active"><i class="fas fa-percent"></i> Promociones</a>
+                <a href="#"><i class="fas fa-cog"></i> Control</a>
+                <a href="#"><i class="fas fa-user-shield"></i> Admin</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <h1>Descuentos y promociones</h1>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar">
+                </div>
+            </header>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="bebidas">Bebidas</button>
+                <button class="filter-btn" data-filter="comida">Comida</button>
+                <button class="filter-btn" data-filter="postres">Postres</button>
+            </div>
+            <section class="promotions-grid">
+                <div class="promo-card large-card" data-category="bebidas">
+                    <h2>LOS MARTES 2X1 EN CAFÉ AMERICANO MEDIANO</h2>
+                    <img src="https://i.imgur.com/O6E2b1F.png" alt="Café Americano">
+                </div>
+                <div class="promo-card small-card" data-category="comida">
+                    <h3>Lunes:</h3>
+                    <p>2 paninis = una limonada chica gratis</p>
+                    <img src="https://i.imgur.com/kGkL4G4.png" alt="Panini">
+                </div>
+                <div class="promo-card small-card" data-category="postres">
+                    <h3>Lunes:</h3>
+                    <p>1 Galleta casera = una infusión chica -25%</p>
+                    <img src="https://i.imgur.com/2xvA1p7.png" alt="Infusiones">
+                </div>
+                <div class="promo-card small-card" data-category="comida">
+                    <h3>Lunes:</h3>
+                    <p>2 paninis = una limonada chica gratis</p>
+                    <img src="https://i.imgur.com/kGkL4G4.png" alt="Panini">
+                </div>
+                <div class="promo-card small-card" data-category="postres">
+                     <h3>Lunes:</h3>
+                    <p>1 Galleta casera = una infusión chica -25%</p>
+                    <img src="https://i.imgur.com/2xvA1p7.png" alt="Infusiones">
+                </div>
+                 <div class="promo-card small-card" data-category="comida">
+                    <h3>Lunes:</h3>
+                    <p>2 paninis = una limonada chica gratis</p>
+                    <img src="https://i.imgur.com/kGkL4G4.png" alt="Panini">
+                </div>
+                <div class="promo-card small-card" data-category="postres">
+                     <h3>Lunes:</h3>
+                    <p>1 Galleta casera = una infusión chica -25%</p>
+                    <img src="https://i.imgur.com/2xvA1p7.png" alt="Infusiones">
+                </div>
+
+                <div class="promo-card small-card" data-category="bebidas">
+                    <h3>Miércoles:</h3>
+                    <p>Frappé grande a precio de mediano.</p>
+                    <img src="https://i.imgur.com/2xvA1p7.png" alt="Infusiones">
+                </div>
+                 <div class="promo-card small-card" data-category="comida">
+                    <h3>Jueves:</h3>
+                    <p>En la compra de un cuernito, llévate un café americano.</p>
+                    <img src="https://i.imgur.com/kGkL4G4.png" alt="Panini">
+                </div>
+
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

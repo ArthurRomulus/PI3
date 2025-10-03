@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Coffee Shop</title>
+  <link rel="stylesheet" href="productos.css">
+</head>
+<body>
+<div class="container">
+  
+  <div id="navbar-placeholder"></div>
+
+  <main class="main">
+    <div class="main-scroll">
+      <header class="header">
+        <h1>Coffee Shop</h1>
+        <div class="date">Jueves, 25 de septiembre de 2025</div>
+      </header>
+      <section class="filters">
+        <input class="search" type="search" placeholder="Buscar..." />
+        <div class="cats">
+          <button class="cat-btn">Frappes</button>
+          <button class="cat-btn active">Cafés</button>
+          <button class="cat-btn">Comida</button>
+          <button class="cat-btn">Postres</button>
+          <button class="cat-btn">Panes</button>
+        </div>
+      </section>
+      
+      <section class="products" aria-label="Productos">
+        <article class="product-card-new" data-name="Café Americano" data-desc="Café caliente tradicional">
+          <div class="card-top">
+            <span class="card-tag">CALIENTE</span>
+            <span class="card-price">$39.50</span>
+          </div>
+          <div class="card-image">
+            <img src="../img/amer.png" alt="Café Americano"> 
+          </div>
+          <div class="card-options">
+            <div class="option-select"><select class="milk-type"><option selected disabled>Tipo Leche</option><option>Entera</option><option>Deslactosada</option><option>Almendra</option></select></div>
+            <div class="option-select"><select class="coffee-type"><option selected disabled>Tipo Café</option><option>Grano regular</option><option>Descafeinado</option></select></div>
+            <div class="option-row quantity-selector"><button class="quantity-btn minus">-</button><span class="quantity-value">1</span><button class="quantity-btn plus">+</button></div>
+            <div class="option-row size-selector">
+              <button class="size-btn active" data-price="39.50"><svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg><span>250ML</span></button>
+              <button class="size-btn" data-price="45.00"><svg viewBox="0 0 24 24"><path d="M3 8h18v10a3 3 0 01-3 3H6a3 3 0 01-3-3V8zm3-4h12v2H6V4z"/></svg><span>500ML</span></button>
+              <button class="size-btn" data-price="52.00"><svg viewBox="0 0 24 24"><path d="M2 7h20v10a4 4 0 01-4 4H6a4 4 0 01-4-4V7zm4-4h12v2H6V3z"/></svg><span>1L</span></button>
+            </div>
+          </div>
+          <textarea class="extra-requests-input" placeholder="Peticiones extras..."></textarea>
+          <button class="add-to-cart-btn">Añadir a Carrito</button>
+        </article>
+
+        <article class="product-card-new" data-name="Latte Helado" data-desc="Bebida fría y cremosa">
+          <div class="card-top"><span class="card-tag" style="background-color: #5c9ed6;">FRÍO</span><span class="card-price">$48.00</span></div>
+          <div class="card-image"><img src="../img/latte.png" alt="Latte Helado"></div>
+          <div class="card-options">
+            <div class="option-select"><select class="milk-type"><option selected disabled>Tipo Leche</option><option>Entera</option><option>Deslactosada</option><option>Almendra</option></select></div>
+            <div class="option-select"><select class="coffee-type"><option selected disabled>Tipo Café</option><option>Grano regular</option><option>Descafeinado</option></select></div>
+            <div class="option-row quantity-selector"><button class="quantity-btn minus">-</button><span class="quantity-value">1</span><button class="quantity-btn plus">+</button></div>
+            <div class="option-row size-selector">
+              <button class="size-btn active" data-price="48.00"><svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg><span>250ML</span></button>
+              <button class="size-btn" data-price="55.50"><svg viewBox="0 0 24 24"><path d="M3 8h18v10a3 3 0 01-3 3H6a3 3 0 01-3-3V8zm3-4h12v2H6V4z"/></svg><span>500ML</span></button>
+              <button class="size-btn" data-price="64.00"><svg viewBox="0 0 24 24"><path d="M2 7h20v10a4 4 0 01-4 4H6a4 4 0 01-4-4V7zm4-4h12v2H6V3z"/></svg><span>1L</span></button>
+            </div>
+          </div>
+          <textarea class="extra-requests-input" placeholder="Peticiones extras..."></textarea>
+          <button class="add-to-cart-btn">Añadir a Carrito</button>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <aside class="cart">
+    <div class="order-pill"><div class="order-title">Número de Pedido</div><div class="order-number">901</div></div>
+    <div class="cart-content"></div>
+    <div class="cart-bottom">
+      <div class="summary">
+        <div class="row"><span>Sub Total:</span> <span class="summary-subtotal">$0.00</span></div>
+        <div class="row"><span>IVA:</span> <span class="summary-iva">$0.00</span></div>
+        <div class="row total"><span>Total:</span> <span class="summary-total">$0.00</span></div>
+      </div>
+      <button class="pay">PAGAR</button>
+    </div>
+  </aside>
+</div>
+
+<script src="../barraNav.js"></script>
+<script>
+  // Script para cargar la barra de navegación
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentPage = window.location.pathname.split("/").pop();
+    cargarBarraNav(currentPage); 
+  });
+
+  // Tu script original para el carrito y los productos (INTACTO)
+  document.addEventListener('DOMContentLoaded', () => {
+    const cartList = [];
+    const cartContent = document.querySelector('.cart-content');
+    const summarySubtotal = document.querySelector('.summary-subtotal');
+    const summaryIVA = document.querySelector('.summary-iva');
+    const summaryTotal = document.querySelector('.summary-total');
+    function renderCart() {
+      cartContent.innerHTML = '';
+      let subtotal = 0;
+      cartList.forEach((item, idx) => {
+        subtotal += item.price * item.qty;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        let optionsDesc = `${item.milk}, ${item.coffee}, ${item.size}`;
+        if (item.requests) {
+          optionsDesc += ` (${item.requests})`;
+        }
+        div.innerHTML = `
+          <div class="cart-thumb"><img src="${item.imgSrc}" alt="${item.name}"></div>
+          <div class="cart-info">
+            <div class="cart-title">${item.name}</div>
+            <div class="cart-desc">${optionsDesc}</div>
+            <div class="cart-price">$${item.price.toFixed(2)}</div>
+          </div>
+          <div class="cart-qty">
+            <button class="qty-btn-cart" data-idx="${idx}" data-action="minus">-</button>
+            <div class="qty-num">${item.qty.toString().padStart(2, '0')}</div>
+            <button class="qty-btn-cart" data-idx="${idx}" data-action="plus">+</button>
+          </div>
+        `;
+        cartContent.appendChild(div);
+      });
+      summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+      const iva = subtotal * 0.16;
+      summaryIVA.textContent = `$${iva.toFixed(2)}`;
+      summaryTotal.textContent = `$${(subtotal + iva).toFixed(2)}`;
+    }
+    cartContent.addEventListener('click', e => {
+      if (e.target.classList.contains('qty-btn-cart')) {
+        const idx = parseInt(e.target.dataset.idx);
+        const action = e.target.dataset.action;
+        if (action === 'plus') {
+          cartList[idx].qty += 1;
+        } else if (action === 'minus') {
+          cartList[idx].qty -= 1;
+          if (cartList[idx].qty <= 0) {
+            cartList.splice(idx, 1);
+          }
+        }
+        renderCart();
+      }
+    });
+    const allCards = document.querySelectorAll('.product-card-new');
+    allCards.forEach(card => {
+      const plusBtn = card.querySelector('.quantity-btn.plus');
+      const minusBtn = card.querySelector('.quantity-btn.minus');
+      const valueSpan = card.querySelector('.quantity-value');
+      const sizeButtons = card.querySelectorAll('.size-btn');
+      const addToCartButton = card.querySelector('.add-to-cart-btn');
+      const priceDisplay = card.querySelector('.card-price');
+      function updateTotalPrice() {
+        const quantity = parseInt(valueSpan.textContent);
+        const activeSizeButton = card.querySelector('.size-btn.active');
+        const unitPrice = parseFloat(activeSizeButton.dataset.price);
+        const totalPrice = unitPrice * quantity;
+        priceDisplay.textContent = `$${totalPrice.toFixed(2)}`;
+      }
+      updateTotalPrice();
+      plusBtn.addEventListener('click', () => {
+        valueSpan.textContent = parseInt(valueSpan.textContent) + 1;
+        updateTotalPrice();
+      });
+      minusBtn.addEventListener('click', () => {
+        let currentValue = parseInt(valueSpan.textContent);
+        if (currentValue > 1) {
+          valueSpan.textContent = currentValue - 1;
+          updateTotalPrice();
+        }
+      });
+      sizeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          card.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          updateTotalPrice();
+        });
+      });
+      addToCartButton.addEventListener('click', () => {
+        const milkSelect = card.querySelector('.milk-type');
+        const coffeeSelect = card.querySelector('.coffee-type');
+        if (milkSelect.selectedIndex === 0) { alert('Por favor, selecciona un tipo de leche.'); return; }
+        if (coffeeSelect.selectedIndex === 0) { alert('Por favor, selecciona un tipo de café.'); return; }
+        const productData = {
+          name: card.dataset.name,
+          desc: card.dataset.desc,
+          price: parseFloat(card.querySelector('.size-btn.active').dataset.price),
+          imgSrc: card.querySelector('.card-image img').src,
+          qty: parseInt(card.querySelector('.quantity-value').textContent),
+          milk: milkSelect.value,
+          coffee: coffeeSelect.value,
+          size: card.querySelector('.size-btn.active span').textContent,
+          requests: card.querySelector('.extra-requests-input').value.trim()
+        };
+        const existingProductIndex = cartList.findIndex(item => 
+          item.name === productData.name &&
+          item.milk === productData.milk &&
+          item.coffee === productData.coffee &&
+          item.size === productData.size &&
+          item.requests === productData.requests
+        );
+        if (existingProductIndex > -1) {
+          cartList[existingProductIndex].qty += productData.qty;
+        } else {
+          cartList.push(productData);
+        }
+        renderCart();
+      });
+    });
+    renderCart();
+  });
+</script>
+</body>
+</html>

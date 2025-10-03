@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --bg-color: #F3E9DC;
+    --sidebar-bg: #FFFFFF;
+    --main-brown: #6F4E37;
+    --dark-brown: #5D4037;
+    --light-brown: #D2B48C;
+    --card-bg: #D8C7B8;
+    --text-color: #3B2F2F;
+    --white-text: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: #C8862E;
+}
+
+.sidebar {
+    background-color: #c8862e;
+    padding: 2rem 0rem;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--white-text);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    flex-direction: column;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.menu a {
+    color: var(--white-text);
+    text-decoration: none;
+    padding: 1.9rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu a.active {
+    background-color: #eaaf61;
+    border-radius: 15px 0px 0px 15px;
+}
+
+.main-content {
+    position: relative;
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    background-color: #EAAF61;
+    overflow-y: auto;
+    margin: 15px -10px 15px 15px;
+    border-radius: 30px;
+    right: 30px;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    background-color: var(--main-brown);
+    color: var(--white-text);
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 15px;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.search-bar {
+    position: relative;
+    width: 100%;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border: none;
+    border-radius: 15px;
+    background-color: #f5d6a0;
+    font-size: 1rem;
+}
+
+.search-bar .fa-search {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    background-color: #f5d6a0;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.filter-btn.active {
+    background-color: var(--main-brown);
+    color: var(--white-text);
+}
+
+.promotions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding-right: 1rem;
+}
+
+.promo-card {
+    background-color: #f5d6a0;
+    border-radius: 15px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.promo-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.promo-card h3 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.promo-card p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.promo-card img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: auto;
+}
+
+.large-card {
+    grid-column: span 1;
+    grid-row: span 2;
+    background-color: var(--dark-brown);
+    color: var(--white-text);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.large-card img {
+    width: 60%;
+    margin-top: 1rem;
+}
+
+.small-card img {
+    height: 70px;
+    width: auto;
+    align-self: flex-end;
+}
+
+.main-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+    background: #EFEBE5;
+    border-radius: 10px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background-color: var(--light-brown);
+    border-radius: 10px;
+    border: 2px solid #EFEBE5;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--main-brown);
+}

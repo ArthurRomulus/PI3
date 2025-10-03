@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control - Versión Final</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    :root {
+      --sidebar-bg: #d6a05c; --accent: #c68644; --page-bg: #e9bb7b;
+      --card-bg: #f6e9db; --text-dark: #332a23; --white: #fff;
+      --shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Poppins", sans-serif;
+      background: var(--sidebar-bg); color: var(--text-dark);
+    }
+    .container {
+      display: grid; grid-template-columns: 90px 1fr;
+      height: 100vh; gap: 16px; padding: 16px;
+    }
+    .main {
+      background: var(--page-bg); border-radius: 18px; padding: 18px 24px;
+      display: flex; flex-direction: column; gap: 18px;
+      overflow: hidden;
+    }
+    .header, .dashboard { flex-shrink: 0; }
+    .header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+    .header-title { font-size: 26px; margin: 0; color: var(--white); font-weight: 700; }
+    .panel-title { grid-column: 2; text-align: center; font-size: 32px; font-weight: 700; margin: 0; color: var(--white); }
+    .date { font-weight: 500; color: var(--white); font-size: 13px; text-align: right; }
+    .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+    .card { background: var(--card-bg); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); }
+    .card-header { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .card-value { font-size: 2rem; font-weight: 500; }
+    .card-action { background-color: var(--accent); color: var(--white); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.2s ease; }
+    .card-action .card-value svg { width: 40px; height: 40px; }
+    .card-action:hover { transform: translateY(-4px); }
+
+    .panel-bottom { 
+      display: grid; 
+      grid-template-columns: 2fr 1fr;
+      gap: 18px;
+      overflow: hidden;
+      flex: 1;
+      min-height: 0;
+      max-height: 55;
+    }
+    .panel-table, .panel-alerts { 
+      background: var(--card-bg); 
+      border-radius: 14px; 
+      padding: 18px; 
+      box-shadow: var(--shadow); 
+      display: flex; 
+      flex-direction: column; 
+      overflow: hidden;
+    }
+    .panel-table-header, .panel-alerts-header { 
+      font-size: 1.2rem; 
+      font-weight: 700; 
+      margin-bottom: 1rem; 
+      flex-shrink: 0;
+    }
+    .table-wrapper, .panel-alerts ul { 
+      overflow-y: auto;
+    }
+    
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--page-bg); }
+    th { position: sticky; top: 0; background-color: var(--card-bg); }
+    tr:last-child td { border-bottom: none; }
+    .panel-alerts ul { margin: 0; padding-left: 1.25rem; list-style: square; }
+    .panel-alerts li { margin-bottom: 0.5rem; }
+
+    @media (max-width: 900px) { .container { grid-template-columns: 70px 1fr; } .panel-bottom { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) { body { padding: 0; } .container { grid-template-columns: 1fr; gap: 0; padding: 0; } .sidebar { display: none; } .main { padding: 12px; border-radius: 0; } .header { grid-template-columns: 1fr; text-align: center; gap: 10px; } .header-title, .date { justify-self: center; } .panel-title { grid-column: 1; } }
+    
+    /* ================================================================ */
+    /* ===== PASO 2: AÑADIR ESTILOS PARA LA VENTANA MODAL (CSS) ===== */
+    /* ================================================================ */
+    .modal {
+        display: none; 
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+    }
+    .modal-content {
+        background-color: var(--card-bg);
+        margin: 10% auto;
+        padding: 25px;
+        border: none;
+        width: 90%;
+        max-width: 450px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        position: relative;
+    }
+    .close-button {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .modal-content h2 {
+        text-align: center;
+        margin-top: 0;
+        color: var(--text-dark);
+    }
+    .input-group { margin-bottom: 15px; }
+    .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+    .input-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+    .submit-button {
+        background-color: var(--accent);
+        color: var(--white);
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 10px;
+        transition: background-color 0.2s;
+    }
+    .submit-button:hover { background-color: #a56d35; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="navbar-placeholder"></div>
+
+    <main class="main">
+        <header class="header">
+            <h1 class="header-title">Coffee Shop</h1>
+            <h2 class="panel-title">Panel de control</h2>
+            <div class="date">Martes, 23 de septiembre de 2025</div>
+        </header>
+        <div class="dashboard">
+            <div class="card"><div class="card-header">Ventas hoy 💲</div><div class="card-value">+28</div></div>
+            <div class="card"><div class="card-header">Pedidos ↗️</div><div class="card-value">15</div></div>
+            
+            <div id="btnAbrirCorte" class="card card-action">
+                <div class="card-header">Corte de Caja</div>
+                <div class="card-value">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-bottom">
+            <div class="panel-table">
+                <div class="panel-table-header">Últimos pedidos</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Id de pedido</th><th>Estatus</th><th>Pago</th><th>Hora</th></tr></thead>
+                        <tbody>
+                            <tr><td>401</td><td>Preparacion</td><td>Efectivo</td><td>10:15 AM</td></tr>
+                            <tr><td>404</td><td>Listo</td><td>Efectivo</td><td>12:45 PM</td></tr>
+                            <tr><td>201</td><td>Preparacion</td><td>Efectivo</td><td>13:30 PM</td></tr>
+                            <tr><td>-130</td><td>Cancelado</td><td>---</td><td>15:50 PM</td></tr>
+                            <tr><td>405</td><td>Listo</td><td>Tarjeta</td><td>16:10 PM</td></tr>
+                            <tr><td>406</td><td>Preparacion</td><td>Efectivo</td><td>16:25 PM</td></tr>
+                            <tr><td>407</td><td>Listo</td><td>Efectivo</td><td>17:00 PM</td></tr>
+                            <tr><td>408</td><td>Preparacion</td><td>Tarjeta</td><td>17:15 PM</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-alerts">
+                <div class="panel-alerts-header">Alertas de inventario 📋</div>
+                <ul>
+                    <li>Cafe late 12 OZ. quedan 7</li><li>Panini de jamon. quedan 3</li><li>Cafe America frio. quedan 2</li><li>Pan Concha cacera. quedan 5</li><li>Leche de Almendras. quedan 2L</li><li>Vasos de 12 OZ. quedan 50</li><li>Azúcar Morena. queda 1kg</li><li>Popotes. quedan 100</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="corteModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Realizar Corte de Caja</h2>
+        <form id="corteForm">
+            <div class="input-group">
+                <label for="fondoInicial">Fondo inicial (FI)</label>
+                <input type="number" step="0.01" id="fondoInicial" placeholder="$0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="ventasEfectivo">Ventas en efectivo (VE)</label>
+                <input type="number" step="0.01" id="ventasEfectivo" placeholder="$0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="ventasTarjeta">Ventas con tarjeta (VT)</label>
+                <input type="number" step="0.01" id="ventasTarjeta" placeholder="$0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="gastosRetiros">Gastos / Retiros (RG)</label>
+                <input type="number" step="0.01" id="gastosRetiros" placeholder="$0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="conteoReal">Conteo real de efectivo</label>
+                <input type="number" step="0.01" id="conteoReal" placeholder="$0.00" required>
+            </div>
+            <button type="submit" class="submit-button">Realizar Corte</button>
+        </form>
+    </div>
+</div>
+
+
+<script src="../barraNav.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentPage = window.location.pathname.split("/").pop();
+    cargarBarraNav(currentPage); 
+  });
+</script>
+
+<script>
+    // Obtener los elementos del DOM
+    const modal = document.getElementById("corteModal");
+    const btnAbrir = document.getElementById("btnAbrirCorte");
+    const spanCerrar = document.querySelector(".close-button");
+    const formCorte = document.getElementById("corteForm");
+
+    // Abrir la modal al hacer clic en el botón
+    btnAbrir.onclick = () => {
+        modal.style.display = "block";
+    }
+
+    // Cerrar la modal con la 'X'
+    spanCerrar.onclick = () => {
+        modal.style.display = "none";
+    }
+
+    // Cerrar la modal si se hace clic fuera de ella
+    window.onclick = (event) => {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Lógica al enviar el formulario del corte
+    formCorte.addEventListener("submit", function(event) {
+        event.preventDefault(); // Evita que la página se recargue
+
+        // Obtener y convertir valores a números
+        const fondoInicial = parseFloat(document.getElementById("fondoInicial").value) || 0;
+        const ventasEfectivo = parseFloat(document.getElementById("ventasEfectivo").value) || 0;
+        const gastosRetiros = parseFloat(document.getElementById("gastosRetiros").value) || 0;
+        const conteoReal = parseFloat(document.getElementById("conteoReal").value) || 0;
+
+        // Calcular el total esperado en caja
+        const efectivoEsperado = (fondoInicial + ventasEfectivo) - gastosRetiros;
+        const diferencia = conteoReal - efectivoEsperado;
+
+        let titulo, mensaje, icono;
+
+        if (diferencia > 0) {
+            titulo = "¡Sobrante!";
+            mensaje = `Hay un sobrante de $${diferencia.toFixed(2)} pesos.`;
+            icono = "success";
+        } else if (diferencia < 0) {
+            titulo = "¡Faltante!";
+            mensaje = `Hay un faltante de $${Math.abs(diferencia).toFixed(2)} pesos.`;
+            icono = "error";
+        } else {
+            titulo = "¡Corte Exacto!";
+            mensaje = "El conteo de efectivo es correcto. ¡Buen trabajo!";
+            icono = "info";
+        }
+
+        modal.style.display = "none"; // Ocultar la modal
+
+        // Mostrar la alerta de SweetAlert2
+        Swal.fire({
+            title: titulo,
+            text: mensaje,
+            icon: icono,
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#c68644' // Usamos el color de tu variable --accent
+        });
+        
+        formCorte.reset(); // Limpiar los campos del formulario
+    });
+</script>
+
+</body>
+</html>

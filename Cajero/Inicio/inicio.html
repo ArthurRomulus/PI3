@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Coffee Shop</title>
+  <link rel="stylesheet" href="inicio.css">
+</head>
+<body>
+<div class="container">
+
+  <div id="navbar-placeholder"></div>
+
+  <main class="main">
+    <div class="main-scroll">
+      <header class="header">
+        <h1>Coffee Shop</h1>
+        <div class="date">Martes, 2 de septiembre de 2025</div>
+      </header>
+      <section class="filters">
+        <input class="search" type="search" placeholder="Buscar..." />
+        <div class="cats">
+          <button class="cat-btn">Frappes</button>
+          <button class="cat-btn active">Cafés</button>
+          <button class="cat-btn">Comida</button>
+          <button class="cat-btn">Postres</button>
+          <button class="cat-btn">Panes</button>
+          <button class="cat-btn">Sin café</button>
+          <button class="cat-btn">Temporada</button>
+          <button class="cat-btn">Categorías</button>
+        </div>
+      </section>
+      <section class="products" aria-label="Productos">
+        <article class="product-card">
+          <div class="product-img"><img src="../img/nvs.png" width="80" height="60"></div>
+          <h3 class="product-title">2X1 EN FRAPPES</h3>
+          <p class="product-sub">Valido solo para parejas</p>
+          <div class="product-footer">
+            <div class="price">$17.99</div>
+            <button class="add-btn" aria-label="Agregar al carrito"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14l.84-2h7.45c.75 0 1.41-.41 1.75-1.03l3.24-5.88A1 1 0 0 0 20.45 4H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25z"/></svg></button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=80&q=80" width="80" height="60"></div>
+          <h3 class="product-title">Café Sencillo</h3>
+          <p class="product-sub">Con leche</p>
+          <div class="product-footer">
+            <div class="price">$55.00</div>
+            <button class="add-btn" aria-label="Agregar al carrito"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14l.84-2h7.45c.75 0 1.41-.41 1.75-1.03l3.24-5.88A1 1 0 0 0 20.45 4H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25z"/></svg></button>
+          </div>
+        </article>
+
+        </section>
+    </div>
+  </main>
+
+  <aside class="cart">
+    <div class="order-pill"><div class="order-title">Número de Pedido</div><div class="order-number">901</div></div>
+    <div class="cart-content"></div>
+    <div class="cart-bottom">
+      <div class="summary">
+        <div class="row"><span>Sub Total:</span> <span class="summary-subtotal">$0.00</span></div>
+        <div class="row"><span>IVA:</span> <span class="summary-iva">$0.00</span></div>
+        <div class="row total"><span>Total:</span> <span class="summary-total">$0.00</span></div>
+      </div>
+      <button class="pay">PAGAR</button>
+    </div>
+  </aside>
+
+</div>
+
+<div id="modal-bg" class="modal-bg" style="display:none;">
+  <div class="modal-producto">
+    <h2 id="modal-title"></h2>
+    <div class="modal-options">
+      <label for="modal-leche">Tipo de leche:</label><select id="modal-leche"><option>Entera</option><option>Deslactosada</option><option>Light</option><option>Almendra</option><option>Coco</option></select>
+      <label for="modal-tamano">Tamaño:</label><select id="modal-tamano"><option>Chico</option><option>Mediano</option><option>Grande</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" id="modal-cancelar">Cancelar</button>
+      <button class="modal-btn" id="modal-agregar">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<script src="../barraNav.js"></script>
+<script>
+  // Script para cargar la barra de navegación
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentPage = window.location.pathname.split("/").pop();
+    cargarBarraNav(currentPage); 
+  });
+
+  // Tu script original para el carrito y el modal (INTACTO)
+  function getProductData(card) {
+    return { name: card.querySelector('.product-title').textContent, desc: card.querySelector('.product-sub').textContent, price: parseFloat(card.querySelector('.price').textContent.replace('$','')), img: card.querySelector('.product-img').innerHTML };
+  }
+  const cartList = [];
+  const cartContent = document.querySelector('.cart-content');
+  const summarySubtotal = document.querySelector('.summary-subtotal');
+  const summaryIVA = document.querySelector('.summary-iva');
+  const summaryTotal = document.querySelector('.summary-total');
+  function renderCart() {
+    cartContent.innerHTML = '';
+    let subtotal = 0;
+    cartList.forEach((item, idx) => {
+      subtotal += item.price * item.qty;
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `<div class="cart-thumb">${item.img}</div><div class="cart-info"><div class="cart-title">${item.name}</div><div class="cart-desc">${item.desc} - ${item.leche} - ${item.tamano}</div><div class="cart-price">$${item.price.toFixed(2)}</div></div><div class="cart-qty"><button class="qty-btn" data-idx="${idx}" data-action="minus">-</button><div class="qty-num">${item.qty.toString().padStart(2,'0')}</div><button class="qty-btn" data-idx="${idx}" data-action="plus">+</button></div>`;
+      cartContent.appendChild(div);
+    });
+    summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+    const iva = subtotal * 0.16;
+    summaryIVA.textContent = `$${iva.toFixed(2)}`;
+    summaryTotal.textContent = `$${(subtotal + iva).toFixed(2)}`;
+  }
+  cartContent.addEventListener('click', e => {
+    if(e.target.classList.contains('qty-btn')) {
+      const idx = +e.target.dataset.idx;
+      const action = e.target.dataset.action;
+      if(action === 'plus') cartList[idx].qty += 1;
+      if(action === 'minus') { cartList[idx].qty -= 1; if(cartList[idx].qty <= 0) cartList.splice(idx,1); }
+      renderCart();
+    }
+  });
+  const modalBg = document.getElementById('modal-bg');
+  const modalTitle = document.getElementById('modal-title');
+  const modalLeche = document.getElementById('modal-leche');
+  const modalTamano = document.getElementById('modal-tamano');
+  let modalProduct = null;
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if(e.target.closest('.add-btn')) return;
+      modalProduct = getProductData(card);
+      modalTitle.textContent = modalProduct.name;
+      modalLeche.selectedIndex = 0;
+      modalTamano.selectedIndex = 0;
+      modalBg.style.display = 'flex';
+    });
+  });
+  modalBg.addEventListener('click', e => { if(e.target === modalBg) modalBg.style.display = 'none'; });
+  document.getElementById('modal-cancelar').onclick = () => modalBg.style.display = 'none';
+  document.getElementById('modal-agregar').onclick = () => {
+    if(!modalProduct) return;
+    const leche = modalLeche.value;
+    const tamano = modalTamano.value;
+    const data = {...modalProduct, leche, tamano};
+    const idx = cartList.findIndex(p => p.name === data.name && p.desc === data.desc && p.leche === data.leche && p.tamano === data.tamano);
+    if(idx >= 0) { cartList[idx].qty += 1; } else { cartList.push({...data, qty: 1}); }
+    renderCart();
+    modalBg.style.display = 'none';
+  };
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.product-card');
+      const data = getProductData(card);
+      const leche = "Entera";
+      const tamano = "Chico";
+      const idx = cartList.findIndex(p => p.name === data.name && p.desc === data.desc && p.leche === leche && p.tamano === tamano);
+      if(idx >= 0) { cartList[idx].qty += 1; } else { cartList.push({...data, leche, tamano, qty: 1}); }
+      renderCart();
+    });
+  });
+  renderCart();
+</script>
+
+</body>
+</html>

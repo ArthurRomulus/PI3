@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --sidebar-bg: #c8862e;
+    --main-content-bg: #EAAF61;
+    --login-card-bg: #FDF6EC;
+    --input-bg: #FFFFFF;
+    --button-bg: #D2B48C;
+    --text-color: #3B2F2F;
+    --dark-brown: #5D4037;
+    --white-text: #FFFFFF;
+    --active-menu-bg: #F0EBE3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    
+}
+
+.sidebar {
+    background-color: #c8862e;
+    padding: 2rem 0rem;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--white-text);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    flex-direction: column;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.menu a {
+    color: var(--white-text);
+    text-decoration: none;
+    padding: 1.9rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu a.active {
+    background-color: #eaaf61;
+    border-radius: 15px 0px 0px 15px;
+    width: 209px;
+    height: 117.17px;
+}
+
+.main-content {
+    position: relative;
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    background-color: #EAAF61;
+    margin: 15px -10px 15px 15px;
+    border-radius: 30px;
+    right: 30px;
+}
+
+.login-header {
+    width: 100%;
+    color: var(--dark-brown);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 29rem;
+    position: relative;
+    bottom: 20px;
+}
+
+.login-header h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.login-header p {
+    font-size: 1rem;
+}
+
+.welcome-message h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--dark-brown);
+    margin-bottom: 1rem;
+    position: relative;
+    bottom: 40px;
+    left: 160px;
+}
+
+.login-card {
+    background-color: #F4CF8D;
+    padding: 1rem 2.5rem;
+    border-radius: 35px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+    bottom: 50px;
+    left: 100px;
+}
+
+.login-card h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    line-height: 1.5;
+    position: relative;
+    left: 80px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --- REGLAS MODIFICADAS --- */
+.input-group input {
+    width: 100%;
+    padding: 1.2rem 1rem;
+    border: none;
+    background-color: #FFE3BF;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    color: var(--dark-brown); /* Color del texto que escribes */
+}
+
+.input-group input::placeholder {
+    color: #623F19; /* Color del texto de marcador de posición (ej. "Usuario") */
+}
+
+.input-group input:focus {
+    outline: none; /* Esto remueve el borde por defecto del navegador */
+    border: 2px solid var(--dark-brown); /* Usa tu variable de color Dark Brown */
+}
+
+.forgot-password {
+    font-size: 0.9rem;
+    color: var(--dark-brown);
+    text-decoration: none;
+    margin-top: 0.5rem;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+    color: #5D4037;
+}
+
+button[type="submit"] {
+    background-color: var(--button-bg);
+    color: var(--dark-brown);
+    border: none;
+    padding: 1rem;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    max-width: 200px;
+    position: relative;
+    left: 200px;
+}

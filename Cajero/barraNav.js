@@ -1,0 +1,47 @@
+// Archivo: barraNav.js
+function cargarBarraNav() {
+    const barraNavHTML = `
+        <style>
+            .sidebar {
+                background: var(--sidebar-bg); color: var(--white); padding: 18px 0; display: flex;
+                flex-direction: column; align-items: center; gap: 2px; border-radius: 16px; height: 100%;
+            }
+            .logo { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+            .logo h2 { margin: 0; font-size: 14px; letter-spacing: 1px; font-weight: 700; color: var(--white); }
+            .nav { margin-top: 2px; width: 100%; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+            .nav-link {
+                display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0;
+                color: var(--white); text-decoration: none; border-radius: 14px; transition: background .18s;
+                font-weight: 600; font-size: 15px; width: 100%;
+            }
+            .nav-link .icon { display: flex; align-items: center; justify-content: center; }
+            .nav-link:not(.active):hover { background: rgba(255,255,255,0.13); }
+            .nav-link.active { background: var(--page-bg); color: var(--white); font-weight: 700; }
+            .nav-link.active .icon svg { stroke: var(--white); }
+        </style>
+        
+        <aside class="sidebar">
+            <div class="logo">
+                <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#fff"/><rect x="8" y="14" width="20" height="8" rx="4" fill="#c68644"/></svg>
+                <h2>COFFEE SHOP</h2>
+            </div>
+            <nav class="nav">
+                <a href="../Inicio/inicio.html" class="nav-link"><span class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V9h6v12"/></svg></span><span class="nav-text">Inicio</span></a>
+                <a href="../Productos/productos.html" class="nav-link"><span class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3v4M8 3v4"/></svg></span><span class="nav-text">Productos</span></a>
+                <a href="../Promocion/promociones.html" class="nav-link"><span class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="17" r="2"/><circle cx="17" cy="7" r="2"/><path d="M7 17L17 7"/></svg></span><span class="nav-text">Promociones</span></a>
+                <a href="../ControlCaja/controlcaja.html" class="nav-link"><span class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span class="nav-text">Control</span></a>
+                <a href="../login_admin_cajero/admin.html" class="nav-link"><span class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0 1 13 0"/></svg></span><span class="nav-text">Admin</span></a>
+            </nav>
+        </aside>
+    `;
+    const placeholder = document.getElementById('navbar-placeholder');
+    if (placeholder) { placeholder.outerHTML = barraNavHTML; }
+    const currentPage = window.location.pathname.split("/").pop();
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        const linkPage = new URL(link.href, window.location.href).pathname.split("/").pop();
+        if (linkPage.toLowerCase() === currentPage.toLowerCase()) {
+            link.classList.add('active');
+        }
+    });
+}
