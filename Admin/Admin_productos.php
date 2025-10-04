@@ -1,3 +1,7 @@
+<?php
+include "conexion.php";
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -36,96 +40,37 @@
     <!-- Sección de productos -->
     <h3>Productos</h3>
     <div class="products-container">
-      <!-- Productos de ejemplo -->
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
+      <?php
+      $sql = "SELECT * FROM producto";
+      $result = $conn->query($sql);
 
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="img/Cafe_Americano.png" alt="Producto 1">
-        <span class="product-name">Café Latte</span>
-        <span class="product-price">$45.00</span>
-        <div class="product-actions">
-          <i class="fas fa-pen edit" title="Editar"></i>
-          <i class="fas fa-trash delete" title="Eliminar"></i>
-        </div>
-      </div>
+      if ($result->num_rows > 0) {
+          while ($row = $result->fetch_assoc()) {
+              ?>
+              <div class="product-card" 
+                  data-id="<?php echo $row['idp']; ?>" 
+                  data-nombre="<?php echo $row['namep']; ?>" 
+                  data-precio="<?php echo $row['precio']; ?>" 
+                  data-categoria="<?php echo $row['categoria']; ?>" 
+                  data-sabor="<?php echo $row['sabor']; ?>" 
+                  data-status="<?php echo $row['status']; ?>" 
+                  data-imagen="<?php echo $row['imagen']; ?>">
+                  
+                  <img src="<?php echo $row['imagen'] ? $row['imagen'] : 'img/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
+                  <span class="product-name"><?php echo $row['namep']; ?></span>
+                  <span class="product-price">$<?php echo number_format($row['precio'], 2); ?></span>
+                  
+                  <div class="product-actions">
+                      <i class="fas fa-pen edit" title="Editar"></i>
+                      <i class="fas fa-trash delete" title="Eliminar"></i>
+                  </div>
+              </div>
+              <?php
+          }
+      } else {
+          echo "<p>No hay productos registrados.</p>";
+      }
+      ?>
 
       <!-- Cuadro para agregar producto (solo uno al final del grid) -->
       <div class="product-card add-product" id="openModal">
@@ -136,26 +81,73 @@
   </div>
 
   <!-- Modal flotante para agregar producto -->
-  <div id="productModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Agregar Producto</h2>
-      <input type="text" placeholder="Nombre del producto">
-      <input type="file" accept="image/*">
-      <input type="number" placeholder="Precio">
-      <button>Guardar</button>
-    </div>
-  </div>
+  <!-- Modal flotante para agregar producto -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Agregar Producto</h2>
+    <form action="Guardar_producto.php" method="POST" enctype="multipart/form-data">
+      <input type="text" name="name" placeholder="Nombre del producto" required>
+      <input type="file" name="imagen" accept="image/*">
+      <input type="number" name="precio" placeholder="Precio" required>
+      
+      <!-- Select para categoría -->
+      <select name="categoria" required>
+        <option value="">Selecciona categoría</option>
+        <option value="Frappés">Frappés</option>
+        <option value="Cafés">Cafés</option>
+        <option value="Comida">Comida</option>
+        <option value="Postres">Postres</option>
+        <option value="Panes">Panes</option>
+        <option value="Sin café">Sin café</option>
+        <option value="Temporada">Temporada</option>
+      </select>
 
+      <!-- Select para sabor/tamaño -->
+      <select name="sabor" required>
+        <option value="">Selecciona tamaño</option>
+        <option value="1">Pequeño</option>
+        <option value="2">Mediano</option>
+        <option value="3">Grande</option>
+      </select>
+
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+</div>
   <!-- Modal flotante para editar producto -->
   <div id="editModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
       <h2>Editar Producto</h2>
-      <input type="text" id="editName" placeholder="Nombre del producto">
-      <input type="file" id="editImage" accept="image/*">
-      <input type="number" id="editPrice" placeholder="Precio">
-      <button>Actualizar</button>
+      <form action="Editar_productos.php" method="POST" enctype="multipart/form-data">
+        <!-- Campo oculto para el ID del producto -->
+        <input type="hidden" id="editId" name="id">
+
+        <input type="text" id="editName" name="name" placeholder="Nombre del producto" required>
+        <input type="file" id="editImage" name="imagen" accept="image/*">
+        <input type="number" id="editPrice" name="precio" placeholder="Precio" required>
+        
+        <select id="editCategoria" name="categoria" required>
+          <option value="">Selecciona categoría</option>
+          <option value="Frappés">Frappés</option>
+          <option value="Cafés">Cafés</option>
+          <option value="Comida">Comida</option>
+          <option value="Postres">Postres</option>
+          <option value="Panes">Panes</option>
+          <option value="Sin café">Sin café</option>
+          <option value="Temporada">Temporada</option>
+        </select>
+
+        <select id="editSabor" name="sabor" required>
+          <option value="">Selecciona tamaño</option>
+          <option value="1">Pequeño</option>
+          <option value="2">Mediano</option>
+          <option value="3">Grande</option>
+        </select>
+
+        <button type="submit">Actualizar</button>
+      </form>
     </div>
   </div>
 
@@ -185,17 +177,57 @@
 
     editButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Obtén datos del producto
         const card = btn.closest('.product-card');
-        const name = card.querySelector('.product-name').innerText;
-        const price = card.querySelector('.product-price').innerText.replace('$','');
 
-        // Rellena el modal con los datos
+        // Usamos dataset (data-*) directamente
+        const id = card.dataset.id;
+        const name = card.dataset.nombre;
+        const price = card.dataset.precio;
+        const categoria = card.dataset.categoria;
+        const sabor = card.dataset.sabor;
+
+        // Rellenamos el modal con los datos del producto
+        document.getElementById('editId').value = id;
         document.getElementById('editName').value = name;
         document.getElementById('editPrice').value = price;
+        document.getElementById('editCategoria').value = categoria;
+        document.getElementById('editSabor').value = sabor;
 
-        // Muestra modal
+        // Mostramos el modal
         editModal.style.display = 'flex';
+      });
+    });
+
+    // --- Eliminar producto ---
+    const deleteButtons = document.querySelectorAll('.product-actions .delete');
+
+    deleteButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.product-card');
+        const id = card.dataset.id;
+
+        if (confirm("¿Seguro que deseas eliminar este producto?")) {
+          // Petición AJAX para eliminar
+          fetch("Eliminar_productos.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: "id=" + encodeURIComponent(id),
+          })
+          .then(res => res.text())
+          .then(data => {
+            if (data.trim() === "success") {
+              alert("Producto eliminado correctamente");
+              card.remove(); // Eliminar del DOM sin recargar
+            } else {
+              alert("Error al eliminar: " + data);
+            }
+          })
+          .catch(err => {
+            alert("Error en la solicitud: " + err);
+          });
+        }
       });
     });
   </script>
