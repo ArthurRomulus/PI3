@@ -46,6 +46,14 @@ include "conexion.php";
 
       if ($result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
+            // Convertir el valor de sabor en texto
+            $sabor_texto = '';
+            switch($row['sabor']){
+                case 1: $sabor_texto = 'Pequeño'; break;
+                case 2: $sabor_texto = 'Mediano'; break;
+                case 3: $sabor_texto = 'Grande'; break;
+                default: $sabor_texto = 'Desconocido';
+            }
               ?>
               <div class="product-card" 
                   data-id="<?php echo $row['idp']; ?>" 
@@ -58,7 +66,9 @@ include "conexion.php";
                   
                   <img src="<?php echo $row['imagen'] ? $row['imagen'] : 'img/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
                   <span class="product-name"><?php echo $row['namep']; ?></span>
+                  <span class="product-categoria"><?php echo $row['categoria']; ?></span>
                   <span class="product-price">$<?php echo number_format($row['precio'], 2); ?></span>
+                  <span class="product-sabor"><?php echo $sabor_texto; ?></span>
                   
                   <div class="product-actions">
                       <i class="fas fa-pen edit" title="Editar"></i>
