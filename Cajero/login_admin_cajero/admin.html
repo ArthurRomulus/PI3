@@ -20,7 +20,6 @@
     </script>
 </head>
 <body>
-    <body>
     <div class="container">
         
         <div id="navbar-placeholder"></div>
@@ -61,11 +60,13 @@
     </div>
 
     <script src="../barraNav.js"></script>
-    <script>
-        // Llama a la función para que se ejecute al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarBarraNav();
-        });
-    </script>
+<script>
+  // Script para cargar la barra de navegación
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentPage = window.location.pathname.split("/").pop();
+    cargarBarraNav(currentPage); 
+  });
+
+</script>
 </body>
 </html>

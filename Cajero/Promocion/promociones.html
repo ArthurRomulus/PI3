@@ -8,22 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <script src="../barraNav.js"></script>
-    <div class="container">
-        <aside class="sidebar">
-            <div class="logo">
-                <i class="fas fa-coffee"></i>
-                <span>COFFEE SHOP</span>
-            </div>
-            <nav class="menu">
-                <a href="#"><i class="fas fa-home"></i> Inicio</a>
-                <a href="#"><i class="fas fa-box"></i> Productos</a>
-                <a href="#" class="active"><i class="fas fa-percent"></i> Promociones</a>
-                <a href="#"><i class="fas fa-cog"></i> Control</a>
-                <a href="#"><i class="fas fa-user-shield"></i> Admin</a>
-            </nav>
-        </aside>
-        <main class="main-content">
+            <div class="container">
+                <div id="navbar-placeholder"></div>
+                <main class="main-content">
             <header>
                 <h1>Descuentos y promociones</h1>
                 <div class="search-bar">
@@ -83,10 +70,16 @@
                     <p>En la compra de un cuernito, llévate un café americano.</p>
                     <img src="https://i.imgur.com/kGkL4G4.png" alt="Panini">
                 </div>
-
             </section>
         </main>
-    </div>
-    <script src="script.js"></script>
+        </div>
+                <script src="../barraNav.js"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const currentPage = window.location.pathname.split("/").pop();
+                        cargarBarraNav(currentPage);
+                    });
+                </script>
+                <script src="script.js"></script>
 </body>
 </html>
