@@ -1,15 +1,79 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+
 :root {
-    --sidebar-bg: #c8862e;
-    --main-content-bg: #EAAF61;
-    --login-card-bg: #FDF6EC;
-    --input-bg: #FFFFFF;
-    --button-bg: #D2B48C;
-    --text-color: #3B2F2F;
-    --dark-brown: #5D4037;
-    --white-text: #FFFFFF;
-    --active-menu-bg: #F0EBE3;
+    --sidebar-bg: #d6a05c;
+    --accent: #c68644;
+    --page-bg: #e9bb7b;
+    --card-bg: #f6e9db;
+    --search-bg: #f3e6c1;
+    --text-dark: #332a23;
+    --muted: #6a584a;
+    --white: #fff;
+    --shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+/* ===== ESTILOS DE LA BARRA DE NAVEGACIÓN ===== */
+.sidebar {
+    background: var(--sidebar-bg);
+    color: var(--white);
+    padding: 18px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    border-radius: 16px;
+    height: 100%;
+}
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+.logo h2 {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--white);
+}
+.nav {
+    margin-top: 2px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+.nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 0;
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 14px;
+    transition: background .18s;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+}
+.nav-link .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nav-link:not(.active):hover {
+    background: rgba(255,255,255,0.13);
+}
+.nav-link.active {
+    background: var(--page-bg);
+    color: var(--white);
+    font-weight: 700;
+}
+.nav-link.active .icon svg {
+    stroke: var(--white);
 }
 
 * {
@@ -25,8 +89,13 @@ body {
 }
 
 .container {
-    display: flex;
-    
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    height: 100vh;
+    gap: 20px;
+    padding: 16px;
+    min-width: 900px;
+    background: var(--sidebar-bg);
 }
 
 .sidebar {
@@ -82,22 +151,27 @@ body {
 .main-content {
     position: relative;
     flex-grow: 1;
-    padding: 2rem 3rem;
-    background-color: #EAAF61;
-    margin: 15px -10px 15px 15px;
-    border-radius: 30px;
-    right: 30px;
+    padding: 18px 24px;
+    background: #e9bb7b;
+    margin: 0 auto;
+    border-radius: 18px;
+    right: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-width: 950px;
 }
 
 .login-header {
     width: 100%;
-    color: var(--dark-brown);
-    margin-bottom: 1rem;
+    color: var(--white);
+    margin-bottom: 1.3rem;
     display: flex;
     align-items: baseline;
     gap: 29rem;
     position: relative;
-    bottom: 20px;
+    bottom: 5px;
 }
 
 .login-header h2 {
@@ -112,7 +186,7 @@ body {
 .welcome-message h1 {
     font-size: 3rem;
     font-weight: 700;
-    color: var(--dark-brown);
+    color: var(--white);
     margin-bottom: 1rem;
     position: relative;
     bottom: 40px;
@@ -135,7 +209,7 @@ body {
     font-size: 1.25rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: var(--text-color);
+    color: var(--dark-brown);
     line-height: 1.5;
     position: relative;
     left: 80px;
@@ -181,9 +255,9 @@ form {
 }
 
 button[type="submit"] {
-    background-color: var(--button-bg);
+    background-color: #c68644;
     color: var(--dark-brown);
-    border: none;
+    border: 2px solid var(--dark-brown);
     padding: 1rem;
     border-radius: 15px;
     font-size: 1.1rem;
