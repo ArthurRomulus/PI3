@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Coffee Shop</title>
+  <title>BlackWood Coffe</title>
   <link rel="stylesheet" href="productos.css">
 </head>
 <body>
@@ -13,14 +13,16 @@
   <main class="main">
     <div class="main-scroll">
       <header class="header">
-        <h1>Coffee Shop</h1>
-        <div class="date">Jueves, 25 de septiembre de 2025</div>
+        <h1>BlackWood Coffe</h1>
+        <div class="date"> <!--aqui muestra la fecha --></div>
       </header>
       <section class="filters">
         <input class="search" type="search" placeholder="Buscar..." />
         <div class="cats">
+          <button class="cat-btn active">Todos</button>
           <button class="cat-btn">Frappes</button>
-          <button class="cat-btn active">Cafés</button>
+          <button class="cat-btn">Tés</button>
+            <button class="cat-btn">Cafés</button>
           <button class="cat-btn">Comida</button>
           <button class="cat-btn">Postres</button>
           <button class="cat-btn">Panes</button>
@@ -28,8 +30,7 @@
       </section>
       
       <section class="products" aria-label="Productos">
-        
-      </section>
+        </section>
     </div>
   </main>
 
@@ -56,6 +57,24 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarBarraNav(currentPage);
     }
 
+    // --- ACTUALIZAR LA FECHA EN TIEMPO REAL ---
+    const dateElement = document.querySelector('.date');
+    if (dateElement) {
+        // Arrays para los nombres en español
+        const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        
+        const fechaActual = new Date();
+        
+        // Formateamos la fecha al estilo "Jueves, 5 de octubre de 2025"
+        const diaSemana = dias[fechaActual.getDay()];
+        const diaMes = fechaActual.getDate();
+        const mes = meses[fechaActual.getMonth()];
+        const anio = fechaActual.getFullYear();
+        
+        dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
+    }
+
     // --- VARIABLES Y FUNCIONES DEL CARRITO ---
     const cartList = [];
     const cartContent = document.querySelector('.cart-content');
@@ -64,104 +83,84 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryTotal = document.querySelector('.summary-total');
     const IVA_RATE = 0.16;
 
-    function renderCart() {
-        if (!cartContent) return;
-        cartContent.innerHTML = '';
-        if (cartList.length === 0) {
-            cartContent.innerHTML = '<p class="empty-cart" style="text-align:center; font-size:12px; color:var(--muted);">El carrito está vacío</p>';
-        } else {
-            cartList.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'cart-item';
-                let optionsDesc = `${item.milk}, ${item.coffee}, ${item.size}`;
-                if (item.requests) {
-                    optionsDesc += ` (${item.requests})`;
-                }
-                div.innerHTML = `
-                    <div class="cart-thumb"><img src="${item.imgSrc}" alt="${item.name}"></div>
-                    <div class="cart-info">
-                        <div class="cart-title">${item.name}</div>
-                        <div class="cart-desc">${optionsDesc}</div>
-                        <div class="cart-price">$${(item.price * item.qty).toFixed(2)}</div> 
-                    </div>
-                    <div class="cart-qty">
-                        <button class="qty-btn-cart" data-idx="${idx}" data-action="minus">-</button>
-                        <div class="qty-num">${item.qty.toString().padStart(2, '0')}</div>
-                        <button class="qty-btn-cart" data-idx="${idx}" data-action="plus">+</button>
-                    </div>`;
-                cartContent.appendChild(div);
-            });
-        }
-        updateSummary();
-    }
-
-    function updateSummary() {
-        const subtotal = cartList.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        const iva = subtotal * IVA_RATE;
-        const total = subtotal + iva;
-        if (summarySubtotal) summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
-        if (summaryIVA) summaryIVA.textContent = `$${iva.toFixed(2)}`;
-        if (summaryTotal) summaryTotal.textContent = `$${(total).toFixed(2)}`;
-    }
-    
-    function updateCardPrice(card) {
-        const basePrice = parseFloat(card.dataset.basePrice);
-        const sizeButton = card.querySelector('.size-btn.active');
-        const milkSelect = card.querySelector('.milk-type');
-        const coffeeSelect = card.querySelector('.coffee-type');
-        const sizeIncrease = sizeButton ? parseFloat(sizeButton.dataset.precioAumento) : 0;
-        const milkExtra = milkSelect.selectedIndex > 0 ? parseFloat(milkSelect.options[milkSelect.selectedIndex].dataset.precioExtra) : 0;
-        const coffeeExtra = coffeeSelect.selectedIndex > 0 ? parseFloat(coffeeSelect.options[coffeeSelect.selectedIndex].dataset.precioExtra) : 0;
-        const quantity = parseInt(card.querySelector('.quantity-value').textContent);
-        const unitPrice = basePrice + sizeIncrease + milkExtra + coffeeExtra;
-        const finalPrice = unitPrice * quantity;
-        card.querySelector('.card-price').textContent = `$${finalPrice.toFixed(2)}`;
-    }
-
-    // --- CARGA DE PRODUCTOS DESDE API ---
+    // --- LÓGICA DE PRODUCTOS ---
     const contenedorProductos = document.querySelector('.products');
+    const filterContainer = document.querySelector('.cats');
+    let allProducts = [];
+
+    // --- Función para mostrar productos en la página ---
+    function renderProducts(productsToRender, allData) {
+        if (!contenedorProductos) return;
+        contenedorProductos.innerHTML = '';
+        
+        productsToRender.forEach(producto => {
+            const { modificadores, tamanos } = allData;
+            const esCaliente = producto.categoria === 'Bebidas calientes';
+            const tagClass = esCaliente ? 'tag-caliente' : 'tag-frio';
+            const tagTexto = esCaliente ? 'CALIENTE' : 'FRÍO';
+            const opcionesLecheHtml = generarOpcionesHtml(modificadores.leches, 'Tipo Leche');
+            const opcionesCafeHtml = generarOpcionesHtml(modificadores.basesCafe, 'Tipo Café');
+            const tamanosHtml = generarTamanosHtml(tamanos, producto.tamano_defecto);
+            
+            const tarjetaHTML = `
+                <article class="product-card-new" data-id="${producto.idp}" data-base-price="${producto.precio}" data-name="${producto.namep}">
+                    <div class="card-top">
+                        <span class="card-tag ${tagClass}">${tagTexto}</span>
+                        <span class="card-price">$${parseFloat(producto.precio).toFixed(2)}</span>
+                    </div>
+                    <div class="card-image"><img src="${producto.ruta_imagen}.png" alt="${producto.namep}"></div>
+                    <div class="card-badge">${producto.namep}</div>
+                    <div class="card-options">
+                        <div class="option-select"><select class="milk-type">${opcionesLecheHtml}</select></div>
+                        <div class="option-select"><select class="coffee-type">${opcionesCafeHtml}</select></div>
+                        <div class="option-row quantity-selector">
+                            <button class="quantity-btn minus">-</button><span class="quantity-value">1</span><button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="option-row size-selector">${tamanosHtml}</div>
+                    </div>
+                    <textarea class="extra-requests-input" placeholder="Peticiones extras..."></textarea>
+                    <button class="add-to-cart-btn">Añadir a Carrito</button>
+                </article>`;
+            contenedorProductos.insertAdjacentHTML('beforeend', tarjetaHTML);
+        });
+    }
+
+    // --- CARGA INICIAL DE PRODUCTOS DESDE API ---
     if (contenedorProductos) {
         fetch('api.php')
             .then(response => response.json())
             .then(data => {
                 if (data.error) { console.error('Error desde API:', data.error); return; }
-                const { productos, modificadores, tamanos } = data;
-                contenedorProductos.innerHTML = '';
-                productos.forEach(producto => {
-                    // --- LÓGICA PARA ASIGNAR CLASE Y TEXTO A LA ETIQUETA ---
-                    const esCaliente = producto.categoria === 'Bebidas calientes';
-                    const tagClass = esCaliente ? 'tag-caliente' : 'tag-frio';
-                    const tagTexto = esCaliente ? 'CALIENTE' : 'FRÍO';
+                
+                allProducts = data.productos;
+                renderProducts(allProducts, data);
 
-                    const opcionesLecheHtml = generarOpcionesHtml(modificadores.leches, 'Tipo Leche');
-                    const opcionesCafeHtml = generarOpcionesHtml(modificadores.basesCafe, 'Tipo Café');
-                    const tamanosHtml = generarTamanosHtml(tamanos, producto.tamano_defecto);
-                    
-                    const tarjetaHTML = `
-                        <article class="product-card-new" data-id="${producto.idp}" data-base-price="${producto.precio}" data-name="${producto.namep}">
-                            <div class="card-top">
-                                <span class="card-tag ${tagClass}">${tagTexto}</span>
-                                <span class="card-price">$${parseFloat(producto.precio).toFixed(2)}</span>
-                            </div>
-                            <div class="card-image"><img src="../img/default.png" alt="${producto.namep}"></div>
-                            <div class="card-badge">${producto.namep}</div>
-                            <div class="card-options">
-                                <div class="option-select"><select class="milk-type">${opcionesLecheHtml}</select></div>
-                                <div class="option-select"><select class="coffee-type">${opcionesCafeHtml}</select></div>
-                                <div class="option-row quantity-selector">
-                                    <button class="quantity-btn minus">-</button><span class="quantity-value">1</span><button class="quantity-btn plus">+</button>
-                                </div>
-                                <div class="option-row size-selector">${tamanosHtml}</div>
-                            </div>
-                            <textarea class="extra-requests-input" placeholder="Peticiones extras..."></textarea>
-                            <button class="add-to-cart-btn">Añadir a Carrito</button>
-                        </article>`;
-                    contenedorProductos.insertAdjacentHTML('beforeend', tarjetaHTML);
-                });
+                if (filterContainer) {
+                    filterContainer.addEventListener('click', (event) => {
+                        const target = event.target;
+                        if (!target.matches('.cat-btn')) return;
+
+                        filterContainer.querySelector('.active').classList.remove('active');
+                        target.classList.add('active');
+
+                        const filterType = target.textContent.toLowerCase();
+                        let filteredProducts = [];
+
+                        if (filterType === 'todos') {
+                            filteredProducts = allProducts;
+                        } else if (filterType === 'frappes') {
+                            filteredProducts = allProducts.filter(p => p.namep.toLowerCase().includes('frappé'));
+                        } else if (filterType === 'tés') {
+                            filteredProducts = allProducts.filter(p => p.namep.toLowerCase().includes('té') || p.namep.toLowerCase().includes('tea'));
+                        }
+                        
+                        renderProducts(filteredProducts, data);
+                    });
+                }
             });
     }
 
-    // --- MANEJADORES DE EVENTOS ---
+    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
     if (contenedorProductos) {
         contenedorProductos.addEventListener('click', (event) => {
             const target = event.target;
@@ -218,25 +217,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // --- MANEJADOR DE EVENTOS PARA EL CARRITO ---
     if (cartContent) {
         cartContent.addEventListener('click', e => {
             if (e.target.classList.contains('qty-btn-cart')) {
                 const idx = parseInt(e.target.dataset.idx);
                 const action = e.target.dataset.action;
+
                 if (action === 'plus') {
                     cartList[idx].qty += 1;
                 } else if (action === 'minus') {
                     cartList[idx].qty -= 1;
                     if (cartList[idx].qty <= 0) {
+                        // Si la cantidad es 0 o menos, elimina el producto del carrito
                         cartList.splice(idx, 1);
                     }
                 }
-                renderCart();
+                renderCart(); // Vuelve a dibujar el carrito con los datos actualizados
             }
         });
     }
 
-    // --- FUNCIONES AUXILIARES PARA GENERAR HTML ---
+    // --- FUNCIONES COMPLETAS DEL CARRITO Y AUXILIARES ---
+
+    function renderCart() {
+        if (!cartContent) return;
+        cartContent.innerHTML = '';
+        if (cartList.length === 0) {
+            cartContent.innerHTML = '<p class="empty-cart" style="text-align:center; font-size:12px; color:var(--muted);">El carrito está vacío</p>';
+        } else {
+            cartList.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                let optionsDesc = `${item.milk}, ${item.coffee}, ${item.size}`;
+                if (item.requests) {
+                    optionsDesc += ` (${item.requests})`;
+                }
+                div.innerHTML = `
+                    <div class="cart-thumb"><img src="${item.imgSrc}" alt="${item.name}"></div>
+                    <div class="cart-info">
+                        <div class="cart-title">${item.name}</div>
+                        <div class="cart-desc">${optionsDesc}</div>
+                        <div class="cart-price">$${(item.price * item.qty).toFixed(2)}</div> 
+                    </div>
+                    <div class="cart-qty">
+                        <button class="qty-btn-cart" data-idx="${idx}" data-action="minus">-</button>
+                        <div class="qty-num">${item.qty.toString().padStart(2, '0')}</div>
+                        <button class="qty-btn-cart" data-idx="${idx}" data-action="plus">+</button>
+                    </div>`;
+                cartContent.appendChild(div);
+            });
+        }
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const subtotal = cartList.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const iva = subtotal * IVA_RATE;
+        const total = subtotal + iva;
+        if (summarySubtotal) summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        if (summaryIVA) summaryIVA.textContent = `$${iva.toFixed(2)}`;
+        if (summaryTotal) summaryTotal.textContent = `$${(total).toFixed(2)}`;
+    }
+
+    function updateCardPrice(card) {
+        const basePrice = parseFloat(card.dataset.basePrice);
+        const sizeButton = card.querySelector('.size-btn.active');
+        const milkSelect = card.querySelector('.milk-type');
+        const coffeeSelect = card.querySelector('.coffee-type');
+        const sizeIncrease = sizeButton ? parseFloat(sizeButton.dataset.precioAumento) : 0;
+        const milkExtra = milkSelect.selectedIndex > 0 ? parseFloat(milkSelect.options[milkSelect.selectedIndex].dataset.precioExtra) : 0;
+        const coffeeExtra = coffeeSelect.selectedIndex > 0 ? parseFloat(coffeeSelect.options[coffeeSelect.selectedIndex].dataset.precioExtra) : 0;
+        const quantity = parseInt(card.querySelector('.quantity-value').textContent);
+        const unitPrice = basePrice + sizeIncrease + milkExtra + coffeeExtra;
+        const finalPrice = unitPrice * quantity;
+        card.querySelector('.card-price').textContent = `$${finalPrice.toFixed(2)}`;
+    }
+
     function generarOpcionesHtml(opciones, placeholder) {
         let html = `<option selected disabled>${placeholder}</option>`;
         if (opciones) {
@@ -246,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return html;
     }
+
     function generarTamanosHtml(tamanos, tamanoDefecto) {
         const tamanoMap = {'Chico': {texto: '250ML',svg: '<svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg>'},'Mediano': {texto: '500ML',svg: '<svg viewBox="0 0 24 24"><path d="M3 8h18v10a3 3 0 01-3 3H6a3 3 0 01-3-3V8zm3-4h12v2H6V4z"/></svg>'},'Grande': {texto: '1L',svg: '<svg viewBox="0 0 24 24"><path d="M2 7h20v10a4 4 0 01-4 4H6a4 4 0 01-4-4V7zm4-4h12v2H6V3z"/></svg>'}};
         let html = '';
