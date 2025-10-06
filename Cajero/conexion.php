@@ -23,7 +23,7 @@ try {
     
     // (Opcional) Si llegamos aquí, la conexión fue exitosa.
     // Puedes descomentar la siguiente línea para probar, pero luego bórrala en producción.
-    echo "Conexión a la base de datos '$dbname' establecida correctamente.";
+    //echo "Conexión a la base de datos '$dbname' establecida correctamente.";
 
 } catch (\PDOException $e) {
     // Si algo sale mal, capturamos la excepción y mostramos un error genérico.
