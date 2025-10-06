@@ -1,0 +1,113 @@
+/* --- Barra lateral --- */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background-color: #D7D7D7;
+  color: #1C1B1F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  transition: transform 0.3s ease;
+}
+
+/* Ocultar sidebar en móviles (por defecto la sacamos del viewport) */
+/* NOTA: Esta clase NO se usará en el JS, en su lugar usaremos .sidebar.show para ser más explícitos en el toggle */
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+/* --- Logo --- */
+.logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo img {
+  width: 220px;
+  height: auto;
+}
+
+/* --- Items de navegación --- */
+.nav-item {
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  color: #1C1B1F;
+  text-decoration: none;
+}
+
+.nav-item i {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.nav-item span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nav-item:hover {
+  background-color: #bfbfbf;
+  border-radius: 20px;
+}
+
+.nav-item.active {
+  background-color: #a6a6a6;
+  border-radius: 20px;
+}
+
+.nav-item + .nav-item {
+  margin-top: 15px;
+}
+
+/* --- Botón hamburguesa --- */
+.hamburger {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  color: #1C1B1F; /* Color para que se vea bien sobre el contenido */
+  font-size: 26px;
+  z-index: 30;
+  cursor: pointer;
+  display: none; /* Oculto por defecto en escritorio */
+}
+
+/* --- Ajuste del contenido principal --- */
+main {
+  /* En escritorio, deja espacio para la barra lateral */
+  margin-left: 220px; 
+  transition: margin-left 0.3s ease;
+}
+
+/* --- Responsive para pantallas menores a 768px --- */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block; /* Mostrar botón hamburguesa */
+  }
+
+  .sidebar {
+    transform: translateX(-100%); /* Oculta por defecto fuera del viewport */
+  }
+
+  .sidebar.show {
+    transform: translateX(0); /* Mostrar al hacer toggle */
+  }
+
+  /* Ajustar el contenido principal para que ocupe todo el ancho */
+  main {
+    margin-left: 0; 
+  }
+}
