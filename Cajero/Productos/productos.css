@@ -310,14 +310,28 @@ body{
   align-items: center;
   padding: 0 4px;
 }
+
+/* --- REGLAS CORREGIDAS PARA LAS ETIQUETAS --- */
+/* 1. Estilo base para TODAS las etiquetas (sin color de fondo) */
 .card-tag {
-  background-color: #e54d4d;
   color: var(--white);
   padding: 4px 10px;
   border-radius: 8px;
   font-size: 12px;
   font-weight: 700;
 }
+
+/* 2. Color específico para bebidas calientes */
+.card-tag.tag-caliente {
+  background-color: #e54d4d; /* Rojo */
+}
+
+/* 3. Color específico para bebidas frías */
+.card-tag.tag-frio {
+  background-color: #5c9ed6; /* Azul */
+}
+/* --- FIN DE LAS REGLAS CORREGIDAS --- */
+
 .card-price {
   background-color: #f0e2d0;
   color: var(--text-dark);
