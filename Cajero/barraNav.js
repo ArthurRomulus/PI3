@@ -3,7 +3,7 @@ function cargarBarraNav() {
     const barraNavHTML = `
         <style>
             .sidebar {
-                background: var(--sidebar-bg); color: var(--white); padding: 18px 0; display: flex;
+                background: var(--sidebar-bg); color: var(--white); padding: 18px 12px; display: flex;
                 flex-direction: column; align-items: center; gap: 2px; border-radius: 16px; height: 100%;
             }
             .logo { display: flex; flex-direction: column; align-items: center; gap: 8px; }
