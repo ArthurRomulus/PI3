@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 06-10-2025 a las 03:43:50
+-- Servidor: localhost:3307
+-- Tiempo de generación: 06-10-2025 a las 05:02:08
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -95,6 +95,7 @@ CREATE TABLE `movimientos` (
 CREATE TABLE `producto` (
   `idp` int(11) NOT NULL,
   `namep` varchar(50) NOT NULL,
+  `ruta_imagen` varchar(255) DEFAULT NULL,
   `precio` int(11) NOT NULL CHECK (`precio` >= 0),
   `categoria` varchar(50) DEFAULT NULL,
   `sabor` int(11) DEFAULT NULL,
@@ -106,55 +107,45 @@ CREATE TABLE `producto` (
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`idp`, `namep`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `status`) VALUES
-(51, 'Americano', 40, 'Bebidas calientes', 1, 1, 1),
-(52, 'Espresso', 40, 'Bebidas calientes', 1, 1, 1),
-(53, 'Macchiato', 50, 'Bebidas calientes', 1, 1, 1),
-(54, 'Capucchino Entero', 45, 'Bebidas calientes', 2, 1, 1),
-(55, 'Lechero (Entera)', 42, 'Bebidas calientes', 2, 1, 1),
-(56, 'Lechero Deslactosado', 45, 'Bebidas calientes', 3, 1, 1),
-(57, 'Moka', 50, 'Bebidas calientes', 1, 1, 1),
-(58, 'Matcha', 65, 'Bebidas calientes', 1, 1, 1),
-(59, 'Capucchino Deslactos', 55, 'Bebidas calientes', 3, 1, 1),
-(60, 'Irlandés', 70, 'Bebidas calientes', 1, 1, 1),
-(61, 'Latte Entero', 45, 'Bebidas calientes', 2, 1, 1),
-(62, 'Latter Deslactosado', 42, 'Bebidas calientes', 3, 1, 1),
-(63, 'Latte Avena', 40, 'Bebidas calientes', 4, 1, 1),
-(64, 'Latte Almendra', 45, 'Bebidas calientes', 5, 1, 1),
-(65, 'Carajillo', 70, 'Bebidas calientes', 1, 1, 1),
-(66, 'Matchalatte', 60, 'Bebidas calientes', 1, 1, 1),
-(67, 'Doble', 55, 'Bebidas calientes', 1, 1, 1),
-(68, 'Chocolate caliente (Entero)', 30, 'Bebidas calientes', 2, 1, 1),
-(69, 'Chocolate caliente Deslactosad', 30, 'Bebidas calientes', 3, 1, 1),
-(70, 'Chocolate caliente Avena', 30, 'Bebidas calientes', 4, 1, 1),
-(71, 'Latte Entero', 45, 'Bebidas calientes', 2, 1, 1),
-(72, 'Latte Deslactosado', 45, 'Bebidas calientes', 3, 1, 1),
-(73, 'Latte Avena', 45, 'Bebidas calientes', 4, 1, 1),
-(74, 'Latte Almendra', 45, 'Bebidas calientes', 5, 1, 1),
-(75, 'Carajillo', 70, 'Bebidas calientes', 1, 1, 1),
-(76, 'Matchalatte', 60, 'Bebidas calientes', 1, 1, 1),
-(77, 'Doble', 50, 'Bebidas calientes', 1, 1, 1),
-(78, 'Chocolate caliente (Entero)', 30, 'Bebidas calientes', 2, 1, 1),
-(79, 'Chocolate caliente Deslactosado', 30, 'Bebidas calientes', 3, 1, 1),
-(80, 'Chocolate caliente Avena', 30, 'Bebidas calientes', 4, 1, 1),
-(81, 'Frappé clásico Entero', 60, 'Bebidas frias', 2, 1, 1),
-(82, 'Frappé clásico Deslactosado', 60, 'Bebidas frias', 3, 1, 1),
-(83, 'Frappé moka Entero', 65, 'Bebidas frias', 2, 1, 1),
-(84, 'Frappé moka Deslactosado', 65, 'Bebidas frias', 3, 1, 1),
-(85, 'Frappé caramel Entero', 65, 'Bebidas frias', 2, 1, 1),
-(86, 'Frappé caramel Deslactosado', 65, 'Bebidas frias', 3, 1, 1),
-(87, 'Frappé cookies n cream Entero', 75, 'Bebidas frias', 2, 1, 1),
-(88, 'Frappé cookies n cream Deslactosado', 75, 'Bebidas frias', 3, 1, 1),
-(89, 'Frappé matcha Entero', 80, 'Bebidas frias', 2, 1, 1),
-(90, 'Frappé matcha Deslactosado', 80, 'Bebidas frias', 3, 1, 1),
-(91, 'Frappé espresso Entero', 75, 'Bebidas frias', 2, 1, 1),
-(92, 'Frappé espresso Deslactosado', 75, 'Bebidas frias', 3, 1, 1),
-(93, 'Iced tea Negro', 45, 'Bebidas frias', 7, 1, 1),
-(94, 'Iced tea Limón', 45, 'Bebidas frias', 8, 1, 1),
-(95, 'Limonada', 40, 'Bebidas frias', 1, 1, 1),
-(96, 'Té Manzanilla', 35, 'Bebidas calientes', 6, 1, 1),
-(97, 'Té Negro', 35, 'Bebidas calientes', 7, 1, 1),
-(98, 'Té Limón', 35, 'Bebidas calientes', 8, 1, 1);
+INSERT INTO `producto` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `status`) VALUES
+(51, 'Americano', '../../Images/CafeAmer', 40, 'Bebidas calientes', 1, 1, 1),
+(52, 'Espresso', '../../Images/Espresso', 40, 'Bebidas calientes', 1, 1, 1),
+(53, 'Macchiato', '../../Images/Macchi', 50, 'Bebidas calientes', 1, 1, 1),
+(54, 'Capucchino Entero', '../../Images/CafeCapu', 45, 'Bebidas calientes', 2, 1, 1),
+(55, 'Lechero (Entera)', '../../Images/Lechero', 42, 'Bebidas calientes', 2, 1, 1),
+(56, 'Lechero Deslactosado', '../../Images/Lechero', 45, 'Bebidas calientes', 3, 1, 1),
+(57, 'Moka', '../../Images/Moka', 50, 'Bebidas calientes', 1, 1, 1),
+(58, 'Matcha', '../../Images/Matchalatte', 65, 'Bebidas calientes', 1, 1, 1),
+(59, 'Capucchino Deslactos', '../../Images/CafeCapu', 55, 'Bebidas calientes', 3, 1, 1),
+(60, 'Irlandés', '../../Images/Irlandes', 70, 'Bebidas calientes', 1, 1, 1),
+(61, 'Latte Entero', '../../Images/Latte', 45, 'Bebidas calientes', 2, 1, 1),
+(62, 'Latter Deslactosado', '../../Images/Latte', 42, 'Bebidas calientes', 3, 1, 1),
+(63, 'Latte Avena', '../../Images/Latte', 40, 'Bebidas calientes', 4, 1, 1),
+(64, 'Latte Almendra', '../../Images/Latte', 45, 'Bebidas calientes', 5, 1, 1),
+(65, 'Carajillo', '../../Images/Carajillo', 70, 'Bebidas calientes', 1, 1, 1),
+(66, 'Matchalatte', '../../Images/Matchalatte', 60, 'Bebidas calientes', 1, 1, 1),
+(67, 'Doble', '../../Images/EspreDoble', 55, 'Bebidas calientes', 1, 1, 1),
+(68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali', 30, 'Bebidas calientes', 2, 1, 1),
+(69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali', 30, 'Bebidas calientes', 3, 1, 1),
+(80, 'Chocolate caliente Avena', '../../Images/ChocoCali', 30, 'Bebidas calientes', 4, 1, 1),
+(81, 'Frappé clásico Entero', '../../Images/FrappeClasic', 60, 'Bebidas frias', 2, 1, 1),
+(82, 'Frappé clásico Deslactosado', '../../Images/FrappeClasic', 60, 'Bebidas frias', 3, 1, 1),
+(83, 'Frappé moka Entero', '../../Images/FrappMoka', 65, 'Bebidas frias', 2, 1, 1),
+(84, 'Frappé moka Deslactosado', '../../Images/FrappMoka', 65, 'Bebidas frias', 3, 1, 1),
+(85, 'Frappé caramel Entero', '../../Images/FrapCaramel', 65, 'Bebidas frias', 2, 1, 1),
+(86, 'Frappé caramel Deslactosado', '../../Images/FrapCaramel', 65, 'Bebidas frias', 3, 1, 1),
+(87, 'Frappé cookies n cream Entero', '../../Images/FrappCnC', 75, 'Bebidas frias', 2, 1, 1),
+(88, 'Frappé cookies n cream Deslactosado', '../../Images/FrappCnC', 75, 'Bebidas frias', 3, 1, 1),
+(89, 'Frappé matcha Entero', '../../Images/FrappMatcha', 80, 'Bebidas frias', 2, 1, 1),
+(90, 'Frappé matcha Deslactosado', '../../Images/FrappMatcha', 80, 'Bebidas frias', 3, 1, 1),
+(91, 'Frappé espresso Entero', '../../Images/FrappEspresso', 75, 'Bebidas frias', 2, 1, 1),
+(92, 'Frappé espresso Deslactosado', '../../Images/FrappEspresso', 75, 'Bebidas frias', 3, 1, 1),
+(93, 'Iced tea Negro', '../../Images/IcedTeaBlack', 45, 'Bebidas frias', 7, 1, 1),
+(94, 'Iced tea Limón', '../../Images/IcedTea', 45, 'Bebidas frias', 8, 1, 1),
+(95, 'Limonada', '../../Images/Limonadas', 40, 'Bebidas frias', 1, 1, 1),
+(96, 'Té Manzanilla', '../../Images/Te', 35, 'Bebidas calientes', 6, 1, 1),
+(97, 'Té Negro', '../../Images/TeCali', 35, 'Bebidas calientes', 7, 1, 1),
+(98, 'Té Limón', '../../Images/Te', 35, 'Bebidas calientes', 8, 1, 1);
 
 -- --------------------------------------------------------
 
