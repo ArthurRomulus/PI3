@@ -10,77 +10,138 @@
 
 *{box-sizing:border-box}
 body{
-  background-color: #DCC0B9;
-  color:var(--cafe); 
-  font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif
+  background-color:#DCC0B9;
+  color:var(--cafe);
+  font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
+/* ====== LAYOUT AMPLIO ====== */
 .panel-comentarios{
-  max-width: 520px;
-  margin: 100px auto;
-  padding: 0 8px;
-  background-color: #DCC0B9;
-  margin-bottom: 300px;
+  max-width:1200px;          /* muy ancho */
+  margin:80px auto 300px;
+  padding:0 16px;
+  background-color:#DCC0B9;
 }
 
 .panel{
-  background-color: #DCC0B9;
-  border:2px solid var(--borde);
+  background-color:#DCC0B9;
+  border:4px solid var(--borde);
   border-radius:10px;
   box-shadow:var(--sombra);
-  padding:14px 16px 18px;
+  padding:20px 22px 24px;
 }
 
 .panel h2{
   margin:0 0 6px;
-  background-color: #DCC0B9;
-  font-size:28px;
+  background-color:#DCC0B9;
+  font-size:32px;
+  line-height:1.15;
 }
 
+/* ====== ESTRELLAS + CONTADOR ====== */
 .fila-top{
   display:flex; align-items:center; justify-content:space-between;
-  margin:6px 0 10px;
+  margin:8px 0 12px;
 }
-.estrellas{ font-size:18px; letter-spacing:4px; color:#793410 }
-.contador{ font-weight:900; color: #793410; }
+.estrellas{ font-size:20px; letter-spacing:6px; color:#793410 }
+.contador{ font-weight:900; color:#793410 }
 
-.caja-comentario{ position:relative; color: #793410; }
+/* ====== CAJA DE COMENTARIO ====== */
+.caja-comentario{ position:relative; color:#793410 }
 .caja-comentario textarea{
-  width:100%; min-height:150px; resize:vertical;
-  border:2px solid var(--cafe); border-radius:6px;
+  width:100%; min-height:160px; resize:vertical;
+  border:2px solid var(--cafe); border-radius:10px;
   background:color-mix(in oklab, var(--crema) 92%, white);
-  color: #793410; padding:10px 34px 12px 12px; outline:none;
+  color:#793410; padding:14px 42px 16px 14px; outline:none;
 }
 .caja-comentario textarea::placeholder{ color:#876c60 }
-.ico-bean{ position:absolute; left:8px; bottom:8px; width: 30px; height: px; opacity:0.85; object-fit:contain; width:22px; height:22px }
-.ico-emoji{ position:absolute; right:10px; top:8px; color: #793410; }
+.ico-bean{
+  position:absolute; left:10px; bottom:10px;
+  width:22px; height:22px; opacity:.85; object-fit:contain;
+}
+.ico-emoji{
+  position:absolute; right:12px; top:10px; color:#793410;
+}
 
+/* ====== SUBIR FOTO + ETIQUETAS (orden: foto primero) ====== */
 .fila-subida{
-  margin-top:14px;
-  display:flex; flex-direction:column; gap:16px; align-items:flex-start;
+  margin-top:16px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:18px;
+  align-items:start;
+}
+@media (max-width:800px){
+  .fila-subida{ grid-template-columns:1fr }
 }
 
+/* Botón "Subir Foto" */
 .subir-foto{
-  display:inline-flex; align-items:center; gap:12px; color: #793410; cursor:pointer;
+  display:inline-flex; align-items:center; gap:12px; color:#793410; cursor:pointer;
+  border:2px solid var(--cafe); border-radius:10px; padding:12px 16px; background:#fff;
+  box-shadow:0 2px 0 var(--cafe) inset, 0 1px 0 rgba(0,0,0,.06);
+  font-weight:800;
 }
-.ico-cam{
+.subir-foto .ico-cam{
   width:40px; height:40px; display:grid; place-items:center;
   background:#fff; border:2px solid var(--cafe); border-radius:8px;
-  box-shadow:0 2px 0 var(--cafe) inset, 0 1px 0 rgba(0,0,0,.06);
 }
 
+/* Botón que abre opciones de etiqueta */
+.btn-etiquetas{
+  display:inline-flex; align-items:center; gap:12px;
+  padding:12px 16px;
+  border:2px solid var(--cafe); border-radius:10px;
+  background:var(--crema); color:var(--cafe); cursor:pointer; font-weight:800;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn-etiquetas:hover{ background:#efdcd2 }
+
+/* Panel/contendor de etiquetas (oculto por defecto) */
+.tags-panel{
+  grid-column:1 / -1;       /* que abarque todo el ancho debajo de los botones */
+  margin-top:10px;
+  border:2px solid var(--borde);
+  border-radius:12px;
+  background:color-mix(in oklab, var(--crema) 85%, white);
+  padding:14px;
+  display:none;              /* cambia a block o usa .open para mostrar */
+}
+.tags-panel.open{ display:block; }
+
+.tags-grid{
+  display:flex; flex-wrap:wrap; gap:10px;
+}
+.tag-chip{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  border:2px solid var(--borde);
+  background:#fff;
+  color:var(--cafe);
+  font-weight:700; font-size:14px;
+  cursor:pointer;
+}
+.tag-chip:hover{ background:var(--crema) }
+.tag-chip.is-active{
+  background:var(--cafe); color:#fff; border-color:var(--cafe2);
+}
+
+/* ====== BOTONES FINALES ====== */
 .acciones{
   width:100%;
-  display:flex; gap:18px; justify-content:center; /* centrados como en la captura */
+  display:flex; gap:18px; justify-content:flex-end;
+  margin-top:24px;
 }
 .btn{
-  padding:10px 24px; border-radius:8px; font-weight:900; cursor:pointer;
+  padding:12px 28px; border-radius:10px; font-weight:900; cursor:pointer;
   border:2px solid var(--cafe);
 }
 .btn-outline{ background:transparent; color:var(--cafe) }
-.btn-outline:hover{ background-color: #DCC0B9; }
+.btn-outline:hover{ background-color:#DCC0B9 }
 .btn-solid{ background:var(--cafe); color:#fff }
 .btn-solid:hover{ background:var(--cafe2) }
+
 
 
 /* ======= RATING / OPINIONES ======= */
@@ -93,6 +154,7 @@ body{
 .rating{
   background:#DCC0B9;
   padding:26px clamp(16px,3vw,40px);
+  margin-bottom: 300px;
 }
 .rating__wrap{
   max-width:1100px;
@@ -109,19 +171,21 @@ body{
 }
 .rating__count{ margin:10px 0 0; color:var(--ink); font-size:clamp(.95rem,1.2vw,1.05rem); }
 
-/* Costal decorativo */
-.rating__bag{
-  position:absolute; bottom:-10px; left:-8px;
+.rating__bag {
+  position:absolute; 
+  bottom:-210px;   /* en lugar de -10px, lo bajas 100px más */
+  left:-8px;
   width:clamp(160px,40vw,260px);
   filter:drop-shadow(0 8px 18px rgba(0,0,0,.25));
   pointer-events:none;
 }
 
+
 /* ======= Estrellas por máscara (relleno fraccional) ======= */
 .stars{
-  --size:22px;      /* tamaño individual */
+  --size:22px;      
   --gap:6px;
-  --value:5;        /* 0–5, acepta decimales (ej. 4.7) */
+  --value:5;        
   --percent: calc((var(--value) / 5) * 100%);
   inline-size: calc(var(--size)*5 + var(--gap)*4);
   block-size: var(--size);
@@ -258,7 +322,7 @@ body{
 
 /* ----- Tarjeta ----- */
 .card{
-  background:linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  background:#F7E7D7;
   border:2px solid var(--borde);
   border-radius:16px;
   box-shadow: var(--shadow-soft);
@@ -277,26 +341,7 @@ body{
   border:2px solid var(--borde); object-fit:cover;
   background:#fff;
 }
-.meta .name{
-  font-weight:900; color:#3b2a25; line-height:1.1;
-}
-.meta .time{
-  font-size:.9rem; color: #7a5a49;
-}
 
-/* Estrellas pequeñas dentro de la tarjeta */
-.card .stars{
-  --size:16px; --gap:4px; --value:5;
-  inline-size: calc(var(--size)*5 + var(--gap)*4);
-  block-size: var(--size);
-  position:relative; display:inline-block;
-}
-.card .stars::before, .card .stars::after{
-  content:""; position:absolute; inset:0;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.3l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.9 6.2 20.3l1.1-6.5L2.6 9.2l6.5-1L12 2.3z'/%3E%3C/svg%3E") 0 0/var(--size) var(--size) repeat-x;
-          mask:       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.3l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.9 6.2 20.3l1.1-6.5L2.6 9.2l6.5-1L12 2.3z'/%3E%3C/svg%3E") 0 0/var(--size) var(--size) repeat-x;
-}
-.card .stars::after{ background:var(--coffee); width:100%; border-radius:3px; }
 
 /* Texto */
 .card__text{ margin:0; color:#3b2a25; }
@@ -333,6 +378,8 @@ body{
 
 /* Alineación del bloque de “Comentarios” de tu captura */
 .reviews__wrap .stars{ --coffee:#531607; }  /* asegura el tono café */
+
+
 /* ===== HEADER con el MISMO look del FOOTER (.cs-*) ===== */
 :root{
   --coffee:#531607;
@@ -403,4 +450,30 @@ body{
 }
 @media (max-width:560px){
   .header-logo img{ width:96px; }
+}
+
+
+/* ================== SEPARADOR CAFÉ ================== */
+.coffee-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;                  /* espacio entre icono y líneas */
+  margin: 60px auto 40px;     /* separación con el contenido de arriba y el footer */
+  max-width: 1100px;
+}
+
+.coffee-separator .line {
+  width: 600px;                    /* que crezca para ocupar el ancho */
+  height: 2px;
+  background-color: #531607;  /* café oscuro */
+  border-radius: 999px;
+  opacity: 0.8;
+}
+
+.coffee-separator .coffee-icon {
+  width: 40px;                /* ajusta tamaño del icono */
+  height: 40px;
+  object-fit: contain;
+  opacity: 0.9;
 }
