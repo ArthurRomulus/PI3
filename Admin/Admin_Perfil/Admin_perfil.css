@@ -1,0 +1,165 @@
+/* --- Estilos generales --- */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  background-color: #C0C0C0;
+}
+
+/* --- Contenido principal --- */
+.content {
+  margin-left: 220px; /* espacio para sidebar */
+  padding: 20px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+
+  /* Margen visible como productos.php */
+  border: 15px solid #D7D7D7;  /* color de la barra lateral */
+  border-radius: 20px;
+
+  min-height: calc(100vh - 40px); /* asegura que llegue hasta abajo */
+  box-sizing: border-box;         /* incluye padding y borde en la altura */
+}
+
+/* Asegura que html y body ocupen toda la altura */
+html, body {
+  height: 100%;
+}
+
+/* --- Títulos --- */
+.content h1 {
+  font-size: 40px;
+  margin-bottom: 25px;
+  color: #FFFFFF;
+}
+
+.content h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #000000;
+  text-align: center;
+}
+
+/* --- Contenedor de perfil --- */
+.profile-container {
+  display: flex;
+  gap: 40px;
+  justify-content: flex-start; /* alineado a la izquierda */
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* --- Información del admin --- */
+.profile-info {
+  background-color: #D7D7D7;
+  border-radius: 15px;
+  padding: 60px;          /* espacio interno generoso */
+  width: 800px;            /* ancho más grande */
+  min-height: 500px;       /* altura mayor para llenar pantalla */
+  color: #1C1B1F;
+  box-sizing: border-box;  /* incluye padding en el ancho */
+  font-size: 20px;         /* letra más grande */
+}
+
+.profile-info h3 {
+  margin-bottom: 25px;
+  font-size: 28px;         /* título más grande */
+  color: #1C1B1F;
+}
+
+.profile-info p {
+  font-size: 20px;         /* texto más grande */
+  margin-bottom: 15px;
+}
+
+/* Botón editar */
+.btn-edit {
+  background-color: #8c8f96;
+  color: white;
+  border: none;
+  padding: 14px 24px;      /* botón más grande */
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: #4b4e4c;
+}
+
+/* --- Foto de perfil --- */
+.profile-picture {
+  background-color: #D7D7D7;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;             /* ancho más grande */
+  min-height: 440px;        /* altura igual que info para balance visual */
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  max-width: 350px;
+  max-height: 350px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #8c8f96;
+}
+
+
+/* --- Modal --- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #C0C0C0;
+  padding: 30px;
+  border-radius: 20px;
+  width: 400px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-content input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  background-color: #D7D7D7;
+}
+
+.modal-content button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background-color: #D7D7D7;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-content button:hover {
+  background-color: #8c8f96;
+}
+
+.modal-content .close {
+  align-self: flex-end;
+  cursor: pointer;
+  font-size: 24px;
+}

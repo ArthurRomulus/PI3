@@ -4,7 +4,7 @@ require '../conexion.php';
 
 try {
     // --- OBTENER PRODUCTOS --- (Sin cambios)
-$sql_productos = "SELECT idp, namep, ruta_imagen, precio, categoria, tamano_defecto FROM producto WHERE status = 1";    $sentencia_productos = $pdo->prepare($sql_productos);
+$sql_productos = "SELECT idp, namep, ruta_imagen, precio, categoria, tamano_defecto FROM productos WHERE status = 1";    $sentencia_productos = $pdo->prepare($sql_productos);
     $sentencia_productos->execute();
     $productos = $sentencia_productos->fetchAll();
 
