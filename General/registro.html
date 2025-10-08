@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee & Frappé Registro</title>
+  <link rel="stylesheet" href="registro.css">
+</head>
+<body>
+  <div class="cup-wrapper">
+    <div class="cup" id="cup">
+      <div class="coffee-top"></div>
+      <div class="handle"></div>
+      <div class="form-container" id="formContainer">
+        <h2 id="formTitle">☕ Registrarse</h2>
+        <form id="registerForm">
+          <input type="text" placeholder="Usuario" required>
+          <input type="email" placeholder="Correo" required>
+          <input type="password" placeholder="Contraseña" required>
+          <input type="password" placeholder="Confirmar contraseña" required>
+          <button type="submit">Registrar</button>
+          <div class="terms-container">
+            <input type="checkbox" required>
+            <span>Acepto los <a href="#" style="color:#f0a474; text-decoration:underline;">términos y condiciones</a></span>
+          </div>
+        </form>
+        <a href="login.html" class="toggle-btn">¿Ya tienes cuenta? Inicia sesión</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
