@@ -1,0 +1,23 @@
+.ts-section {
+  position: relative;
+  text-align: center;
+  margin-top: 60px;
+}
+
+/* Iconos laterales decorativos */
+.ts-icon-left,
+.ts-icon-right {
+  position: absolute;
+  top: 50%;
+  opacity: 0.5;
+}
+
+.ts-icon-left {
+  left: 10px;
+  margin-bottom: 500px
+}
+
+.ts-icon-right {
+  right: 10px;
+  margin-top: 200px;
+}
