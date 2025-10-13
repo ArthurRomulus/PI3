@@ -5,7 +5,7 @@ if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
     // Primero, eliminamos la imagen si existe
-    $queryImg = $conn->prepare("SELECT imagen FROM producto WHERE idp=?");
+    $queryImg = $conn->prepare("SELECT ruta_imagen FROM productos WHERE idp=?");
     $queryImg->bind_param("i", $id);
     $queryImg->execute();
     $result = $queryImg->get_result();
@@ -17,7 +17,7 @@ if (isset($_POST['id'])) {
     }
 
     // Eliminamos el producto
-    $stmt = $conn->prepare("DELETE FROM producto WHERE idp=?");
+    $stmt = $conn->prepare("DELETE FROM productos WHERE idp=?");
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {

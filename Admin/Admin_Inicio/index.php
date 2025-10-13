@@ -105,7 +105,7 @@
       <p>¿Retomamos desde donde lo dejamos?</p>
     </div>
 
-    <img src="img/logo.png" class="img-logo">
+    <img src="../../Images/logo.png" class="img-logo">
   </div>
 </body>
 </html>

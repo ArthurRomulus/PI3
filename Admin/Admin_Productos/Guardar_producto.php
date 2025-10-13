@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insertar en la base de datos
-    $sql = "INSERT INTO producto (namep, precio, categoria, sabor, imagen) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO productos (namep, precio, categoria, sabor, ruta_imagen) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {

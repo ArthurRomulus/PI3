@@ -15,11 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         move_uploaded_file($_FILES['imagen']['tmp_name'], $targetFile);
         $imagen = $targetFile;
 
-        $sql = "UPDATE producto SET namep=?, precio=?, categoria=?, sabor=?, imagen=? WHERE idp=?";
+        $sql = "UPDATE productos SET namep=?, precio=?, categoria=?, sabor=?, ruta_imagen=? WHERE idp=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sisssi", $name, $precio, $categoria, $sabor, $imagen, $id);
     } else {
-        $sql = "UPDATE producto SET namep=?, precio=?, categoria=?, sabor=? WHERE idp=?";
+        $sql = "UPDATE productos SET namep=?, precio=?, categoria=?, sabor=? WHERE idp=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sissi", $name, $precio, $categoria, $sabor, $id);
     }
