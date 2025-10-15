@@ -1,0 +1,238 @@
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: #f8e5d1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background 0.5s ease;
+    }
+
+    /* Nuevo contenedor externo */
+    .cup-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cup {
+    position: relative;
+    width: 380px;
+    height: 480px;
+    background: #6f4e37;
+    border-radius: 70px 70px 160px 160px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    transition: all 0.8s ease-in-out;
+}
+
+    /* Espuma arriba */
+    .foam {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  height: 100px;
+  background: #fff9f0;
+  border-radius: 50%;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  transition: all 0.8s ease-in-out;
+  overflow: visible;
+}
+
+  .cup .foam {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+    /* Asa */
+    .handle {
+      position: absolute;
+      right: -80px;
+      top: 120px;
+      width: 120px;
+      height: 180px;
+      border: 18px solid #6f4e37;
+      border-left: none;
+      border-radius: 0 100px 100px 0;
+      transition: all 0.8s ease-in-out;
+    }
+
+    /* Popote */
+    .straw {
+    position: absolute;
+    top: -140px;
+    left: 70%;
+    width: 25px;
+    height: 160px;
+    background: linear-gradient(45deg, #ff5f5f, #ffb347);
+    border-radius: 12px;
+    transform: rotate(10deg);
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+    /* Vapor del café */
+    .steam {
+      position: absolute;
+      top: -80px;
+      left: 40%;
+      width: 60px;
+      height: 120px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+      filter: blur(20px);
+      animation: rise 3s infinite ease-in-out;
+      transition: opacity 0.8s ease-in-out;
+    }
+    .steam:nth-child(2) { left: 55%; animation-delay: 1s; }
+    .steam:nth-child(3) { left: 45%; animation-delay: 2s; }
+
+    @keyframes rise {
+      0% { transform: translateY(0) scaleX(1); opacity: 0.4; }
+      50% { transform: translateY(-40px) scaleX(1.2); opacity: 0.2; }
+      100% { transform: translateY(-80px) scaleX(1); opacity: 0; }
+    }
+
+    .form-container {
+      position: relative;
+      top: -10px;
+      padding: 20px;
+      text-align: center;
+      color: white;
+      transition: all 0.5s ease;
+    }
+
+    .form-container h2 {
+    margin-bottom: 8px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #7c6853;
+    position: relative;
+    top: -15px;
+    right: 8px;
+    }
+
+    .form-container input {
+    width: 90%;
+    padding: 12px 14px;
+    margin: 10px 0;
+    border-radius: 20px;
+    position: relative;
+    top: 12px;
+    font-size: 15px;
+    background: #fff8f1;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .form-container input:focus {
+      outline: none;
+      background: #fdf1e4;
+      box-shadow: 0 0 6px rgba(210, 150, 90, 0.6);
+    }
+
+    .form-container button {
+    width: 92%;
+    padding: 14px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #f1c27d, #b3744d);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: top 0.6s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    top: 5px;
+}
+
+    .toggle-btn {
+      margin-top: 22px;
+      background: none;
+      border: none;
+      color: #f1e7dc;
+      font-size: 15px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      position: relative;
+      top: 25px;
+      transition: top 0.6s ease;
+    }
+
+    .toggle-btn:hover { color: #ffe0b3; }
+
+    .coffee-top {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  height: 100px;
+  background: #ffffff; /* un tono más oscuro que la taza */
+  border-radius: 50%;
+  box-shadow: inset 0 8px 20px rgba(0,0,0,0.4);
+  transition: opacity 0.6s ease;
+}
+
+/* Cuando es frappé, el círculo del café desaparece */
+.cup.frappe .coffee-top {
+  opacity: 0;
+}
+
+    /* === ESTADO FRAPPÉ === */
+    .cup.frappe {
+    background: #c49b77;
+    border-radius: 50px 50px 90px 90px;
+    height: 500px;
+    }
+
+    /* Ajuste espuma frappé */
+.cup.frappe .foam {
+  background: none;
+  box-shadow: none;
+  width: 100%;
+  height: 120px;
+  top: -50px;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Burbujas individuales */
+.foam .bubble {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* Ajustamos varias bolitas */
+.foam .bubble1 {
+    width: 200px;
+    height: 100px;
+    top: 20px;
+    left: -5px;
+}
+.foam .bubble2 {
+    width: 160px;
+    height: 120px;
+    top: 0px;
+    left: 120px;
+}
+.foam .bubble3 {
+    width: 190px;
+    height: 100px;
+    top: 25px;
+    left: 200px;
+}
+
+    .cup.frappe .handle { opacity: 0; }
+
+    .cup.frappe .straw { opacity: 1; }
+
+    .cup.frappe .steam { opacity: 0; }

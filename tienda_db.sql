@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3307
--- Tiempo de generación: 06-10-2025 a las 01:11:39
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 08-10-2025 a las 07:30:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -49,7 +49,14 @@ CREATE TABLE `categorias` (
 
 INSERT INTO `categorias` (`nombrecategoria`) VALUES
 ('Bebidas calientes'),
-('Bebidas frias');
+('Bebidas frias'),
+('Cafés'),
+('Comida'),
+('Frappés'),
+('Panes'),
+('Postres'),
+('Sin café'),
+('Temporada');
 
 -- --------------------------------------------------------
 
@@ -89,12 +96,13 @@ CREATE TABLE `movimientos` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `producto`
+-- Estructura de tabla para la tabla `productos`
 --
 
-CREATE TABLE `producto` (
+CREATE TABLE `productos` (
   `idp` int(11) NOT NULL,
   `namep` varchar(50) NOT NULL,
+  `ruta_imagen` varchar(255) DEFAULT NULL,
   `precio` int(11) NOT NULL CHECK (`precio` >= 0),
   `categoria` varchar(50) DEFAULT NULL,
   `sabor` int(11) DEFAULT NULL,
@@ -103,58 +111,48 @@ CREATE TABLE `producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `producto`
+-- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `producto` (`idp`, `namep`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `status`) VALUES
-(51, 'Americano', 40, 'Bebidas calientes', 1, 1, 1),
-(52, 'Espresso', 40, 'Bebidas calientes', 1, 1, 1),
-(53, 'Macchiato', 50, 'Bebidas calientes', 1, 1, 1),
-(54, 'Capucchino Entero', 45, 'Bebidas calientes', 2, 1, 1),
-(55, 'Lechero (Entera)', 42, 'Bebidas calientes', 2, 1, 1),
-(56, 'Lechero Deslactosado', 45, 'Bebidas calientes', 3, 1, 1),
-(57, 'Moka', 50, 'Bebidas calientes', 1, 1, 1),
-(58, 'Matcha', 65, 'Bebidas calientes', 1, 1, 1),
-(59, 'Capucchino Deslactos', 55, 'Bebidas calientes', 3, 1, 1),
-(60, 'Irlandés', 70, 'Bebidas calientes', 1, 1, 1),
-(61, 'Latte Entero', 45, 'Bebidas calientes', 2, 1, 1),
-(62, 'Latter Deslactosado', 42, 'Bebidas calientes', 3, 1, 1),
-(63, 'Latte Avena', 40, 'Bebidas calientes', 4, 1, 1),
-(64, 'Latte Almendra', 45, 'Bebidas calientes', 5, 1, 1),
-(65, 'Carajillo', 70, 'Bebidas calientes', 1, 1, 1),
-(66, 'Matchalatte', 60, 'Bebidas calientes', 1, 1, 1),
-(67, 'Doble', 55, 'Bebidas calientes', 1, 1, 1),
-(68, 'Chocolate caliente (Entero)', 30, 'Bebidas calientes', 2, 1, 1),
-(69, 'Chocolate caliente Deslactosad', 30, 'Bebidas calientes', 3, 1, 1),
-(70, 'Chocolate caliente Avena', 30, 'Bebidas calientes', 4, 1, 1),
-(71, 'Latte Entero', 45, 'Bebidas calientes', 2, 1, 1),
-(72, 'Latte Deslactosado', 45, 'Bebidas calientes', 3, 1, 1),
-(73, 'Latte Avena', 45, 'Bebidas calientes', 4, 1, 1),
-(74, 'Latte Almendra', 45, 'Bebidas calientes', 5, 1, 1),
-(75, 'Carajillo', 70, 'Bebidas calientes', 1, 1, 1),
-(76, 'Matchalatte', 60, 'Bebidas calientes', 1, 1, 1),
-(77, 'Doble', 50, 'Bebidas calientes', 1, 1, 1),
-(78, 'Chocolate caliente (Entero)', 30, 'Bebidas calientes', 2, 1, 1),
-(79, 'Chocolate caliente Deslactosado', 30, 'Bebidas calientes', 3, 1, 1),
-(80, 'Chocolate caliente Avena', 30, 'Bebidas calientes', 4, 1, 1),
-(81, 'Frappé clásico Entero', 60, 'Bebidas frias', 2, 1, 1),
-(82, 'Frappé clásico Deslactosado', 60, 'Bebidas frias', 3, 1, 1),
-(83, 'Frappé moka Entero', 65, 'Bebidas frias', 2, 1, 1),
-(84, 'Frappé moka Deslactosado', 65, 'Bebidas frias', 3, 1, 1),
-(85, 'Frappé caramel Entero', 65, 'Bebidas frias', 2, 1, 1),
-(86, 'Frappé caramel Deslactosado', 65, 'Bebidas frias', 3, 1, 1),
-(87, 'Frappé cookies n cream Entero', 75, 'Bebidas frias', 2, 1, 1),
-(88, 'Frappé cookies n cream Deslactosado', 75, 'Bebidas frias', 3, 1, 1),
-(89, 'Frappé matcha Entero', 80, 'Bebidas frias', 2, 1, 1),
-(90, 'Frappé matcha Deslactosado', 80, 'Bebidas frias', 3, 1, 1),
-(91, 'Frappé espresso Entero', 75, 'Bebidas frias', 2, 1, 1),
-(92, 'Frappé espresso Deslactosado', 75, 'Bebidas frias', 3, 1, 1),
-(93, 'Iced tea Negro', 45, 'Bebidas frias', 7, 1, 1),
-(94, 'Iced tea Limón', 45, 'Bebidas frias', 8, 1, 1),
-(95, 'Limonada', 40, 'Bebidas frias', 1, 1, 1),
-(96, 'Té Manzanilla', 35, 'Bebidas calientes', 6, 1, 1),
-(97, 'Té Negro', 35, 'Bebidas calientes', 7, 1, 1),
-(98, 'Té Limón', 35, 'Bebidas calientes', 8, 1, 1);
+INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `status`) VALUES
+(51, 'Americano', '../../Images/CafeAmer.png', 40, 'Bebidas calientes', 1, 1, 1),
+(52, 'Espresso', '../../Images/Espresso.png', 40, 'Bebidas calientes', 1, 1, 1),
+(53, 'Macchiato', '../../Images/Macchi.png', 50, 'Bebidas calientes', 1, 1, 1),
+(54, 'Capucchino Entero', '../../Images/CafeCapu.png', 45, 'Bebidas calientes', 2, 1, 1),
+(55, 'Lechero (Entera)', '../../Images/Lechero.png', 42, 'Bebidas calientes', 2, 1, 1),
+(56, 'Lechero Deslactosado', '../../Images/Lechero.png', 45, 'Bebidas calientes', 3, 1, 1),
+(57, 'Moka', '../../Images/Moka.png', 50, 'Bebidas calientes', 1, 1, 1),
+(58, 'Matcha', '../../Images/Matchalatte.png', 65, 'Bebidas calientes', 1, 1, 1),
+(59, 'Capucchino Deslactos', '../../Images/CafeCapu.png', 55, 'Bebidas calientes', 3, 1, 1),
+(60, 'Irlandés', '../../Images/Irlandes.png', 70, 'Bebidas calientes', 1, 1, 1),
+(61, 'Latte Entero', '../../Images/Latte.png', 45, 'Bebidas calientes', 2, 1, 1),
+(62, 'Latter Deslactosado', '../../Images/Latte.png', 42, 'Bebidas calientes', 3, 1, 1),
+(63, 'Latte Avena', '../../Images/Latte.png', 40, 'Bebidas calientes', 4, 1, 1),
+(64, 'Latte Almendra', '../../Images/Latte.png', 45, 'Bebidas calientes', 5, 1, 1),
+(65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 1),
+(66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 1),
+(67, 'Doble', '../../Images/EspreDoble.png', 55, 'Bebidas calientes', 1, 1, 1),
+(68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 2, 1, 1),
+(69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 3, 1, 1),
+(80, 'Chocolate caliente Avena', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 4, 1, 1),
+(81, 'Frappé clásico Entero', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 2, 1, 1),
+(82, 'Frappé clásico Deslactosado', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 3, 1, 1),
+(83, 'Frappé moka Entero', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 2, 1, 1),
+(84, 'Frappé moka Deslactosado', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 3, 1, 1),
+(85, 'Frappé caramel Entero', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 2, 1, 1),
+(86, 'Frappé caramel Deslactosado', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 3, 1, 1),
+(87, 'Frappé cookies n cream Entero', '../../Images/FrappCnC.png', 75, 'Bebidas frias', 2, 1, 1),
+(88, 'Frappé cookies n cream Deslactosado', '../../Images/FrappeClasic.png', 75, 'Bebidas frias', 3, 1, 1),
+(89, 'Frappé matcha Entero', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 2, 1, 1),
+(90, 'Frappé matcha Deslactosado', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 3, 1, 1),
+(91, 'Frappé espresso Entero', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 2, 1, 1),
+(92, 'Frappé espresso Deslactosado', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 3, 1, 1),
+(93, 'Iced tea Negro', '../../Images/IcedTeaBlack.png', 45, 'Bebidas frias', 7, 1, 1),
+(94, 'Iced tea Limón', '../../Images/IcedTea.png', 45, 'Bebidas frias', 8, 1, 1),
+(95, 'Limonada', '../../Images/Limonadas.png', 40, 'Bebidas frias', 1, 1, 1),
+(96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 1),
+(97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 1),
+(98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -203,6 +201,16 @@ CREATE TABLE `roles` (
   `currentusers` int(11) DEFAULT 0,
   `status` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id_rol`, `rolename`, `currentusers`, `status`) VALUES
+(1, 'defaultuser', 0, 1),
+(2, 'cajero', 0, 1),
+(3, 'Gerente', 0, 1),
+(4, 'Administrator', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -262,11 +270,20 @@ CREATE TABLE `usuarios` (
   `userid` int(11) NOT NULL,
   `profilescreen` varchar(255) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
-  `password` varchar(20) NOT NULL CHECK (char_length(`password`) between 1 and 8),
-  `role` int(11) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` int(11) DEFAULT 1,
   `status` tinyint(1) DEFAULT 1,
   `archived` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`) VALUES
+(4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
+(5, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0);
 
 --
 -- Índices para tablas volcadas
@@ -298,9 +315,9 @@ ALTER TABLE `movimientos`
   ADD PRIMARY KEY (`id_movimiento`);
 
 --
--- Indices de la tabla `producto`
+-- Indices de la tabla `productos`
 --
-ALTER TABLE `producto`
+ALTER TABLE `productos`
   ADD PRIMARY KEY (`idp`),
   ADD KEY `categoria` (`categoria`),
   ADD KEY `sabor` (`sabor`),
@@ -344,9 +361,7 @@ ALTER TABLE `tamanos`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`userid`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD KEY `role` (`role`);
+  ADD PRIMARY KEY (`userid`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -371,9 +386,9 @@ ALTER TABLE `movimientos`
   MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `producto`
+-- AUTO_INCREMENT de la tabla `productos`
 --
-ALTER TABLE `producto`
+ALTER TABLE `productos`
   MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
@@ -392,7 +407,7 @@ ALTER TABLE `resena`
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `sabores`
@@ -410,39 +425,17 @@ ALTER TABLE `tamanos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `auditlogs`
---
-ALTER TABLE `auditlogs`
-  ADD CONSTRAINT `auditlogs_ibfk_1` FOREIGN KEY (`username`) REFERENCES `usuarios` (`username`);
-
---
--- Filtros para la tabla `producto`
---
-ALTER TABLE `producto`
-  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`categoria`) REFERENCES `categorias` (`nombrecategoria`),
-  ADD CONSTRAINT `producto_ibfk_2` FOREIGN KEY (`sabor`) REFERENCES `sabores` (`id_sabor`),
-  ADD CONSTRAINT `producto_ibfk_3` FOREIGN KEY (`tamano_defecto`) REFERENCES `tamanos` (`tamano_id`);
-
---
 -- Filtros para la tabla `resena`
 --
 ALTER TABLE `resena`
-  ADD CONSTRAINT `resena_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`),
-  ADD CONSTRAINT `resena_ibfk_2` FOREIGN KEY (`username`) REFERENCES `usuarios` (`username`),
   ADD CONSTRAINT `resena_ibfk_3` FOREIGN KEY (`producto`) REFERENCES `producto` (`idp`);
-
---
--- Filtros para la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`role`) REFERENCES `roles` (`id_rol`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

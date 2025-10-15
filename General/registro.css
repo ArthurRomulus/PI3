@@ -1,0 +1,124 @@
+/* Contenedor de términos y condiciones */
+.terms-container {
+  display: inline-flex; /* Cambiamos a inline-flex */
+  align-items: center;
+  justify-content: center;
+  gap: 5px; /* Puedes ajustar este espacio si lo necesitas */
+  color: #ffffff;
+  font-size: 15px;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  /* Eliminamos width: 90%; */
+  position: relative;
+  z-index: 2;
+}
+
+.terms-container span {
+  white-space: nowrap;
+}
+
+body {
+  background: #f8e5d1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.cup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cup {
+  position: relative;
+  width: 380px;
+  height: 480px;
+  background: #6f4e37;
+  border-radius: 70px 70px 160px 160px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+.coffee-top {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  height: 100px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: inset 0 8px 20px rgba(0,0,0,0.4);
+}
+.foam {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  height: 100px;
+  background: #fff9f0;
+  border-radius: 50%;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+.bubble {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+.bubble1 { width: 200px; height: 100px; top: 20px; left: -5px; }
+.bubble2 { width: 160px; height: 120px; top: 0px; left: 120px; }
+.bubble3 { width: 190px; height: 100px; top: 25px; left: 200px; }
+.handle {
+  position: absolute;
+  right: -80px;
+  top: 120px;
+  width: 120px;
+  height: 180px;
+  border: 18px solid #6f4e37;
+  border-left: none;
+  border-radius: 0 100px 100px 0;
+}
+.form-container {
+  position: relative;
+  top: -10px;
+  padding: 20px;
+  text-align: center;
+  color: white;
+}
+.form-container h2 {
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #7c6853;
+}
+.form-container input {
+    width: 90%;
+    padding: 10px 14px;
+    margin: 10px 0;
+    border-radius: 20px;
+    font-size: 15px;
+    background: #fff8f1;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.form-container button {
+  width: 92%;
+  padding: 14px;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  border: none;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #f1c27d, #b3744d);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+.toggle-btn {
+  margin-top: 22px;
+  background: none;
+  border: none;
+  color: #f1e7dc;
+  font-size: 15px;
+  cursor: pointer;
+}
+.toggle-btn:hover { color: #ffe0b3; }
