@@ -435,7 +435,7 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `resena`
 --
 ALTER TABLE `resena`
-  ADD CONSTRAINT `resena_ibfk_3` FOREIGN KEY (`producto`) REFERENCES `producto` (`idp`);
+  ADD CONSTRAINT `resena_ibfk_3` FOREIGN KEY (`productos`) REFERENCES `productos` (`idp`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
