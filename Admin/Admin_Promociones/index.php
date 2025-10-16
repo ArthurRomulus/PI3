@@ -1,5 +1,5 @@
 <?php
-include "conexion.php";
+include "../conexion.php";
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +96,6 @@ include "conexion.php";
                 </div>
             </div>
         </div>
->>>>>>> 2fa511127017625575b05bb481f44dd7d0522e3a:Admin/Admin_Promociones/index.php
     </div>
 
     <h1>Coffee Shop</h1>
