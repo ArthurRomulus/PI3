@@ -3,7 +3,7 @@
 session_start();
 
 // Incluye el archivo de conexión a la base de datos
-include '../database.php';
+include '../../conexion.php';
 
 // Variable para almacenar mensajes de error
 $error_message = '';
@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['role'] = 1; // Rol asignado por defecto
 
                 // 3. Redirigimos al usuario a la página de bienvenida
-                header("Location: bienvenido.php");
+                header("Location: ../../Usuarios/index.php");
                 exit();
                 // --- FIN DE INICIO DE SESIÓN AUTOMÁTICO ---
                 
