@@ -4,28 +4,25 @@ body {
   font-family: 'Segoe UI', sans-serif;
   display: flex;
   background-color: #C0C0C0;
+  height: 100%;
 }
 
 /* --- Contenido principal --- */
-/* Margen fino del mismo color que la barra lateral */
 .content {
   margin-left: 220px;
   padding: 20px;
   flex: 1;
   position: relative;
   z-index: 1;
-
-  border: 15px solid #D7D7D7; /* igual que productos.css */
+  border: 15px solid #D7D7D7;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* ok */
+  box-sizing: border-box;
 
-  min-height: calc(100vh - 40px); /* asegura que el contenido llegue hasta abajo */
-  box-sizing: border-box; /* importante para incluir padding y borde en la altura */
+
 }
-
-html, body {
-  height: 100%;
-}
-
 
 /* --- Títulos --- */
 .content h1 {
@@ -42,7 +39,7 @@ html, body {
 
 /* --- Barra superior con perfil --- */
 .top-bar {
-  position: absolute;
+  position: absolute; /* opcional, si quieres que quede flotando */
   top: 20px;
   right: 20px;
   display: flex;
@@ -144,9 +141,10 @@ html, body {
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   margin-top: 30px;
+  
 }
 
-/* --- NUEVO DISEÑO DE TARJETAS --- */
+/* --- Diseño de tarjetas --- */
 .promo-card {
   background-color: #D7D7D7;
   border-radius: 15px;
@@ -185,6 +183,8 @@ html, body {
 
 .promo-status.active { color: green; }
 .promo-status.expiring { color: orange; }
+.promo-status.expired { color: black; }
+
 
 /* Nombre en medio */
 .promo-name {
@@ -192,6 +192,13 @@ html, body {
   font-weight: 700;
   margin: 10px 0;
   color: #1C1B1F;
+}
+
+.promo-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1C1B1F;
+  margin-bottom: 8px; /* espacio entre precio y vigencia */
 }
 
 /* Vigencia */
