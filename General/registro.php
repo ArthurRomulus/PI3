@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['role'] = 1; // Rol asignado por defecto
 
                 // 3. Redirigimos al usuario a la página de bienvenida
-                header("Location: ../../Usuarios/index.php");
+                header("Location: ../Usuario/index.php");
                 exit();
                 // --- FIN DE INICIO DE SESIÓN AUTOMÁTICO ---
                 

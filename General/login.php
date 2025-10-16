@@ -4,7 +4,6 @@ session_start();
 
 // Incluye el archivo de conexión a la base de datos
 include '../conexion.php';
-
 // Variable para almacenar mensajes de error
 $error_message = '';
 
