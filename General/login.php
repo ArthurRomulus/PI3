@@ -3,7 +3,7 @@
 session_start();
 
 // Incluye el archivo de conexión a la base de datos
-include '../database.php';
+include '../conexion.php';
 
 // Variable para almacenar mensajes de error
 $error_message = '';
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                   header("Location: ../Cajero/Inicio/Inicio.html");
 
                 } else {
-                                  header("Location: ../Usuarios");
+                                  header("Location: ../Usuario/index.php");
 
                 }
                 
