@@ -1,6 +1,6 @@
 <?php
 // Conexión a la base de datos
-include '../conexion.php'; // asegúrate de que este archivo existe y conecta correctamente
+include "../../conexion.php"; // asegúrate de que este archivo existe y conecta correctamente
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validar que se haya enviado el ID
