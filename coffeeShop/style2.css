@@ -1,0 +1,28 @@
+.delivery__title {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  margin: 0;
+  font-family: "ADLaM Display", system-ui;
+  font-size: 2.2rem;
+  line-height: 1.1;
+  color: var(--coffee);
+  letter-spacing: .2px;
+}
+
+.delivery__sticker {
+  position: absolute;
+  right: -60px;        
+  bottom: 0;           
+  width: 90px;         
+  height: auto;
+  margin-right: -45px;
+  margin-bottom: -11px;
+}
+
+@media (max-width: 480px) {
+  .delivery__sticker {
+    right: -40px;
+    width: 38px;
+  }
+}
