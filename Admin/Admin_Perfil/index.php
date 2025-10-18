@@ -5,12 +5,12 @@ session_start();
 // Si no existe la variable de sesión 'userid', lo redirigimos al login
 if (!isset($_SESSION['userid'])) {
     // Asegúrate de que la ruta a tu login.php sea correcta
-    header("Location: ../Login/login.php"); 
+    header("Location: ../../General/login.php"); 
     exit();
 }
 
 // 2. INCLUIMOS LA CONEXIÓN A LA BASE DE DATOS
-include '../../database.php';
+include '../../conexion.php';
 
 // 3. OBTENEMOS LA INFORMACIÓN COMPLETA DEL USUARIO DESDE LA BD
 $user_id = $_SESSION['userid'];

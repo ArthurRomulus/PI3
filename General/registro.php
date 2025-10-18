@@ -3,7 +3,7 @@
 session_start();
 
 // Incluye el archivo de conexión a la base de datos
-include '../../conexion.php';
+include '../conexion.php';
 
 // Variable para almacenar mensajes de error
 $error_message = '';
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Preparar la sentencia de inserción
         // Asignamos rol '2' (usuario normal) y status '1' (activo) por defecto
-        $sql_insert = "INSERT INTO usuarios (username, email, password, role, status) VALUES (?, ?, ?, 2, 1)";
+        $sql_insert = "INSERT INTO usuarios (username, email, password, role, status) VALUES (?, ?, ?, 1, 1)";
         $stmt_insert = $conn->prepare($sql_insert);
         
         if ($stmt_insert) {
@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['role'] = 1; // Rol asignado por defecto
 
                 // 3. Redirigimos al usuario a la página de bienvenida
-                header("Location: ../../Usuarios/index.php");
+                header("Location: ../Usuario/index.php");
                 exit();
                 // --- FIN DE INICIO DE SESIÓN AUTOMÁTICO ---
                 

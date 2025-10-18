@@ -1,5 +1,5 @@
 <?php
-include "../conexion.php";
+include "../../conexion.php";
 ?>
 
 <!DOCTYPE html>
@@ -22,25 +22,63 @@ include "../conexion.php";
 
     <h1>Coffee Shop</h1>
     <h3>Categorías</h3>
-    <input type="search" placeholder="Buscar...">
+    <form method="GET" action="index.php">
+        <input type="search" name="buscar" placeholder="Buscar..." 
+              value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
+              onkeypress="if(event.key === 'Enter'){this.form.submit();}">
+        <?php if(isset($_GET['categoria'])): ?>
+            <input type="hidden" name="categoria" value="<?php echo htmlspecialchars($_GET['categoria']); ?>">
+        <?php endif; ?>
+    </form>
 
     <div class="button-group">
-      <button>Frappés</button>
-      <button>Cafés</button>
-      <button>Comida</button>
-      <button>Postres</button>
-      <button>Panes</button>
-      <button>Sin café</button>
-      <button>Temporada</button>
-      <button>Categorías</button>
+    <?php
+    $categoria_query = "SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC";
+    $categoria_result = $conn->query($categoria_query);
+
+    if ($categoria_result->num_rows > 0) {
+        while($cat = $categoria_result->fetch_assoc()) {
+            $cat_nombre = $cat['nombrecategoria'];
+            echo '<a href="index.php?categoria=' . urlencode($cat_nombre) . '">
+                    <button>' . htmlspecialchars($cat_nombre) . '</button>
+                  </a>';
+        }
+    }
+    ?>
+    <a href="index.php"><button>Categorías</button></a> <!-- Muestra todo -->
     </div>
 
     <!-- Sección de productos -->
     <h3>Productos</h3>
     <div class="products-container">
       <?php
-      $sql = "SELECT * FROM productos";
-      $result = $conn->query($sql);
+      $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+      $buscar = isset($_GET['buscar']) ? $_GET['buscar'] : '';
+
+      if ($categoria && $buscar) {
+          $sql = "SELECT * FROM productos WHERE categoria = ? AND namep LIKE ?";
+          $stmt = $conn->prepare($sql);
+          $buscarParam = "%$buscar%";
+          $stmt->bind_param("ss", $categoria, $buscarParam);
+          $stmt->execute();
+          $result = $stmt->get_result();
+      } elseif ($categoria) {
+          $sql = "SELECT * FROM productos WHERE categoria = ?";
+          $stmt = $conn->prepare($sql);
+          $stmt->bind_param("s", $categoria);
+          $stmt->execute();
+          $result = $stmt->get_result();
+      } elseif ($buscar) {
+          $sql = "SELECT * FROM productos WHERE namep LIKE ?";
+          $stmt = $conn->prepare($sql);
+          $buscarParam = "%$buscar%";
+          $stmt->bind_param("s", $buscarParam);
+          $stmt->execute();
+          $result = $stmt->get_result();
+      } else {
+          $sql = "SELECT * FROM productos";
+          $result = $conn->query($sql);
+      }
 
       if ($result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
@@ -102,13 +140,14 @@ include "../conexion.php";
       <!-- Select para categoría -->
       <select name="categoria" required>
         <option value="">Selecciona categoría</option>
-        <option value="Frappés">Frappés</option>
-        <option value="Cafés">Cafés</option>
-        <option value="Comida">Comida</option>
-        <option value="Postres">Postres</option>
-        <option value="Panes">Panes</option>
-        <option value="Sin café">Sin café</option>
-        <option value="Temporada">Temporada</option>
+        <?php
+        $categoria_result = $conn->query("SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
+        if ($categoria_result->num_rows > 0) {
+            while($cat = $categoria_result->fetch_assoc()) {
+                echo '<option value="' . htmlspecialchars($cat['nombrecategoria']) . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
+            }
+        }
+        ?>
       </select>
 
       <!-- Select para sabor/tamaño -->
@@ -138,13 +177,14 @@ include "../conexion.php";
         
         <select id="editCategoria" name="categoria" required>
           <option value="">Selecciona categoría</option>
-          <option value="Frappés">Frappés</option>
-          <option value="Cafés">Cafés</option>
-          <option value="Comida">Comida</option>
-          <option value="Postres">Postres</option>
-          <option value="Panes">Panes</option>
-          <option value="Sin café">Sin café</option>
-          <option value="Temporada">Temporada</option>
+          <?php
+          $categoria_result = $conn->query("SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
+          if ($categoria_result->num_rows > 0) {
+              while($cat = $categoria_result->fetch_assoc()) {
+                  echo '<option value="' . htmlspecialchars($cat['nombrecategoria']) . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
+              }
+          }
+          ?>
         </select>
 
         <select id="editSabor" name="sabor" required>

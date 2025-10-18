@@ -1,5 +1,5 @@
 <?php
-include "../conexion.php";
+include "../../conexion.php";
 
 // Verificamos que se reciba el ID
 if (!isset($_POST['id'])) {
