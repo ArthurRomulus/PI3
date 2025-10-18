@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de Control</title>
+  <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link rel="stylesheet" href="../general.css">
   <style>
 

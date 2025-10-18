@@ -6,6 +6,7 @@
     <title>Document</title>
 </head>
 <body>
+    <link rel="stylesheet" href="../Admin_nav_bar.css">
     <link rel="stylesheet" href="../general.css">
     <?php 
         include "../Admin_nav_bar.php";  
