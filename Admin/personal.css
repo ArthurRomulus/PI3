@@ -1,0 +1,66 @@
+.empleado {
+    background-color: #E6E6E6;
+    border-radius: 20px;
+    font-family: Roboto, sans-serif;
+    min-width: 250px;
+    max-width: 350px;
+    padding: 10px;
+
+    display: flex;             /* Flexbox en fila */
+    align-items: center;       /* Centra verticalmente la imagen y el texto */
+    gap: 15px;                 /* Espacio entre imagen y texto */
+}
+
+.empleado img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;        /* Imagen circular */
+    object-fit: cover;
+    background: #ccc;
+}
+
+.empleado .info {
+    display: flex;
+    flex-direction: column;    /* Los textos se apilan en columna */
+    align-items: flex-start;   /* Texto alineado a la izquierda */
+    justify-content: center;   /* Centrado vertical respecto a la imagen */
+}
+
+.empleado .info strong {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.modify_button{
+    background-color: rgb(90, 90, 90);
+    color: white;
+    border-radius: 12px;
+    border: none;
+    min-height: 40px;
+    margin-top: 15px;
+}
+
+.modify_button:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.remove_user_button{
+    background-color: rgb(90, 90, 90);
+    color: white;
+    margin-top: 5px;
+    min-height: 40px;
+    border-radius: 12px;
+    border: none;
+}
+
+
+.remove_user_button:hover{
+    transform: translateY(-1px);
+    transform: translateX(-1px);
+    box-shadow: 0 1px 3px rgb(0, 0, 0);
+}
+
+.empleado .info span {
+    font-size: 14px;
+}
