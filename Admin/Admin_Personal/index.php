@@ -6,8 +6,10 @@
   <title>Coffee Shop - Usuarios</title>
 
   <link rel="stylesheet" href="../general.css">
+  <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link rel="stylesheet" href="personal.css">
   <link rel="stylesheet" href="usuariocrud.css">
+  
 </head>
 <body>
   <script src="../functions.js" defer></script>
@@ -24,7 +26,7 @@
 
     <div class="layout" id="graphic">
       <?php 
-        include "../../database.php";
+        include "../../conexion.php";
 
         $result = $conn->query("SELECT * FROM usuarios");
 

@@ -30,10 +30,11 @@ $imagen_ruta = $row['imagen_url'];
 if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0){
     $file = $_FILES['imagen'];
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $nuevo_nombre = "img/promocion_" . time() . "." . $ext;
-    
-    if(move_uploaded_file($file['tmp_name'], $nuevo_nombre)){
-        $imagen_ruta = $nuevo_nombre;
+    $nuevo_nombre = time() . "_" . basename($file['name']);
+    $ruta_destino = "../img/" . $nuevo_nombre;  // <-- subimos un nivel y apuntamos a la carpeta img
+
+    if(move_uploaded_file($file['tmp_name'], $ruta_destino)){
+        $imagen_ruta = "../img/" . $nuevo_nombre; // <-- ruta que se guardará en la DB
     } else {
         die("Error al subir la imagen");
     }

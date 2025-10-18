@@ -100,7 +100,7 @@ include "../../conexion.php";
                   data-status="<?php echo $row['status']; ?>" 
                   data-imagen="<?php echo $row['ruta_imagen']; ?>">
                   
-                  <img src="<?php echo $row['ruta_imagen'] ? $row['ruta_imagen'] : '../../Images/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
+                  <img src="<?php echo $row['ruta_imagen'] ? $row['ruta_imagen'] : '../img/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
                   <span class="product-name"><?php echo $row['namep']; ?></span>
                   <span class="product-categoria"><?php echo $row['categoria']; ?></span>
                   <span class="product-price">$<?php echo number_format($row['precio'], 2); ?></span>
