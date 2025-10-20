@@ -6,7 +6,7 @@ function cargarBarraNav() {
                 background: var(--sidebar-bg); color: var(--white);
                 /* --- CAMBIOS AQUÍ --- */
                 position: relative; /* Contenedor para el logo absoluto */
-                padding: 100px 12px 18px 12px; /* Aumentamos el padding superior para dar espacio al logo */
+                padding: 75px 12px 1px 12px; /* Aumentamos el padding superior para dar espacio al logo */
                 
                 display: flex;
                 flex-direction: column; align-items: center; gap: 2px; border-radius: 16px; height: 100%;
@@ -14,7 +14,7 @@ function cargarBarraNav() {
             .logo {
                 /* --- CAMBIOS AQUÍ --- */
                 position: absolute; /* Sacamos el logo del flujo */
-                top: 18px; /* Lo posicionamos arriba */
+                top: 0px; /* Lo posicionamos arriba */
                 left: 50%;
                 transform: translateX(-50%); /* Lo centramos horizontalmente */
                 z-index: 10; /* Nos aseguramos que esté por encima */
@@ -22,17 +22,17 @@ function cargarBarraNav() {
                 display: flex; flex-direction: column; align-items: center; gap: 8px;
             }
             .logo img {
-                width: 65px; /* Puedes ajustar el tamaño sin afectar los botones */
-                height: auto;
-                margin-bottom: 8px;
+                width: 90px; /* Puedes ajustar el tamaño sin afectar los botones */
+                height: 90px;
+                margin-bottom: 0px;
             }
             .nav {
                 /* --- CAMBIO AQUÍ --- */
                 margin-top: 0; /* Eliminamos el margen superior que ya no es necesario */
-                width: 100%; display: flex; flex-direction: column; gap: 8px; align-items: center;
+                width: 100%; display: flex; flex-direction: column; gap: 0px; align-items: center;
             }
             .nav-link {
-                display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0;
+                display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 60px;
                 color: var(--white); text-decoration: none; border-radius: 14px; transition: background .18s;
                 font-weight: 600; font-size: 15px; width: 100%;
             }
