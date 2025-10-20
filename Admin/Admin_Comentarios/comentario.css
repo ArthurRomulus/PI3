@@ -1,0 +1,99 @@
+.comentario {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between; /* Distribuye texto y botón */
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex-wrap: wrap; /* Evita que se rompa en pantallas pequeñas */
+}
+
+.comentario:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profileimgco {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.comentario-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.usernameco {
+    color: #222222;
+    font-weight: 700;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.descriptioncoment {
+    color: #555555;
+    font-size: 1em;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.fecha {
+    color: #888888;
+    font-size: 0.85em;
+    margin-bottom: 8px;
+}
+
+.deletebutton {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    margin-left: 15px;
+    align-self: flex-start;
+    white-space: nowrap;
+}
+
+.deletebutton:hover {
+    background-color: #e60000;
+    transform: scale(1.05);
+}
+
+/* 🌐 Responsividad */
+@media (max-width: 768px) {
+    .comentario {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profileimgco {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .deletebutton {
+        align-self: flex-end;
+        margin-top: 10px;
+    }
+
+    .usernameco {
+        font-size: 1em;
+    }
+
+    .descriptioncoment {
+        font-size: 0.9em;
+    }
+}

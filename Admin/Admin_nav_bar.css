@@ -1,41 +1,47 @@
 /* --- Barra lateral --- */
 .sidebar {
   width: 220px;
+  max-width: 80vw;
   height: 100vh;
   background-color: #D7D7D7;
   color: #1C1B1F;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 20px;
+  padding: 15px 0;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 20;
   transition: transform 0.3s ease;
-}
-
-/* Ocultar sidebar en móviles (por defecto la sacamos del viewport) */
-/* NOTA: Esta clase NO se usará en el JS, en su lugar usaremos .sidebar.show para ser más explícitos en el toggle */
-.sidebar.hidden {
-  transform: translateX(-100%);
+  overflow: hidden; /* Evita scroll */
 }
 
 /* --- Logo --- */
 .logo {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .logo img {
-  width: 220px;
+  width: 70%;
   height: auto;
+}
+
+/* --- Contenedor de ítems --- */
+.nav-items-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly; /* Reparte los botones de forma uniforme */
+  align-items: center;
+  flex-grow: 1; /* Ocupa todo el espacio restante del sidebar */
+  width: 100%;
 }
 
 /* --- Items de navegación --- */
 .nav-item {
-  width: 100%;
-  padding: 20px 0;
+  width: 90%;
+  padding: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,66 +54,70 @@
 }
 
 .nav-item i {
-  font-size: 28px;
+  font-size: 22px;
   margin-bottom: 5px;
 }
 
 .nav-item span {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
 .nav-item:hover {
   background-color: #bfbfbf;
-  border-radius: 20px;
+  border-radius: 15px;
 }
 
 .nav-item.active {
   background-color: #a6a6a6;
-  border-radius: 20px;
+  border-radius: 15px;
 }
 
-.nav-item + .nav-item {
-  margin-top: 15px;
-}
-
-/* --- Botón hamburguesa --- */
-.hamburger {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  background: none;
-  border: none;
-  color: #1C1B1F; /* Color para que se vea bien sobre el contenido */
-  font-size: 26px;
-  z-index: 30;
-  cursor: pointer;
-  display: none; /* Oculto por defecto en escritorio */
-}
-
-/* --- Ajuste del contenido principal --- */
-main {
-  /* En escritorio, deja espacio para la barra lateral */
-  margin-left: 220px; 
-  transition: margin-left 0.3s ease;
-}
-
-/* --- Responsive para pantallas menores a 768px --- */
-@media (max-width: 768px) {
-  .hamburger {
-    display: block; /* Mostrar botón hamburguesa */
+/* --- Responsivo --- */
+@media (max-height: 700px) {
+  .nav-item i {
+    font-size: 18px;
   }
 
+  .nav-item span {
+    font-size: 11px;
+  }
+
+  .nav-item {
+    padding: 6px 0;
+  }
+
+  .logo img {
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px) {
   .sidebar {
-    transform: translateX(-100%); /* Oculta por defecto fuera del viewport */
+    width: 70vw;
+    max-width: 250px;
+    transform: translateX(-100%);
   }
 
   .sidebar.show {
-    transform: translateX(0); /* Mostrar al hacer toggle */
+    transform: translateX(0);
   }
 
-  /* Ajustar el contenido principal para que ocupe todo el ancho */
-  main {
-    margin-left: 0; 
+  .nav-item i {
+    font-size: 20px;
+  }
+
+  .nav-item span {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-item i {
+    font-size: 18px;
+  }
+
+  .nav-item span {
+    font-size: 10px;
   }
 }
