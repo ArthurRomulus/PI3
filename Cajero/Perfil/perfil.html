@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil y Datos Personales</title>
+    <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+    <div class="container">
+        <div class="coffee-cup-section">
+            <div class="coffee-cup">
+                <div class="cup-top"></div>
+                <div class="cup-body">
+                    <div class="cup-sleeve">
+                        <label for="profile-picture" class="profile-picture-area">
+                            <span class="profile-text">Foto de perfil</span>
+                            <input type="file" id="profile-picture" accept="image/*" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <div class="clipboard">
+                <div class="clip"></div>
+                <div class="paper">
+                    <h2 class="title">DATOS PERSONALES</h2>
+                    <div class="croissant"></div>
+                    <form>
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="correo">Correo Electronico:</label>
+                            <input type="email" id="correo">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Telefono:</label>
+                            <input type="tel" id="telefono">
+                        </div>
+                        <div class="form-group">
+                            <label for="emergencias">Telefono emergencias:</label>
+                            <input type="tel" id="emergencias">
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion">Dirección vive:</label>
+                            <input type="text" id="direccion">
+                        </div>
+                        <div class="form-group">
+                            <label for="empleado">Numero empleado:</label>
+                            <input type="text" id="empleado" value="(20216721)" readonly>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
