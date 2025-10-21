@@ -1,74 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+    <title>Estadísticas de ventas</title>
     <link rel="stylesheet" href="../Admin_nav_bar.css">
     <link rel="stylesheet" href="../general.css">
-    <?php 
-        include "../Admin_nav_bar.php";  
-    ?>
-<div class="content">
-  <div class="top-bar">
-    <?php include "../AdminProfileSesion.php"; ?>
-
-  </div>
-
-<h1>Estadísticas de ventas.</h1>
-<?php include '../date.php' ?>
-
-
-<div class="filtros">
   
-  <div class="filtro">
-    <label>CATEGORÍA</label>
-    <select class="inputoptional">
-      <option>FRAPPES</option>
-      <option>Smoothies</option>
-      <option>Cafés</option>
-    </select>
-  </div>
-  <div class="filtro">
-    <label>TIEMPO</label>
-    <select class="inputoptional">
-      <option>ÚLTIMO AÑO</option>
-      <option>Último mes</option>
-      <option>Última semana</option>
-    </select>
-  </div>
-</div>
+</head>
+<body>
 
-<div class="grafico">
-  <div class="eje-y">
-    <span>$1,000,000</span>
-    <span>$900,000</span>
-    <span>$800,000</span>
-    <span>$700,000</span>
-    <span>$600,000</span>
-    <span>$500,000</span>
-    <span>$400,000</span>
-    <span>$300,000</span>
-    <span>$200,000</span>
-    <span>$100,000</span>
-    <span>$0</span>
-  </div>
+<?php 
+    include "../Admin_nav_bar.php";  
+    include "../../conexion.php";
+?>
 
-  <div class="barras">
-    <div class="barra" style="--altura:12%; background:#666;"><span>GALLETAS OREO</span></div>
-    <div class="barra" style="--altura:100%; background:#c7b185;"><span>MAZAPÁN</span></div>
-    <div class="barra" style="--altura:100%; background:#8b5e3c;"><span>CHOCOLATE</span></div>
-    <div class="barra" style="--altura:100%; background:#c62828;"><span>FRUTOS ROJOS</span></div>
-    <div class="barra" style="--altura:55%; background:#ff8a80;"><span>FRESA</span></div>
-    <div class="barra" style="--altura:30%; background:#4caf50;"><span>CHOCO MENTA</span></div>
-    <div class="barra" style="--altura:45%; background:#6d4c41;"><span>CAFÉ</span></div>
-    <div class="barra" style="--altura:65%; background:#2e7d32;"><span>MATCHA</span></div>
-    <div class="barra" style="--altura:60%; background:#cddc39;"><span>MANGO</span></div>
-  </div>
-</div>
+<div class="content">
+    <div class="top-bar">
+        <?php include "../AdminProfileSesion.php"; ?>
+    </div>
 
+    <h1>📊 Estadísticas de ventas</h1>
+
+    <?php
+    // Obtener las categorías únicas desde la base de datos
+    $catQuery = "SELECT DISTINCT categoria FROM productos";
+    $catResult = $conn->query($catQuery);
+    ?>
+
+    <form method="GET" class="filtros">
+        <div class="filtro">
+            <label>CATEGORÍA</label>
+            <select name="categoria" class="inputoptional">
+                <option value="">Todas</option>
+                <?php while ($cat = $catResult->fetch_assoc()) { ?>
+                    <option value="<?= $cat['categoria'] ?>" 
+                        <?= (isset($_GET['categoria']) && $_GET['categoria'] == $cat['categoria']) ? 'selected' : '' ?>>
+                        <?= $cat['categoria'] ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </div>
+        <button type="submit" class="inputoptional">Filtrar</button>
+    </form>
+
+    <?php
+    // Filtro por categoría
+    $filtro = "";
+    if (isset($_GET['categoria']) && $_GET['categoria'] != "") {
+        $categoria = $conn->real_escape_string($_GET['categoria']);
+        $filtro = "WHERE categoria = '$categoria'";
+    }
+
+    // Consulta de productos
+    $query = "SELECT namep, VENTAS FROM productos $filtro ORDER BY VENTAS DESC";
+    $result = $conn->query($query);
+
+    // Obtener valor máximo para escalar alturas
+    $maxVentasQuery = "SELECT MAX(VENTAS) as maxVentas FROM productos $filtro";
+    $maxResult = $conn->query($maxVentasQuery);
+    $maxVentas = $maxResult->fetch_assoc()['maxVentas'] ?? 1;
+    ?>
+
+    <div class="grafico">
+        <?php 
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) { 
+                $altura = $maxVentas > 0 ? ($row['VENTAS'] / $maxVentas) * 100 : 0;
+        ?>
+            <div class="barra" style="height: <?= $altura ?>%;">
+                <span><?= htmlspecialchars($row['namep']) ?></span>
+                <div class="valor"><?= $row['VENTAS'] ?></div>
+            </div>
+        <?php 
+            } 
+        } else { 
+        ?>
+            <div class="no-datos">No hay datos para mostrar.</div>
+        <?php } ?>
+    </div>
 </div>
 
 </body>
+</html>
