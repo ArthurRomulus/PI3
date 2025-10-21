@@ -1,0 +1,209 @@
+/* ========== VARIABLES ========== */
+:root {
+    --sidebar-bg: #d6a05c;
+    --accent: #c68644;
+    --page-bg: #e9bb7b;
+    --text-dark: #332a23;
+    --white: #fff;
+}
+
+/* ========== RESET BÁSICO Y LAYOUT ========== */
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: "Poppins", system-ui, sans-serif;
+    background: var(--sidebar-bg);
+    color: var(--text-dark);
+}
+.app-container {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    height: 100vh;
+    gap: 16px;
+    padding: 16px;
+}
+.main-content {
+    background: var(--page-bg);
+    border-radius: 18px;
+    overflow: auto;
+    position: relative; /* Necesario para posicionar el botón de logout */
+}
+
+.perfil-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    width: 100%;
+    min-height: 100%;
+    padding: 0 90px;
+    gap: 40px;
+}
+
+/* ======================================================= */
+/* ===== ESTILOS PARA LAS SECCIONES Y BOTONES ===== */
+/* ======================================================= */
+.profile-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.data-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    left: 0px;
+    /* Eje Y: valores positivos mueven hacia abajo, negativos hacia arriba */
+    top: -20px;
+}
+
+.btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-save {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.btn-save:hover {
+    background-color: #a56d35;
+    transform: translateY(-2px);
+}
+
+.btn-logout {
+    position: absolute;
+    top: 16px;
+    right: 970px;
+    background-color: #554236;
+    color: var(--white);
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.btn-logout:hover {
+    background-color: #332a23;
+}
+/* ======================================================= */
+
+
+/* --- FOTO DE PERFIL --- */
+.profile-picture-container {
+    width: 350px;
+    height: 450px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-picture-container:hover {
+    transform: scale(1.05);
+}
+
+#coffee-profile-svg #camera-icon {
+    transform: translate(0, 15px);
+}
+
+
+/* --- CONTENEDOR DEL PORTAPAPELES --- */
+.clipboard-container {
+    position: relative;
+    width: 400px;
+    height: 550px;
+}
+.clipboard-container svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- FORMULARIO SUPERPUESTO --- */
+.form-overlay {
+    position: absolute;
+    top: 80px;
+    left: 45px;
+    width: 310px;
+    height: 430px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    font-size: 22px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #777;
+    padding-bottom: 5px;
+}
+
+form {
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 14px;
+    white-space: nowrap;
+    margin-right: 10px;
+    color: var(--white);
+    font-weight: 500;
+}
+
+.form-group input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: var(--white);
+    font-size: 14px;
+    padding: 2px 0;
+    outline: none;
+    text-align: right;
+    font-weight: 400;
+    width: 0; 
+}
+
+.form-group input[readonly] {
+    opacity: 0.8;
+}
+
+/* ======================================================= */
+/* ===== CÓDIGO AÑADIDO: POSICIONAMIENTO MANUAL ===== */
+/* ======================================================= */
+
+#save-profile-btn {
+    position: relative;
+    /* Eje X: valores positivos mueven a la derecha, negativos a la izquierda */
+    left: 0px; 
+    /* Eje Y: valores positivos mueven hacia abajo, negativos hacia arriba */
+    top: -30px;
+}
+
+#save-data-btn {
+    position: relative;
+    /* Eje X: valores positivos mueven a la derecha, negativos a la izquierda */
+    left: 0px;
+    /* Eje Y: valores positivos mueven hacia abajo, negativos hacia arriba */
+    top: -57px;
+}

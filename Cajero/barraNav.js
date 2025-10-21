@@ -2,25 +2,69 @@
 function cargarBarraNav() {
     const barraNavHTML = `
         <style>
+
+/* ========== VARIABLES ========== */
+:root {
+  --sidebar-bg: #d6a05c;
+  --accent: #c68644;
+  --page-bg: #e9bb7b;
+  --card-bg: #f6e9db;
+  --search-bg: #f3e6c1;
+  --text-dark: #332a23;
+  --muted: #6a584a;
+  --white: #fff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
             .sidebar {
-                background: var(--sidebar-bg); color: var(--white); padding: 18px 12px; display: flex;
+                background: var(--sidebar-bg); color: var(--white);
+                /* --- CAMBIOS AQUÍ --- */
+                position: relative; /* Contenedor para el logo absoluto */
+                padding: 75px 12px 1px 12px; /* Aumentamos el padding superior para dar espacio al logo */
+                width: 90px;          /* Le damos un ancho fijo */
+                flex-shrink: 0;       /* Evitamos que se encoja */
+                display: flex;
                 flex-direction: column; align-items: center; gap: 2px; border-radius: 16px; height: 100%;
             }
-            .logo { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-            .logo img {
-                width: 65px; /* Ajusta el tamaño del logo si lo necesitas */
-                height: auto;
-                margin-bottom: 8px;
+            .logo {
+                /* --- CAMBIOS AQUÍ --- */
+                position: absolute; /* Sacamos el logo del flujo */
+                top: 0px; /* Lo posicionamos arriba */
+                left: 50%;
+                transform: translateX(-50%); /* Lo centramos horizontalmente */
+                z-index: 10; /* Nos aseguramos que esté por encima */
+
+                display: flex; flex-direction: column; align-items: center; gap: 8px;
             }
-            .nav { margin-top: 2px; width: 100%; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+            .logo img {
+                width: 90px; /* Puedes ajustar el tamaño sin afectar los botones */
+                height: 90px;
+                margin-bottom: 0px;
+            }
+            .nav {
+                /* --- CAMBIO AQUÍ --- */
+                margin-top: 0; /* Eliminamos el margen superior que ya no es necesario */
+                width: 100%; display: flex; flex-direction: column; gap: 0px; align-items: center; width: 90px; box-sizing: border-box;
+            }
             .nav-link {
-                display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0;
-                color: var(--white); text-decoration: none; border-radius: 14px; transition: background .18s;
+                display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 60px;
+                color: var(--white); text-decoration: none; border-radius: 14px; 
+                
+                /* --- CORRECCIÓN 1 AQUÍ --- */
+                transition: background-color .18s; /* Cambiado de 'background' a 'background-color' */
+                
                 font-weight: 600; font-size: 15px; width: 100%;
             }
-            .nav-link .icon { display: flex; align-items: center; justify-content: center; }
-            .nav-link:not(.active):hover { background: rgba(255, 255, 255, 0.13); }
-            .nav-link.active { background: var(--page-bg); color: #ffffffff; font-weight: 700; }
+            .nav-link .icon { display: flex; align-items: center; justify-content: center; width: 90px; box-sizing: border-box;}
+            
+            /* --- CORRECCIÓN 2 AQUÍ --- */
+            .nav-link:not(.active):hover { 
+                background-color: rgba(255, 255, 255, 0.13); /* Cambiado de 'background' a 'background-color' */
+                width: 90px;
+                box-sizing: border-box; 
+            }
+
+            .nav-link.active { background: var(--page-bg); color: #ffffffff; font-weight: 700; width: 90px; box-sizing: border-box; }
             .nav-link.active .icon svg { stroke: #ffffffff; }
         </style>
         
@@ -60,18 +104,12 @@ function cargarBarraNav() {
                     </span>
                     <span class="nav-text">Admin</span>
                 </a>
-    <a href="../General/logout.php" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        <span class="icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-        </span>
-        <span class="nav-text">Cerrar Sesión</span>
-    </a>
-    
-    <form id="logout-form" method="POST" action="../../General/logout.php" style="display: none;"></form>
+                <a href="../Perfil/perfil.html" class="nav-link">
+                    <span class="icon">
+                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </span>
+                    <span class="nav-text">Perfil</span>
+                </a>
             </nav>
         </aside>
     `;
@@ -88,7 +126,7 @@ function cargarBarraNav() {
     
     navLinks.forEach(link => {
         const linkPath = new URL(link.href).pathname;
-        if (currentPath.endsWith(linkPath)) {
+        if (currentPath.includes(linkPath.substring(linkPath.lastIndexOf('/') + 1))) {
             link.classList.add('active');
         }
     });
