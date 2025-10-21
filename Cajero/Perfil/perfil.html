@@ -7,56 +7,134 @@
     <link rel="stylesheet" href="perfil.css">
 </head>
 <body>
-    <div class="container">
-        <div class="coffee-cup-section">
-            <div class="coffee-cup">
-                <div class="cup-top"></div>
-                <div class="cup-body">
-                    <div class="cup-sleeve">
-                        <label for="profile-picture" class="profile-picture-area">
-                            <span class="profile-text">Foto de perfil</span>
-                            <input type="file" id="profile-picture" accept="image/*" style="display: none;">
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="app-container">
+        <div id="navbar-placeholder"></div>
+        <main class="main-content">
 
-        <div class="menu-section">
-            <div class="clipboard">
-                <div class="clip"></div>
-                <div class="paper">
-                    <h2 class="title">DATOS PERSONALES</h2>
-                    <div class="croissant"></div>
-                    <form>
-                        <div class="form-group">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text" id="nombre">
-                        </div>
-                        <div class="form-group">
-                            <label for="correo">Correo Electronico:</label>
-                            <input type="email" id="correo">
-                        </div>
-                        <div class="form-group">
-                            <label for="telefono">Telefono:</label>
-                            <input type="tel" id="telefono">
-                        </div>
-                        <div class="form-group">
-                            <label for="emergencias">Telefono emergencias:</label>
-                            <input type="tel" id="emergencias">
-                        </div>
-                        <div class="form-group">
-                            <label for="direccion">Dirección vive:</label>
-                            <input type="text" id="direccion">
-                        </div>
-                        <div class="form-group">
-                            <label for="empleado">Numero empleado:</label>
-                            <input type="text" id="empleado" value="(20216721)" readonly>
-                        </div>
-                    </form>
+            <button class="btn btn-logout">Cerrar Sesión</button>
+
+            <div class="perfil-container">
+
+                <div class="profile-section">
+                    <div class="profile-picture-container">
+                        <input type="file" id="profile-upload" accept="image/*" style="display: none;">
+                        <svg id="coffee-profile-svg" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <clipPath id="profile-clip"><circle cx="100" cy="140" r="50" /></clipPath>
+                            </defs>
+                            <path d="M 45 235 H 155 L 170 60 H 30 Z" fill="#000000" opacity="0.1" transform="translate(5, 5)"/>
+                            <path d="M 50 230 H 150 L 165 55 H 35 Z" fill="#C8A67B"/>
+                            <path d="M 25 55 H 175 L 170 40 H 30 Z" fill="#6F4E37"/>
+                            <path d="M 35 40 H 165 C 165 20, 35 20, 35 40 Z" fill="#6F4E37"/>
+                            <path d="M 40 180 H 160 L 162 100 H 38 Z" fill="#282828"/>
+                            <text x="100" y="80" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12" fill="#FFFFFF" class="profile-text">Imagen de perfil</text>
+                            <circle cx="100" cy="140" r="55" fill="#FFFFFF"/>
+                            <image id="profile-image" clip-path="url(#profile-clip)" height="100" width="100" x="50" y="90" href="" preserveAspectRatio="xMidYMid slice"/>
+                            <circle id="icon-placeholder" cx="100" cy="140" r="50" fill="#E0E0E0"/>
+                            <g id="camera-icon" fill="none" stroke="#555555" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M 115 155 H 85 C 80 155, 78 152, 78 148 V 138 C 78 132, 80 130, 85 130 H 115 C 120 130, 122 132, 122 138 V 148 C 122 152, 120 155, 115 155 Z" />
+                                <circle cx="100" cy="142" r="6" />
+                                <line x1="110" y1="135" x2="112" y2="135" />
+                            </g>
+                        </svg>
+                    </div>
+                    <button class="btn btn-save" id="save-profile-btn">Guardar Cambios</button>
+                </div>
+
+                <div class="data-section">
+                    <div class="clipboard-container">
+                         <svg width="100%" height="100%" viewBox="0 0 450 600" preserveAspectRatio="xMidYMid meet">
+                             <defs>
+                                  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                                      <feOffset dx="2" dy="4" result="offsetblur"/>
+                                      <feMerge>
+                                          <feMergeNode/>
+                                          <feMergeNode in="SourceGraphic"/>
+                                      </feMerge>
+                                  </filter>
+                                  <linearGradient id="wood-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                      <stop offset="0%" style="stop-color:#D2B48C;stop-opacity:1" />
+                                      <stop offset="100%" style="stop-color:#BC986C;stop-opacity:1" />
+                                  </linearGradient>
+                                  <linearGradient id="clip-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                      <stop offset="0%" style="stop-color:#E0E0E0;stop-opacity:1" />
+                                      <stop offset="100%" style="stop-color:#A0A0A0;stop-opacity:1" />
+                                  </linearGradient>
+                              </defs>
+                              <rect x="25" y="50" width="400" height="525" rx="10" fill="url(#wood-gradient)" filter="url(#shadow)"/>
+                              <rect x="50" y="80" width="350" height="470" rx="5" fill="#282828"/>
+                              <path d="M 180 65 C 180 45, 270 45, 270 65 L 270 80 L 180 80 Z" fill="url(#clip-gradient)" stroke="#555" stroke-width="1.5"/>
+                              <rect x="200" y="25" width="50" height="20" rx="10" fill="#888"/>
+                              <path d="M 215 45 L 215 60 M 235 45 L 235 60" stroke="#777" stroke-width="3"/>
+                         </svg>
+                         <div class="form-overlay">
+                             <h2 class="title">DATOS PERSONALES</h2>
+                               <form>
+                                   <div class="form-group">
+                                       <label for="nombre">Nombre:</label>
+                                       <input type="text" id="nombre">
+                                   </div>
+                                   <div class="form-group">
+                                       <label for="correo">Correo Electronico:</label>
+                                       <input type="email" id="correo">
+                                   </div>
+                                   <div class="form-group">
+                                       <label for="telefono">Telefono:</label>
+                                       <input type="tel" id="telefono">
+                                   </div>
+                                   <div class="form-group">
+                                       <label for="emergencias">Telefono emergencias:</label>
+                                       <input type="tel" id="emergencias">
+                                   </div>
+                                   <div class="form-group">
+                                       <label for="direccion">Dirección vive:</label>
+                                       <input type="text" id="direccion">
+                                   </div>
+                                   <div class="form-group">
+                                       <label for="empleado">Numero empleado:</label>
+                                       <input type="text" id="empleado" value="(20216721)" readonly>
+                                   </div>
+                               </form>
+                         </div>
+                    </div>
+                    <button class="btn btn-save" id="save-data-btn">Guardar Cambios</button>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
+
+    <script src="../barraNav.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof cargarBarraNav === 'function') {
+                cargarBarraNav();
+            }
+
+            const profilePictureContainer = document.querySelector('.profile-picture-container');
+            const fileInput = document.getElementById('profile-upload');
+            const profileImage = document.getElementById('profile-image');
+            const iconPlaceholder = document.getElementById('icon-placeholder');
+            const cameraIcon = document.getElementById('camera-icon');
+            
+            profilePictureContainer.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        profileImage.setAttribute('href', e.target.result);
+                        
+                        iconPlaceholder.style.display = 'none';
+                        cameraIcon.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

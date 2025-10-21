@@ -1,216 +1,209 @@
+/* ========== VARIABLES ========== */
+:root {
+    --sidebar-bg: #d6a05c;
+    --accent: #c68644;
+    --page-bg: #e9bb7b;
+    --text-dark: #332a23;
+    --white: #fff;
+}
+
+/* ========== RESET BÁSICO Y LAYOUT ========== */
+* { box-sizing: border-box; }
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #4A3A32; /* Color de madera oscura de fondo */
-    overflow: hidden; /* Para evitar scrollbars si los elementos son muy grandes */
+    font-family: "Poppins", system-ui, sans-serif;
+    background: var(--sidebar-bg);
+    color: var(--text-dark);
+}
+.app-container {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    height: 100vh;
+    gap: 16px;
+    padding: 16px;
+}
+.main-content {
+    background: var(--page-bg);
+    border-radius: 18px;
+    overflow: auto;
+    position: relative; /* Necesario para posicionar el botón de logout */
 }
 
-.container {
+.perfil-container {
     display: flex;
     align-items: center;
-    gap: 80px; /* Separación entre el vaso y el menú */
-    padding: 20px;
-    max-width: 1200px; /* Ancho máximo para el contenedor */
+    justify-content: space-between; 
     width: 100%;
-    box-sizing: border-box;
+    min-height: 100%;
+    padding: 0 90px;
+    gap: 40px;
 }
 
-/* --- Estilos del Vaso de Café --- */
-.coffee-cup-section {
-    flex-shrink: 0; /* Evita que el vaso se encoja */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.coffee-cup {
-    width: 200px; /* Tamaño del vaso */
-    height: 250px;
-    background-color: #fff;
-    border-radius: 0 0 100px 100px / 0 0 50px 50px;
-    position: relative;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.cup-top {
-    width: 210px;
-    height: 40px;
-    background-color: #333;
-    border-radius: 50%;
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-}
-
-.cup-sleeve {
-    width: 180px;
-    height: 100px;
-    background-color: #333;
-    border-radius: 50px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.profile-picture-area {
-    width: 100px; /* Tamaño del círculo blanco */
-    height: 100px;
-    background-color: #fff;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column; /* Para centrar el texto verticalmente */
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    text-align: center;
-    font-size: 14px;
-    color: #333;
-    font-weight: bold;
-    position: relative;
-    padding-top: 20px; /* Espacio para el texto "Foto de perfil" */
-}
-
-.profile-picture-area::before {
-    content: "Foto de perfil";
-    position: absolute;
-    top: 5px; /* Posiciona el texto arriba del círculo */
-    font-size: 12px;
-    color: #333;
-    width: 100%;
-}
-
-
-/* --- Estilos del Menú de Datos Personales --- */
-.menu-section {
-    flex-grow: 1; /* Permite que el menú ocupe el espacio restante */
-    display: flex;
-    justify-content: flex-start; /* Alinea a la izquierda dentro de su espacio */
-}
-
-.clipboard {
-    width: 380px; /* Ancho del portapapeles */
-    height: 500px; /* Alto del portapapeles */
-    background-color: #D2B48C; /* Color de madera del portapapeles */
-    border-radius: 10px;
-    position: relative;
-    padding-top: 60px; /* Espacio para el clip */
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-    box-sizing: border-box; /* Incluye padding en el tamaño */
-}
-
-.clip {
-    width: 100px;
-    height: 50px;
-    background-color: #B0B0B0; /* Color del clip metálico */
-    border-radius: 10px 10px 0 0;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    border: 3px solid #888;
-    box-sizing: border-box;
-}
-.clip::before {
-    content: '';
-    width: 20px;
-    height: 20px;
-    background-color: #888;
-    border-radius: 50%;
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.paper {
-    width: calc(100% - 40px); /* Ancho del papel con márgenes */
-    height: calc(100% - 80px); /* Alto del papel con márgenes */
-    background-color: #222; /* Color oscuro del papel */
-    position: absolute;
-    top: 40px;
-    left: 20px;
-    border-radius: 5px;
-    padding: 20px;
-    box-sizing: border-box;
-    color: #fff;
+/* ======================================================= */
+/* ===== ESTILOS PARA LAS SECCIONES Y BOTONES ===== */
+/* ======================================================= */
+.profile-section{
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centrar elementos horizontalmente */
+    align-items: center;
+    gap: 20px;
+}
+
+.data-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    left: 0px;
+    /* Eje Y: valores positivos mueven hacia abajo, negativos hacia arriba */
+    top: -20px;
+}
+
+.btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-save {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.btn-save:hover {
+    background-color: #a56d35;
+    transform: translateY(-2px);
+}
+
+.btn-logout {
+    position: absolute;
+    top: 16px;
+    right: 970px;
+    background-color: #554236;
+    color: var(--white);
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.btn-logout:hover {
+    background-color: #332a23;
+}
+/* ======================================================= */
+
+
+/* --- FOTO DE PERFIL --- */
+.profile-picture-container {
+    width: 350px;
+    height: 450px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-picture-container:hover {
+    transform: scale(1.05);
+}
+
+#coffee-profile-svg #camera-icon {
+    transform: translate(0, 15px);
+}
+
+
+/* --- CONTENEDOR DEL PORTAPAPELES --- */
+.clipboard-container {
+    position: relative;
+    width: 400px;
+    height: 550px;
+}
+.clipboard-container svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- FORMULARIO SUPERPUESTO --- */
+.form-overlay {
+    position: absolute;
+    top: 80px;
+    left: 45px;
+    width: 310px;
+    height: 430px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.croissant {
-    width: 150px; /* Tamaño del cuernito */
-    height: 100px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150"><path fill="none" stroke="white" stroke-width="5" d="M100,50 C150,0 200,50 150,100 C100,150 50,100 50,50 C0,0 50,-50 100,0 M100,60 C140,20 180,60 140,90 C100,120 60,90 60,60 C20,20 60,-10 100,20 M100,70 C130,40 160,70 130,95 C100,120 70,95 70,70 C40,40 70,10 100,30 M100,80 C120,60 140,80 120,100 C100,120 80,100 80,80 C60,60 80,30 100,50" /></svg>') no-repeat center center;
-    background-size: contain;
-    transform: rotate(-15deg); /* Inclinación del cuernito */
-    position: absolute;
-    bottom: -10px; /* Posicionamiento para que parezca cortado */
-    left: -20px;
-    z-index: 0; /* Asegura que esté detrás del texto */
-}
-
-
-form {
-    width: 100%;
+    font-size: 22px;
     margin-top: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--white);
 }
 
 .form-group {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    align-items: baseline; /* Alinea los labels con la base de los inputs */
+    align-items: baseline;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #777;
+    padding-bottom: 5px;
+}
+
+form {
+    width: 100%;
 }
 
 .form-group label {
     font-size: 14px;
-    white-space: nowrap; /* Evita que el texto del label se rompa */
-    margin-right: 10px; /* Espacio entre label y input */
-    flex-shrink: 0; /* Evita que el label se encoja */
+    white-space: nowrap;
+    margin-right: 10px;
+    color: var(--white);
+    font-weight: 500;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"] {
-    flex-grow: 1; /* Permite que el input ocupe el espacio restante */
+.form-group input {
+    flex-grow: 1;
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid #aaa; /* Línea de texto */
-    color: #fff;
+    color: var(--white);
     font-size: 14px;
     padding: 2px 0;
     outline: none;
+    text-align: right;
+    font-weight: 400;
+    width: 0; 
 }
 
 .form-group input[readonly] {
-    opacity: 0.8; /* Hace que el número de empleado se vea ligeramente diferente */
+    opacity: 0.8;
 }
 
-/* Opcional: Estilo para la imagen de perfil cuando se seleccione */
-.profile-picture-area img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    left: 0;
+/* ======================================================= */
+/* ===== CÓDIGO AÑADIDO: POSICIONAMIENTO MANUAL ===== */
+/* ======================================================= */
+
+#save-profile-btn {
+    position: relative;
+    /* Eje X: valores positivos mueven a la derecha, negativos a la izquierda */
+    left: 0px; 
+    /* Eje Y: valores positivos mueven hacia abajo, negativos hacia arriba */
+    top: -30px;
+}
+
+#save-data-btn {
+    position: relative;
+    /* Eje X: valores positivos mueven a la derecha, negativos a la izquierda */
+    left: 0px;
+    /* Eje Y: valores positivos mueven hacia abajo, negativos hacia arriba */
+    top: -57px;
 }
