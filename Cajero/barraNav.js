@@ -2,12 +2,27 @@
 function cargarBarraNav() {
     const barraNavHTML = `
         <style>
+
+/* ========== VARIABLES ========== */
+:root {
+  --sidebar-bg: #d6a05c;
+  --accent: #c68644;
+  --page-bg: #e9bb7b;
+  --card-bg: #f6e9db;
+  --search-bg: #f3e6c1;
+  --text-dark: #332a23;
+  --muted: #6a584a;
+  --white: #fff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
             .sidebar {
                 background: var(--sidebar-bg); color: var(--white);
                 /* --- CAMBIOS AQUÍ --- */
                 position: relative; /* Contenedor para el logo absoluto */
                 padding: 75px 12px 1px 12px; /* Aumentamos el padding superior para dar espacio al logo */
-                
+                width: 90px;          /* Le damos un ancho fijo */
+                flex-shrink: 0;       /* Evitamos que se encoja */
                 display: flex;
                 flex-direction: column; align-items: center; gap: 2px; border-radius: 16px; height: 100%;
             }
@@ -29,16 +44,27 @@ function cargarBarraNav() {
             .nav {
                 /* --- CAMBIO AQUÍ --- */
                 margin-top: 0; /* Eliminamos el margen superior que ya no es necesario */
-                width: 100%; display: flex; flex-direction: column; gap: 0px; align-items: center;
+                width: 100%; display: flex; flex-direction: column; gap: 0px; align-items: center; width: 90px; box-sizing: border-box;
             }
             .nav-link {
                 display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 60px;
-                color: var(--white); text-decoration: none; border-radius: 14px; transition: background .18s;
+                color: var(--white); text-decoration: none; border-radius: 14px; 
+                
+                /* --- CORRECCIÓN 1 AQUÍ --- */
+                transition: background-color .18s; /* Cambiado de 'background' a 'background-color' */
+                
                 font-weight: 600; font-size: 15px; width: 100%;
             }
-            .nav-link .icon { display: flex; align-items: center; justify-content: center; }
-            .nav-link:not(.active):hover { background: rgba(255, 255, 255, 0.13); }
-            .nav-link.active { background: var(--page-bg); color: #ffffffff; font-weight: 700; }
+            .nav-link .icon { display: flex; align-items: center; justify-content: center; width: 90px; box-sizing: border-box;}
+            
+            /* --- CORRECCIÓN 2 AQUÍ --- */
+            .nav-link:not(.active):hover { 
+                background-color: rgba(255, 255, 255, 0.13); /* Cambiado de 'background' a 'background-color' */
+                width: 90px;
+                box-sizing: border-box; 
+            }
+
+            .nav-link.active { background: var(--page-bg); color: #ffffffff; font-weight: 700; width: 90px; box-sizing: border-box; }
             .nav-link.active .icon svg { stroke: #ffffffff; }
         </style>
         
