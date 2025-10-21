@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-10-2025 a las 07:30:37
+-- Tiempo de generación: 20-10-2025 a las 18:11:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,18 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tienda_db`
 --
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `auditlogs`
---
-
-CREATE TABLE `auditlogs` (
-  `id_au` int(11) NOT NULL,
-  `descripcion` varchar(255) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -107,52 +95,53 @@ CREATE TABLE `productos` (
   `categoria` varchar(50) DEFAULT NULL,
   `sabor` int(11) DEFAULT NULL,
   `tamano_defecto` int(11) NOT NULL DEFAULT 1,
-  `status` tinyint(1) DEFAULT 1
+  `VENTAS` int(11) NOT NULL DEFAULT 0,
+  `STOCK` int(11) NOT NULL DEFAULT 0,
+  `descripcion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `status`) VALUES
-(51, 'Americano', '../../Images/CafeAmer.png', 40, 'Bebidas calientes', 1, 1, 1),
-(52, 'Espresso', '../../Images/Espresso.png', 40, 'Bebidas calientes', 1, 1, 1),
-(53, 'Macchiato', '../../Images/Macchi.png', 50, 'Bebidas calientes', 1, 1, 1),
-(54, 'Capucchino Entero', '../../Images/CafeCapu.png', 45, 'Bebidas calientes', 2, 1, 1),
-(55, 'Lechero (Entera)', '../../Images/Lechero.png', 42, 'Bebidas calientes', 2, 1, 1),
-(56, 'Lechero Deslactosado', '../../Images/Lechero.png', 45, 'Bebidas calientes', 3, 1, 1),
-(57, 'Moka', '../../Images/Moka.png', 50, 'Bebidas calientes', 1, 1, 1),
-(58, 'Matcha', '../../Images/Matchalatte.png', 65, 'Bebidas calientes', 1, 1, 1),
-(59, 'Capucchino Deslactos', '../../Images/CafeCapu.png', 55, 'Bebidas calientes', 3, 1, 1),
-(60, 'Irlandés', '../../Images/Irlandes.png', 70, 'Bebidas calientes', 1, 1, 1),
-(61, 'Latte Entero', '../../Images/Latte.png', 45, 'Bebidas calientes', 2, 1, 1),
-(62, 'Latter Deslactosado', '../../Images/Latte.png', 42, 'Bebidas calientes', 3, 1, 1),
-(63, 'Latte Avena', '../../Images/Latte.png', 40, 'Bebidas calientes', 4, 1, 1),
-(64, 'Latte Almendra', '../../Images/Latte.png', 45, 'Bebidas calientes', 5, 1, 1),
-(65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 1),
-(66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 1),
-(67, 'Doble', '../../Images/EspreDoble.png', 55, 'Bebidas calientes', 1, 1, 1),
-(68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 2, 1, 1),
-(69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 3, 1, 1),
-(80, 'Chocolate caliente Avena', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 4, 1, 1),
-(81, 'Frappé clásico Entero', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 2, 1, 1),
-(82, 'Frappé clásico Deslactosado', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 3, 1, 1),
-(83, 'Frappé moka Entero', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 2, 1, 1),
-(84, 'Frappé moka Deslactosado', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 3, 1, 1),
-(85, 'Frappé caramel Entero', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 2, 1, 1),
-(86, 'Frappé caramel Deslactosado', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 3, 1, 1),
-(87, 'Frappé cookies n cream Entero', '../../Images/FrappCnC.png', 75, 'Bebidas frias', 2, 1, 1),
-(88, 'Frappé cookies n cream Deslactosado', '../../Images/FrappeClasic.png', 75, 'Bebidas frias', 3, 1, 1),
-(89, 'Frappé matcha Entero', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 2, 1, 1),
-(90, 'Frappé matcha Deslactosado', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 3, 1, 1),
-(91, 'Frappé espresso Entero', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 2, 1, 1),
-(92, 'Frappé espresso Deslactosado', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 3, 1, 1),
-(93, 'Iced tea Negro', '../../Images/IcedTeaBlack.png', 45, 'Bebidas frias', 7, 1, 1),
-(94, 'Iced tea Limón', '../../Images/IcedTea.png', 45, 'Bebidas frias', 8, 1, 1),
-(95, 'Limonada', '../../Images/Limonadas.png', 40, 'Bebidas frias', 1, 1, 1),
-(96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 1),
-(97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 1),
-(98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 1);
+INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `VENTAS`, `STOCK`, `descripcion`) VALUES
+(51, 'Americano', '../../Images/CafeAmer.png', 40, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(52, 'Espresso', '../../Images/Espresso.png', 40, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(53, 'Macchiato', '../../Images/Macchi.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(54, 'Capucchino Entero', '../../Images/CafeCapu.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
+(55, 'Lechero (Entera)', '../../Images/Lechero.png', 42, 'Bebidas calientes', 2, 1, 0, 0, NULL),
+(57, 'Moka', '../../Images/Moka.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(58, 'Matcha2', '../../Images/Matchalatte.png', 65, 'Cafés', 1, 1, 0, 0, NULL),
+(59, 'Capucchino Deslactos', '../../Images/CafeCapu.png', 55, 'Bebidas calientes', 3, 1, 0, 0, NULL),
+(60, 'Irlandés', '../../Images/Irlandes.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(61, 'Latte Entero', '../../Images/Latte.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
+(62, 'Latter Deslactosado', '../../Images/Latte.png', 42, 'Bebidas calientes', 3, 1, 0, 0, NULL),
+(63, 'Latte Avena', '../../Images/Latte.png', 40, 'Bebidas calientes', 4, 1, 0, 0, NULL),
+(64, 'Latte Almendra', '../../Images/Latte.png', 45, 'Bebidas calientes', 5, 1, 0, 0, NULL),
+(65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(67, 'Doble', '../../Images/EspreDoble.png', 55, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 2, 1, 0, 0, NULL),
+(69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 3, 1, 0, 0, NULL),
+(80, 'Chocolate caliente Avena', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 4, 1, 0, 0, NULL),
+(81, 'Frappé clásico Entero', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 2, 1, 0, 0, NULL),
+(82, 'Frappé clásico Deslactosado', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 3, 1, 0, 0, NULL),
+(83, 'Frappé moka Entero', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
+(84, 'Frappé moka Deslactosado', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
+(85, 'Frappé caramel Entero', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
+(86, 'Frappé caramel Deslactosado', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
+(87, 'Frappé cookies n cream Entero', '../../Images/FrappCnC.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
+(88, 'Frappé cookies n cream Deslactosado', '../../Images/FrappeClasic.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
+(89, 'Frappé matcha Entero', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 2, 1, 0, 0, NULL),
+(90, 'Frappé matcha Deslactosado', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 3, 1, 0, 0, NULL),
+(91, 'Frappé espresso Entero', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
+(92, 'Frappé espresso Deslactosado', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
+(93, 'Iced tea Negro', '../../Images/IcedTeaBlack.png', 45, 'Bebidas frias', 7, 1, 0, 0, NULL),
+(94, 'Iced tea Limón', '../../Images/IcedTea.png', 45, 'Bebidas frias', 8, 1, 0, 0, NULL),
+(95, 'Limonada', '../../Images/Limonadas.png', 40, 'Bebidas frias', 1, 1, 0, 0, NULL),
+(96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 0, 0, NULL),
+(97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 0, NULL),
+(98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -186,8 +175,18 @@ CREATE TABLE `resena` (
   `username` varchar(50) DEFAULT NULL,
   `comentario` text DEFAULT NULL,
   `producto` int(11) DEFAULT NULL,
-  `estrellas` int(11) DEFAULT NULL CHECK (`estrellas` between 0 and 5)
+  `estrellas` int(11) DEFAULT NULL CHECK (`estrellas` between 0 and 5),
+  `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `resena`
+--
+
+INSERT INTO `resena` (`idr`, `userid`, `username`, `comentario`, `producto`, `estrellas`, `date`) VALUES
+(123, 4, '123', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n', 5, 5, '2025-10-15'),
+(125, 4, '123', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut ', 5, 5, '2025-10-15'),
+(126, 4, '123', 'Lorem ipsum dolor sit ametlabore et dolore magna aliqua.', 5, 5, '2025-10-15');
 
 -- --------------------------------------------------------
 
@@ -283,18 +282,12 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`) VALUES
 (4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
-(5, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0);
+(5, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0),
+(6, NULL, 'Juan Pablo', 'test@ucol.mx', '$2y$10$4ynET9Xds2k.FEDXXfPugO9.2kxJqeJvb6C5GYt6YKG3F.p55Ytb.', 2, 1, 0);
 
 --
 -- Índices para tablas volcadas
 --
-
---
--- Indices de la tabla `auditlogs`
---
-ALTER TABLE `auditlogs`
-  ADD PRIMARY KEY (`id_au`),
-  ADD KEY `username` (`username`);
 
 --
 -- Indices de la tabla `categorias`
@@ -335,6 +328,8 @@ ALTER TABLE `promocion`
 --
 ALTER TABLE `resena`
   ADD PRIMARY KEY (`idr`),
+  ADD UNIQUE KEY `idr` (`idr`),
+  ADD UNIQUE KEY `idr_2` (`idr`),
   ADD KEY `userid` (`userid`),
   ADD KEY `username` (`username`),
   ADD KEY `producto` (`producto`);
@@ -368,12 +363,6 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `auditlogs`
---
-ALTER TABLE `auditlogs`
-  MODIFY `id_au` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `cortes_caja`
 --
 ALTER TABLE `cortes_caja`
@@ -401,7 +390,7 @@ ALTER TABLE `promocion`
 -- AUTO_INCREMENT de la tabla `resena`
 --
 ALTER TABLE `resena`
-  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -425,17 +414,7 @@ ALTER TABLE `tamanos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `resena`
---
-ALTER TABLE `resena`
-  ADD CONSTRAINT `resena_ibfk_3` FOREIGN KEY (`producto`) REFERENCES `productos` (`idp`);
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
