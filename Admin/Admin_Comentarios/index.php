@@ -61,7 +61,9 @@
             echo "<p class='descriptioncoment'>" . htmlspecialchars($row['comentario']) . "</p>";
 
             // Producto asociado
-            echo "<p class='producto-coment'>" . htmlspecialchars($row['producto']) . "</p>";
+            $pro = $conn->query("SELECT * FROM productos WHERE idp = ". $row['producto']);
+            $pro_row = $pro->fetch_assoc();
+            echo "<p class='producto-coment'> Producto o Servicio: " . htmlspecialchars($pro_row['namep']) . "</p>";
 
             // Botón eliminar
             echo "<form method='POST' action='delete_comentario.php'>";
