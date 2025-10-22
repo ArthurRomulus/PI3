@@ -1,0 +1,1023 @@
+/*1seccion sabor que inspira*/
+
+.hero-sabor {
+  background-color: #DCC0B9;
+  padding: 20px 20px 60px;
+}
+
+.hero-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr; /* texto | imagen */
+  gap: clamp(24px, 5vw, 56px);
+  align-items: center;
+}
+
+.hero-texto h2 {
+  font-family: 'ADLaM Display', cursive;
+  color: #531607;
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1.05;
+  margin: 0 0 80px 0;
+  font-size: clamp(36px, 6vw, 64px); /* grande y responsivo */
+  margin-left: 50px;
+  margin-top: -60px;
+}
+
+.hero-texto p {
+  font-family: 'Montaga', serif;
+  color: #6b2f1d;           /* café más claro para el párrafo */
+  font-size: clamp(16px, 2.2vw, 20px);
+  line-height: 1.8;
+  max-width: 48ch;
+  text-align: justify;      /* como en la maqueta */
+  margin-left: 50px;
+  margin-top: 100px; /*separa mi texto del titulo*/
+}
+
+.hero-imagen img {
+  width: 100%;
+  max-width: 515px;
+  height: auto;
+  display: block;
+  margin-inline: auto;
+  filter: drop-shadow(15px 20px 12px rgba(0, 0, 0, 0.6));/*sombra de imagen*/
+}
+
+/* Icono decorativo bajo el subtitulo en Sabor que inspira */
+.hero-icon-bg {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 18px;
+  position: relative;
+  left: -18px;
+}
+.hero-icon-bg img {
+  width: 90px;
+  opacity: 0.18;
+  transform: rotate(18deg);
+}
+
+/* Línea delgada bajo la sección (igual estilo que usas) */
+.hero-sabor {
+  position: relative;
+}
+
+
+/*------------------seccion 2 Mas vendidos------------*/
+
+
+/* Título con líneas café a los lados para 'Más Vendidos' */
+.ts-title-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.ts-title-text {
+  font-family: 'ADLaM Display', cursive;
+  font-size: clamp(28px, 4vw, 38px);
+  color: #531607;
+  margin: 0 18px;
+  white-space: nowrap;
+}
+.ts-line {
+  flex: 1;
+  border-top: 2.5px solid #531607;
+  opacity: 0.7;
+  height: 0;
+  min-width: 60px;
+}
+/* Hace que la banda ocupe todo el ancho de la pantalla */
+.ts-title-line.full-bleed{
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;   
+  margin-right: -50vw;
+  padding: 0 16px;     
+}
+
+.ts-section {
+  padding: 60px 20px;
+  background-color: #DCC0B9;
+  text-align: center;
+}
+
+.ts-title {
+  font-family: 'ADLaM Display', cursive;
+  font-size: clamp(28px, 4vw, 38px);
+  color: #531607;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.ts-grid {
+  display: grid;
+  margin-top: 230px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  justify-items: center;
+}
+
+/* Tarjeta */
+.ts-card {
+  position: relative;
+  background: #5d3a31;
+  border-radius: 16px;
+  padding: 170px 16px 40px;   /* top grande = espacio para el stage */
+  box-shadow: 0 10px 26px rgba(201, 45, 45, 0.2);
+  overflow: visible;
+  color: #ffffff;
+  width: 300px;
+  text-align: center;
+}
+
+/* Escenario (rectángulo rosita donde entra la foto) */
+.ts-stage {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 195px;
+  height: 150px;
+  background: #e6a392;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(12px 16px 12px rgba(0,0,0,.18));
+  overflow: visible;
+}
+
+/* Imagen dentro del stage */
+.ts-stage img {
+  max-height: 260px;   /* controla tamaño uniforme */
+  width: auto;
+  height: auto;
+  display: block;
+  transform: translateY(-90px);
+  z-index: 2;                  
+  filter: drop-shadow(12px 18px 12px rgba(0,0,0,.38));
+}
+
+/* Rating */
+.ts-rate {
+  position: absolute;
+  right: -10px;
+  top: 124px;
+  background: #fff;
+  color: #5d3a31;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font: 700 14px 'Montaga', serif;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.12);
+  z-index: 3;
+}
+
+/* Nombre */
+.ts-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin: -50px 0 0px;
+  font-family: 'Montaga', serif;
+  color: #fff;
+}
+
+/* Descripción */
+.ts-desc {
+  font-size: 14px;
+  color: #f0e0d6;
+  margin: 0 0 20px;
+  font-family: 'Montaga', serif;
+  line-height: 1.5;
+}
+
+/* Info inferior */
+.ts-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  border-top: 1px solid rgba(255,255,255,.3);
+  padding-top: 10px;
+}
+
+.ts-price {
+  background: #f7c7b2;
+  padding: 8px 40px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #5d3a31;
+}
+
+.ts-cart {
+  background: #f7c7b2;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.ts-cart:hover {
+  background: #e8a98f;
+}
+/*- Botón Catálogo- */
+.catalogo-btn {
+  display: flex;
+  justify-content: center;
+  margin: 110px 0;
+}
+
+.catalogo-btn a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border: 2px solid #531607;
+  border-radius: 10px;
+  font-family: 'Montaga', serif;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: none;
+  color: #531607;
+  background: transparent;
+  transition: 0.3s ease;
+}
+
+.catalogo-btn a:hover {
+  background: #531607;
+  color: #fff;
+}
+
+.catalogo-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+
+/* ================== seccion 3 NUESTROS SERVICIOS ================== */
+:root{
+  --coffee:#6a4b44;;           /* color de marca */
+  --bg:#f1e4db;               /* rosa claro del fondo */
+  --bg-2:#e6cbc3;             /* variante para tarjetas */
+  --ink:#3b2a25;
+  --radius:18px;
+  --shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+
+
+.svc__wrap{
+  max-width:1050px;
+  margin-inline:auto;
+}
+
+.svc__head{
+  text-align:center;
+  margin-bottom:28px;
+  color:var(--coffee);
+}
+.svc__head h2{
+  font-size:clamp(1.6rem, 2vw + 1rem, 2rem);
+  margin:0 0 80px;
+  letter-spacing:.5px;
+  color: #7B3F00;
+}
+.svc__head p{
+  margin:0;
+  font-size:.95rem;
+  color:#6a4b44;
+  
+}
+
+.hero-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* centra los tres elementos: icono, texto, icono */
+  gap: 18px;                /* separación entre ellos */
+  margin: 60px auto 100px;  /* centrado automático horizontal */
+  max-width: 900px;
+  text-align: center;
+}
+
+.hero-texto__contenido {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #6a4b44;
+  margin: 0; /* elimina márgenes manuales que rompen el centrado */
+}
+
+.hero-icon {
+  width: 46px;
+  height: auto;
+  opacity: 0.9;
+  flex-shrink: 0; /* evita que se encojan si el texto es largo */
+}
+
+.hero-icon--left {
+  transform: rotate(-6deg);
+
+}
+
+.hero-icon--right {
+  transform: rotate(6deg);
+}
+
+
+.svc__grid{
+  list-style:none;
+  padding:0;
+  margin:24px auto 10px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
+  max-width:980px;
+}
+
+.svc__card{
+  background: linear-gradient(180deg, var(--bg-2) 0%, #f4deda 100%);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:24px 18px 24px;
+  width: 140px;
+  height: 170px;
+  text-align:center;
+  transition:transform .2s ease, box-shadow .2s ease;
+  margin-left: 80px; /* Ajusta este valor para centrar las cartas */
+}
+.svc__card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 28px rgba(0,0,0,.16);
+}
+
+.svc__icon{
+  width:84px; height:84px;
+  margin:6px auto 12px;
+  display:grid; place-items:center;
+}
+.svc__icon img{
+  width:100%; height:100%;
+  object-fit:contain;         
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.06));
+}
+
+.svc__label{
+  color:#531607;      
+  font-weight:700;
+  line-height:1.15;
+  font-family:'Montaga', serif;
+}
+
+
+
+.svc__cta{
+  display:flex; justify-content:center;
+  margin-top:150px;
+}
+.btn{
+  display: flex;
+  align-items: center;
+  gap: 70px;
+  padding: 12px 24px;
+  border: 2px solid #531607;
+  border-radius: 10px;
+  font-family: 'Montaga', serif;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: none;
+  color: #531607;
+  background: transparent;
+  transition: 0.3s ease;
+}
+  .btn:hover {
+    background: #531607;
+    color: #fff;
+  }
+.btn:focus-visible{ outline:3px solid #c8a79a; outline-offset:3px; }
+
+
+/* ================== seccion 4 PROMO PEDIDO ================== */
+:root{
+  --coffee:#531607;
+  --text:#4a332e;
+  --bg-a:#d6b6a1;
+  --bg-b:#f1e4db;
+}
+
+/* Fondo y layout */
+.promo{
+  position:relative;
+  isolation:isolate;
+    background-color: #DCC0B9;
+  padding:48px 22px 68px;
+  overflow:hidden;
+}
+
+.promo__wrap{
+  max-width:1100px;           /* <— corrige el 150px */
+  margin-inline:auto;
+  display:grid;
+  grid-template-columns: 1fr 420px;
+  align-items:center;
+  gap:28px;
+}
+
+/* Texto */
+.promo__title{
+  color:var(--coffee);
+  font-size:clamp(1.8rem, 2.2vw + 1rem, 2.4rem);
+  font-weight:800;
+  line-height:1.15;
+  margin:0 0 10px 0;
+  position:relative;
+  display:inline-block;
+}
+.promo__title::after{
+  content:"";
+  display:block;
+  width:390px;          /* largo de la línea bajo el título */
+  height:3px;
+  background:var(--coffee);
+  border-radius:999px;
+  margin-top:8px;
+}
+
+.promo__desc{
+  margin:14px 0 10px 0;
+  color: #4a332e;
+  font-weight:900;
+  margin-bottom: 70px;
+}
+
+.promo__price{
+  margin:6px 0 16px 0;
+  color:var(--coffee);
+}
+
+/* Botones (compactos, como en el mockup) */
+.promo__cta {
+  display: flex;
+  gap: 8px;           
+  flex-wrap: wrap;
+  margin-top: 16px;      /* antes 200px → los sube justo debajo del precio */
+  justify-content: flex-start;
+  align-items: center; 
+  margin-right: 350px;
+}
+
+.promo__cta .btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 14px;
+  border:2px solid var(--coffee);
+  border-radius:10px;
+  font-family:'Montaga', serif;
+  font-weight:700;
+  font-size:14px;
+  text-decoration:none;
+  transition:.25s ease;
+}
+.promo__cta .btn--dark{
+  background:var(--coffee);
+  color:#fff;
+}
+.promo__cta .btn--light{
+  background:transparent;
+  color:var(--coffee);
+}
+.promo__cta .btn:hover{ filter:brightness(.9); }
+
+/* Imagen bebida + “spotlight” detrás */
+.promo__img{
+  position:relative;
+  display:grid;
+  place-items:center;
+}
+.promo__img::before{
+  content:"";
+  position:absolute;
+  inset:auto;
+  width:90%;
+  aspect-ratio:1/1;
+  border-radius:20%;
+  filter:blur(30px);
+  background:rgba(0,0,0,.02);
+  transform:translateY(40%);
+  z-index:0;
+}
+.promo__img img{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:380px;
+  height:auto;
+  object-fit:contain;
+  filter: drop-shadow(20px 20px 20px rgba(0,0,0,.25));
+}
+
+/* === Stickers decorativos para la sección PROMO === */
+.sticker {
+  position: absolute;
+  opacity: 0.35; /* baja opacidad para que no distraigan */
+  pointer-events: none; /* evita que interfieran con clics */
+  user-select: none;
+  transition: opacity .3s ease;
+}
+
+.promo,
+.promo__wrap {
+  position: relative;
+  overflow: visible;   /* <- importante */
+}
+
+
+/* Sticker esquina superior izquierda (corregido) */
+.sticker--corner {
+  position: absolute;
+  top: -80px;      /* lo sube un poco más arriba */
+  left: -70px;      /* lo alinea más hacia la esquina */
+  width: 60px;     /* más pequeño para no destacar tanto */
+  transform: rotate(-8deg);
+  opacity: 0.35;   /* igual que los otros */
+}
+
+
+/* Sticker debajo de los botones */
+.sticker--bottom {
+  position: absolute;
+  bottom: -140px;
+  left: 1000px;
+  width: 100px;
+  transform: rotate(15deg);
+}
+.sticker--footer {
+  position: absolute;
+  left: -70px;
+  transform: translateX(50%) rotate(8deg);
+  width: 70px;     /* 👈 más chico */
+  opacity: 0.35;
+  bottom: -140px;
+}
+
+
+
+
+
+.pf-item img{ width:22px; height:22px; object-fit:contain; }
+.pf-item span{
+  display:block; width:120px; height:2px; border-radius:999px;
+}
+
+/* Responsivo */
+@media (max-width:980px){
+  .promo__wrap{ grid-template-columns:1fr; text-align:center; }
+  .promo__title::after{ margin-inline:auto; }
+  .promo__cta{ justify-content:center; }
+  .promo__img img{ max-width:320px; }
+  .promo__beans{ display:none; }             /* oculta adornos en móvil */
+  .promo__footer-icons{ position:static; margin-top:28px; justify-content:center; }
+  .pf-item span{ width:90px; }
+}
+
+/*================= seccion 5 otros productos ================== */
+
+:root{
+  /* Paleta estilo café (puedes ajustarla a la tuya) */
+  --bg: #F2E1D0;          /* beige de fondo */
+  --ink: #531607;         /* café oscuro */
+  --muted: #79523D;       /* texto secundario */
+  --card: #F7E7D7;        /* fondo suave de tarjeta */
+  --btn: #DCC0B9;         /* botón claro */
+  --btn-hover: #cfae9f;   /* hover botón */
+  --border: rgba(83,22,7,.14);
+  --radius: 14px;
+  --shadow: 0 6px 20px rgba(83,22,7,.08);
+}
+
+.our-products{
+  background: var(--bg);
+  padding: clamp(48px, 8vw, 96px) 20px;
+  color: var(--ink);
+  margin-top: 150px;
+}
+
+.op-wrap{
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.op-title{
+  text-align: center;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: 700;
+  font-size: clamp(28px, 3.2vw, 44px);
+  letter-spacing: .5px;
+  margin: 0 0 36px;
+  color: var(--ink);
+}
+
+.op-title span{
+  position: relative;
+  display: inline-block;
+  padding: 6px 18px;
+}
+
+.op-title span::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  width: 470px;
+  height: 2px;
+  background: var(--ink);
+  opacity: .4;
+  border-radius: 2px;
+}
+
+
+
+/* ================= Fondo detrás de cada bolsa ================= */
+
+
+.op-media img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ================= Fondo detrás de cada bolsa ================= */
+.op-media{
+  position: relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:visible;              /* deja que el fondo se asome */
+  padding: 8px 0 28px 0;
+}
+
+
+/* Fondo decorativo */
+.op-media .op-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: auto;
+  transform: translate(-50%, -40%) scale(1);
+  opacity: 0.18;
+  filter: blur(0.4px) contrast(1.05);
+  z-index: 0;
+  object-fit: contain;
+}
+
+/* Imagen principal (bolsa) */
+.op-media .op-bg{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width: 115%;                   /* tamaño base del adorno */
+  height:auto;
+  transform:
+    translate(
+      calc(-50% + var(--bg-x, 0%)),
+      calc(-50% + var(--bg-y, 0%))
+    )
+    scale(var(--bg-scale, 1))
+    rotate(var(--bg-rotate, 0deg));
+  opacity: var(--bg-opacity, .18);
+  filter: blur(var(--bg-blur, .4px)) contrast(1.05);
+  object-fit: contain;
+  z-index:0;
+}
+.op-media .op-bag{
+  position:relative;
+  z-index:2;
+  width: var(--bag-width, 230px);
+  max-width: 90%;
+  height:auto;
+  transition: transform .3s ease, filter .3s ease;
+  filter:
+    drop-shadow(0 20px 32px rgba(83,22,7,.36))
+    drop-shadow(0 8px 14px rgba(0,0,0,.18));
+}
+.op-media .op-bag:hover{
+  transform: scale(1.06);
+}
+.op-media .op-bag:hover {
+  transform: scale(1.06);
+  filter:
+    drop-shadow(0 25px 35px rgba(83,22,7,.4))
+    drop-shadow(0 8px 15px rgba(0,0,0,.2));
+}
+
+
+/* Imagen principal (bolsa de café) */
+.op-media img:not(.op-bg) {
+  position: relative;
+  z-index: 1;
+  width: 65%;     /* 🔸 ajusta el tamaño de la bolsa */
+  transition: transform 0.3s ease;
+}
+
+.op-media img:not(.op-bg):hover {
+  transform: scale(1.05); /* efecto suave al pasar el mouse */
+}
+
+
+.op-grid{
+  display: grid;
+  gap: clamp(20px, 3vw, 40px);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: start;
+}
+
+.op-card{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  background: transparent; 
+  margin-top: 110px;
+}
+
+.op-media{
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+}
+.op-media img {
+  max-width: 260px;
+  width: min(60vw, 240px);
+  height: auto;
+  display: block;
+  margin-bottom: 70px;
+
+  filter:
+    drop-shadow(0 22px 36px rgba(83,22,7,.32))
+    drop-shadow(0 8px 14px rgba(0,0,0,.18))
+    drop-shadow(0 3px 8px rgba(255,255,255,.20));
+
+  transition: transform .25s ease, filter .25s ease;
+}
+
+.op-media img {
+  filter:
+    drop-shadow(0 30px 45px rgba(83,22,7,.42))
+    drop-shadow(0 10px 20px rgba(0,0,0,.25))
+    drop-shadow(0 3px 10px rgba(255,255,255,.15));
+}
+
+
+
+.op-body{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+}
+
+.op-name{
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: clamp(22px, 2.2vw, 28px);
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+
+.op-desc{
+  margin: 0 0 16px;
+  line-height: 1.55;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.op-btn{
+  display: inline-block;
+  background: var(--btn);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+  box-shadow: 0 4px 10px rgba(83,22,7,.08);
+}
+
+.op-btn:hover{
+  background: var(--btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(83,22,7,.12);
+}
+
+/* ========== Botón de carrito ========== */
+.op-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;            
+  margin-top: 40px;     /* 🔹 Separación respecto al texto de arriba */
+}
+
+
+.op-cart-btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 10px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Georgia", "Times New Roman", serif;
+  transition: background .25s ease, transform .2s ease, box-shadow .25s ease;
+  box-shadow: 0 4px 10px rgba(83,22,7,.15);
+}
+
+.op-cart-btn:hover {
+  background: #7b3f00; /* tono café más claro */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(83,22,7,.25);
+}
+
+.op-cart-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--bg);
+  transition: stroke .2s ease;
+}
+
+.op-cart-btn:hover svg {
+  stroke: #fff;
+}
+
+
+/* Pequeños ajustes responsivos */
+@media (min-width: 920px){
+  /* imita dos arriba y una abajo si lo deseas */
+  .op-card:nth-child(3){
+    grid-column: 1 / span 1;
+  }
+}
+
+
+
+
+/* ============ seccion 6 ENVIOS MANZANILLO ============= */
+:root{
+  --coffee:#531607;
+  --chip:#793410;     /* color del icono y acentos */
+  --panel:#F7E7D7;
+  --bg:#DCC0B9;
+}
+
+.delivery{
+  background-color: #DCC0B9;
+  padding: 28px 16px 44px;
+  margin-top:  250px;
+}
+
+.delivery__wrap{
+  max-width: 1050px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 18px;
+}
+
+/* Card izquierda */
+.delivery__card{
+  background: #f7e7d7;
+  border: 3px solid #e8d2c4;
+  border-radius: 14px;
+  padding: 18px 18px 22px;
+  box-shadow: 0 12px 26px rgba(60,35,22,.12);
+}
+
+.delivery__header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.delivery__title{
+  margin: 0;
+  font-family: "ADLaM Display", system-ui;
+  font-size: 2.2rem;
+  line-height: 1.1;
+  color: var(--coffee);
+  letter-spacing:.2px;
+}
+.delivery__title span{ display:block; }
+
+.delivery__truck{
+  margin-left:auto;
+  display:inline-grid;
+  place-items:center;
+  width: 44px; height: 44px;
+  background: #f1e4db;
+  border: 2px solid rgba(83,22,7,.25);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+}
+.delivery__truck svg{ width: 28px; height: 28px; display:block; }
+
+/* línea separadora */
+.delivery__rule{
+  border:0; height:2px; margin: 10px 0 12px;
+  background: linear-gradient(90deg, rgba(121,52,16,.35), rgba(121,52,16,.15));
+  border-radius: 2px;
+}
+/* Línea decorativa bajo el título Envíos a Manzanillo */
+.delivery__line {
+  border: none;
+  height: 3px;
+  width: 100%;
+  background: #531607;
+  border-radius: 2px;
+  margin: 10px 0 18px 0;
+  display: block;
+}
+
+/* ===== Sticker al lado del título ===== */
+.delivery__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+
+
+
+.delivery__desc{
+  margin: 0 0 6px;
+  font-weight: 800;
+  color: #4a332e;
+}
+.delivery__small{
+  margin: 0 0 16px;
+  color: #6a4b44;
+}
+
+
+/* Botón */
+.btn{
+  text-decoration:none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items:center;
+  gap:8px;
+  transition: transform .12s ease, box-shadow .15s ease;
+  margin-top: 70px;
+  justify-content: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+.btn--dark{
+  background: var(--coffee);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(83,22,7,.25);
+}
+.btn--dark:hover{ transform: translateY(-1px); }
+
+.btn__icon{ width:18px; height:18px; object-fit:contain; }
+
+/* Mapa */
+.delivery__map{
+  border-radius: 14px;
+  overflow:hidden;
+  border: 3px solid #3c3c3c22;
+  box-shadow: 0 12px 26px rgba(60,35,22,.12);
+  aspect-ratio: 4/3;
+  background: #00000008;
+}
+.delivery__map iframe{
+  width:100%; height:100%; border:0; display:block;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .delivery__wrap{ grid-template-columns:1fr; }
+  .delivery__map{ aspect-ratio: 16/9; }
+}
+@media (max-width: 560px){
+  .delivery__title{ font-size: 1.9rem; }
+}
+
+
