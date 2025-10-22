@@ -25,6 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     echo "ID de comentario no proporcionado.";
-}
+} 
 
 ?>
