@@ -1,5 +1,5 @@
 <?php
-include "../conexion.php";
+include "../../conexion.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Manejar imagen
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-        $targetDir = "img/";
+        $targetDir = "../img/";
         $targetFile = $targetDir . basename($_FILES['imagen']['name']);
         move_uploaded_file($_FILES['imagen']['tmp_name'], $targetFile);
         $imagen = $targetFile;

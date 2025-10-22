@@ -1,4 +1,3 @@
-
       <h3><?php echo date('d ');
        switch (date('m')){
           case 1: echo ("January"); break;
@@ -7,7 +6,7 @@
           case 4: echo "April"; break;
           case 5: echo "May";break;
           case 6: echo "June"; break;
-          case 7: Echo "July"; break;
+          case 7: echo "July"; break;
           case 8: echo "August"; break;
           case 9: echo "September"; break;
           case 10: echo "October"; break;

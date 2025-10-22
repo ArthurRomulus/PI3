@@ -1,5 +1,5 @@
 <?php
-include "../conexion.php";
+include "../../conexion.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Recibir datos del formulario
@@ -10,14 +10,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Subida de imagen
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-        $targetDir = "img/";
-        // Generar un nombre único para evitar sobreescritura
-        $targetFile = $targetDir . uniqid() . "_" . basename($_FILES['imagen']['name']);
+        $targetDir = "../img/"; // para mover el archivo físicamente
+        $fileName = uniqid() . "_" . basename($_FILES['imagen']['name']);
+        $targetFile = $targetDir . $fileName;
+
+        // Mover archivo
         if (move_uploaded_file($_FILES['imagen']['tmp_name'], $targetFile)) {
-            $imagen = $targetFile;
+            $imagen = $targetFile; // <<--- Guardar exactamente la ruta que funciona desde index.php
         } else {
-            $imagen = "img/default.png"; // Imagen por defecto si falla la subida
+            $imagen = "../img/default.png";
         }
+
     } else {
         $imagen = "img/default.png"; // Imagen por defecto si no se sube nada
     }

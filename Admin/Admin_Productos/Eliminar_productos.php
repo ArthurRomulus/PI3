@@ -1,5 +1,5 @@
 <?php
-include "../conexion.php";
+include "../../conexion.php";
 
 if (isset($_POST['id'])) {
     $id = $_POST['id'];

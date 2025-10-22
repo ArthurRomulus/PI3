@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // === FUNCIONES PARA EL MODAL ===
 function openUpdateModal(button) {
   const modal = document.getElementById("updateModal");
@@ -70,3 +71,15 @@ document.getElementById("updateuser").addEventListener("click", async () => {
 });
 
 
+=======
+function closeModal(element){
+    document.getElementById(element).style.display = "None";
+}
+
+function openModal(element){
+    document.getElementById(element).style.display = "flex";
+}
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+>>>>>>> 2266480 (Initial commit)
