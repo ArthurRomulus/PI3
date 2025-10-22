@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coffee & Frappé - Iniciar Sesión</title>
-  <link rel="stylesheet" href="registro.css">
+  <link rel="stylesheet" href="login.css">
   <style>
     /* Estilo para los mensajes de error */
     .mensaje-error {
@@ -101,14 +101,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       border-radius: 5px;
     }
   </style>
-
-
 </head>
 <body>
   <div class="cup-wrapper">
     <div class="cup" id="cup">
       <div class="coffee-top"></div>
+      <div class="foam">
+        <div class="bubble bubble1"></div>
+        <div class="bubble bubble2"></div>
+        <div class="bubble bubble3"></div>
+      </div>
+
       <div class="handle"></div>
+      <div class="straw"></div>
+
+      <div class="steam"></div>
+      <div class="steam"></div>
+      <div class="steam"></div>
+
       <div class="form-container" id="formContainer">
         <h2 id="formTitle">☕ Iniciar Sesión</h2>
         
@@ -122,8 +132,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
-
 </body>
 </html>
+
 
 
