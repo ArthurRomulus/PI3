@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // === FUNCIONES PARA EL MODAL ===
 function openUpdateModal(button) {
   const modal = document.getElementById("updateModal");

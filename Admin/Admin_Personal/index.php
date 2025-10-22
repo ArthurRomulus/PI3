@@ -80,8 +80,7 @@
 
         if ($result && $result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
-            echo '<option value="'. htmlspecialchars($row['id_rol']) .'">' 
-                . htmlspecialchars($row['rolename']) . '</option>';
+            echo '<option value="'. htmlspecialchars($row['id_rol']) .'">' . htmlspecialchars($row['rolename']) . '</option>';
           }
         } else {
           echo '<option disabled>No hay roles disponibles</option>';

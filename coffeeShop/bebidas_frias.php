@@ -38,7 +38,7 @@
 
         <!-- ACCIONES -->
         <div class="footer-actions">
-          <a href="#" class="icon-btn" aria-label="Cuenta">👤</a>
+          <a href="../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
           <!-- Carrito con contador (IMPORTANTE: id en el botón y en el badge) -->
           <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
   🛒 <span></span>

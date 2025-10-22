@@ -29,7 +29,7 @@
 
         <!-- ACCIONES -->
         <div class="footer-actions">
-          <a href="#" class="icon-btn" aria-label="Cuenta">👤</a>
+          <a href="../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
           <a href="#" class="icon-btn" aria-label="Carrito">🛒</a>
           <span class="lang">ESP | ING</span>
         </div>
