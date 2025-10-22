@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 22-10-2025 a las 04:36:34
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: localhost
+-- Tiempo de generación: 22-10-2025 a las 05:35:21
+-- Versión del servidor: 8.0.17
+-- Versión de PHP: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -24,11 +25,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `auditlogs`
+--
+
+CREATE TABLE `auditlogs` (
+  `id_au` int(11) NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `categorias`
 --
 
 CREATE TABLE `categorias` (
-  `nombrecategoria` varchar(50) NOT NULL
+  `nombrecategoria` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -61,30 +74,8 @@ CREATE TABLE `cortes_caja` (
   `saldo_real_contado` decimal(10,2) DEFAULT NULL,
   `diferencia` decimal(10,2) DEFAULT NULL,
   `id_usuario_cierre` int(11) NOT NULL,
-  `estado` enum('abierto','cerrado') NOT NULL
+  `estado` enum('abierto','cerrado') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `empleados_cajeros`
---
-
-CREATE TABLE `empleados_cajeros` (
-  `userid` int(11) NOT NULL,
-  `numero_empleado` varchar(20) NOT NULL,
-  `nombre_completo` varchar(100) NOT NULL,
-  `telefono` varchar(15) NOT NULL,
-  `telefono_emergencia` varchar(15) NOT NULL,
-  `direccion` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `empleados_cajeros`
---
-
-INSERT INTO `empleados_cajeros` (`userid`, `numero_empleado`, `nombre_completo`, `telefono`, `telefono_emergencia`, `direccion`) VALUES
-(7, '10000001', 'artpapuro22', '555555555', '444444444444444', 'ffffffffffffffffff');
 
 -- --------------------------------------------------------
 
@@ -95,12 +86,12 @@ INSERT INTO `empleados_cajeros` (`userid`, `numero_empleado`, `nombre_completo`,
 CREATE TABLE `movimientos` (
   `id_movimiento` int(11) NOT NULL,
   `id_corte_caja` int(11) NOT NULL,
-  `tipo_movimiento` enum('venta','gasto','devolucion','ingreso_inicial','retiro') NOT NULL,
+  `tipo_movimiento` enum('venta','gasto','devolucion','ingreso_inicial','retiro') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `monto` decimal(10,2) NOT NULL,
-  `metodo_pago` enum('efectivo','tarjeta','transferencia') DEFAULT NULL,
-  `descripcion` varchar(255) DEFAULT NULL,
+  `metodo_pago` enum('efectivo','tarjeta','transferencia') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `id_usuario` int(11) NOT NULL,
-  `fecha_hora` timestamp NOT NULL DEFAULT current_timestamp()
+  `fecha_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -110,60 +101,45 @@ CREATE TABLE `movimientos` (
 --
 
 CREATE TABLE `productos` (
-  `idp` int(11) NOT NULL,
-  `namep` varchar(50) NOT NULL,
-  `ruta_imagen` varchar(255) DEFAULT NULL,
-  `precio` int(11) NOT NULL CHECK (`precio` >= 0),
-  `categoria` varchar(50) DEFAULT NULL,
+  `idp` varchar(5) NOT NULL,
+  `namep` varchar(100) NOT NULL,
+  `descripcion_producto` varchar(255) DEFAULT NULL,
+  `ruta_imagen` varchar(255) NOT NULL,
+  `precio` decimal(6,2) NOT NULL,
+  `categoria` varchar(50) NOT NULL,
   `sabor` int(11) DEFAULT NULL,
-  `tamano_defecto` int(11) NOT NULL DEFAULT 1,
-  `VENTAS` int(11) NOT NULL DEFAULT 0,
-  `STOCK` int(11) NOT NULL DEFAULT 0,
-  `descripcion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `tamano_defecto` int(11) DEFAULT '1',
+  `status` tinyint(1) DEFAULT '1',
+  `stock` int(11) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `VENTAS`, `STOCK`, `descripcion`) VALUES
-(51, 'Americano', '../../Images/CafeAmer.png', 40, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(52, 'Espresso', '../../Images/Espresso.png', 40, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(53, 'Macchiato', '../../Images/Macchi.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(54, 'Capucchino Entero', '../../Images/CafeCapu.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(55, 'Lechero (Entera)', '../../Images/Lechero.png', 42, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(57, 'Moka', '../../Images/Moka.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(58, 'Matcha2', '../../Images/Matchalatte.png', 65, 'Cafés', 1, 1, 0, 0, NULL),
-(59, 'Capucchino Deslactos', '../../Images/CafeCapu.png', 55, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(60, 'Irlandés', '../../Images/Irlandes.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(61, 'Latte Entero', '../../Images/Latte.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(62, 'Latter Deslactosado', '../../Images/Latte.png', 42, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(63, 'Latte Avena', '../../Images/Latte.png', 40, 'Bebidas calientes', 4, 1, 0, 0, NULL),
-(64, 'Latte Almendra', '../../Images/Latte.png', 45, 'Bebidas calientes', 5, 1, 0, 0, NULL),
-(65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(67, 'Doble', '../../Images/EspreDoble.png', 55, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(80, 'Chocolate caliente Avena', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 4, 1, 0, 0, NULL),
-(81, 'Frappé clásico Entero', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(82, 'Frappé clásico Deslactosado', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(83, 'Frappé moka Entero', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(84, 'Frappé moka Deslactosado', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(85, 'Frappé caramel Entero', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(86, 'Frappé caramel Deslactosado', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(87, 'Frappé cookies n cream Entero', '../../Images/FrappCnC.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(88, 'Frappé cookies n cream Deslactosado', '../../Images/FrappeClasic.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(89, 'Frappé matcha Entero', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(90, 'Frappé matcha Deslactosado', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(91, 'Frappé espresso Entero', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(92, 'Frappé espresso Deslactosado', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(93, 'Iced tea Negro', '../../Images/IcedTeaBlack.png', 45, 'Bebidas frias', 7, 1, 0, 0, NULL),
-(94, 'Iced tea Limón', '../../Images/IcedTea.png', 45, 'Bebidas frias', 8, 1, 0, 0, NULL),
-(95, 'Limonada', '../../Images/Limonadas.png', 40, 'Bebidas frias', 1, 1, 0, 0, NULL),
-(96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 0, 0, NULL),
-(97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 0, NULL),
-(98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 0, NULL);
+INSERT INTO `productos` (`idp`, `namep`, `descripcion_producto`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `status`, `stock`) VALUES
+('00001', 'Café Americano', '80% Agua caliente, 20% Espresso', '../../Images/CafeAmer.png', '40.00', 'Bebidas calientes', NULL, 1, 1, 25),
+('00003', 'Café Capuchino', '33% Espresso, 33% Leche, 33% Espuma de leche', '../../Images/CafeCapu.png', '45.00', 'Bebidas calientes', NULL, 1, 1, 18),
+('00004', 'Café Carajillo', '60% Café con espresso, 40% licor', '../../Images/Carajillo.png', '70.00', 'Bebidas calientes', NULL, 1, 1, 15),
+('00005', 'Café Espresso', '100% Café espresso concentrado con crema', '../../Images/Espresso.png', '40.00', 'Bebidas calientes', NULL, 1, 1, 22),
+('00006', 'Café Latte', '20% Espresso, 60% Leche caliente, 20% Espuma ligera', '../../Images/Latte.png', '45.00', 'Bebidas calientes', NULL, 1, 1, 16),
+('00007', 'Café Lechero', '30% Café, 70% Leche caliente', '../../Images/Lechero.png', '42.00', 'Bebidas calientes', NULL, 1, 1, 14),
+('00009', 'Chocolate Caliente', '70% Leche caliente, 30% Chocolate', '../../Images/ChocoCali.png', '30.00', 'Bebidas calientes', NULL, 1, 1, 20),
+('00010', 'Té Caliente', '90% Agua caliente, 10% Hojas de té', '../../Images/Te.png', '35.00', 'Bebidas calientes', NULL, 1, 1, 30),
+('00110', 'Café Mocca', '30% espresso, 50% leche, 20% chocolate', '../../Images/Moka.png', '50.00', 'Bebidas calientes', NULL, 1, 1, 20),
+('00111', 'Café Macchiato', '80% espresso, 20% espuma de leche', '../../Images/Macchi.png', '50.00', 'Bebidas calientes', NULL, 1, 1, 18),
+('00112', 'Frappé Caramel', '35% café frío, 35% leche, 20% hielo, 10% sirope de caramelo', '../../Images/FrapCaramel.png', '65.00', 'Bebidas frias', NULL, 1, 1, 15),
+('00113', 'Frappé Clásico', '40% café frío, 40% leche, 20% hielo + crema batida', '../../Images/FrappeClasic.png', '60.00', 'Bebidas frias', NULL, 1, 1, 25),
+('00114', 'Frappé Cookies and Cream', '30% leche, 35% crema, 30% hielo, 5% galleta', '../../Images/FrappCnC.png', '75.00', 'Bebidas frias', NULL, 1, 1, 14),
+('00115', 'Frappé Espresso', '50% espresso, 30% leche, 20% hielo', '../../Images/FrappEspresso.png', '75.00', 'Bebidas frias', NULL, 1, 1, 16),
+('00116', 'Frappé Matcha', '30% matcha endulzado, 40% leche, 30% hielo', '../../Images/FrappMatcha.png', '80.00', 'Bebidas frias', NULL, 1, 1, 12),
+('00117', 'Frappé Moka', '40% café frío, 30% leche, 20% hielo, 10% chocolate', '../../Images/FrappMoka.png', '65.00', 'Bebidas frias', NULL, 1, 1, 22),
+('00118', 'Café Irlandés (frío)', '10% crema batida, 60% café, 30% whiskey', '../../Images/Irlandes.png', '70.00', 'Bebidas calientes', NULL, 1, 1, 10),
+('00120', 'Té Frío', '80% té infusionado frío, 15% hielo, 5% endulzante', '../../Images/IcedTeaBlack.png', '45.00', 'Bebidas frias', NULL, 1, 1, 30),
+('00901', 'Cappuccino', 'Bolsa de 250 g con notas de cacao y toque cremoso.', '../../Images/cappuccinobag.png', '75.00', 'Bebidas calientes', NULL, 1, 1, 25),
+('00902', 'Black Coffee', 'Tostado intenso 100% arábica, aroma profundo.', '../../Images/blackcoffeebag.png', '80.00', 'Bebidas calientes', NULL, 1, 1, 30),
+('00903', 'Pods', 'Cápsulas naturales de fibra para espresso o moka.', '../../Images/podsbag.png', '85.00', 'Bebidas calientes', NULL, 1, 1, 20),
+('00904', 'Mokka', 'Mezcla artesanal con aroma suave y cuerpo balanceado.', '../../Images/mokkabag.png', '70.00', 'Bebidas calientes', NULL, 1, 1, 25);
 
 -- --------------------------------------------------------
 
@@ -173,16 +149,16 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 
 CREATE TABLE `promocion` (
   `idPromo` int(11) NOT NULL,
-  `nombrePromo` varchar(255) NOT NULL,
-  `imagen_url` varchar(255) DEFAULT NULL,
-  `codigo_promo` varchar(50) NOT NULL,
-  `condiciones` text DEFAULT NULL,
-  `tipo_descuento` enum('porcentaje','fijo') NOT NULL,
+  `nombrePromo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `imagen_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `codigo_promo` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `condiciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `tipo_descuento` enum('porcentaje','fijo') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `valor_descuento` decimal(10,2) NOT NULL,
   `fechaInicio` date NOT NULL,
   `fechaFin` date DEFAULT NULL,
-  `activo` tinyint(1) NOT NULL DEFAULT 1,
-  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `fecha_creacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -194,21 +170,11 @@ CREATE TABLE `promocion` (
 CREATE TABLE `resena` (
   `idr` int(11) NOT NULL,
   `userid` int(11) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL,
-  `comentario` text DEFAULT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `comentario` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `producto` int(11) DEFAULT NULL,
-  `estrellas` int(11) DEFAULT NULL CHECK (`estrellas` between 0 and 5),
-  `date` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `resena`
---
-
-INSERT INTO `resena` (`idr`, `userid`, `username`, `comentario`, `producto`, `estrellas`, `date`) VALUES
-(123, 4, '123', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n', 5, 5, '2025-10-15'),
-(125, 4, '123', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut ', 5, 5, '2025-10-15'),
-(126, 4, '123', 'Lorem ipsum dolor sit ametlabore et dolore magna aliqua.', 5, 5, '2025-10-15');
+  `estrellas` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -218,9 +184,9 @@ INSERT INTO `resena` (`idr`, `userid`, `username`, `comentario`, `producto`, `es
 
 CREATE TABLE `roles` (
   `id_rol` int(11) NOT NULL,
-  `rolename` varchar(50) NOT NULL,
-  `currentusers` int(11) DEFAULT 0,
-  `status` tinyint(1) DEFAULT 1
+  `rolename` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `currentusers` int(11) DEFAULT '0',
+  `status` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -241,9 +207,9 @@ INSERT INTO `roles` (`id_rol`, `rolename`, `currentusers`, `status`) VALUES
 
 CREATE TABLE `sabores` (
   `id_sabor` int(11) NOT NULL,
-  `nombre_sabor` varchar(50) NOT NULL,
-  `precio_extra` decimal(5,2) NOT NULL DEFAULT 0.00,
-  `tipo_modificador` varchar(20) NOT NULL
+  `nombre_sabor` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `precio_extra` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `tipo_modificador` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -251,14 +217,14 @@ CREATE TABLE `sabores` (
 --
 
 INSERT INTO `sabores` (`id_sabor`, `nombre_sabor`, `precio_extra`, `tipo_modificador`) VALUES
-(1, 'Sin Modificador', 0.00, 'BASE'),
-(2, 'Leche Entera', 0.00, 'LECHE_VACA'),
-(3, 'Leche Deslactosada', 5.00, 'LECHE_VACA'),
-(4, 'Leche de Avena', 10.00, 'LECHE_VEGETAL'),
-(5, 'Leche de Almendra', 10.00, 'LECHE_VEGETAL'),
-(6, 'Té Manzanilla', 0.00, 'TÉ'),
-(7, 'Té Negro', 0.00, 'TÉ'),
-(8, 'Té Limón', 0.00, 'TÉ');
+(1, 'Sin Modificador', '0.00', 'BASE'),
+(2, 'Leche Entera', '0.00', 'LECHE_VACA'),
+(3, 'Leche Deslactosada', '5.00', 'LECHE_VACA'),
+(4, 'Leche de Avena', '10.00', 'LECHE_VEGETAL'),
+(5, 'Leche de Almendra', '10.00', 'LECHE_VEGETAL'),
+(6, 'Té Manzanilla', '0.00', 'TÉ'),
+(7, 'Té Negro', '0.00', 'TÉ'),
+(8, 'Té Limón', '0.00', 'TÉ');
 
 -- --------------------------------------------------------
 
@@ -268,8 +234,8 @@ INSERT INTO `sabores` (`id_sabor`, `nombre_sabor`, `precio_extra`, `tipo_modific
 
 CREATE TABLE `tamanos` (
   `tamano_id` int(11) NOT NULL,
-  `nombre_tamano` varchar(50) NOT NULL,
-  `precio_aumento` decimal(10,2) NOT NULL DEFAULT 0.00
+  `nombre_tamano` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `precio_aumento` decimal(10,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -277,9 +243,9 @@ CREATE TABLE `tamanos` (
 --
 
 INSERT INTO `tamanos` (`tamano_id`, `nombre_tamano`, `precio_aumento`) VALUES
-(1, 'Chico', 0.00),
-(2, 'Mediano', 10.00),
-(3, 'Grande', 15.00);
+(1, 'Chico', '0.00'),
+(2, 'Mediano', '10.00'),
+(3, 'Grande', '15.00');
 
 -- --------------------------------------------------------
 
@@ -289,13 +255,13 @@ INSERT INTO `tamanos` (`tamano_id`, `nombre_tamano`, `precio_aumento`) VALUES
 
 CREATE TABLE `usuarios` (
   `userid` int(11) NOT NULL,
-  `profilescreen` varchar(255) DEFAULT NULL,
-  `username` varchar(50) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` int(11) DEFAULT 1,
-  `status` tinyint(1) DEFAULT 1,
-  `archived` tinyint(1) DEFAULT 0
+  `profilescreen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `role` int(11) DEFAULT '1',
+  `status` tinyint(1) DEFAULT '1',
+  `archived` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -304,13 +270,18 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`) VALUES
 (4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
-(5, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0),
-(6, NULL, 'Juan Pablo', 'test@ucol.mx', '$2y$10$4ynET9Xds2k.FEDXXfPugO9.2kxJqeJvb6C5GYt6YKG3F.p55Ytb.', 2, 1, 0),
-(7, '../../Images/Profiles/7_68f83fc6adfc6.png', 'aaaa', 'zzzz@gmail.com', '$2y$10$m2vKXrwX0OJLV16gVbshg.vOSs5PbAexmjuxs.1eR2.iqOzrUjNyu', 2, 1, 0);
+(5, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `auditlogs`
+--
+ALTER TABLE `auditlogs`
+  ADD PRIMARY KEY (`id_au`),
+  ADD KEY `username` (`username`);
 
 --
 -- Indices de la tabla `categorias`
@@ -325,13 +296,6 @@ ALTER TABLE `cortes_caja`
   ADD PRIMARY KEY (`id_corte_caja`);
 
 --
--- Indices de la tabla `empleados_cajeros`
---
-ALTER TABLE `empleados_cajeros`
-  ADD PRIMARY KEY (`userid`),
-  ADD UNIQUE KEY `numero_empleado` (`numero_empleado`);
-
---
 -- Indices de la tabla `movimientos`
 --
 ALTER TABLE `movimientos`
@@ -341,10 +305,7 @@ ALTER TABLE `movimientos`
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD PRIMARY KEY (`idp`),
-  ADD KEY `categoria` (`categoria`),
-  ADD KEY `sabor` (`sabor`),
-  ADD KEY `producto_ibfk_3` (`tamano_defecto`);
+  ADD PRIMARY KEY (`idp`);
 
 --
 -- Indices de la tabla `promocion`
@@ -358,8 +319,6 @@ ALTER TABLE `promocion`
 --
 ALTER TABLE `resena`
   ADD PRIMARY KEY (`idr`),
-  ADD UNIQUE KEY `idr` (`idr`),
-  ADD UNIQUE KEY `idr_2` (`idr`),
   ADD KEY `userid` (`userid`),
   ADD KEY `username` (`username`),
   ADD KEY `producto` (`producto`);
@@ -393,6 +352,12 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `auditlogs`
+--
+ALTER TABLE `auditlogs`
+  MODIFY `id_au` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `cortes_caja`
 --
 ALTER TABLE `cortes_caja`
@@ -405,12 +370,6 @@ ALTER TABLE `movimientos`
   MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `productos`
---
-ALTER TABLE `productos`
-  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
-
---
 -- AUTO_INCREMENT de la tabla `promocion`
 --
 ALTER TABLE `promocion`
@@ -420,7 +379,7 @@ ALTER TABLE `promocion`
 -- AUTO_INCREMENT de la tabla `resena`
 --
 ALTER TABLE `resena`
-  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -444,17 +403,7 @@ ALTER TABLE `tamanos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `empleados_cajeros`
---
-ALTER TABLE `empleados_cajeros`
-  ADD CONSTRAINT `empleados_cajeros_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
