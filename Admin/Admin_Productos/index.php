@@ -97,7 +97,7 @@ include "../../conexion.php";
                   data-precio="<?php echo $row['precio']; ?>" 
                   data-categoria="<?php echo $row['categoria']; ?>" 
                   data-sabor="<?php echo $row['sabor']; ?>" 
-                  data-status="<?php echo $row['status']; ?>" 
+                  data-status="<?php echo $row['STOCK']; ?>" 
                   data-imagen="<?php echo $row['ruta_imagen']; ?>">
                   
                   <img src="<?php echo $row['ruta_imagen'] ? $row['ruta_imagen'] : '../img/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
