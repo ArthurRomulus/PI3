@@ -1,115 +1,207 @@
-body {
-    background: #f8e5d1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+:root {
+  --frappe-base: #c49b77;
+  --accent1: #f1c27d;
+  --accent2: #b3744d;
+}
 
+* { box-sizing: border-box; }
+
+body {
+    background-image: url("../images/logo.png");
+  background-repeat: repeat;
+  background-size: 152px;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .cup-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.cup.frappe {
-    background: #c49b77;
-    border-radius: 50px 50px 90px 90px;
-    height: 500px;
-    position: relative;
-    width: 380px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-
+/* Apariencia principal del frappe */
+.cup {
+  position: relative;
+  width: 380px;
+  height: 500px;
+  background: var(--frappe-base);
+  border-radius: 50px 50px 90px 90px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transition: all 0.8s ease-in-out;
 }
 
+/* En frappé el coffee-top desaparece visualmente */
+.coffee-top {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  height: 100px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: inset 0 8px 20px rgba(0,0,0,0.4);
+  opacity: 0;        /* oculto */
+  pointer-events: none;
+}
+
+/* Espuma visible y con burbujas */
 .foam {
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    height: 120px;
-    opacity: 1;
-    visibility: visible;
-
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: none;
+  box-shadow: none;
+  opacity: 1;
+  visibility: visible;
+  overflow: visible;
 }
 
-.bubble {
-    position: absolute;
-    background: #fff;
-    border-radius: 50%;
-
+/* Burbujas individuales */
+.foam .bubble {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.12);
 }
 
-.bubble1 { width: 200px; height: 100px; top: 20px; left: -5px; }
+.bubble1 {
+  width: 200px;
+  height: 100px;
+  top: 20px;
+  left: -5px;
+}
+.bubble2 {
+  width: 160px;
+  height: 120px;
+  top: 0px;
+  left: 120px;
+}
+.bubble3 {
+  width: 190px;
+  height: 100px;
+  top: 25px;
+  left: 200px;
+}
 
-.bubble2 { width: 160px; height: 120px; top: 0px; left: 120px; }
+/* Asa oculta en frappé */
+.handle {
+  position: absolute;
+  right: -80px;
+  top: 120px;
+  width: 120px;
+  height: 180px;
+  border: 18px solid var(--frappe-base);
+  border-left: none;
+  border-radius: 0 100px 100px 0;
+  opacity: 0; /* oculto */
+  transition: all 0.8s ease-in-out;
+}
 
-.bubble3 { width: 190px; height: 100px; top: 25px; left: 200px; }
-
+/* Popote visible en frappé */
 .straw {
-    position: absolute;
-    top: -140px;
-    left: 70%;
-    width: 25px;
-    height: 160px;
-    background: linear-gradient(45deg, #ff5f5f, #ffb347);
-    border-radius: 12px;
-    transform: rotate(10deg);
-    opacity: 1;
-
+  position: absolute;
+  top: -140px;
+  left: 20%;
+  width: 25px;
+  height: 160px;
+  background: linear-gradient(45deg, #ff5f5f, #ffb347);
+  border-radius: 12px;
+  transform: rotate(10deg);
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
 }
 
-.form-container {
-    position: relative;
-    top: -10px;
-    padding: 20px;
-    text-align: center;
-    color: white;
+/* Vapor oculto en frappé */
+.steam {
+  position: absolute;
+  top: -80px;
+  left: 40%;
+  width: 60px;
+  height: 120px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: none;
+  opacity: 0;
+}
 
+/* Form */
+.form-container {
+  position: relative;
+  top: -10px;
+  padding: 20px;
+  text-align: center;
+  color: white;
 }
 
 .form-container h2 {
-    margin-bottom: 40px;
-    font-size: 30px;
-    font-weight: 700;
-    color: #7c6853;
-    margin-top: 10px;
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #7c6853;
+  position: relative;
+  top: -15px;
+  right: 8px;
 }
 
 .form-container input {
-    width: 90%;
-    padding: 12px 14px;
-    margin: 10px 0;
-    border-radius: 20px;
-    font-size: 15px;
-    background: #fff8f1;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 20px;
+  position: relative;
+  top: 12px;
+  font-size: 15px;
+  background: #fff8f1;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
 
+.form-container input:focus {
+  outline: none;
+  background: #fdf1e4;
+  box-shadow: 0 0 6px rgba(210, 150, 90, 0.6);
 }
 
 .form-container button {
-    width: 92%;
-    padding: 14px;
-    margin-top: 150px;
-    border: none;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #f1c27d, #b3744d);
-    color: white;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  width: 92%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 28px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  top: 5px;
 }
 
-.toggle-btn {
-    margin-top: 22px;
-    background: none;
-    border: none;
-    color: #f1e7dc;
-    font-size: 15px;
-    cursor: pointer;
+@media (max-width: 420px) {
+  .cup { width: 300px; height: 460px; }
+  .foam .bubble { transform: scale(0.8); }
+}
 
+/* --- ESTE ES EL CAMBIO --- */
+/* Enlace al registro (renombrado de .link a .toggle-btn) */
+.toggle-btn {
+  display: inline-block; /* Para que respete los márgenes */
+  margin-top: 25px;  /* Aumentado de 12px para "bajarlo" */
+  font-size: 14px;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
 }
