@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil y Datos Personales</title>
     <link rel="stylesheet" href="perfil.css">
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 </head>
 <body>
     <div class="app-container">
         <div id="navbar-placeholder"></div>
         <main class="main-content">
 
-            <button class="btn btn-logout">Cerrar Sesión</button>
+<button class="btn btn-logout" id="logout-btn">Cerrar Sesión</button>
 
             <div class="perfil-container">
 
@@ -69,34 +73,34 @@
                               <path d="M 215 45 L 215 60 M 235 45 L 235 60" stroke="#777" stroke-width="3"/>
                          </svg>
                          <div class="form-overlay">
-                             <h2 class="title">DATOS PERSONALES</h2>
-                               <form>
-                                   <div class="form-group">
-                                       <label for="nombre">Nombre:</label>
-                                       <input type="text" id="nombre">
-                                   </div>
-                                   <div class="form-group">
-                                       <label for="correo">Correo Electronico:</label>
-                                       <input type="email" id="correo">
-                                   </div>
-                                   <div class="form-group">
-                                       <label for="telefono">Telefono:</label>
-                                       <input type="tel" id="telefono">
-                                   </div>
-                                   <div class="form-group">
-                                       <label for="emergencias">Telefono emergencias:</label>
-                                       <input type="tel" id="emergencias">
-                                   </div>
-                                   <div class="form-group">
-                                       <label for="direccion">Dirección vive:</label>
-                                       <input type="text" id="direccion">
-                                   </div>
-                                   <div class="form-group">
-                                       <label for="empleado">Numero empleado:</label>
-                                       <input type="text" id="empleado" value="(20216721)" readonly>
-                                   </div>
-                               </form>
-                         </div>
+    <h2 class="title">DATOS PERSONALES</h2>
+    <form id="datosPersonalesForm">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre_completo">
+        </div>
+        <div class="form-group">
+            <label for="correo">Correo Electronico:</label>
+            <input type="email" id="correo" name="email">
+        </div>
+        <div class="form-group">
+            <label for="telefono">Telefono:</label>
+            <input type="tel" id="telefono" name="telefono">
+        </div>
+        <div class="form-group">
+            <label for="emergencias">Telefono emergencias:</label>
+            <input type="tel" id="emergencias" name="telefono_emergencia">
+        </div>
+        <div class="form-group">
+            <label for="direccion">Dirección vive:</label>
+            <input type="text" id="direccion" name="direccion">
+        </div>
+        <div class="form-group">
+            <label for="empleado">Numero empleado:</label>
+            <input type="text" id="empleado" name="numero_empleado" readonly>
+        </div>
+    </form>
+</div>
                     </div>
                     <button class="btn btn-save" id="save-data-btn">Guardar Cambios</button>
                 </div>
@@ -105,36 +109,204 @@
     </div>
 
     <script src="../barraNav.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof cargarBarraNav === 'function') {
-                cargarBarraNav();
+<script>
+    // Función para mostrar mensajes de estado con detalle de depuración
+    function showStatusMessage(message, isSuccess) {
+        // Usa alert para una depuración rápida
+        alert(`Estado: ${isSuccess ? 'Éxito' : 'Fallo'}\nMensaje: ${message}`);
+    }
+
+    // Función de ayuda para serializar el formulario en FormData
+    function serializeForm(form) {
+        return new FormData(form);
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof cargarBarraNav === 'function') {
+            cargarBarraNav();
+        }
+
+        // Elementos DOM
+        const profilePictureContainer = document.querySelector('.profile-picture-container');
+        const fileInput = document.getElementById('profile-upload');
+        const profileImage = document.getElementById('profile-image');
+        const iconPlaceholder = document.getElementById('icon-placeholder');
+        const cameraIcon = document.getElementById('camera-icon');
+        const datosPersonalesForm = document.getElementById('datosPersonalesForm');
+        
+        // Botones clave con los IDs corregidos
+        const saveDataBtn = document.getElementById('save-data-btn'); // Guarda Datos de Texto
+        const saveProfileBtn = document.getElementById('save-profile-btn'); // Guarda Imagen
+        
+        // --- Lógica de Previsualización de Imagen ---
+        let selectedFile = null;
+
+        profilePictureContainer.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file; // Guarda la referencia al archivo
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    profileImage.setAttribute('href', e.target.result);
+                    iconPlaceholder.style.display = 'none';
+                    cameraIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
             }
+        });
+        
+        // =======================================================
+        // LÓGICA DE CARGA DE DATOS (AJAX GET) - CON DEPURACIÓN
+        // =======================================================
+        const loadEmployeeData = async () => {
+            try {
+                const response = await fetch('get_perfil_data.php');
 
-            const profilePictureContainer = document.querySelector('.profile-picture-container');
-            const fileInput = document.getElementById('profile-upload');
-            const profileImage = document.getElementById('profile-image');
-            const iconPlaceholder = document.getElementById('icon-placeholder');
-            const cameraIcon = document.getElementById('camera-icon');
-            
-            profilePictureContainer.addEventListener('click', () => {
-                fileInput.click();
-            });
+                if (!response.ok) {
+                    // Si el código de respuesta no es 200 (ej. 403, 404, 500)
+                    let errorDetail = `HTTP ${response.status}.`;
+                    try {
+                        const errorJson = await response.json();
+                        errorDetail = errorJson.message || errorDetail;
+                    } catch (e) {
+                        // El servidor PHP tuvo un error fatal y no devolvió JSON
+                        errorDetail = `HTTP ${response.status}. Error interno del servidor o ruta de 'conexion.php' incorrecta.`;
+                    }
+                    throw new Error(errorDetail);
+                }
 
-            fileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        profileImage.setAttribute('href', e.target.result);
-                        
+                const result = await response.json();
+                
+                if (result.success) {
+                    const data = result.data;
+                    
+                    // Rellenar el formulario
+                    document.getElementById('nombre').value = data.nombre_completo || '';
+                    document.getElementById('correo').value = data.email || '';
+                    document.getElementById('telefono').value = data.telefono || '';
+                    document.getElementById('emergencias').value = data.telefono_emergencia || '';
+                    document.getElementById('direccion').value = data.direccion || '';
+                    document.getElementById('empleado').value = data.numero_empleado || '';
+                    
+                    // Cargar imagen de perfil si existe
+                    if (data.profilescreen) {
+                        profileImage.setAttribute('href', data.profilescreen);
                         iconPlaceholder.style.display = 'none';
                         cameraIcon.style.display = 'none';
-                    };
-                    reader.readAsDataURL(file);
+                    }
+                } else {
+                    // Si PHP devuelve success: false (ej. usuario no encontrado)
+                    throw new Error(result.message);
                 }
-            });
+
+            } catch (error) {
+                console.error("Fallo al cargar los datos:", error);
+                showStatusMessage(`No se pudieron cargar los datos del perfil. DETALLE: ${error.message}`, false);
+            }
+        };
+
+
+        // =======================================================
+        // LÓGICA DE GUARDADO DE FOTO (AJAX POST a update_perfil_picture.php)
+        // =======================================================
+        saveProfileBtn.addEventListener('click', async (event) => { // ID: save-profile-btn
+            event.preventDefault();
+
+            if (!selectedFile) {
+                showStatusMessage("Por favor, selecciona una imagen primero.", false);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('profile_file', selectedFile, selectedFile.name); 
+
+            try {
+                const response = await fetch('update_perfil_picture.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatusMessage(result.message, true);
+                    // Recargar los datos para refrescar la foto si el guardado fue exitoso
+                    loadEmployeeData(); 
+                    fileInput.value = ''; 
+                    selectedFile = null;
+                } else {
+                    showStatusMessage(result.message, false);
+                }
+
+            } catch (error) {
+                console.error("Fallo al subir la imagen:", error);
+                showStatusMessage("Error de conexión o servidor al guardar la imagen.", false);
+            }
         });
-    </script>
+
+
+        // =======================================================
+        // LÓGICA DE GUARDADO DE DATOS (AJAX POST a update_perfil_data.php)
+        // =======================================================
+        saveDataBtn.addEventListener('click', async (event) => { // ID: save-data-btn
+            event.preventDefault();
+
+            const formData = new FormData(datosPersonalesForm); // Solo campos de texto
+            
+            try {
+                const response = await fetch('update_perfil_data.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatusMessage(result.message, true);
+                } else {
+                    showStatusMessage(result.message, false);
+                }
+
+            } catch (error) {
+                console.error("Fallo al guardar los datos:", error);
+                showStatusMessage("Error de conexión o servidor al guardar los cambios.", false);
+            }
+        });
+        
+
+const logoutBtn = document.getElementById('logout-btn');
+        
+        logoutBtn.addEventListener('click', () => {
+            // El usuario está en PI3/Cajero/Perfil/perfil.html
+            // logout.php está en PI3/
+            // Por lo tanto, la ruta relativa es: ../../logout.php
+            window.location.href = '../../General/logout.php';
+        });
+
+        // =======================================================
+        // PREVENCIÓN DE VUELTA AL HISTORIAL (Anti-Back Button)
+        // =======================================================
+        // Evita que la página actual sea cacheada. Al dar clic en "Atrás",
+        // forzará la recarga de la página anterior (que será login.php tras el logout).
+        window.onload = function() {
+            if (window.history && window.history.pushState) {
+                // Inserta un estado de historial falso
+                window.history.pushState('forward', document.title, window.location.href);
+                // Cuando el usuario intenta ir hacia atrás, volvemos a insertar el estado.
+                window.onpopstate = function() {
+                    window.history.pushState('forward', document.title, window.location.href);
+                };
+            }
+        };
+
+        // Iniciar la carga de datos al terminar de cargar la página
+        loadEmployeeData();
+    });
+</script>
 </body>
 </html>
