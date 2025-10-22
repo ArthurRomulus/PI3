@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-10-2025 a las 18:11:51
+-- Tiempo de generación: 22-10-2025 a las 04:36:34
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -63,6 +63,28 @@ CREATE TABLE `cortes_caja` (
   `id_usuario_cierre` int(11) NOT NULL,
   `estado` enum('abierto','cerrado') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `empleados_cajeros`
+--
+
+CREATE TABLE `empleados_cajeros` (
+  `userid` int(11) NOT NULL,
+  `numero_empleado` varchar(20) NOT NULL,
+  `nombre_completo` varchar(100) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
+  `telefono_emergencia` varchar(15) NOT NULL,
+  `direccion` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `empleados_cajeros`
+--
+
+INSERT INTO `empleados_cajeros` (`userid`, `numero_empleado`, `nombre_completo`, `telefono`, `telefono_emergencia`, `direccion`) VALUES
+(7, '10000001', 'artpapuro22', '555555555', '444444444444444', 'ffffffffffffffffff');
 
 -- --------------------------------------------------------
 
@@ -283,7 +305,8 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`) VALUES
 (4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
 (5, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0),
-(6, NULL, 'Juan Pablo', 'test@ucol.mx', '$2y$10$4ynET9Xds2k.FEDXXfPugO9.2kxJqeJvb6C5GYt6YKG3F.p55Ytb.', 2, 1, 0);
+(6, NULL, 'Juan Pablo', 'test@ucol.mx', '$2y$10$4ynET9Xds2k.FEDXXfPugO9.2kxJqeJvb6C5GYt6YKG3F.p55Ytb.', 2, 1, 0),
+(7, '../../Images/Profiles/7_68f83fc6adfc6.png', 'aaaa', 'zzzz@gmail.com', '$2y$10$m2vKXrwX0OJLV16gVbshg.vOSs5PbAexmjuxs.1eR2.iqOzrUjNyu', 2, 1, 0);
 
 --
 -- Índices para tablas volcadas
@@ -300,6 +323,13 @@ ALTER TABLE `categorias`
 --
 ALTER TABLE `cortes_caja`
   ADD PRIMARY KEY (`id_corte_caja`);
+
+--
+-- Indices de la tabla `empleados_cajeros`
+--
+ALTER TABLE `empleados_cajeros`
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `numero_empleado` (`numero_empleado`);
 
 --
 -- Indices de la tabla `movimientos`
@@ -414,7 +444,17 @@ ALTER TABLE `tamanos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `empleados_cajeros`
+--
+ALTER TABLE `empleados_cajeros`
+  ADD CONSTRAINT `empleados_cajeros_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
