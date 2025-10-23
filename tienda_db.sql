@@ -300,13 +300,7 @@ ALTER TABLE `cortes_caja`
 --
 ALTER TABLE `movimientos`
   ADD PRIMARY KEY (`id_movimiento`);
-
---
--- Indices de la tabla `productos`
---
-ALTER TABLE `productos`
-  ADD PRIMARY KEY (`idp`);
-
+  
 --
 -- Indices de la tabla `promocion`
 --
