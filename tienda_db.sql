@@ -111,7 +111,7 @@ CREATE TABLE `productos` (
   `tamano_defecto` int(11) DEFAULT '1',
   `status` tinyint(1) DEFAULT '1',
   `stock` int(11) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
@@ -174,7 +174,7 @@ CREATE TABLE `resena` (
   `comentario` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `producto` int(11) DEFAULT NULL,
   `estrellas` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
