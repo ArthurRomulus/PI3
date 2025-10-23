@@ -101,7 +101,7 @@ CREATE TABLE `movimientos` (
 --
 
 CREATE TABLE `productos` (
-  `idp` varchar(5) NOT NULL,
+  `idp` int(11) NOT NULL,
   `namep` varchar(100) NOT NULL,
   `descripcion_producto` varchar(255) DEFAULT NULL,
   `ruta_imagen` varchar(255) NOT NULL,
