@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Subida de imagen
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-        $targetDir = "../img/"; // para mover el archivo físicamente
+        $targetDir = "../../Images/"; // para mover el archivo físicamente
         $fileName = uniqid() . "_" . basename($_FILES['imagen']['name']);
         $targetFile = $targetDir . $fileName;
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (move_uploaded_file($_FILES['imagen']['tmp_name'], $targetFile)) {
             $imagen = $targetFile; // <<--- Guardar exactamente la ruta que funciona desde index.php
         } else {
-            $imagen = "../img/default.png";
+            $imagen = "../../Images/default.png";
         }
 
     } else {

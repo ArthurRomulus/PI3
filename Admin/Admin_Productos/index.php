@@ -97,10 +97,10 @@ include "../../conexion.php";
                   data-precio="<?php echo $row['precio']; ?>" 
                   data-categoria="<?php echo $row['categoria']; ?>" 
                   data-sabor="<?php echo $row['sabor']; ?>" 
-                  data-status="<?php echo $row['STOCK']; ?>" 
+                  data-status="<?php echo $row['stock']; ?>" 
                   data-imagen="<?php echo $row['ruta_imagen']; ?>">
                   
-                  <img src="<?php echo $row['ruta_imagen'] ? $row['ruta_imagen'] : '../img/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
+                  <img src="<?php echo $row['ruta_imagen'] ? $row['ruta_imagen'] : '../../Images/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
                   <span class="product-name"><?php echo $row['namep']; ?></span>
                   <span class="product-categoria"><?php echo $row['categoria']; ?></span>
                   <span class="product-price">$<?php echo number_format($row['precio'], 2); ?></span>

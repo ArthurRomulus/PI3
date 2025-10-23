@@ -16,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Manejo de imagen
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
-        $carpeta = "../img/";
+        $carpeta = "../../Images/";
         $nombreImagen = time() . "_" . basename($_FILES['imagen']['name']);
         $rutaDestino = $carpeta . $nombreImagen;
 
         if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino)) {
-            $imagen = "../img/" . $nombreImagen;
+            $imagen = "../../Images/" . $nombreImagen;
         } else {
             $imagen = "img/default.png";
         }
