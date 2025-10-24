@@ -1,0 +1,400 @@
+:root{
+  --bg:#f6f7fb;
+  --panel:#ffffff;
+  --ink:#202327;
+  --ink-soft:#5b6068;
+  --primary:#3b82f6;
+  --border:#e6e8ef;
+  --ring: 0 0 0 3px rgba(222, 162, 115, 0.18); /* ↑ sutilmente más visible */
+  --radius:14px;
+  --shadow:0 20px 40px rgba(23,30,50,.06);
+
+  /* NUEVO: variables de tu paleta café/beige para usar coherentemente */
+  --coffee:#5b3527;
+  --beige:#DCC0B9;
+  --input:#f7eadf;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  background-color: var(--beige);
+  color:var(--ink);
+  font: 15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+.shell{
+  max-width: 1180px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+.app{
+  background: var(--panel);
+  border: 1px solid var(--coffee);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 680px;
+  overflow: hidden;
+}
+
+/* ===== Sidebar (color, línea vertical y espacio para logo) ===== */
+.sidebar{
+  position: relative;
+  background-color: var(--beige);  /* fondo del panel izquierdo */
+  padding-bottom: 64px;            /* espacio para el logo inferior */
+}
+.sidebar::after{                   /* línea vertical separadora */
+  content:"";
+  position:absolute;
+  top:0; right:0;
+  width:1px; height:100%;
+  background: var(--coffee);
+  opacity:.9;
+}
+
+/* ===== Avatar centrado ===== */
+.brand{
+  position: relative;
+  display:flex;
+  justify-content:center;          /* centra horizontalmente */
+  align-items:center;
+  padding:12px 8px 6px;
+}
+.brand .avatar{
+  width:110px; height:110px;
+  border-radius:50%; object-fit:cover;
+  border:3px solid var(--input);
+  outline:2px solid var(--coffee);
+  box-shadow:0 10px 20px rgba(23,30,50,.08);
+}
+
+/* ===== Botón de cámara tocando el avatar ===== */
+/* Usa <label for="upload-photo" class="cam-badge"> en el HTML */
+.cam-badge{
+  position:absolute;
+  bottom:6px;
+  left:50%;
+  transform:translateX(26px);      /* acercado para que “toque” el borde */
+  width:44px; height:44px;
+  cursor:pointer;
+}
+.cam-badge::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:50%;
+  background:#fff;
+  border:1px solid var(--coffee);
+  box-shadow:var(--shadow);
+  transition:.2s ease;
+}
+.cam-badge:hover::before{
+  background:#f0e0d8;
+  transform:scale(1.05);
+}
+.cam-badge svg{
+  position:relative;
+  display:block;
+  margin:10px auto 0;              /* centra el ícono dentro del círculo */
+  color:var(--coffee);
+}
+.cam-badge:focus-visible{
+  outline:none;
+  box-shadow:var(--ring);
+  border-radius:50%;
+}
+
+/* ===== Logo centrado pegado abajo ===== */
+.sidebar-bottom{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  display:flex; justify-content:center; align-items:flex-end;
+}
+.sidebar-logo{
+  display:block;
+  max-width:70%;
+  width:220px;
+  height:auto;
+  opacity:.88;                      /* “poquito” transparente */
+  margin-bottom:-1px;               /* toca la línea inferior */
+}
+
+
+/* === 3) Mini-sección activa con color (por si algún estilo lo pisó) === */
+.nav a.active{
+  background: var(--input) !important;   /* beige claro */
+  border-color: var(--coffee) !important;
+  color: var(--coffee) !important;
+}
+
+/* (Opcional) hace que el resto del sidebar conserve el tono claro */
+.nav a:hover{ background: var(--input); }
+
+/* === 4) Por si el logo toca justo la línea inferior, asegúrate que quede centrado === */
+.sidebar-bottom{ left:0; right:0; bottom:0; display:flex; justify-content:center; }
+.sidebar-logo{ opacity:.88; margin-bottom:-1px; }
+
+
+/* ====== NAV: estilo nuevo unificado (sobrescribe lo anterior) ====== */
+.nav {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Botón del menú con el mismo look que tus nuevos botones */
+.nav a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color: var(--coffee);
+  background: transparent;
+  padding: 18px 14px;              /* altura como los nuevos */
+  border-radius: 12px;             /* igual que .btn */
+  border: 1px solid transparent;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+.nav a:hover{
+  background: var(--input);
+  border-color: var(--coffee);
+  transform: translateX(3px);      /* mismo “desliz” */
+  box-shadow: 0 8px 22px rgba(91,53,39,.15);  /* sombra igual */
+}
+
+.nav a:focus-visible{
+  outline: none;
+  box-shadow: var(--ring);
+}
+
+.nav a.active{
+  background: var(--input) !important;
+  border-color: var(--coffee) !important;
+  color: var(--coffee) !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(91,53,39,.15);
+}
+
+/* Íconos del menú: tamaño y animación sutil */
+.nav svg{
+  width: 16px;      /* puedes bajar a 14 si los quieres más chicos */
+  height: 16px;
+  color: var(--coffee);
+  flex-shrink: 0;
+  transition: transform .15s ease, color .15s ease;
+}
+
+.nav a:hover svg{ transform: scale(1.06); }
+.nav a.active svg{ color:#3b241b; }
+
+
+/* Main */
+.main{padding: 28px 32px; background-color: var(--beige);}
+h1{font-size:26px; margin:0 0 18px}
+
+.card{
+  border:1px solid var(--coffee);
+  border-radius: var(--radius);
+  background-color: var(--beige);
+  box-shadow: var(--shadow);
+}
+
+.section{padding: 22px 24px}
+.section + .section{border-top:1px solid var(--coffee)}
+
+/* ↑ Mejor contraste en textos secundarios */
+.muted{color:#4b3a32;}
+
+/* Form */
+.grid{
+  display:grid; gap:18px; grid-template-columns: repeat(12,1fr);
+}
+.col-6{grid-column: span 6}
+.col-12{grid-column: span 12}
+
+label{display:block; font-weight:600; margin-bottom:8px; color:#3e2c24;} /* NUEVO: etiqueta más marcada */
+
+.field{display:flex; align-items:center; gap:10px; position:relative;}
+
+input[type="text"], input[type="email"], input[type="date"], select{
+  width:100%;
+  appearance:none;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 14px;
+  outline: none; background:var(--input); color:var(--ink);
+  transition:.15s ease, box-shadow .15s ease;
+}
+input::placeholder{color:#8a7e77;} /* NUEVO: placeholder más legible */
+input:focus, select:focus{
+  border-color:var(--coffee);
+  box-shadow: var(--ring);
+}
+
+/* Select caret */
+.select-wrap{position:relative}
+.select-wrap svg{
+  position:absolute; right:12px; top:50%;
+  transform:translateY(-50%); pointer-events:none; color:#9aa3b2
+}
+
+.tz-hint{font-size:12px; color:#4b3a32; margin-top:6px}
+
+.actions{display:flex; gap:10px}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:11px 18px; border-radius:12px; border:1px solid transparent; cursor:pointer; font-weight:600;
+  background: var(--coffee); color:#fff;
+  box-shadow: 0 8px 22px rgba(222, 158, 103, 0.25);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease; /* NUEVO */
+}
+.btn:hover{
+  transform: translateY(-2px);                         /* NUEVO animación */
+  box-shadow: 0 12px 26px rgba(91,53,39,.35);          /* NUEVO sombra más profunda */
+}
+.btn:active{transform: translateY(0);}                 /* NUEVO feedback click */
+.btn:focus{outline:none; box-shadow: var(--ring)}
+.btn.secondary{
+  background:#fff; color:var(--ink); border-color:var(--border); box-shadow:none
+}
+.btn.secondary:hover{background:#fff; border-color:#cdb2a8;}
+
+/* NUEVO: inputs en error/ok (por si los usas más adelante) */
+.input--error{border-color:#b42318 !important;}
+.input--ok{border-color:#1a7f37 !important;}
+
+/* Responsive */
+@media (max-width: 960px){
+  .app{grid-template-columns: 1fr}
+  .sidebar{border-right:0; border-bottom:1px solid var(--border)}
+}
+@media (max-width: 640px){
+  .grid{grid-template-columns: 1fr}
+  .col-6,.col-12{grid-column:auto}
+  .nav a{padding:18px 10px;} /* NUEVO: toque para móvil */
+}
+
+
+/* ===== PERFIL PRINCIPAL ===== */
+.panel{background:var(--beige); border:1px solid var(--coffee); border-radius:14px; box-shadow:var(--shadow)}
+.panel .inner{padding:22px 24px}
+h1{margin:0 0 18px; font-size:28px; color:var(--coffee)}
+.hello{font-size:14px; color:var(--ink-soft); margin-bottom:20px}
+
+.content-grid{display:grid; gap:18px; grid-template-columns:1fr 0.9fr}
+.card{background:var(--input); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow)}
+.card .body{padding:18px}
+.card h2{font-size:18px; color:var(--coffee); margin-top:0}
+
+/* Perfil mini */
+.profile-mini{display:grid; grid-template-columns:80px 1fr; gap:14px; align-items:center}
+.profile-mini img{width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--input); outline:2px solid var(--coffee)}
+.profile-mini .name{font-weight:700; font-size:18px; color:var(--coffee)}
+.profile-mini .meta{font-size:14px; color:var(--ink-soft)}
+.meta .dot{display:inline-block; width:8px; height:8px; border-radius:50%; background:#2ecc71; margin-right:6px}
+
+/* Lista datos */
+.data{display:grid; grid-template-columns:1fr 1fr; gap:10px 18px}
+.data dt{font-weight:600; color:#3e2c24}
+.data dd{margin:0; color:var(--ink)}
+
+/* Botones */
+.actions{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:8px}
+.btn{
+  background:#fff; color:var(--coffee);
+  border:1px solid var(--border);
+  border-radius:12px; padding:10px;
+  font-weight:600; cursor:pointer;
+  transition:.15s ease;
+}
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 20px rgba(0,0,0,.12);
+  border-color:var(--coffee);
+  background:var(--input);
+}
+
+/* Responsive */
+@media (max-width:980px){
+  .content-grid{grid-template-columns:1fr}
+}
+
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 12px; border-radius:12px; border:1px solid var(--border);
+  background:#fff; color:var(--coffee); font-weight:600; cursor:pointer;
+  text-decoration:none; /* importante para <a> */
+  transition:.15s ease;
+}
+.btn:hover{ transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.12); border-color:var(--coffee); background:var(--input); }
+
+
+/* ===== NAV: estilo final unificado (forzado) ===== */
+.sidebar .nav{
+  margin-top: 30px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+/* Botón de menú con el MISMO look que tus nuevos botones */
+.sidebar .nav a{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+  text-decoration: none !important;
+  color: var(--coffee) !important;
+
+  padding: 18px 14px !important;        /* altura “acolchada” */
+  border-radius: 12px !important;        /* igual que .btn */
+  border: 1px solid transparent !important;
+  background: transparent !important;
+
+  transition: background .15s ease, border-color .15s ease,
+              transform .15s ease, box-shadow .15s ease !important;
+}
+
+/* Hover idéntico al de los botones principales */
+.sidebar .nav a:hover{
+  background: var(--input) !important;
+  border-color: var(--coffee) !important;
+  transform: translateX(3px) !important;
+  box-shadow: 0 8px 22px rgba(91,53,39,.15) !important;
+}
+
+/* Enfoque accesible */
+.sidebar .nav a:focus-visible{
+  outline: none !important;
+  box-shadow: var(--ring) !important;
+}
+
+/* Estado activo igual */
+.sidebar .nav a.active{
+  background: var(--input) !important;
+  border-color: var(--coffee) !important;
+  color: var(--coffee) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 12px rgba(91,53,39,.15) !important;
+}
+
+/* Tamaño de iconos + animación sutil */
+.sidebar .nav a svg{
+  width: 16px !important;    /* baja a 14px si los quieres más chicos */
+  height: 16px !important;
+  color: var(--coffee) !important;
+  flex-shrink: 0 !important;
+  transition: transform .15s ease, color .15s ease !important;
+}
+.sidebar .nav a:hover svg{ transform: scale(1.06) !important; }
+.sidebar .nav a.active svg{ color: #3b241b !important; }

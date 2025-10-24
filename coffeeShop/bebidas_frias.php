@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coffee-Shop</title>
-    <link rel="stylesheet" href="Style.css" />
+    <link rel="stylesheet" href="css/Style.css" />
     <link rel="icon" href="assest/logotipocafes.png" />
     <link rel="stylesheet" href="catalogo.css" />
     <style>
@@ -38,7 +38,7 @@
 
         <!-- ACCIONES -->
         <div class="footer-actions">
-          <a href="../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
+          <a href="#" class="icon-btn" aria-label="Cuenta">👤</a>
           <!-- Carrito con contador (IMPORTANTE: id en el botón y en el badge) -->
           <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
   🛒 <span></span>
