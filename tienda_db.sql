@@ -85,7 +85,7 @@ CREATE TABLE `empleados_cajeros` (
 -- Estructura de tabla para la tabla `administradores`
 --
 
-CREATE TABLE `asministradores` (
+CREATE TABLE `administradores` (
   `userid` int(11) NOT NULL,
   `numero_admin` varchar(20) NOT NULL,
   `nombre_completo` varchar(100) NOT NULL,
