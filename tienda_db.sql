@@ -82,6 +82,22 @@ CREATE TABLE `empleados_cajeros` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `administradores`
+--
+
+CREATE TABLE `asministradores` (
+  `userid` int(11) NOT NULL,
+  `numero_admin` varchar(20) NOT NULL,
+  `nombre_completo` varchar(100) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
+  `telefono_emergencia` varchar(15) NOT NULL,
+  `direccion` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `movimientos`
 --
 
@@ -331,6 +347,14 @@ ALTER TABLE `empleados_cajeros`
   ADD UNIQUE KEY `numero_empleado` (`numero_empleado`);
 
 --
+-- Indices de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `numero_admin` (`numero_admin`);
+
+
+--
 -- Indices de la tabla `movimientos`
 --
 ALTER TABLE `movimientos`
@@ -454,6 +478,13 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `empleados_cajeros`
   ADD CONSTRAINT `empleados_cajeros_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+--
+-- Filtros para la tabla `administrador`
+--
+ALTER TABLE `administrador`
+  ADD CONSTRAINT `administrador_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
