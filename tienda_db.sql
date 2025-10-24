@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-10-2025 a las 18:25:35
+-- Tiempo de generación: 25-10-2025 a las 01:36:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -24,10 +24,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `administradores`
+--
+
+CREATE TABLE `administradores` (
+  `userid` int(11) NOT NULL,
+  `numero_admin` varchar(20) NOT NULL,
+  `nombre_completo` varchar(100) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
+  `telefono_emergencia` varchar(15) NOT NULL,
+  `direccion` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `categorias`
 --
 
 CREATE TABLE `categorias` (
+  `id_categoria` int(11) NOT NULL,
   `nombrecategoria` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -35,16 +51,16 @@ CREATE TABLE `categorias` (
 -- Volcado de datos para la tabla `categorias`
 --
 
-INSERT INTO `categorias` (`nombrecategoria`) VALUES
-('Bebidas calientes'),
-('Bebidas frias'),
-('Cafés'),
-('Comida'),
-('Frappés'),
-('Panes'),
-('Postres'),
-('Sin café'),
-('Temporada');
+INSERT INTO `categorias` (`id_categoria`, `nombrecategoria`) VALUES
+(1, 'Bebidas calientes'),
+(2, 'Bebidas frias'),
+(3, 'Cafés'),
+(4, 'Comida'),
+(5, 'Frappés'),
+(6, 'Panes'),
+(7, 'Postres'),
+(8, 'Sin café'),
+(9, 'Temporada');
 
 -- --------------------------------------------------------
 
@@ -78,22 +94,6 @@ CREATE TABLE `empleados_cajeros` (
   `telefono_emergencia` varchar(15) NOT NULL,
   `direccion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `administradores`
---
-
-CREATE TABLE `administradores` (
-  `userid` int(11) NOT NULL,
-  `numero_admin` varchar(20) NOT NULL,
-  `nombre_completo` varchar(100) NOT NULL,
-  `telefono` varchar(15) NOT NULL,
-  `telefono_emergencia` varchar(15) NOT NULL,
-  `direccion` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 -- --------------------------------------------------------
 
@@ -173,7 +173,37 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 (96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 0, 0, NULL),
 (97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 0, NULL),
 (98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 0, NULL),
-(99, 'Frappe Machine', '../img/68fb9ef301530_maxresdefault.jpg', 2147483647, 'Panes', 1, 1, 0, 0, NULL);
+(100, 'the cofi', '../../Images/68fbfd1963946_Frappé matcha.png', 69, NULL, 1, 1, 0, 0, NULL),
+(102, 'cofff', '../../Images/68fbfe1aa4b68_Cafe carajillo.png', 67, NULL, 2, 1, 0, 0, NULL),
+(103, 'theex', '../../Images/68fbfe420c7d7_Cafe latte.png', 67, NULL, 2, 1, 0, 0, NULL),
+(104, 'Cafeee', '../../Images/68fbffd94b439_Cafe bombon.png', 67, NULL, 1, 1, 0, 0, NULL),
+(106, 'late', '../../Images/68fc00971d167_Cafe latte.png', 45, NULL, 2, 1, 0, 0, NULL),
+(108, 'Frappé', '../../Images/68fc09e70216a_Cafe latte.png', 69, 'Array', 2, 1, 0, 0, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_categorias`
+--
+
+CREATE TABLE `producto_categorias` (
+  `idp` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `producto_categorias`
+--
+
+INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
+(102, 4),
+(103, 4),
+(104, 6),
+(106, 2),
+(106, 3),
+(108, 2),
+(108, 3),
+(108, 4);
 
 -- --------------------------------------------------------
 
@@ -328,10 +358,17 @@ INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `passwor
 --
 
 --
+-- Indices de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `numero_admin` (`numero_admin`);
+
+--
 -- Indices de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  ADD PRIMARY KEY (`nombrecategoria`);
+  ADD PRIMARY KEY (`id_categoria`);
 
 --
 -- Indices de la tabla `cortes_caja`
@@ -347,14 +384,6 @@ ALTER TABLE `empleados_cajeros`
   ADD UNIQUE KEY `numero_empleado` (`numero_empleado`);
 
 --
--- Indices de la tabla `administradores`
---
-ALTER TABLE `administradores`
-  ADD PRIMARY KEY (`userid`),
-  ADD UNIQUE KEY `numero_admin` (`numero_admin`);
-
-
---
 -- Indices de la tabla `movimientos`
 --
 ALTER TABLE `movimientos`
@@ -368,6 +397,13 @@ ALTER TABLE `productos`
   ADD KEY `categoria` (`categoria`),
   ADD KEY `sabor` (`sabor`),
   ADD KEY `producto_ibfk_3` (`tamano_defecto`);
+
+--
+-- Indices de la tabla `producto_categorias`
+--
+ALTER TABLE `producto_categorias`
+  ADD PRIMARY KEY (`idp`,`id_categoria`),
+  ADD KEY `id_categoria` (`id_categoria`);
 
 --
 -- Indices de la tabla `promocion`
@@ -416,6 +452,12 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `categorias`
+--
+ALTER TABLE `categorias`
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT de la tabla `cortes_caja`
 --
 ALTER TABLE `cortes_caja`
@@ -431,7 +473,7 @@ ALTER TABLE `movimientos`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT de la tabla `promocion`
@@ -474,17 +516,23 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- Filtros para la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD CONSTRAINT `administradores_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `empleados_cajeros`
 --
 ALTER TABLE `empleados_cajeros`
   ADD CONSTRAINT `empleados_cajeros_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 --
--- Filtros para la tabla `administrador`
+-- Filtros para la tabla `producto_categorias`
 --
-ALTER TABLE `administradores`
-  ADD CONSTRAINT `administradores_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `producto_categorias`
+  ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
+  ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
