@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coffee-Shop</title>
-    <link rel="stylesheet" href="Style.css" />
+    <link rel="stylesheet" href="css/Style.css" />
+    <link rel="stylesheet" href="css/acercade.css">
     <link rel="icon" href="assest/logotipocafes.png" />
   </head>
   <body>
@@ -28,7 +29,7 @@
 
         <!-- ACCIONES -->
         <div class="footer-actions">
-          <a href="../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
+          <a href="#" class="icon-btn" aria-label="Cuenta">👤</a>
           <a href="#" class="icon-btn" aria-label="Carrito">🛒</a>
           <span class="lang">ESP | ING</span>
         </div>
@@ -46,18 +47,18 @@
             disfrutar a tu manera.
           </p>
 
-          <div class="about-badges">
-            <div class="badge">
-              <span class="big">1</span>
-              <span class="small">Año</span>
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="stat-number">1</span>
+              <span class="stat-label">Año</span>
             </div>
-            <div class="badge">
-              <span class="big">+40</span>
-              <span class="small">Recetas</span>
+            <div class="stat-box">
+              <span class="stat-number">+40</span>
+              <span class="stat-label">Recetas</span>
             </div>
-            <div class="badge">
-              <span class="big">1</span>
-              <span class="small">Sucursal</span>
+            <div class="stat-box">
+              <span class="stat-number">1</span>
+              <span class="stat-label">Sucursal</span>
             </div>
           </div>
         </div>
@@ -98,7 +99,8 @@
         </div>
       </div>
     </section>
-    <!-- Seccion 3 cuadrado con iconos -->
+
+        <!-- Seccion 3 cuadrado con iconos -->
     <section class="features">
       <div class="features-box">
         <div class="feature-item">
@@ -127,28 +129,98 @@
         </div>
       </div>
     </section>
-    <!--seccion 4 descubre el sbr y la exp-->
-    <section class="cta-experience">
-      <div class="cta-wrap">
-        <div class="cta-text">
-          <h3>Descubre el sabor y la experiencia</h3>
-          <p>Que te espera en nuestras instalaciones</p>
 
-          <div class="cta-actions">
-            <a href="contacto.html" class="btn btn-solid">Visítanos</a>
-            <a href="catalogo.html" class="btn btn-outline">Conoce el menú</a>
-          </div>
-        </div>
 
-        <!-- Fotos -->
-        <div class="cta-photos">
-          <img src="assest/varistacoffee.jpeg" alt="Barista preparando café" />
-          <img
-            src="/assest/cleintacooffee.jpeg"
-            alt="Cliente disfrutando café"
-          />
+    <!-- Seccion 4 Nuestro equipo -->
+<section class="coffee-stories" id="coffee-stories">
+  <div class="cs-wrap">
+
+    <!-- Frase superior -->
+    <p class="cs-intro">
+      Somos un grupo <strong>#CoffeeLovers</strong> y productores de
+      <strong>Manzanillo</strong>, Tecomán, buscando nuevas formas de compartir nuestra
+      <strong>pasión por el café</strong>.
+    </p>
+
+    <!-- Grid de 3 columnas -->
+    <div class="cs-grid">
+      <!-- Card 1 -->
+      <article class="cs-card">
+        <div class="cs-media">
+          <img src="assest/agricultor2.png" alt="Cosecha de café en Finca La Roca" loading="lazy">
         </div>
+        <h3 class="cs-title">FINCA LA ROCA (COATEPEC, VER)</h3>
+        <p class="cs-text">
+          Nuestro café se cultiva en Finca La Roca a 1,250 m s. n. m., con una
+          selección de granos de productores invitados que cuidan cada detalle para
+          que tu café reciba el respeto que se merece.
+        </p>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="cs-card">
+        <div class="cs-media">
+          <img src="assest/agricultor.png" alt="Selección manual de granos de café" loading="lazy">
+        </div>
+        <h3 class="cs-title">SELECCIÓN ESPECIAL</h3>
+        <p class="cs-text">
+          Una selección de granos cultivados con el cuidado de los cafés de altura
+          y la dedicación en el proceso de los granos de especialidad. Tostamos
+          cada semana para que recibas tu café siempre fresco.
+        </p>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="cs-card">
+        <div class="cs-media">
+          <img src="assest/agricultor3.jpg" alt="Granos de café tostados con reconocimientos" loading="lazy">
+        </div>
+        <h3 class="cs-title">CAFÉ DE ALTURA</h3>
+        <p class="cs-text">
+          Gracias al trabajo de nuestros productores, las fincas donde se cultiva
+          tu café han sido reconocidas en certámenes de relevancia como la
+          <em>Cup of Excellence</em> (México 2018 y 2019).
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+    
+
+
+    <!-- =================seccion 5 descubre el sbr y la exp============= -->
+    <section class="hero-cafe">
+  <!-- Íconos de fondo con <img> -->
+  <img class="hero-decor decor-1" src="assest/iconoplanta1.png" alt="" aria-hidden="true">
+  <img class="hero-decor decor-2" src="assest/icono_planta2.png" alt="" aria-hidden="true">
+
+  <div class="hero-wrap">
+    <!-- Lado izquierdo: textos -->
+    <div class="hero-copy">
+      <h1 class="hero-title">
+        Descubre el sabor<br>
+        y la experiencia
+      </h1>
+      <p class="hero-sub">
+        Sumérgete en el aroma, disfruta cada sorbo y vive la experiencia única que solo nuestra cafetería puede ofrecerte.
+        Cada rincón, cada taza… una historia que te inspira.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#visitanos" class="btn btn-primary">Visítanos</a>
+        <a href="#menu" class="btn btn-ghost">Conoce el menú</a>
       </div>
+    </div>
+
+    <!-- Lado derecho: tarjetas de imagen (SIN títulos) -->
+    <div class="hero-media">
+      <figure class="media-card card-bottom">
+        <img src="assest/negro_programndo.jpg" alt="Productor seleccionando granos" loading="lazy">
+      </figure>
+    </div>
+  </div>
+</section>
+
 
       <!-- Decoración inferior -->
       <div class="cta-decor">
@@ -164,7 +236,8 @@
           <img src="assest/iconcofe.png" alt="" aria-hidden="true" />
         </div>
       </div>
-    </section>
+
+      
         <!-- ===================== FOOTER ===================== -->
 <footer class="cs-footer" aria-labelledby="footer-title">
   <h2 id="footer-title" class="sr-only">Información del sitio</h2>
