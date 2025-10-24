@@ -37,7 +37,7 @@
 
         <!-- ACCIONES -->
         <div class="footer-actions">
-          <a href="../General/login.php.php" class="icon-btn" aria-label="Cuenta">👤</a>
+          <a href="../General/registro.php" class="icon-btn" aria-label="Cuenta">👤</a>
           <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
   🛒 <span></span>
 </a>

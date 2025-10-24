@@ -1,41 +1,77 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Shop - Promociones</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Shop - Promociones</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-            <div class="container">
-                <div id="navbar-placeholder"></div>
-                <main class="main-content">
-            <header>
-                <h1>Descuentos y promociones</h1>
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar">
-                </div>
-            </header>
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">Todas</button>
-                <button class="filter-btn" data-filter="bebidas">Bebidas</button>
-                <button class="filter-btn" data-filter="comida">Comida</button>
-                <button class="filter-btn" data-filter="postres">Postres</button>
-            </div>
-            <section class="promotions-grid">
-                <!-- Contenedor vacío: las promociones se cargarán dinámicamente desde la base de datos -->
-            </section>
-        </main>
+  <div class="container">
+    <div id="navbar-placeholder"></div>
+
+    <main class="main-content">
+      <header class="header-3-col">
+        <div class="brand">Blackwood Coffee</div>
+        <h1>Descuentos y promociones</h1>
+        <div class="date"> </div>
+      </header>
+
+      <section class="filters">
+        <input class="search" type="search" placeholder="Buscar..." />
+        <div class="cats">
+          <button class="cat-btn active" data-filter="all">Todas</button>
+          <button class="cat-btn" data-filter="frappes">Frappes</button>
+          <button class="cat-btn" data-filter="tes">Tés</button>
+          <button class="cat-btn" data-filter="cafes">Cafés</button>
+          <button class="cat-btn" data-filter="comida">Comida</button>
+          <button class="cat-btn" data-filter="postres">Postres</button>
+          <button class="cat-btn" data-filter="panes">Panes</button>
         </div>
-                <script src="../barraNav.js"></script>
-                <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                        const currentPage = window.location.pathname.split("/").pop();
-                        cargarBarraNav(currentPage);
-                    });
-                </script>
-                <script src="script.js"></script>
+      </section>
+
+      <section class="promotions-grid" aria-label="Productos">
+        </section>
+    </main>
+  </div>
+
+  <script src="../barraNav.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const currentPage = window.location.pathname.split("/").pop();
+      cargarBarraNav(currentPage);
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Carga la barra de navegación
+      const currentPage = window.location.pathname.split("/").pop();
+      cargarBarraNav(currentPage);
+
+      // --- CÓDIGO DE LA FECHA AÑADIDO (de productos.html) ---
+      const dateElement = document.querySelector('.date');
+      if (dateElement) {
+          // Arrays para los nombres en español
+          const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+          const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+          
+          const fechaActual = new Date();
+          
+          // Formateamos la fecha al estilo "Jueves, 5 de octubre de 2025"
+          const diaSemana = dias[fechaActual.getDay()];
+          const diaMes = fechaActual.getDate();
+          const mes = meses[fechaActual.getMonth()];
+          const anio = fechaActual.getFullYear();
+          
+          dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
+      }
+      // --- FIN DEL CÓDIGO DE LA FECHA ---
+
+    });
+  </script>
+  <script src="script.js"></script>
+  
 </body>
 </html>

@@ -132,6 +132,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
+  <a href="../Usuario/index.php" target="_blank" class="logo-fijo">
+    <img src="../images/logo.png" alt="Logo Blackwood Coffee">
+  </a>
 </body>
 </html>
 
