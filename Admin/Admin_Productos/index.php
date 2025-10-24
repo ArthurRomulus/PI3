@@ -16,8 +16,7 @@ include "../../conexion.php";
 
   <div class="content">
     <div class="top-bar">
-    <?php include "../AdminProfileSesion.php"; ?>
-
+      <?php include "../AdminProfileSesion.php"; ?>
     </div>
 
     <h1>Coffee Shop</h1>
@@ -55,30 +54,40 @@ include "../../conexion.php";
       $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
       $buscar = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 
-      if ($categoria && $buscar) {
-          $sql = "SELECT * FROM productos WHERE categoria = ? AND namep LIKE ?";
-          $stmt = $conn->prepare($sql);
-          $buscarParam = "%$buscar%";
-          $stmt->bind_param("ss", $categoria, $buscarParam);
-          $stmt->execute();
-          $result = $stmt->get_result();
-      } elseif ($categoria) {
-          $sql = "SELECT * FROM productos WHERE categoria = ?";
-          $stmt = $conn->prepare($sql);
-          $stmt->bind_param("s", $categoria);
-          $stmt->execute();
-          $result = $stmt->get_result();
-      } elseif ($buscar) {
-          $sql = "SELECT * FROM productos WHERE namep LIKE ?";
-          $stmt = $conn->prepare($sql);
-          $buscarParam = "%$buscar%";
-          $stmt->bind_param("s", $buscarParam);
-          $stmt->execute();
-          $result = $stmt->get_result();
-      } else {
-          $sql = "SELECT * FROM productos";
-          $result = $conn->query($sql);
+      // Consulta con múltiples categorías
+      $sql = "SELECT p.*, GROUP_CONCAT(c.nombrecategoria SEPARATOR ', ') AS categorias
+              FROM productos p
+              LEFT JOIN producto_categorias pc ON p.idp = pc.idp
+              LEFT JOIN categorias c ON pc.id_categoria = c.id_categoria";
+
+      $params = [];
+      $types = "";
+      $conditions = [];
+
+      if ($buscar) {
+          $conditions[] = "p.namep LIKE ?";
+          $params[] = "%$buscar%";
+          $types .= "s";
       }
+
+      if ($categoria) {
+          $conditions[] = "c.nombrecategoria = ?";
+          $params[] = $categoria;
+          $types .= "s";
+      }
+
+      if ($conditions) {
+          $sql .= " WHERE " . implode(" AND ", $conditions);
+      }
+
+      $sql .= " GROUP BY p.idp";
+
+      $stmt = $conn->prepare($sql);
+      if ($params) {
+          $stmt->bind_param($types, ...$params);
+      }
+      $stmt->execute();
+      $result = $stmt->get_result();
 
       if ($result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
@@ -90,19 +99,28 @@ include "../../conexion.php";
                 case 3: $sabor_texto = 'Grande'; break;
                 default: $sabor_texto = 'Desconocido';
             }
+
+            // Obtener categorías del producto (para el modal de editar)
+            $cat_actuales = [];
+            $cat_query = $conn->query("SELECT c.nombrecategoria FROM producto_categorias pc 
+                                        JOIN categorias c ON pc.id_categoria = c.id_categoria
+                                        WHERE pc.idp = ".$row['idp']);
+            while($c = $cat_query->fetch_assoc()){
+                $cat_actuales[] = $c['nombrecategoria'];
+            }
               ?>
               <div class="product-card" 
                   data-id="<?php echo $row['idp']; ?>" 
                   data-nombre="<?php echo $row['namep']; ?>" 
                   data-precio="<?php echo $row['precio']; ?>" 
-                  data-categoria="<?php echo $row['categoria']; ?>" 
+                  data-categorias="<?php echo implode(',', $cat_actuales); ?>" 
                   data-sabor="<?php echo $row['sabor']; ?>" 
-                  data-status="<?php echo $row['stock']; ?>" 
+                  data-status="<?php echo $row['STOCK']; ?>" 
                   data-imagen="<?php echo $row['ruta_imagen']; ?>">
                   
                   <img src="<?php echo $row['ruta_imagen'] ? $row['ruta_imagen'] : '../../Images/default.png'; ?>" alt="<?php echo $row['namep']; ?>">
                   <span class="product-name"><?php echo $row['namep']; ?></span>
-                  <span class="product-categoria"><?php echo $row['categoria']; ?></span>
+                  <span class="product-categoria"><?php echo htmlspecialchars($row['categorias']); ?></span>
                   <span class="product-price">$<?php echo number_format($row['precio'], 2); ?></span>
                   <span class="product-sabor"><?php echo $sabor_texto; ?></span>
                   
@@ -118,7 +136,7 @@ include "../../conexion.php";
       }
       ?>
 
-      <!-- Cuadro para agregar producto (solo uno al final del grid) -->
+      <!-- Cuadro para agregar producto -->
       <div class="product-card add-product" id="openModal">
         <i class="fas fa-plus"></i>
         <span>Agregar Producto</span>
@@ -126,8 +144,7 @@ include "../../conexion.php";
     </div>
   </div>
 
-  <!-- Modal flotante para agregar producto -->
-  <!-- Modal flotante para agregar producto -->
+  <!-- Modal Agregar Producto -->
 <div id="productModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -137,9 +154,8 @@ include "../../conexion.php";
       <input type="file" name="imagen" accept="image/*">
       <input type="number" name="precio" placeholder="Precio" required>
       
-      <!-- Select para categoría -->
-      <select name="categoria" required>
-        <option value="">Selecciona categoría</option>
+      <!-- Select múltiple para categorías -->
+      <select id="categoriaSelect" name="categoria[]" multiple required>
         <?php
         $categoria_result = $conn->query("SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
         if ($categoria_result->num_rows > 0) {
@@ -162,21 +178,20 @@ include "../../conexion.php";
     </form>
   </div>
 </div>
-  <!-- Modal flotante para editar producto -->
-  <div id="editModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Editar Producto</h2>
-      <form action="Editar_productos.php" method="POST" enctype="multipart/form-data">
-        <!-- Campo oculto para el ID del producto -->
-        <input type="hidden" id="editId" name="id">
 
+<!-- Modal Editar Producto -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Editar Producto</h2>
+    <form action="Editar_productos.php" method="POST" enctype="multipart/form-data">
+        <input type="hidden" id="editId" name="id">
         <input type="text" id="editName" name="name" placeholder="Nombre del producto" required>
         <input type="file" id="editImage" name="imagen" accept="image/*">
         <input type="number" id="editPrice" name="precio" placeholder="Precio" required>
         
-        <select id="editCategoria" name="categoria" required>
-          <option value="">Selecciona categoría</option>
+        <!-- Select múltiple para categorías -->
+        <select id="editCategoria" name="categoria[]" multiple required>
           <?php
           $categoria_result = $conn->query("SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
           if ($categoria_result->num_rows > 0) {
@@ -195,89 +210,100 @@ include "../../conexion.php";
         </select>
 
         <button type="submit">Actualizar</button>
-      </form>
-    </div>
+    </form>
   </div>
+</div>
 
-  <!-- Scripts -->
-  <script>
-    // --- Modal de Agregar ---
-    const productModal = document.getElementById('productModal');
-    const openModalBtn = document.getElementById('openModal');
-    const closeBtns = document.querySelectorAll('.modal .close');
+<script>
+  // --- Modal Agregar ---
+  const productModal = document.getElementById('productModal');
+  const openModalBtn = document.getElementById('openModal');
+  const closeBtns = document.querySelectorAll('.modal .close');
 
-    openModalBtn.onclick = () => productModal.style.display = 'flex';
+  openModalBtn.onclick = () => productModal.style.display = 'flex';
+  closeBtns.forEach(btn => btn.onclick = () => btn.parentElement.parentElement.style.display = 'none');
+  window.onclick = e => { if(e.target.classList.contains('modal')) e.target.style.display = 'none'; }
 
-    // Cerrar cualquier modal
-    closeBtns.forEach(btn => {
-      btn.onclick = () => btn.parentElement.parentElement.style.display = 'none';
+  // --- Modal Editar ---
+  const editModal = document.getElementById('editModal');
+  const editButtons = document.querySelectorAll('.product-actions .edit');
+
+  editButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.product-card');
+      const id = card.dataset.id;
+      const name = card.dataset.nombre;
+      const price = card.dataset.precio;
+      const categorias = card.dataset.categorias.split(',');
+      const sabor = card.dataset.sabor;
+
+      document.getElementById('editId').value = id;
+      document.getElementById('editName').value = name;
+      document.getElementById('editPrice').value = price;
+      document.getElementById('editSabor').value = sabor;
+
+      // Marcar las categorías seleccionadas
+      const select = document.getElementById('editCategoria');
+      Array.from(select.options).forEach(option => {
+          option.selected = categorias.includes(option.value);
+      });
+
+      editModal.style.display = 'flex';
     });
+  });
 
-    window.onclick = (e) => {
-      if (e.target.classList.contains('modal')) {
-        e.target.style.display = 'none';
+  // --- Eliminar producto ---
+  const deleteButtons = document.querySelectorAll('.product-actions .delete');
+  deleteButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.product-card');
+      const id = card.dataset.id;
+
+      if (confirm("¿Seguro que deseas eliminar este producto?")) {
+        fetch("Eliminar_productos.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "id=" + encodeURIComponent(id),
+        })
+        .then(res => res.text())
+        .then(data => {
+          if (data.trim() === "success") {
+            alert("Producto eliminado correctamente");
+            card.remove();
+          } else {
+            alert("Error al eliminar: " + data);
+          }
+        })
+        .catch(err => alert("Error en la solicitud: " + err));
       }
-    };
-
-    // --- Modal de Editar ---
-    const editModal = document.getElementById('editModal');
-    const editButtons = document.querySelectorAll('.product-actions .edit');
-
-    editButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const card = btn.closest('.product-card');
-
-        // Usamos dataset (data-*) directamente
-        const id = card.dataset.id;
-        const name = card.dataset.nombre;
-        const price = card.dataset.precio;
-        const categoria = card.dataset.categoria;
-        const sabor = card.dataset.sabor;
-
-        // Rellenamos el modal con los datos del producto
-        document.getElementById('editId').value = id;
-        document.getElementById('editName').value = name;
-        document.getElementById('editPrice').value = price;
-        document.getElementById('editCategoria').value = categoria;
-        document.getElementById('editSabor').value = sabor;
-
-        // Mostramos el modal
-        editModal.style.display = 'flex';
-      });
     });
+  });
 
-    // --- Eliminar producto ---
-    const deleteButtons = document.querySelectorAll('.product-actions .delete');
-
-    deleteButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const card = btn.closest('.product-card');
-        const id = card.dataset.id;
-
-        if (confirm("¿Seguro que deseas eliminar este producto?")) {
-          // Petición AJAX para eliminar
-          fetch("Eliminar_productos.php", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: "id=" + encodeURIComponent(id),
-          })
-          .then(res => res.text())
-          .then(data => {
-            if (data.trim() === "success") {
-              alert("Producto eliminado correctamente");
-              card.remove(); // Eliminar del DOM sin recargar
-            } else {
-              alert("Error al eliminar: " + data);
-            }
-          })
-          .catch(err => {
-            alert("Error en la solicitud: " + err);
-          });
-        }
+  // Hacer que se puedan seleccionar varias opciones solo con click (Agregar)
+  const categoriaSelect = document.getElementById('categoriaSelect');
+  if(categoriaSelect){
+      categoriaSelect.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          const option = e.target;
+          if (option.tagName === 'OPTION') {
+              option.selected = !option.selected;
+          }
       });
-    });
-  </script>
+  }
+
+  // Hacer que se puedan seleccionar varias opciones solo con click (Editar)
+  const editCategoriaSelect = document.getElementById('editCategoria');
+  if(editCategoriaSelect){
+      editCategoriaSelect.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          const option = e.target;
+          if (option.tagName === 'OPTION') {
+              option.selected = !option.selected;
+          }
+      });
+  }
+
+
+</script>
 </body>
 </html>
