@@ -4,8 +4,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const apiUrl = 'obtener_promociones.php';
     const grid = document.querySelector('.promotions-grid');
-    const searchInput = document.querySelector('.search-bar input');
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    // ----- CORREGIDO -----
+    // El input de búsqueda ahora tiene la clase '.search'
+    const searchInput = document.querySelector('.search'); 
+    // Los botones de filtro ahora tienen la clase '.cat-btn'
+    const filterButtons = document.querySelectorAll('.cat-btn');
+    // ---------------------
 
     let promotions = [];
 
@@ -31,33 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = p.imagen_url;
             img.alt = p.nombrePromo || 'Imagen promoción';
             img.className = 'promo-img';
-            img.loading = 'lazy';
-            img.onerror = function() {
-                console.warn('Imagen de promoción no encontrada:', this.src);
-                this.style.display = 'none';
-            };
             card.appendChild(img);
         }
         card.appendChild(title);
         card.appendChild(desc);
+        
         return card;
     }
 
-    function render(promos) {
+    function render(promoList) {
         grid.innerHTML = '';
-        if (!promos.length) {
-            grid.innerHTML = '<p>No hay promociones por el momento.</p>';
+        if (promoList.length === 0) {
+            grid.innerHTML = '<p>No se encontraron promociones.</p>';
             return;
         }
-        promos.forEach((p) => {
-            const card = createCard(p);
-            grid.appendChild(card);
+        promoList.forEach(p => {
+            grid.appendChild(createCard(p));
         });
     }
 
     function applyFilters() {
-        const searchTerm = (searchInput.value || '').toLowerCase();
-        const activeFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeFilter = document.querySelector('.cat-btn.active').dataset.filter || 'all';
+
         const filtered = promotions.filter(p => {
             let category = (p.tipo_descuento || '').toLowerCase();
             if (category.includes('bebida')) category = 'bebidas';
@@ -79,13 +80,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!json.success) throw new Error(json.error || 'Error al obtener promociones');
             promotions = json.data || [];
             render(promotions);
+            
             // Enlazar eventos de filtro/búsqueda
+            // (Esto fallaba antes y causaba que no se viera nada)
             filterButtons.forEach(btn => btn.addEventListener('click', (e) => {
                 filterButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 applyFilters();
             }));
-            searchInput.addEventListener('input', applyFilters);
+            
+            // Comprobamos que searchInput no sea null antes de añadir el listener
+            if (searchInput) {
+                searchInput.addEventListener('input', applyFilters);
+            }
         })
         .catch(err => {
             console.error('Error cargando promociones:', err);

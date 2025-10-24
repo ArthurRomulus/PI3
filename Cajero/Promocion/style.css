@@ -227,21 +227,21 @@ header {
 /* Desktop: keep portrait (taller-than-wide) cards but allow more columns */
 @media (min-width: 900px) {
     .promotions-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 1rem;
     }
 
     .promo-card {
         flex-direction: column;
         align-items: stretch;
-        min-height: 210px;
+        min-height: 270px;
         max-width: 220px;
         gap: 0.5rem;
     }
 
     .promo-img {
         width: 100%;
-        height: 100px;
+        height: 150px;
         border-radius: 10px;
         margin-bottom: 0.5rem;
         object-fit: cover;
