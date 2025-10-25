@@ -2,41 +2,61 @@
 include "../../conexion.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Recibir datos del formulario
-    $namep = $_POST['name'];        // Asegúrate que coincida con el name del input
+    $namep = $_POST['name'];
     $precio = $_POST['precio'];
-    $categoria = $_POST['categoria'];
+    $categorias = $_POST['categoria']; // ahora es un array
     $sabor = $_POST['sabor'];
 
     // Subida de imagen
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-        $targetDir = "../../Images/"; // para mover el archivo físicamente
+        $targetDir = "../../Images/";
         $fileName = uniqid() . "_" . basename($_FILES['imagen']['name']);
         $targetFile = $targetDir . $fileName;
 
-        // Mover archivo
         if (move_uploaded_file($_FILES['imagen']['tmp_name'], $targetFile)) {
-            $imagen = $targetFile; // <<--- Guardar exactamente la ruta que funciona desde index.php
+            $imagen = $targetFile;
         } else {
             $imagen = "../../Images/default.png";
         }
-
     } else {
-        $imagen = "img/default.png"; // Imagen por defecto si no se sube nada
+        $imagen = "../../Images/default.png";
     }
 
-    // Insertar en la base de datos
-    $sql = "INSERT INTO productos (namep, precio, categoria, sabor, ruta_imagen) VALUES (?, ?, ?, ?, ?)";
+    // Insertar producto (sin categoría)
+    $sql = "INSERT INTO productos (namep, precio, sabor, ruta_imagen) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
+    if ($stmt === false) die("Error en la preparación: " . $conn->error);
 
-    if ($stmt === false) {
-        die("Error en la preparación: " . $conn->error);
-    }
-
-    $stmt->bind_param("sisis", $namep, $precio, $categoria, $sabor, $imagen);
+    $stmt->bind_param("siss", $namep, $precio, $sabor, $imagen);
 
     if ($stmt->execute()) {
-        // Redirigir de nuevo a la página de productos si todo salió bien
+        $id_producto = $stmt->insert_id;
+
+        // Insertar todas las categorías seleccionadas
+        foreach ($categorias as $categoria_nombre) {
+            // Preparar consulta para obtener id_categoria
+            $cat_query = $conn->prepare("SELECT id_categoria FROM categorias WHERE nombrecategoria = ?");
+            if ($cat_query === false) die("Error en preparación de categoría: " . $conn->error);
+            
+            $cat_query->bind_param("s", $categoria_nombre);
+            $cat_query->execute();
+            $cat_result = $cat_query->get_result();
+            $cat_row = $cat_result->fetch_assoc();
+
+            if ($cat_row) {
+                $id_categoria = $cat_row['id_categoria'];
+
+                // Insertar relación en producto_categorias
+                $relacion = $conn->prepare("INSERT INTO producto_categorias (idp, id_categoria) VALUES (?, ?)");
+                if ($relacion === false) die("Error en preparación de relación: " . $conn->error);
+                $relacion->bind_param("ii", $id_producto, $id_categoria);
+                $relacion->execute();
+                $relacion->close();
+            }
+
+            $cat_query->close(); // se cierra aquí, fuera del if
+        }
+
         header("Location: index.php");
         exit;
     } else {
