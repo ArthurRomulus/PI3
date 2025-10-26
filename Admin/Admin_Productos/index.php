@@ -157,10 +157,10 @@ include "../../conexion.php";
       <!-- Select múltiple para categorías -->
       <select id="categoriaSelect" name="categoria[]" multiple required>
         <?php
-        $categoria_result = $conn->query("SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
+        $categoria_result = $conn->query("SELECT id_categoria, nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
         if ($categoria_result->num_rows > 0) {
             while($cat = $categoria_result->fetch_assoc()) {
-                echo '<option value="' . htmlspecialchars($cat['nombrecategoria']) . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
+                echo '<option value="' . $cat['id_categoria'] . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
             }
         }
         ?>
