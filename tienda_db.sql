@@ -60,7 +60,8 @@ INSERT INTO `categorias` (`id_categoria`, `nombrecategoria`) VALUES
 (6, 'Panes'),
 (7, 'Postres'),
 (8, 'Sin café'),
-(9, 'Temporada');
+(9, 'Temporada'),
+(10, 'Tés');
 
 -- --------------------------------------------------------
 
