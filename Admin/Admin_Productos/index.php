@@ -50,6 +50,11 @@ include "../../conexion.php";
     <!-- Sección de productos -->
     <h3>Productos</h3>
     <div class="products-container">
+      <!-- Cuadro para agregar producto -->
+      <div class="product-card add-product" id="openModal">
+        <i class="fas fa-plus"></i>
+        <span>Agregar Producto</span>
+      </div>   
       <?php
       $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
       $buscar = isset($_GET['buscar']) ? $_GET['buscar'] : '';
@@ -88,6 +93,7 @@ include "../../conexion.php";
       }
       $stmt->execute();
       $result = $stmt->get_result();
+      
 
       if ($result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
@@ -135,12 +141,6 @@ include "../../conexion.php";
           echo "<p>No hay productos registrados.</p>";
       }
       ?>
-
-      <!-- Cuadro para agregar producto -->
-      <div class="product-card add-product" id="openModal">
-        <i class="fas fa-plus"></i>
-        <span>Agregar Producto</span>
-      </div>   
     </div>
   </div>
 
