@@ -168,12 +168,15 @@ CREATE TABLE `promocion` (
 --
 
 CREATE TABLE `resena` (
-  `idr` int(11) NOT NULL,
-  `userid` int(11) DEFAULT NULL,
-  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `comentario` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `producto` int(11) DEFAULT NULL,
-  `estrellas` int(11) DEFAULT NULL
+  `idr` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `nombre` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `comentario` text COLLATE utf8mb4_general_ci,
+  `calificacion` int(11) DEFAULT NULL,
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `imagen_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `etiquetas` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `likes` int(11) DEFAULT 0,
+  `parent_id` int(11) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
