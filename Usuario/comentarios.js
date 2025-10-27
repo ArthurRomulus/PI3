@@ -56,13 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ====================================================
-    // === CAMBIO 1: FUNCIÓN RENDERIZAR COMENTARIO (RECURSIVA) ===
-    // ====================================================
     /**
      * Esta función ahora es recursiva.
      * Pinta un comentario y, si tiene respuestas, se llama a sí misma para pintarlas.
-     * El argumento 'isReply' cambia el HTML para que sea más pequeño.
      */
     function renderizarComentario(com, isReply = false) {
         
@@ -106,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 6. Ensamblamos la tarjeta/respuesta
-        // Usamos una clase 'card--reply' si es una respuesta
         const cardClass = isReply ? 'card card--reply' : 'card';
         
         return `
@@ -178,10 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // ====================================================
-    // === CAMBIO 2: EVENT LISTENER PARA CLICS (MODIFICADO) ===
-    // ====================================================
-    
     /**
      * Muestra/oculta el formulario de respuesta
      */
@@ -212,32 +203,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (listaComentariosEl) {
         listaComentariosEl.addEventListener('click', async (e) => {
             
-            // --- LÓGICA DE CLIC EN "ME GUSTA" ---
+            // ====================================================
+            // === ESTA ES LA LÓGICA MODIFICADA (LIKE/UNLIKE) ===
+            // ====================================================
             const likeButton = e.target.closest('.act-like');
             if (likeButton) {
+                
                 if (likeButton.disabled) return; 
                 likeButton.disabled = true;
+
                 const idResena = likeButton.dataset.id;
+                const countSpan = likeButton.querySelector('.like-count');
+                const currentCount = parseInt(countSpan.textContent, 10);
                 
+                // Determinamos si estamos dando 'like' o 'unlike'
+                const yaTieneLike = likeButton.classList.contains('liked');
+                const action = yaTieneLike ? 'unlike' : 'like';
+                const newCount = yaTieneLike ? currentCount - 1 : currentCount + 1;
+
                 const formData = new FormData();
-                formData.append('action', 'like');
+                formData.append('action', action);
                 formData.append('id_resena', idResena);
 
                 try {
                     const respuesta = await fetch(API_URL, { method: 'POST', body: formData });
                     const json = await respuesta.json();
-                    if (!respuesta.ok || !json.success) { throw new Error(json.error || 'Error del servidor'); }
+                    if (!respuesta.ok || !json.success) {
+                        throw new Error(json.error || 'Error del servidor');
+                    }
 
-                    const countSpan = likeButton.querySelector('.like-count');
-                    const newCount = parseInt(countSpan.textContent, 10) + 1;
-                    countSpan.textContent = newCount;
-                    likeButton.classList.add('liked'); 
+                    // Éxito: Actualizamos el contador y el estilo
+                    countSpan.textContent = newCount < 0 ? 0 : newCount; // Evita contadores negativos
+                    likeButton.classList.toggle('liked'); // Añade o quita la clase 'liked'
 
                 } catch (error) {
-                    console.error('Error al dar like:', error);
-                    likeButton.disabled = false; 
+                    console.error('Error al dar like/unlike:', error);
+                    // Si falla, no hacemos nada y solo reactivamos el botón
+                } finally {
+                    // Habilitamos el botón de nuevo
+                    likeButton.disabled = false;
                 }
             }
+            // ====================================================
+            // === FIN DE LA LÓGICA MODIFICADA ===
+            // ====================================================
             
             // --- LÓGICA DE CLIC EN "RESPONDER" ---
             const replyButton = e.target.closest('.act-reply');
@@ -257,9 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ====================================================
-    // === CAMBIO 3: EVENT LISTENER PARA ENVIAR RESPUESTA (NUEVO) ===
-    // ====================================================
     /**
      * Listener para los *envíos* de formularios de respuesta (delegado)
      */

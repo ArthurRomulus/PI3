@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-require_once __DIR__ . '/../conexion.php'; // Ruta corregida
+// require_once __DIR__ . '/../conexion.php'; // <-- Ruta antigua e incorrecta
+require_once __DIR__ . '/../conexion.php'; // <-- CAMBIO 2: Ruta corregida a la misma carpeta
 
 $respuesta = ['success' => false, 'data' => [], 'error' => ''];
 
@@ -35,7 +36,29 @@ try {
 
         } 
         // ===============================================
-        // === ACCIÓN 2: CREAR UNA "RESPUESTA" (NUEVO) ===
+        // === CAMBIO 1: ACCIÓN 1.5: QUITAR UN "ME GUSTA" (NUEVO) ===
+        // ===============================================
+        elseif ($action === 'unlike') {
+            
+            if (empty($_POST['id_resena'])) {
+                throw new Exception('ID de reseña no proporcionado.');
+            }
+            $id_resena = (int)$_POST['id_resena'];
+
+            // Usamos GREATEST(0, ...) para evitar que los likes bajen de 0
+            $sql_unlike = "UPDATE resena SET likes = GREATEST(0, likes - 1) WHERE idr = ?";
+            $stmt_unlike = $conn->prepare($sql_unlike);
+            $stmt_unlike->bind_param("i", $id_resena);
+            
+            if (!$stmt_unlike->execute()) {
+                throw new Exception('Error al quitar el like: ' . $stmt_unlike->error);
+            }
+            
+            $stmt_unlike->close();
+            $respuesta['success'] = true;
+        }
+        // ===============================================
+        // === ACCIÓN 2: CREAR UNA "RESPUESTA" ===
         // ===============================================
         elseif ($action === 'reply') {
 
@@ -46,7 +69,7 @@ try {
             $comentario = $_POST['comentario'];
             $parent_id = (int)$_POST['parent_id'];
 
-            // Las respuestas no tienen calificación, imagen ni etiquetas (se puede cambiar si quieres)
+            // Las respuestas no tienen calificación, imagen ni etiquetas
             $sql = "INSERT INTO resena (nombre, comentario, parent_id, likes) VALUES (?, ?, ?, 0)";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ssi", $nombre, $comentario, $parent_id);
@@ -77,7 +100,6 @@ try {
             if (empty($_POST['nombre']) || empty($_POST['comentario']) || empty($_POST['calificacion'])) {
                 throw new Exception('El nombre, comentario y calificación son obligatorios.');
             }
-            // (Tu código original para guardar un comentario principal)
             $nombre = $_POST['nombre'];
             $comentario = $_POST['comentario'];
             $calificacion = isset($_POST['calificacion']) ? (int)$_POST['calificacion'] : null;
@@ -87,14 +109,16 @@ try {
             if (empty($etiquetas)) { $etiquetas = null; }
 
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-                $directorio_subidas = __DIR__ . '/../uploads/comentarios/';
+                // La ruta de subida también debe ser corregida
+                $directorio_subidas = __DIR__ . '/../uploads/comentarios/'; // Asume que 'uploads' es hermano de 'Usuario'
                 if (!file_exists($directorio_subidas)) { mkdir($directorio_subidas, 0777, true); }
                 $nombre_archivo = uniqid() . '-' . basename($_FILES['imagen']['name']);
                 $ruta_archivo = $directorio_subidas . $nombre_archivo;
                 $tipo_archivo = strtolower(pathinfo($ruta_archivo, PATHINFO_EXTENSION));
                 if (!in_array($tipo_archivo, ['jpg', 'png', 'jpeg'])) { throw new Exception('Solo JPG, JPEG, PNG.'); }
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_archivo)) {
-                    $imagen_url_db = '../uploads/comentarios/' . $nombre_archivo;
+                    // La URL para la BD debe ser relativa al HTML
+                    $imagen_url_db = '../uploads/comentarios/' . $nombre_archivo; 
                 } else { throw new Exception('Error al mover archivo.'); }
             }
             
@@ -134,11 +158,9 @@ try {
             // Si tiene un parent_id Y ese padre existe en nuestro mapa...
             if ($comentario['parent_id'] && isset($comentarios_planos[$comentario['parent_id']])) {
                 // Lo añadimos al array 'respuestas' de su padre
-                // (Se añade por referencia)
                 $comentarios_planos[$comentario['parent_id']]['respuestas'][] = &$comentario;
             } else {
                 // Si no tiene padre, es un comentario principal
-                // (Se añade por referencia)
                 $comentarios_anidados[] = &$comentario;
             }
         }
@@ -163,7 +185,6 @@ try {
         $respuesta['data'] = [
             'lista_completa' => $comentarios_anidados, // <-- Enviamos la lista ANIDADA
             'stats' => ['total' => (int)$stats['total_resenas'], 'promedio' => round((float)$stats['promedio_calificacion'], 1), 'conteo' => $conteo_por_estrella]
-            // Ya no necesitamos 'destacados' ni 'imagenes_clientes' por separado
         ];
 
     } else {
