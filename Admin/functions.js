@@ -19,7 +19,7 @@ function closeModal(id) {
 document.getElementById("updateuser").addEventListener("click", async () => {
   const id = document.getElementById("userid").value;
   const username = document.getElementById("username").value;
-  const password = document.getElementById("userpassword").value;
+  const password = document.getElementById("password").value;
   const role = document.getElementById("role").value;
   const image = document.getElementById("userprofile").files[0];
 
@@ -70,15 +70,3 @@ document.getElementById("updateuser").addEventListener("click", async () => {
 });
 
 
-=======
-function closeModal(element){
-    document.getElementById(element).style.display = "None";
-}
-
-function openModal(element){
-    document.getElementById(element).style.display = "flex";
-}
-
-window.openModal = openModal;
-window.closeModal = closeModal;
->>>>>>> 2266480 (Initial commit)
