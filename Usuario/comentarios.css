@@ -768,19 +768,20 @@ body{
 .reviews__grid{
   display: grid;
   /* Crea columnas que se ajustan solas */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
   gap: 24px;
 }
 
 /* ----- Estilo de CADA Tarjeta (card) ----- */
 .card {
-  display: flex;
-  flex-direction: column;
-  background: var(--paper, #f6eae1);
-  border: 2px solid var(--ring, #c9ad9f);
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    background: var(--paper, #f6eae1);
+    border: 2px solid var(--ring, #c9ad9f);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: var(--shadow-soft);
+    max-height: 800px;
 }
 .card__head {
   display: flex;
@@ -883,6 +884,7 @@ body{
 /* ==================================================== */
 
 /* Contenedor de todas las respuestas de un comentario */
+/* Contenedor de todas las respuestas de un comentario */
 .replies-container {
   margin-top: 16px;
   margin-left: 20px; /* Indentación leve */
@@ -891,6 +893,9 @@ body{
   display: flex;
   flex-direction: column;
   gap: 12px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 10px;
 }
 
 /* Estilo para una tarjeta que es una respuesta */
@@ -923,6 +928,8 @@ body{
   gap: 10px;
   margin-left: 50px; /* Alinear con el contenido, no con el avatar */
   animation: fadeIn 0.3s ease;
+  max-width: 450px;
+  max-height: 450px;
 }
 
 @keyframes fadeIn {

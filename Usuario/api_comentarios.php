@@ -1,12 +1,16 @@
 <?php
+session_start(); // <-- CAMBIO 1: Iniciar sesión
 header('Content-Type: application/json; charset=utf-8');
-// require_once __DIR__ . '/../conexion.php'; // <-- Ruta antigua e incorrecta
-require_once __DIR__ . '/../conexion.php'; // <-- CAMBIO 2: Ruta corregida a la misma carpeta
+// require_once __DIR__ . '/../conexion.php'; // <-- Ruta antigua
+require_once __DIR__ . '/../conexion.php'; // <-- CAMBIO 2: Ruta corregida
 
 $respuesta = ['success' => false, 'data' => [], 'error' => ''];
 
 try {
     $metodo = $_SERVER['REQUEST_METHOD'];
+    
+    // Obtenemos el ID del usuario de la sesión
+    $id_usuario_logueado = isset($_SESSION['userid']) ? (int)$_SESSION['userid'] : null;
 
     if ($metodo === 'POST') {
         
@@ -36,7 +40,7 @@ try {
 
         } 
         // ===============================================
-        // === CAMBIO 1: ACCIÓN 1.5: QUITAR UN "ME GUSTA" (NUEVO) ===
+        // === ACCIÓN 1.5: QUITAR UN "ME GUSTA" ===
         // ===============================================
         elseif ($action === 'unlike') {
             
@@ -69,15 +73,29 @@ try {
             $comentario = $_POST['comentario'];
             $parent_id = (int)$_POST['parent_id'];
 
-            // Las respuestas no tienen calificación, imagen ni etiquetas
-            $sql = "INSERT INTO resena (nombre, comentario, parent_id, likes) VALUES (?, ?, ?, 0)";
+            // --- CAMBIO 3: Guardamos el userid ---
+            $sql = "INSERT INTO resena (nombre, comentario, parent_id, likes, userid) VALUES (?, ?, ?, 0, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssi", $nombre, $comentario, $parent_id);
+            $stmt->bind_param("ssii", $nombre, $comentario, $parent_id, $id_usuario_logueado);
+            // --- FIN CAMBIO ---
             
             if (!$stmt->execute()) { throw new Exception('Error al guardar la respuesta: ' . $stmt->error); }
             
-            // Devolvemos el comentario recién creado para que JS lo pinte
             $nuevo_id = $conn->insert_id;
+            
+            // Obtenemos la foto de perfil del usuario logueado para devolverla
+            $avatar_src = null;
+            if ($id_usuario_logueado) {
+                $stmt_avatar = $conn->prepare("SELECT profilescreen FROM usuarios WHERE userid = ?");
+                $stmt_avatar->bind_param("i", $id_usuario_logueado);
+                $stmt_avatar->execute();
+                $resultado_avatar = $stmt_avatar->get_result();
+                if ($fila_avatar = $resultado_avatar->fetch_assoc()) {
+                    $avatar_src = $fila_avatar['profilescreen'];
+                }
+                $stmt_avatar->close();
+            }
+
             $respuesta['success'] = true;
             $respuesta['data'] = [
                 'idr' => $nuevo_id,
@@ -88,7 +106,9 @@ try {
                 'fecha' => date('Y-m-d H:i:s'), // Fecha actual
                 'imagen_url' => null,
                 'etiquetas' => null,
-                'likes' => 0
+                'likes' => 0,
+                'userid' => $id_usuario_logueado,
+                'profilescreen' => $avatar_src // <-- Devolvemos la foto para el JS
             ];
             $stmt->close();
         }
@@ -109,22 +129,22 @@ try {
             if (empty($etiquetas)) { $etiquetas = null; }
 
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-                // La ruta de subida también debe ser corregida
-                $directorio_subidas = __DIR__ . '/../uploads/comentarios/'; // Asume que 'uploads' es hermano de 'Usuario'
+                $directorio_subidas = __DIR__ . '/../uploads/comentarios/'; 
                 if (!file_exists($directorio_subidas)) { mkdir($directorio_subidas, 0777, true); }
                 $nombre_archivo = uniqid() . '-' . basename($_FILES['imagen']['name']);
                 $ruta_archivo = $directorio_subidas . $nombre_archivo;
                 $tipo_archivo = strtolower(pathinfo($ruta_archivo, PATHINFO_EXTENSION));
                 if (!in_array($tipo_archivo, ['jpg', 'png', 'jpeg'])) { throw new Exception('Solo JPG, JPEG, PNG.'); }
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_archivo)) {
-                    // La URL para la BD debe ser relativa al HTML
                     $imagen_url_db = '../uploads/comentarios/' . $nombre_archivo; 
                 } else { throw new Exception('Error al mover archivo.'); }
             }
             
-            $sql = "INSERT INTO resena (nombre, comentario, calificacion, imagen_url, etiquetas, likes) VALUES (?, ?, ?, ?, ?, 0)";
+            // --- CAMBIO 4: Guardamos el userid ---
+            $sql = "INSERT INTO resena (nombre, comentario, calificacion, imagen_url, etiquetas, likes, userid) VALUES (?, ?, ?, ?, ?, 0, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssiss", $nombre, $comentario, $calificacion, $imagen_url_db, $etiquetas); 
+            $stmt->bind_param("ssissi", $nombre, $comentario, $calificacion, $imagen_url_db, $etiquetas, $id_usuario_logueado);
+            // --- FIN CAMBIO ---
             
             if (!$stmt->execute()) { throw new Exception('Error al guardar: ' . $stmt->error); }
             $respuesta['success'] = true;
@@ -133,12 +153,17 @@ try {
         }
 
     } elseif ($metodo === 'GET') {
-        // --- OBTENER DATOS (LÓGICA COMPLETAMENTE NUEVA) ---
+        // --- OBTENER DATOS ---
 
-        // 1. Obtener TODOS los comentarios
-        $sql_lista = "SELECT idr, nombre, comentario, calificacion, fecha, imagen_url, etiquetas, likes, parent_id 
-                      FROM resena 
-                      ORDER BY fecha DESC";
+        // ===============================================
+        // === CAMBIO 5: UNIR (JOIN) CON TABLA USUARIOS ===
+        // ===============================================
+        $sql_lista = "SELECT r.*, u.profilescreen 
+                      FROM resena r
+                      LEFT JOIN usuarios u ON r.userid = u.userid
+                      ORDER BY r.fecha DESC";
+        // ===============================================
+        
         $resultado_lista = $conn->query($sql_lista);
         if (!$resultado_lista) { throw new Exception('Error lista: ' . $conn->error); }
         
