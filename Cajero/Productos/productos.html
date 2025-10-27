@@ -60,18 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ACTUALIZAR LA FECHA EN TIEMPO REAL ---
     const dateElement = document.querySelector('.date');
     if (dateElement) {
-        // Arrays para los nombres en español
         const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-        
         const fechaActual = new Date();
-        
-        // Formateamos la fecha al estilo "Jueves, 5 de octubre de 2025"
         const diaSemana = dias[fechaActual.getDay()];
         const diaMes = fechaActual.getDate();
         const mes = meses[fechaActual.getMonth()];
         const anio = fechaActual.getFullYear();
-        
         dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
     }
 
@@ -88,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterContainer = document.querySelector('.cats');
     let allProducts = [];
 
-    // --- Función para mostrar productos en la página ---
+    // --- Función para mostrar productos en la página --- (Sin cambios)
     function renderProducts(productsToRender, allData) {
         if (!contenedorProductos) return;
         contenedorProductos.innerHTML = '';
@@ -136,6 +131,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderProducts(allProducts, data);
 
                 if (filterContainer) {
+                    
+                    // --- (INICIO) LÓGICA DE FILTRADO MODIFICADA ---
+                    
+                    // Función auxiliar para normalizar texto (quitar acentos y a minúsculas)
+                    // Esto soluciona el problema de "Frappes" (botón) vs "Frappés" (base de datos)
+                    const normalizeText = (str) => {
+                        if (!str) return "";
+                        return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    }
+
                     filterContainer.addEventListener('click', (event) => {
                         const target = event.target;
                         if (!target.matches('.cat-btn')) return;
@@ -143,24 +148,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         filterContainer.querySelector('.active').classList.remove('active');
                         target.classList.add('active');
 
-                        const filterType = target.textContent.toLowerCase();
+                        // Normalizamos el texto del botón presionado
+                        const filterType = normalizeText(target.textContent); // ej: "frappes", "tes", "cafes"
                         let filteredProducts = [];
 
                         if (filterType === 'todos') {
                             filteredProducts = allProducts;
-                        } else if (filterType === 'frappes') {
-                            filteredProducts = allProducts.filter(p => p.namep.toLowerCase().includes('frappé'));
-                        } else if (filterType === 'tés') {
-                            filteredProducts = allProducts.filter(p => p.namep.toLowerCase().includes('té') || p.namep.toLowerCase().includes('tea'));
+                        } else {
+                            // Esta es la nueva lógica de filtrado
+                            filteredProducts = allProducts.filter(p => {
+                                // p.categorias_nombres es el nuevo array que viene de api.php
+                                if (!p.categorias_nombres || p.categorias_nombres.length === 0) {
+                                    return false; // Si el producto no tiene categorías, no puede coincidir
+                                }
+                                
+                                // Usamos .some() para ver si AL MENOS UNA de sus categorías
+                                // coincide con el filtro aplicado (ej: "Frappés" se normaliza a "frappes")
+                                return p.categorias_nombres.some(catName => normalizeText(catName) === filterType);
+                            });
                         }
                         
+                        // Renderizamos solo los productos filtrados
                         renderProducts(filteredProducts, data);
                     });
+                    
+                    // --- (FIN) LÓGICA DE FILTRADO MODIFICADA ---
                 }
             });
     }
 
-    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
+    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS --- (Sin cambios)
     if (contenedorProductos) {
         contenedorProductos.addEventListener('click', (event) => {
             const target = event.target;
@@ -217,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- MANEJADOR DE EVENTOS PARA EL CARRITO ---
+    // --- MANEJADOR DE EVENTOS PARA EL CARRITO --- (Sin cambios)
     if (cartContent) {
         cartContent.addEventListener('click', e => {
             if (e.target.classList.contains('qty-btn-cart')) {
@@ -229,16 +246,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (action === 'minus') {
                     cartList[idx].qty -= 1;
                     if (cartList[idx].qty <= 0) {
-                        // Si la cantidad es 0 o menos, elimina el producto del carrito
                         cartList.splice(idx, 1);
                     }
                 }
-                renderCart(); // Vuelve a dibujar el carrito con los datos actualizados
+                renderCart(); 
             }
         });
     }
 
-    // --- FUNCIONES COMPLETAS DEL CARRITO Y AUXILIARES ---
+    // --- FUNCIONES COMPLETAS DEL CARRITO Y AUXILIARES --- (Sin cambios)
 
     function renderCart() {
         if (!cartContent) return;
@@ -310,7 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tamanos) {
             tamanos.forEach(tamano => {
                 const displayInfo = tamanoMap[tamano.nombre_tamano] || { texto: tamano.nombre_tamano, svg: '' };
-                const esActivo = tamano.tamano_id == tamanoDefecto ? 'active' : '';
+                // Corrección: tamano.tamano_id (de la api) vs tamanoDefecto (del producto)
+                const esActivo = tamano.tamano_id == tamanoDefecto ? 'active' : ''; 
                 html += `<button class="size-btn ${esActivo}" data-tamano-id="${tamano.tamano_id}" data-precio-aumento="${tamano.precio_aumento}">${displayInfo.svg}<span>${displayInfo.texto}</span></button>`;
             });
         }
