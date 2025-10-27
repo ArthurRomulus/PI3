@@ -240,6 +240,7 @@ INSERT INTO `promocion` (`idPromo`, `nombrePromo`, `imagen_url`, `codigo_promo`,
 --
 
 CREATE TABLE `resena` (
+<<<<<<< HEAD
   `idr` int(11) NOT NULL,
   `userid` int(11) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
@@ -247,6 +248,17 @@ CREATE TABLE `resena` (
   `producto` int(11) DEFAULT NULL,
   `estrellas` int(11) DEFAULT NULL CHECK (`estrellas` between 0 and 5),
   `date` date NOT NULL DEFAULT current_timestamp()
+=======
+  `idr` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `nombre` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `comentario` text COLLATE utf8mb4_general_ci,
+  `calificacion` int(11) DEFAULT NULL,
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `imagen_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `etiquetas` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `likes` int(11) DEFAULT 0,
+  `parent_id` int(11) NULL DEFAULT NULL
+>>>>>>> karol
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

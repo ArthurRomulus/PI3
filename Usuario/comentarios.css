@@ -6,6 +6,11 @@
   --crema:#f3e7de;
   --borde:#6f4a36;
   --sombra:0 6px 18px rgba(60,35,22,.12);
+  --coffee: #5e3f2e;
+  --coffee-light: #f0e4db;
+  --coffee-bg: #fdfaf7;
+  --stroke: #d8c6b9;
+  --muted: #856f62;
 }
 
 *{box-sizing:border-box}
@@ -13,16 +18,16 @@ body{
   background-color:#DCC0B9;
   color:var(--cafe);
   font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  margin: 0;
 }
 
 /* ====== LAYOUT AMPLIO ====== */
 .panel-comentarios{
-  max-width:1200px;          /* muy ancho */
-  margin:80px auto 300px;
+  max-width:1200px;
+  margin:80px auto 100px;
   padding:0 16px;
   background-color:#DCC0B9;
 }
-
 .panel{
   background-color:#DCC0B9;
   border:4px solid var(--borde);
@@ -30,237 +35,659 @@ body{
   box-shadow:var(--sombra);
   padding:20px 22px 24px;
 }
-
 .panel h2{
   margin:0 0 6px;
   background-color:#DCC0B9;
   font-size:32px;
-  line-height:1.15;
+  font-weight:700;
+  text-align:center;
+}
+.panel p{
+  margin:0 0 16px;
+  text-align:center;
+  font-size:18px;
 }
 
-/* ====== ESTRELLAS + CONTADOR ====== */
-.fila-top{
-  display:flex; align-items:center; justify-content:space-between;
-  margin:8px 0 12px;
+/* ================== SEPARADOR CAFÉ ================== */
+.coffee-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 60px 0;
 }
-.estrellas{ font-size:20px; letter-spacing:6px; color:#793410 }
-.contador{ font-weight:900; color:#793410 }
-
-/* ====== CAJA DE COMENTARIO ====== */
-.caja-comentario{ position:relative; color:#793410 }
-.caja-comentario textarea{
-  width:100%; min-height:160px; resize:vertical;
-  border:2px solid var(--cafe); border-radius:10px;
-  background:color-mix(in oklab, var(--crema) 92%, white);
-  color:#793410; padding:14px 42px 16px 14px; outline:none;
-}
-.caja-comentario textarea::placeholder{ color:#876c60 }
-.ico-bean{
-  position:absolute; left:10px; bottom:10px;
-  width:22px; height:22px; opacity:.85; object-fit:contain;
-}
-.ico-emoji{
-  position:absolute; right:12px; top:10px; color:#793410;
+.coffee-separator::before,
+.coffee-separator::after {
+  content: '';
+  height: 4px;
+  flex-grow: 1;
+  background-color: var(--borde);
+  border-radius: 2px;
+  max-width: 400px;
 }
 
-/* ====== SUBIR FOTO + ETIQUETAS (orden: foto primero) ====== */
-.fila-subida{
-  margin-top:16px;
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:18px;
-  align-items:start;
-}
-@media (max-width:800px){
-  .fila-subida{ grid-template-columns:1fr }
+
+/* ==================================================== */
+/* === ESTILOS PARA EL FORMULARIO DE 3 CAMPOS (HÍBRIDO) === */
+/* ==================================================== */
+
+.form-comentario-nuevo {
+  display: flex;
+  flex-direction: column; /* Apila los elementos verticalmente */
+  gap: 16px; 
+  max-width: 800px;
+  margin: 20px auto 0;
 }
 
-/* Botón "Subir Foto" */
-.subir-foto{
-  display:inline-flex; align-items:center; gap:12px; color:#793410; cursor:pointer;
-  border:2px solid var(--cafe); border-radius:10px; padding:12px 16px; background:#fff;
-  box-shadow:0 2px 0 var(--cafe) inset, 0 1px 0 rgba(0,0,0,.06);
-  font-weight:800;
+/* ================== CAMBIO 1 (Estrellas) ================== */
+/* Alinear a la izquierda */
+.form-grupo-rating-central {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* <-- CAMBIO: 'center' por 'flex-start' */
+  gap: 8px;
+  margin-bottom: 12px; /* Espacio antes del textarea */
 }
-.subir-foto .ico-cam{
-  width:40px; height:40px; display:grid; place-items:center;
-  background:#fff; border:2px solid var(--cafe); border-radius:8px;
+.form-grupo-rating-central label {
+  font-weight: 600;
+  color: var(--cafe2);
+  font-size: 1.1rem;
 }
-
-/* Botón que abre opciones de etiqueta */
-.btn-etiquetas{
-  display:inline-flex; align-items:center; gap:12px;
-  padding:12px 16px;
-  border:2px solid var(--cafe); border-radius:10px;
-  background:var(--crema); color:var(--cafe); cursor:pointer; font-weight:800;
-  transition:background .15s ease, color .15s ease, border-color .15s ease;
+/* Rectángulo café para estrellas (petición anterior) */
+.rating-estrellas {
+    display: inline-block;
+    direction: rtl;
+    border-radius: 10px;
+    padding: 5px 15px 5px 15px;
+    border: 2px solid var(--borde);
 }
-.btn-etiquetas:hover{ background:#efdcd2 }
-
-/* Panel/contendor de etiquetas (oculto por defecto) */
-.tags-panel{
-  grid-column:1 / -1;       /* que abarque todo el ancho debajo de los botones */
-  margin-top:10px;
-  border:2px solid var(--borde);
-  border-radius:12px;
-  background:color-mix(in oklab, var(--crema) 85%, white);
-  padding:14px;
-  display:none;              /* cambia a block o usa .open para mostrar */
+.rating-estrellas input[type="radio"] {
+  display: none; 
 }
-.tags-panel.open{ display:block; }
-
-.tags-grid{
-  display:flex; flex-wrap:wrap; gap:10px;
+.rating-estrellas label {
+  font-size: 2.5rem;
+  color: var(--crema); 
+  cursor: pointer;
+  padding: 0 3px;
+  transition: color 0.2s;
 }
-.tag-chip{
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:999px;
-  border:2px solid var(--borde);
-  background:#fff;
-  color:var(--cafe);
-  font-weight:700; font-size:14px;
-  cursor:pointer;
+.rating-estrellas label:hover,
+.rating-estrellas label:hover ~ label,
+.rating-estrellas input[type="radio"]:checked ~ label {
+  color: var(--borde); /* Color "encendido" (claro) */
 }
-.tag-chip:hover{ background:var(--crema) }
-.tag-chip.is-active{
-  background:var(--cafe); color:#fff; border-color:var(--cafe2);
-}
-
-/* ====== BOTONES FINALES ====== */
-.acciones{
-  width:100%;
-  display:flex; gap:18px; justify-content:flex-end;
-  margin-top:24px;
-}
-.btn{
-  padding:12px 28px; border-radius:10px; font-weight:900; cursor:pointer;
-  border:2px solid var(--cafe);
-}
-.btn-outline{ background:transparent; color:var(--cafe) }
-.btn-outline:hover{ background-color:#DCC0B9 }
-.btn-solid{ background:var(--cafe); color:#fff }
-.btn-solid:hover{ background:var(--cafe2) }
+/* === FIN DE CAMBIOS DE ESTRELLAS === */
 
 
+/* 1. Textarea grande */
+.form-grupo-grande textarea {
+  width: 100%;
+  min-height: 120px; /* Más alto */
+  padding: 12px;
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--crema);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--cafe);
+  resize: vertical;
+}
 
-/* ======= RATING / OPINIONES ======= */
+.form-grupo-grande textarea:focus {
+  outline: none;
+  border-color: var(--cafe);
+  box-shadow: 0 0 8px rgba(121, 82, 61, 0.3);
+}
+
+/* Fila de en medio (Upload + Tags) */
+.form-fila-media {
+  display: flex;
+  gap: 16px;
+  align-items: stretch; /* Estira ambos elementos a la misma altura */
+}
+
+/* 2. Botón de Subir Foto (Izquierda) */
+.form-grupo-upload {
+  flex: 1; /* Ocupa la mitad del espacio */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 2px dashed var(--borde);
+  border-radius: 8px;
+  background-color: var(--crema);
+}
+
+.form-grupo-upload input[type="file"] { display: none; }
+
+.form-grupo-upload .btn-upload {
+  background-color: var(--cafe);
+  color: var(--crema);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+.form-grupo-upload .btn-upload:hover { background-color: var(--cafe2); }
+.form-grupo-upload .btn-upload .fas { margin-right: 5px; }
+
+.file-name-display {
+  font-size: 0.9rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+/* ================== CAMBIO 2 (Listbox) ================== */
+/* 3. Estilos para el Listbox (Derecha) */
+.form-grupo-tags { 
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+}
+.label-listbox {
+  font-weight: 600;
+  color: var(--cafe2);
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+.form-grupo-tags select[multiple] {
+  width: 100%;
+  height: 100%; /* Ocupa toda la altura disponible */
+  min-height: 80px; /* Altura mínima */
+  padding: 8px;
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--crema);
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--cafe);
+}
+.form-grupo-tags select[multiple]:focus {
+  outline: none;
+  border-color: var(--cafe);
+  box-shadow: 0 0 8px rgba(121, 82, 61, 0.3);
+}
+.form-grupo-tags select[multiple] option {
+  padding: 4px;
+  background-color: var(--crema);
+  color: var(--cafe2);
+  font-weight: 600;
+}
+.form-grupo-tags select[multiple] option:checked {
+  background-color: var(--cafe);
+  color: var(--crema);
+}
+/* === FIN DE CAMBIO DE LISTBOX === */
+
+
+/* Fila de botones (Abajo) */
+.form-fila-botones {
+  display: flex;
+  justify-content: space-between; 
+  margin-top: 10px;
+}
+
+.btn-cancelar {
+  padding: 10px 20px;
+  border: 2px solid var(--muted);
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-cancelar:hover {
+  background-color: var(--crema);
+  border-color: var(--cafe2);
+  color: var(--cafe2);
+}
+
+.btn-enviar {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--cafe);
+  color: var(--crema);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-enviar:hover { background-color: var(--cafe2); }
+
+#form-mensaje {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 0;
+  text-align: left;
+}
+#form-mensaje.exito { color: #28a745; }
+#form-mensaje.error { color: #dc3545; }
+
+
+/* === ESTILOS PARA LA LISTA DE COMENTARIOS === */
+#lista-comentarios {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+.card-comentario {
+  background-color: var(--crema);
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: var(--sombra);
+}
+.comentario-imagen-container {
+  width: 100%;
+  max-height: 400px; 
+  overflow: hidden;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  border: 1px solid var(--borde);
+}
+.comentario-imagen {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.estrellas-mostradas {
+  font-size: 1.2rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.estrellas-mostradas .estrella {
+  color: #ccc;
+  display: inline-block;
+}
+.estrellas-mostradas .estrella.rellena {
+  color: var(--cafe); 
+}
+.comentario-texto {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin: 0 0 10px 0;
+  color: var(--cafe2);
+  text-align: left;
+}
+.comentario-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.etiqueta {
+  background-color: var(--panel);
+  color: var(--cafe2);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--borde);
+}
+.comentario-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cafe);
+  margin-top: 12px;
+}
+
+/* ================== ESTILOS FOOTER ================== */
+/* ... (Tu código de footer) ... */
+.site-footer{
+  background: var(--coffee-bg);
+  color: var(--coffee);
+  border-top: 2px solid var(--stroke);
+  padding: 32px 24px;
+  font-weight: 500;
+}
+.footer-container{
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.footer-logo{ display:flex; align-items:center; gap:12px; font-weight:700; font-size:18px; text-decoration:none; color:var(--coffee); }
+.footer-logo img{ width:48px; height:48px; border-radius:50%; border:2px solid var(--stroke); }
+.footer-menu{ display:flex; gap:20px; font-weight:600; }
+.footer-menu a{ text-decoration:none; color:var(--coffee); }
+.footer-menu a:hover{ text-decoration:underline; }
+.footer-actions{ display:flex; align-items:center; gap:12px; }
+.icon-btn{
+  width:42px; height:42px;
+  border-radius:50%;
+  background: var(--coffee-light); color:var(--coffee);
+  display:grid; place-items:center; text-decoration:none;
+  box-shadow: inset 0 0 0 2px var(--stroke);
+  font-size:18px; line-height:1;
+}
+.lang{ color:var(--muted); font-weight:700; }
+.cs-footer-row{
+  max-width: 1240px;
+  margin: 28px auto 0;
+  padding-top: 28px;
+  border-top: 2px solid var(--stroke);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+.cs-legal{
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  flex-basis: 300px;
+  flex-grow: 1;
+}
+.cs-legal a{ color:var(--muted); text-decoration:underline; }
+.cs-links{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-weight: 600;
+  font-size: 15px;
+  flex-basis: 180px;
+  flex-grow: 1;
+}
+.cs-links li{ margin-bottom: 8px; }
+.cs-links a{ color: var(--coffee); text-decoration: none; }
+.cs-links a:hover{ text-decoration: underline; }
+.cs-links .chev{ color:var(--muted); }
+.cs-card{
+  background: var(--coffee-light);
+  border: 2px solid var(--stroke);
+  border-radius: 12px;
+  padding: 20px;
+  flex-basis: 300px;
+  flex-grow: 1;
+}
+.cs-card h3{ margin:0 0 12px; font-size:16px; }
+.cs-social{ display:flex; gap:12px; margin-bottom:12px; }
+.circle{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--stroke);
+  display: grid;
+  place-items: center;
+  color: var(--coffee);
+  padding: 8px;
+}
+.cs-hours{ font-size:14px; color:var(--muted); margin:0; font-weight:600; line-height:1.5; }
+
+/* ==================================================== */
+/* === ESTILOS PARA EL PANEL DE RESEÑA GENERAL === */
+/* ==================================================== */
+
+.panel-resena-general {
+  background-color: var(--crema);
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  box-shadow: var(--sombra);
+  padding: 20px 24px;
+  max-width: 800px;
+  margin: 20px auto 0;
+}
+
+.resena-container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* --- Lado Izquierdo (Promedio) --- */
+.resena-promedio {
+  flex: 0 0 150px; /* Base de 150px, no crece, no se encoge */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 2px solid var(--borde);
+  padding-right: 24px;
+}
+
+.promedio-numero {
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  color: var(--cafe2);
+  line-height: 1.1;
+}
+
+.promedio-estrellas .estrellas-mostradas {
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: 4px;
+}
+.promedio-estrellas .estrellas-mostradas .estrella.rellena {
+  color: var(--cafe);
+}
+
+.promedio-total {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* --- Lado Derecho (Desglose) --- */
+.resena-desglose {
+  flex: 1; /* Ocupa el resto del espacio */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.desglose-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desglose-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cafe2);
+  flex: 0 0 70px; /* Base de 70px "5 estrellas" */
+}
+
+.desglose-barra-fondo {
+  flex: 1;
+  height: 10px;
+  background-color: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.desglose-barra-relleno {
+  height: 100%;
+  background-color: var(--cafe); /* Color de la barra */
+  border-radius: 5px;
+  transition: width 0.5s ease-out;
+}
+
+.desglose-conteo {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cafe);
+  flex: 0 0 30px; /* Base de 30px para el número "150" */
+  text-align: right;
+}
+
+/* ==================================================== */
+/* === ESTILOS PARA LA CUADRÍCULA DESTACADOS (NUEVOS NOMBRES) === */
+/* ==================================================== */
+
+/* Estilo para el título "Comentarios Destacados" */
+.titulo-destacados {
+  text-align: left; 
+  font-size: 1.5rem; 
+  margin-bottom: 20px; 
+  color: var(--cafe2);
+}
+
+/* Aplica el estilo de cuadrícula usando la nueva CLASE */
+.grid-comentarios-destacados {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  gap: 20px; 
+}
+
+/* Ajustes opcionales para las tarjetas dentro de la cuadrícula */
+.grid-comentarios-destacados .card-comentario {
+  /* Puedes ajustar padding si es necesario */
+  padding: 16px; 
+}
+
+/* Responsive: Vuelve a 1 columna en pantallas pequeñas */
+@media (max-width: 768px) {
+  .grid-comentarios-destacados {
+    grid-template-columns: 1fr; /* Una sola columna */
+  }
+  .titulo-destacados {
+      text-align: center; /* Centra el título */
+  }
+}
+
+/* ==================================================== */
+/* === ESTILOS PARA EL HEADER (BARRA NAVEGACIÓN) ==== */
+/* ==================================================== */
+
+.site-header {
+  /* Usamos las variables de tu CSS */
+  background-color: var(--crema, #f3e7de); 
+  border-bottom: 2px solid var(--borde, #6f4a36);
+  padding: 10px 16px;
+  width: 100%;
+  box-shadow: var(--sombra, 0 6px 18px rgba(60,35,22,.12));
+}
+
+.header-container {
+  max-width: 1200px; 
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  gap: 20px;
+}
+
+/* Logo y Título */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--cafe2, #5e3f2e);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.header-logo img {
+  height: 40px; 
+}
+
+/* Menú de Navegación */
+.header-menu {
+  display: flex;
+  gap: 25px;
+  flex-grow: 1; 
+  justify-content: center;
+}
+.header-menu a {
+  text-decoration: none;
+  color: var(--cafe, #79523D);
+  font-weight: 500;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.header-menu a:hover { 
+  color: var(--cafe2, #5e3f2e);
+  background-color: var(--panel, #cfaea5);
+}
+.header-menu a.pagina-actual {
+  color: var(--cafe2, #5e3f2e);
+  font-weight: 700;
+}
+
+
+/* Acciones (Búsqueda y Cuenta) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Formulario de búsqueda */
+.header-search {
+  display: flex;
+  border: 2px solid var(--borde, #6f4a36);
+  border-radius: 20px; 
+  overflow: hidden;
+  background-color: #fff;
+}
+.header-search input[type="search"] {
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background: transparent;
+  width: 150px; 
+  transition: width 0.3s ease;
+}
+.header-search input[type="search"]:focus {
+  outline: none;
+  width: 200px; 
+}
+.header-search button {
+  border: none;
+  background-color: transparent;
+  padding-right: 12px;
+  padding-left: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--borde, #6f4a36);
+}
+
+/* Icono de cuenta */
+.icon-btn {
+  font-size: 1.5rem; /* 👤 */
+  text-decoration: none;
+  color: var(--cafe, #79523D);
+}
+.icon-btn:hover {
+  color: var(--cafe2, #5e3f2e);
+}
+
+/* ==================================================== */
+/* === ESTILOS PARA LA CUADRÍCULA DE COMENTARIOS (REVIEWS) === */
+/* ==================================================== */
+
 :root{
-  --coffee:#531607; /* tono café oscuro de tus estrellas y barras */
-  --ink:#111; 
-  --track:#d9d9d9;  /* pista gris de las barras */
-}
-
-.rating{
-  background:#DCC0B9;
-  padding:26px clamp(16px,3vw,40px);
-  margin-bottom: 300px;
-}
-.rating__wrap{
-  max-width:1100px;
-  margin:auto;
-  display:grid;
-  grid-template-columns: 360px 1fr;
-  gap:clamp(20px,4vw,60px);
-  align-items:center;
-}
-.rating__summary{ position:relative; min-height:220px; }
-.rating__score{
-  font-size:clamp(2.6rem,6vw,4.4rem);
-  font-weight:800; color:var(--ink); line-height:1; margin-bottom:6px;
-}
-.rating__count{ margin:10px 0 0; color:var(--ink); font-size:clamp(.95rem,1.2vw,1.05rem); }
-
-.rating__bag {
-  position:absolute; 
-  bottom:-210px;   /* en lugar de -10px, lo bajas 100px más */
-  left:-8px;
-  width:clamp(160px,40vw,260px);
-  filter:drop-shadow(0 8px 18px rgba(0,0,0,.25));
-  pointer-events:none;
-}
-
-
-/* ======= Estrellas por máscara (relleno fraccional) ======= */
-.stars{
-  --size:22px;      
-  --gap:6px;
-  --value:5;        
-  --percent: calc((var(--value) / 5) * 100%);
-  inline-size: calc(var(--size)*5 + var(--gap)*4);
-  block-size: var(--size);
-  position:relative;
-  display:inline-block;
-}
-.stars::before,
-.stars::after{
-  content:"";
-  position:absolute; inset:0;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.3l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.9 6.2 20.3l1.1-6.5L2.6 9.2l6.5-1L12 2.3z'/%3E%3C/svg%3E") 0 0/var(--size) var(--size) repeat-x;
-          mask:       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.3l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.9 6.2 20.3l1.1-6.5L2.6 9.2l6.5-1L12 2.3z'/%3E%3C/svg%3E") 0 0/var(--size) var(--size) repeat-x;
-}
-.stars::before{
-  background:transparent !important;
-  box-shadow: inset 0 0 0 2px var(--coffee);
-  opacity:0 !important;
-}
-.stars::after{
-  background:var(--coffee);
-  width:var(--percent); /* relleno fraccional */
-  overflow:hidden; display:block; border-radius:4px;
-}
-
-/* Promedio más grande */
-.stars--avg{ --size:26px; margin:2px 0 10px; }
-
-/* ======= Desglose ======= */
-.rating__breakdown{ display:grid; gap:12px; width:100%; }
-.row{
-  display:grid; grid-template-columns:auto 1fr; align-items:center; gap:16px;
-}
-
-/* Barra de progreso */
-.bar{
-  position:relative;
-  height:18px; background:var(--track);
-  border-radius:999px; box-shadow:inset 0 0 0 2px rgba(0,0,0,.15);
-  overflow:hidden;
-}
-.bar > span{
-  position:absolute; inset:0 auto 0 0;
-  width:var(--p,50%);
-  background:var(--coffee);
-  border-radius:inherit;
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,.25);
-}
-
-/* Accesibilidad (screen reader only) */
-.sr-only{
-  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
-  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
-}
-
-/* Responsive */
-@media (max-width:860px){
-  .rating__wrap{ grid-template-columns:1fr; }
-  .rating__bag{ position:static; display:block; margin-top:12px; }
-}
-
-/* ======= Pequeño fix de tu panel ======= */
-.ico-bean{ position:absolute; left:8px; bottom:8px; opacity:.85; object-fit:contain; width:22px; height:22px; }
-
-/* ===================== COMENTARIOS / REVIEWS ===================== */
-:root{
-  --paper: #f6eae1;            /* crema suave para tarjetas */
-  --paper-2: #f2e4da;          /* crema un poco más oscura */
-  --ink-2: #6f4a36;            /* café texto secundario */
-  --ring: #c9ad9f;             /* borde pill */
-  --chip: #ead8cc;             /* chips de hashtags */
+  /* Estas variables puede que ya existan, pero las definimos
+     por si acaso. Se basan en el CSS que me pasaste. */
+  --paper: #f6eae1;
+  --paper-2: #f2e4da;
+  --ink-2: #6f4a36;
+  --ring: #c9ad9f;
+  --chip: #ead8cc;
   --shadow-soft: 0 6px 18px rgba(60,35,22,.08);
 }
 
 .reviews{
-  background:#DCC0B9;
+  /* Ajusta el fondo si es necesario. Tu CSS de body ya lo define. */
+  /* background:#DCC0B9; */
   padding: 12px clamp(16px,3vw,40px) 60px;
 }
 .reviews__wrap{
@@ -268,9 +695,11 @@ body{
   margin:auto;
 }
 
-/* ----- Encabezado ----- */
+/* ----- Encabezado (Título "Comentarios" y botones) ----- */
 .reviews__header{
-  display:flex; align-items:center; justify-content:space-between;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   gap:16px;
   margin-bottom:14px;
 }
@@ -278,202 +707,285 @@ body{
   margin:0;
   font-size: clamp(1.8rem, 3vw, 2.4rem);
   line-height:1.1;
-  color:#3b2a25;
+  color: var(--cafe2, #3b2a25);
 }
 
 /* Pills de filtro (ghost) */
 .pill-group{ display:flex; gap:10px; }
 .pill{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:10px 14px; border-radius:999px;
-  font-weight:700; font-size:.95rem; cursor:pointer;
-  border:2px solid var(--ring); background:transparent; color:var(--ink-2);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:.95rem;
+  cursor:pointer;
+  border:2px solid var(--ring);
+  background:transparent;
+  color:var(--ink-2);
   box-shadow: var(--shadow-soft);
 }
-.pill--ghost:hover{ background:color-mix(in oklab, var(--paper-2) 60%, white); }
+.pill--ghost:hover{ 
+  background:color-mix(in oklab, var(--paper-2) 60%, white); 
+}
 
 /* ----- Subcontroles (score + select) ----- */
 .reviews__subhead{
-  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
   margin: 12px 0 22px;
 }
 .score-pill{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:52px; height:52px; border-radius:999px;
-  font-weight:800; background:var(--paper); color:#3b2a25;
-  border:2px solid var(--ring); box-shadow: var(--shadow-soft);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:52px;
+  height:52px;
+  border-radius:999px;
+  font-weight:800;
+  background:var(--paper);
+  color: var(--cafe2, #3b2a25);
+  border:2px solid var(--ring);
+  box-shadow: var(--shadow-soft);
 }
 .select-pill{
-  display:inline-flex; align-items:center; gap:10px;
-  padding:10px 14px; border-radius:12px; cursor:pointer;
-  background:var(--paper); color:#3b2a25; border:2px solid var(--ring);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  background:var(--paper);
+  color: var(--cafe2, #3b2a25);
+  border:2px solid var(--ring);
   box-shadow: var(--shadow-soft);
 }
 
 /* ----- Grid de tarjetas ----- */
 .reviews__grid{
-  display:grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
-  gap:18px;
-}
-@media (max-width: 860px){
-  .reviews__grid{ grid-template-columns: 1fr; }
+  display: grid;
+  /* Crea columnas que se ajustan solas */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 24px;
 }
 
-/* ----- Tarjeta ----- */
-.card{
-  background:#F7E7D7;
-  border:2px solid var(--borde);
-  border-radius:16px;
+/* ----- Estilo de CADA Tarjeta (card) ----- */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper, #f6eae1);
+  border: 2px solid var(--ring, #c9ad9f);
+  border-radius: 12px;
+  padding: 18px;
   box-shadow: var(--shadow-soft);
-  padding:14px;
-  display:flex; flex-direction:column; gap:10px;
 }
-
-/* Cabecera de tarjeta */
-.card__head{
-  display:grid;
-  grid-template-columns: 44px 1fr auto; /* avatar | meta | estrellas */
-  gap:12px; align-items:center;
-}
-.avatar{
-  width:44px; height:44px; border-radius:50%;
-  border:2px solid var(--borde); object-fit:cover;
-  background:#fff;
-}
-
-
-/* Texto */
-.card__text{ margin:0; color:#3b2a25; }
-
-/* Imagen dentro de la tarjeta */
-.card__media img{
-  width:100%; height:210px; object-fit:cover;
-  border-radius:12px; border:2px solid var(--ring);
-  display:block; background:#fff;
-}
-
-/* Chips */
-.chips{ display:flex; gap:8px; flex-wrap:wrap; }
-.chip{
-  display:inline-flex; padding:6px 10px; border-radius:10px;
-  background:var(--chip); color:#3b2a25; font-weight:700; font-size:.88rem;
-  border:1px solid color-mix(in srgb, var(--ring), white 20%);
-}
-
-/* Footer de acciones */
-.card__footer{
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-  border-top:2px dashed color-mix(in srgb, var(--ring), #fff 30%);
-  padding-top:10px;
-}
-.act{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:8px 12px; border-radius:10px;
-  background:#fff3; color:#3b2a25; font-weight:800;
-  border:2px solid var(--ring); cursor:pointer;
-}
-.act svg{ width:18px; height:18px; fill:currentColor; }
-.act:hover{ background:color-mix(in oklab, var(--paper) 70%, white); }
-
-/* Alineación del bloque de “Comentarios” de tu captura */
-.reviews__wrap .stars{ --coffee:#531607; }  /* asegura el tono café */
-
-
-/* ===== HEADER con el MISMO look del FOOTER (.cs-*) ===== */
-:root{
-  --coffee:#531607;
-  --bg-a:#d6b6a1;
-  --bg-b:#f1e4db;
-  --card:#f4ebe6;
-  --ink:#3d2e27;
-  --muted:#7b645b;
-  --stroke:#e5d6cb;
-  --shadow:0 14px 30px rgba(0,0,0,.12);
-  --radius:22px;
-}
-
-/* Igual a .cs-footer */
-.site-header{
-  background-color:#DCC0B9;
-  padding:24px 16px 18px;
-  color:var(--ink);
-}
-
-/* Igual a .cs-footer__wrap */
-.header-container{
-  width:98%;
-  margin:0 auto;
-  background:rgba(255,255,255,.22);
-  border-radius:28px;
-  padding:3px 18px 8px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
-  flex-wrap:wrap;
-}
-
-/* LOGO: igual filtro y tamaño que .cs-brand__logo */
-.header-logo img{
-  width:200px; height:auto; object-fit:contain;
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,.18));
-}
-.header-logo span{ font-weight:800; color:var(--ink); }
-
-/* MENÚ: colores/hover igual que .cs-links */
-.header-menu{ display:flex; gap:18px; font-weight:700; }
-.header-menu a{ color:var(--ink); text-decoration:none; }
-.header-menu a:hover{ text-decoration:underline; }
-
-/* ACCIONES: iconos redondos idénticos a .circle */
-.header-actions{ display:flex; align-items:center; gap:12px; }
-
-/* Botón de icono = copia del estilo .circle del footer */
-.icon-btn{
-  width:42px; height:42px;
-  border-radius:50%;
-  background:#f0e4db; color:var(--coffee);
-  display:grid; place-items:center; text-decoration:none;
-  box-shadow: inset 0 0 0 2px var(--stroke);
-  font-size:18px; line-height:1;
-}
-
-/* Texto auxiliar igual tono que .cs-legal / var(--muted) */
-.lang{ color:var(--muted); font-weight:700; }
-
-/* Responsive: mismo comportamiento */
-@media (max-width:980px){
-  .header-container{ justify-content:center; text-align:center; }
-}
-@media (max-width:560px){
-  .header-logo img{ width:96px; }
-}
-
-
-/* ================== SEPARADOR CAFÉ ================== */
-.coffee-separator {
+.card__head {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;                  /* espacio entre icono y líneas */
-  margin: 60px auto 40px;     /* separación con el contenido de arriba y el footer */
-  max-width: 1100px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--ring);
+}
+.meta {
+  flex: 1; /* Ocupa el espacio disponible */
+}
+.name {
+  font-weight: 700;
+  color: var(--cafe2, #5e3f2e);
+}
+.time {
+  font-size: 0.9rem;
+  color: var(--ink-2, #6f4a36);
 }
 
-.coffee-separator .line {
-  width: 600px;                    /* que crezca para ocupar el ancho */
-  height: 2px;
-  background-color: #531607;  /* café oscuro */
+/* Estilo para las estrellas (usando las de la sección 4.7) */
+.card__head .stars {
+  --size: 18px; /* Estrellas más pequeñas en la tarjeta */
+  --gap: 3px;
+  color: var(--coffee, #531607);
+}
+
+/* Cuerpo de la tarjeta */
+.card__text {
+  margin: 0 0 14px;
+  line-height: 1.5;
+  color: var(--cafe, #79523D);
+  /* Asegura que la tarjeta crezca si hay mucho texto */
+  flex: 1; 
+}
+.card__media {
+  margin: 0 0 14px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.card__media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Chips (etiquetas) */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.chip {
+  padding: 4px 10px;
   border-radius: 999px;
-  opacity: 0.8;
+  background: var(--chip, #ead8cc);
+  color: var(--ink-2, #6f4a36);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.coffee-separator .coffee-icon {
-  width: 40px;                /* ajusta tamaño del icono */
-  height: 40px;
-  object-fit: contain;
-  opacity: 0.9;
+/* Pie de la tarjeta (botones) */
+.card__footer {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid var(--ring, #c9ad9f);
+  padding-top: 14px;
+}
+.card__footer .act {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink-2, #6f4a36);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.card__footer .act:hover {
+  color: var(--cafe2, #5e3f2e);
+}
+.card__footer .act svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* ==================================================== */
+/* === ESTILOS PARA RESPUESTAS Y FORMULARIOS DE RESPUESTA === */
+/* ==================================================== */
+
+/* Contenedor de todas las respuestas de un comentario */
+.replies-container {
+  margin-top: 16px;
+  margin-left: 20px; /* Indentación leve */
+  border-left: 3px solid var(--ring, #c9ad9f);
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Estilo para una tarjeta que es una respuesta */
+.card.card--reply {
+  /* Hacemos las respuestas un poco más compactas */
+  padding: 14px;
+  border-color: var(--paper-2, #f2e4da);
+  box-shadow: none;
+  background: var(--coffee-bg, #fdfaf7); /* Un fondo ligeramente diferente */
+}
+
+.card--reply .card__head .avatar {
+  width: 36px;
+  height: 36px;
+}
+
+.card--reply .card__text {
+  font-size: 0.95rem;
+}
+
+/* Contenedor del formulario de respuesta */
+.reply-form-container {
+  margin-top: 12px;
+}
+
+/* Formulario de respuesta */
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 50px; /* Alinear con el contenido, no con el avatar */
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reply-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--ring, #c9ad9f);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--cafe2);
+  resize: vertical;
+  min-height: 60px;
+}
+.reply-form textarea:focus {
+  outline: none;
+  border-color: var(--cafe);
+}
+
+.reply-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.reply-form-actions button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-cancelar-reply {
+  background-color: transparent;
+  color: var(--cafe);
+}
+.btn-cancelar-reply:hover {
+  background-color: var(--paper, #f6eae1);
+}
+
+.btn-enviar-reply {
+  background-color: var(--cafe);
+  color: #fff;
+}
+.btn-enviar-reply:hover {
+  background-color: var(--cafe2);
+}
+.btn-enviar-reply:disabled {
+  background-color: var(--muted, #856f62);
+}
+
+/* Estilo para el botón de "Me gusta" cuando está presionado */
+.act-like.liked {
+  color: #d9534f; /* Un color rojo/rosa */
+  font-weight: 700;
+}
+.act-like.liked svg {
+  fill: #d9534f;
 }
