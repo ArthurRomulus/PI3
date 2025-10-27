@@ -8,21 +8,19 @@ body {
 
 /* --- Contenido principal --- */
 .content {
-  margin-left: 220px; /* espacio para sidebar */
+  margin-left: 220px;
   padding: 20px;
   flex: 1;
   position: relative;
   z-index: 1;
 
-  /* Margen visible como productos.php */
-  border: 15px solid #D7D7D7;  /* color de la barra lateral */
+  border: 15px solid #D7D7D7;
   border-radius: 20px;
 
-  min-height: calc(100vh - 40px); /* asegura que llegue hasta abajo */
-  box-sizing: border-box;         /* incluye padding y borde en la altura */
+  min-height: calc(100vh - 40px);
+  box-sizing: border-box;
 }
 
-/* Asegura que html y body ocupen toda la altura */
 html, body {
   height: 100%;
 }
@@ -44,41 +42,41 @@ html, body {
 /* --- Contenedor de perfil --- */
 .profile-container {
   display: flex;
+  flex-wrap: wrap;            /* permite que los elementos se ajusten */
   gap: 40px;
-  justify-content: flex-start; /* alineado a la izquierda */
+  justify-content: flex-start;
   align-items: flex-start;
-  flex-wrap: wrap;
 }
 
 /* --- Información del admin --- */
 .profile-info {
   background-color: #D7D7D7;
   border-radius: 15px;
-  padding: 60px;          /* espacio interno generoso */
-  width: 800px;            /* ancho más grande */
-  min-height: 500px;       /* altura mayor para llenar pantalla */
+  padding: 40px;
+  flex: 1 1 500px;           /* se adapta al espacio disponible */
   color: #1C1B1F;
-  box-sizing: border-box;  /* incluye padding en el ancho */
-  font-size: 20px;         /* letra más grande */
+  box-sizing: border-box;
+  font-size: 20px;
+  min-width: 300px;
 }
 
 .profile-info h3 {
   margin-bottom: 25px;
-  font-size: 28px;         /* título más grande */
+  font-size: 28px;
   color: #1C1B1F;
 }
 
 .profile-info p {
-  font-size: 20px;         /* texto más grande */
+  font-size: 20px;
   margin-bottom: 15px;
 }
 
-/* Botón editar */
+/* --- Botón editar --- */
 .btn-edit {
   background-color: #8c8f96;
   color: white;
   border: none;
-  padding: 14px 24px;      /* botón más grande */
+  padding: 14px 24px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 18px;
@@ -97,31 +95,30 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 400px;             /* ancho más grande */
-  min-height: 440px;        /* altura igual que info para balance visual */
+  flex: 0 1 350px;            /* ocupa hasta 350px, pero puede reducirse */
+  min-width: 250px;
+  box-sizing: border-box;
 }
 
 .profile-picture img {
   width: 100%;
-  height: 100%;
-  max-width: 350px;
-  max-height: 350px;
+  height: auto;
+  max-width: 300px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #8c8f96;
 }
 
-
 /* --- Modal --- */
 .modal {
-  display: none;               
+  display: none;
   position: fixed;
   z-index: 100;
   left: 0; 
   top: 0;
   width: 100%; 
   height: 100%;
-  background-color: rgba(0,0,0,0.5); 
+  background-color: rgba(0,0,0,0.5);
   justify-content: center;
   align-items: center;
 }
@@ -130,11 +127,11 @@ html, body {
   background-color: #C0C0C0;
   padding: 30px;
   border-radius: 20px;
-  width: 450px;           /* un poco más ancho para todos los campos */
+  width: 450px;
   max-width: 90%;
   display: flex;
-  flex-direction: column;  /* elementos uno debajo de otro */
-  gap: 15px;               /* espacio uniforme entre campos */
+  flex-direction: column;
+  gap: 15px;
 }
 
 .modal-content h2 {
@@ -152,14 +149,14 @@ html, body {
 
 .modal-content input,
 .modal-content select {
-  width: 100%;             
+  width: 100%;
   padding: 12px;
   border-radius: 10px;
   border: 1px solid #ccc;
   background-color: #D7D7D7;
   outline: none;
   font-size: 16px;
-  margin-bottom: 10px;     /* espacio entre campos */
+  margin-bottom: 10px;
   box-sizing: border-box;
 }
 
@@ -184,4 +181,49 @@ html, body {
   cursor: pointer;
   font-size: 24px;
   margin-bottom: 10px;
+}
+
+/* --- Responsividad --- */
+@media (max-width: 1024px) {
+  .profile-container {
+    justify-content: center;
+  }
+
+  .profile-info, .profile-picture {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .profile-picture {
+    justify-content: center;
+    min-height: auto;
+  }
+
+  .profile-info {
+    padding: 30px;
+  }
+
+  .content h1 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .content {
+    margin-left: 0;
+    border-width: 10px;
+  }
+
+  .profile-info, .profile-picture {
+    padding: 20px;
+  }
+
+  .btn-edit {
+    font-size: 16px;
+    padding: 10px 18px;
+  }
+
+  .content h1 {
+    font-size: 28px;
+  }
 }
