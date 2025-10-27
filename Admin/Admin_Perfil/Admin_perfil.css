@@ -49,16 +49,14 @@ html, body {
 }
 
 /* --- Información del admin --- */
-.profile-info {
-  background-color: #D7D7D7;
+.profile-info { background-color: #D7D7D7;
   border-radius: 15px;
-  padding: 40px;
-  flex: 1 1 500px;           /* se adapta al espacio disponible */
+  padding: 60px; /* espacio interno generoso */
+  width: 800px; /* ancho más grande */
+  min-height: 500px; /* altura mayor para llenar pantalla */
   color: #1C1B1F;
-  box-sizing: border-box;
-  font-size: 20px;
-  min-width: 300px;
-}
+  box-sizing: border-box; /* incluye padding en el ancho */
+  font-size: 20px; /* letra más grande */ }
 
 .profile-info h3 {
   margin-bottom: 25px;
@@ -88,25 +86,25 @@ html, body {
 }
 
 /* --- Foto de perfil --- */
-.profile-picture {
+.profile-picture { 
   background-color: #D7D7D7;
-  border-radius: 20px;
-  padding: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 0 1 350px;            /* ocupa hasta 350px, pero puede reducirse */
-  min-width: 250px;
-  box-sizing: border-box;
-}
-
-.profile-picture img {
-  width: 100%;
-  height: auto;
-  max-width: 300px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #8c8f96;
+  border-radius: 20px; 
+  padding: 30px; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  width: 400px; /* ancho más grande */ 
+  min-height: 440px; /* altura igual que info para balance visual */ 
+} 
+  
+.profile-picture img { 
+  width: 100%; 
+  height: 100%; 
+  max-width: 350px; 
+  max-height: 350px; 
+  border-radius: 50%; 
+  object-fit: cover; 
+  border: 3px solid #8c8f96; 
 }
 
 /* --- Modal --- */
