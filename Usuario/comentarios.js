@@ -64,7 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 1. Datos básicos
         const calificacion = parseFloat(com.calificacion) || 0;
-        const avatarSrc = com.avatar_usuario || 'assest/default-avatar.png'; 
+        
+        // ====================================================
+        // === ESTA ES LA LÍNEA MODIFICADA ===
+        // ====================================================
+        // Usamos com.profilescreen (de la API) y añadimos la ruta correcta
+        const avatarSrc = com.profilescreen ? '../images/' + com.profilescreen : 'assest/default-avatar.png';
+        // ====================================================
+
         const nombreUsuario = com.nombre || com.nombre_usuario || 'Invitado';
         const fecha = com.fecha ? new Date(com.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : 'Fecha desconocida';
         const likesCount = com.likes || 0;
@@ -115,9 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ${estrellasHTML}
           </header>
 
+          ${imagenHTML} 
+          
           <p class="card__text">${com.comentario}</p>
 
-          ${imagenHTML}
           ${chipHTML}
 
           <footer class="card__footer">
@@ -203,9 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (listaComentariosEl) {
         listaComentariosEl.addEventListener('click', async (e) => {
             
-            // ====================================================
-            // === ESTA ES LA LÓGICA MODIFICADA (LIKE/UNLIKE) ===
-            // ====================================================
+            // Lógica de "Me gusta" (toggle)
             const likeButton = e.target.closest('.act-like');
             if (likeButton) {
                 
@@ -216,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const countSpan = likeButton.querySelector('.like-count');
                 const currentCount = parseInt(countSpan.textContent, 10);
                 
-                // Determinamos si estamos dando 'like' o 'unlike'
                 const yaTieneLike = likeButton.classList.contains('liked');
                 const action = yaTieneLike ? 'unlike' : 'like';
                 const newCount = yaTieneLike ? currentCount - 1 : currentCount + 1;
@@ -231,28 +236,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!respuesta.ok || !json.success) {
                         throw new Error(json.error || 'Error del servidor');
                     }
-
-                    // Éxito: Actualizamos el contador y el estilo
-                    countSpan.textContent = newCount < 0 ? 0 : newCount; // Evita contadores negativos
-                    likeButton.classList.toggle('liked'); // Añade o quita la clase 'liked'
+                    countSpan.textContent = newCount < 0 ? 0 : newCount; 
+                    likeButton.classList.toggle('liked'); 
 
                 } catch (error) {
                     console.error('Error al dar like/unlike:', error);
-                    // Si falla, no hacemos nada y solo reactivamos el botón
                 } finally {
-                    // Habilitamos el botón de nuevo
                     likeButton.disabled = false;
                 }
             }
-            // ====================================================
-            // === FIN DE LA LÓGICA MODIFICADA ===
-            // ====================================================
             
             // --- LÓGICA DE CLIC EN "RESPONDER" ---
             const replyButton = e.target.closest('.act-reply');
             if (replyButton) {
                 const idResena = replyButton.dataset.id;
-                // Buscamos el contenedor del formulario DENTRO de la tarjeta actual
                 const card = replyButton.closest('.card');
                 const formContainer = card.querySelector('.reply-form-container');
                 toggleReplyForm(idResena, formContainer);
@@ -271,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     if (listaComentariosEl) {
         listaComentariosEl.addEventListener('submit', async (e) => {
-            // Solo nos interesan los formularios con la clase 'reply-form'
             if (!e.target.matches('.reply-form')) {
                 return;
             }
@@ -297,10 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // ¡Éxito! Renderizamos la nueva respuesta
                 const nuevaRespuestaHTML = renderizarComentario(json.data, true);
                 
-                // Buscamos el contenedor de respuestas del padre
                 const cardPadre = replyForm.closest('.card');
                 const repliesContainer = cardPadre.querySelector('.replies-container');
-                repliesContainer.innerHTML += nuevaRespuestaHTML; // Añadimos la respuesta al final
+                repliesContainer.innerHTML += nuevaRespuestaHTML; 
                 
                 replyForm.remove(); // Eliminamos el formulario
 
