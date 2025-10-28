@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 28-10-2025 a las 01:30:07
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 28-10-2025 a las 03:32:48
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -206,6 +206,18 @@ INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
 (108, 3),
 (108, 4);
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_opciones`
+--
+
+CREATE TABLE `producto_opciones` (
+  `id_opcion` int(11) NOT NULL,
+  `idp` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `opciones` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -334,7 +346,7 @@ CREATE TABLE `usuarios` (
   `userid` int(11) NOT NULL,
   `profilescreen` varchar(255) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `role` int(11) DEFAULT 1,
   `status` tinyint(1) DEFAULT 1,
@@ -405,6 +417,13 @@ ALTER TABLE `producto_categorias`
   ADD KEY `id_categoria` (`id_categoria`);
 
 --
+-- Indices de la tabla `producto_opciones`
+--
+ALTER TABLE `producto_opciones`
+  ADD PRIMARY KEY (`id_opcion`),
+  ADD KEY `idp` (`idp`);
+
+--
 -- Indices de la tabla `promocion`
 --
 ALTER TABLE `promocion`
@@ -439,7 +458,8 @@ ALTER TABLE `tamanos`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`userid`);
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -469,23 +489,11 @@ ALTER TABLE `movimientos`
 ALTER TABLE `productos`
   MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
--- --------------------------------------------------------
-
 --
--- Estructura de tabla para la tabla `producto_opciones`
+-- AUTO_INCREMENT de la tabla `producto_opciones`
 --
-
-CREATE TABLE `producto_opciones` (
-  `id_opcion` INT(11) NOT NULL AUTO_INCREMENT,
-  `idp` INT(11) NOT NULL,
-  `nombre` VARCHAR(100) NOT NULL,
-  `opciones` TEXT NOT NULL,
-  PRIMARY KEY (`id_opcion`),
-  KEY `idp` (`idp`),
-  CONSTRAINT `producto_opciones_ibfk_1` FOREIGN KEY (`idp`)
-      REFERENCES `productos` (`idp`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+ALTER TABLE `producto_opciones`
+  MODIFY `id_opcion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `promocion`
@@ -539,6 +547,12 @@ ALTER TABLE `empleados_cajeros`
 ALTER TABLE `producto_categorias`
   ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
   ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `producto_opciones`
+--
+ALTER TABLE `producto_opciones`
+  ADD CONSTRAINT `producto_opciones_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
