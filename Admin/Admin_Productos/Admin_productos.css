@@ -257,4 +257,36 @@ body {
   margin-bottom: 10px;
 }
 
+.listbox-item {
+  background: #e0e0e0;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.listbox-item input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.listbox-item button {
+  margin-right: 10px;
+  background-color: #8c8f96;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.listbox-item button:hover {
+  background-color: #4b4e4c;
+}
+
+
 

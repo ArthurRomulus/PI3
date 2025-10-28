@@ -44,17 +44,21 @@ include "../../conexion.php";
         }
     }
     ?>
-    <a href="index.php"><button>Categorías</button></a> <!-- Muestra todo -->
+    <a href="index.php"><button>Categorías</button></a>
     </div>
 
     <!-- Sección de productos -->
     <h3>Productos</h3>
     <div class="products-container">
+      <!-- Cuadro para agregar producto -->
+      <div class="product-card add-product" id="openModal">
+        <i class="fas fa-plus"></i>
+        <span>Agregar Producto</span>
+      </div>   
       <?php
       $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
       $buscar = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 
-      // Consulta con múltiples categorías
       $sql = "SELECT p.*, GROUP_CONCAT(c.nombrecategoria SEPARATOR ', ') AS categorias
               FROM productos p
               LEFT JOIN producto_categorias pc ON p.idp = pc.idp
@@ -88,10 +92,9 @@ include "../../conexion.php";
       }
       $stmt->execute();
       $result = $stmt->get_result();
-
+      
       if ($result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
-            // Convertir el valor de sabor en texto
             $sabor_texto = '';
             switch($row['sabor']){
                 case 1: $sabor_texto = 'Pequeño'; break;
@@ -100,13 +103,14 @@ include "../../conexion.php";
                 default: $sabor_texto = 'Desconocido';
             }
 
-            // Obtener categorías del producto (para el modal de editar)
             $cat_actuales = [];
-            $cat_query = $conn->query("SELECT c.nombrecategoria FROM producto_categorias pc 
+            $cat_ids = [];
+            $cat_query = $conn->query("SELECT c.id_categoria, c.nombrecategoria FROM producto_categorias pc 
                                         JOIN categorias c ON pc.id_categoria = c.id_categoria
                                         WHERE pc.idp = ".$row['idp']);
             while($c = $cat_query->fetch_assoc()){
                 $cat_actuales[] = $c['nombrecategoria'];
+                $cat_ids[] = $c['id_categoria'];
             }
               ?>
               <div class="product-card" 
@@ -114,6 +118,7 @@ include "../../conexion.php";
                   data-nombre="<?php echo $row['namep']; ?>" 
                   data-precio="<?php echo $row['precio']; ?>" 
                   data-categorias="<?php echo implode(',', $cat_actuales); ?>" 
+                  data-categorias_ids="<?php echo implode(',', $cat_ids); ?>"
                   data-sabor="<?php echo $row['sabor']; ?>" 
                   data-status="<?php echo $row['STOCK']; ?>" 
                   data-imagen="<?php echo $row['ruta_imagen']; ?>">
@@ -135,12 +140,6 @@ include "../../conexion.php";
           echo "<p>No hay productos registrados.</p>";
       }
       ?>
-
-      <!-- Cuadro para agregar producto -->
-      <div class="product-card add-product" id="openModal">
-        <i class="fas fa-plus"></i>
-        <span>Agregar Producto</span>
-      </div>   
     </div>
   </div>
 
@@ -174,6 +173,9 @@ include "../../conexion.php";
         <option value="3">Grande</option>
       </select>
 
+      <h3>Opciones Personalizadas</h3>
+      <div id="listboxContainer"></div>
+      <button type="button" id="addListboxBtn">Agregar Listbox</button>
       <button type="submit">Guardar</button>
     </form>
   </div>
@@ -193,21 +195,26 @@ include "../../conexion.php";
         <!-- Select múltiple para categorías -->
         <select id="editCategoria" name="categoria[]" multiple required>
           <?php
-          $categoria_result = $conn->query("SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
+          $categoria_result = $conn->query("SELECT id_categoria, nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
           if ($categoria_result->num_rows > 0) {
               while($cat = $categoria_result->fetch_assoc()) {
-                  echo '<option value="' . htmlspecialchars($cat['nombrecategoria']) . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
+                  echo '<option value="' . $cat['id_categoria'] . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
               }
           }
           ?>
         </select>
 
+        <!-- Select para sabor/tamaño -->
         <select id="editSabor" name="sabor" required>
           <option value="">Selecciona tamaño</option>
           <option value="1">Pequeño</option>
           <option value="2">Mediano</option>
           <option value="3">Grande</option>
         </select>
+
+        <h3>Opciones Personalizadas</h3>
+        <div id="editListboxContainer"></div>
+        <button type="button" id="addEditListboxBtn">Agregar Listbox</button>
 
         <button type="submit">Actualizar</button>
     </form>
@@ -234,7 +241,7 @@ include "../../conexion.php";
       const id = card.dataset.id;
       const name = card.dataset.nombre;
       const price = card.dataset.precio;
-      const categorias = card.dataset.categorias.split(',');
+      const categorias = card.dataset.categorias_ids.split(',');
       const sabor = card.dataset.sabor;
 
       document.getElementById('editId').value = id;
@@ -242,10 +249,41 @@ include "../../conexion.php";
       document.getElementById('editPrice').value = price;
       document.getElementById('editSabor').value = sabor;
 
-      // Marcar las categorías seleccionadas
       const select = document.getElementById('editCategoria');
       Array.from(select.options).forEach(option => {
           option.selected = categorias.includes(option.value);
+      });
+
+      const editListboxContainer = document.getElementById('editListboxContainer');
+      editListboxContainer.innerHTML = '';
+      editListboxCount = 0;
+
+      fetch(`get_producto_listboxes.php?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+          data.forEach(lb => {
+              editListboxCount++;
+              const listboxDiv = document.createElement('div');
+              listboxDiv.classList.add('listbox-item');
+              let opcionesHtml = '';
+              lb.opciones.forEach(op => {
+                  opcionesHtml += `<div class="option-item">
+                                      <input type="text" name="listbox[${editListboxCount}][opciones][]" value="${op}" required>
+                                   </div>`;
+              });
+              listboxDiv.innerHTML = `
+                <hr>
+                <label>Nombre del listbox:</label>
+                <input type="text" name="listbox[${editListboxCount}][nombre]" value="${lb.nombre}" required>
+                <div class="options-container" id="edit-options-${editListboxCount}">
+                  <label>Opciones:</label>
+                  ${opcionesHtml}
+                </div>
+                <button type="button" class="addOptionBtn" data-target="edit-options-${editListboxCount}">Agregar opción</button>
+                <button type="button" class="removeListboxBtn">Eliminar listbox</button>
+              `;
+              editListboxContainer.appendChild(listboxDiv);
+          });
       });
 
       editModal.style.display = 'flex';
@@ -279,31 +317,91 @@ include "../../conexion.php";
     });
   });
 
-  // Hacer que se puedan seleccionar varias opciones solo con click (Agregar)
-  const categoriaSelect = document.getElementById('categoriaSelect');
-  if(categoriaSelect){
-      categoriaSelect.addEventListener('mousedown', function(e) {
-          e.preventDefault();
-          const option = e.target;
-          if (option.tagName === 'OPTION') {
-              option.selected = !option.selected;
-          }
-      });
+  // --- Multi-select con click ---
+  function enableMultiSelect(select) {
+      if(select){
+          select.addEventListener('mousedown', function(e) {
+              e.preventDefault();
+              const option = e.target;
+              if (option.tagName === 'OPTION') {
+                  option.selected = !option.selected;
+              }
+          });
+      }
   }
+  enableMultiSelect(document.getElementById('categoriaSelect'));
+  enableMultiSelect(document.getElementById('editCategoria'));
 
-  // Hacer que se puedan seleccionar varias opciones solo con click (Editar)
-  const editCategoriaSelect = document.getElementById('editCategoria');
-  if(editCategoriaSelect){
-      editCategoriaSelect.addEventListener('mousedown', function(e) {
-          e.preventDefault();
-          const option = e.target;
-          if (option.tagName === 'OPTION') {
-              option.selected = !option.selected;
-          }
-      });
-  }
+  // --- Listboxes dinámicos (Crear Producto) ---
+  const listboxContainer = document.getElementById('listboxContainer');
+  const addListboxBtn = document.getElementById('addListboxBtn');
+  let listboxCount = 0;
 
+  addListboxBtn.addEventListener('click', () => {
+      listboxCount++;
+      const listboxDiv = document.createElement('div');
+      listboxDiv.classList.add('listbox-item');
+      listboxDiv.innerHTML = `
+        <hr>
+        <label>Nombre del listbox:</label>
+        <input type="text" name="listbox[${listboxCount}][nombre]" placeholder="Nombre del listbox" required>
 
+        <div class="options-container" id="options-${listboxCount}">
+          <label>Opciones:</label>
+          <div class="option-item">
+            <input type="text" name="listbox[${listboxCount}][opciones][]" placeholder="Nueva opción" required>
+          </div>
+        </div>
+
+        <button type="button" class="addOptionBtn" data-target="options-${listboxCount}">Agregar opción</button>
+        <button type="button" class="removeListboxBtn">Eliminar listbox</button>
+      `;
+      listboxContainer.appendChild(listboxDiv);
+  });
+
+  // --- Listboxes dinámicos (Editar Producto) ---
+  const editListboxContainer = document.getElementById('editListboxContainer');
+  const addEditListboxBtn = document.getElementById('addEditListboxBtn');
+  let editListboxCount = 0;
+
+  addEditListboxBtn.addEventListener('click', () => {
+      editListboxCount++;
+      const listboxDiv = document.createElement('div');
+      listboxDiv.classList.add('listbox-item');
+      listboxDiv.innerHTML = `
+        <hr>
+        <label>Nombre del listbox:</label>
+        <input type="text" name="listbox[${editListboxCount}][nombre]" placeholder="Nombre del listbox" required>
+
+        <div class="options-container" id="edit-options-${editListboxCount}">
+          <label>Opciones:</label>
+          <div class="option-item">
+            <input type="text" name="listbox[${editListboxCount}][opciones][]" placeholder="Nueva opción" required>
+          </div>
+        </div>
+
+        <button type="button" class="addOptionBtn" data-target="edit-options-${editListboxCount}">Agregar opción</button>
+        <button type="button" class="removeListboxBtn">Eliminar listbox</button>
+      `;
+      editListboxContainer.appendChild(listboxDiv);
+  });
+
+  // --- Evento global para agregar opciones y eliminar listboxes ---
+  document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('addOptionBtn')) {
+          const targetId = e.target.getAttribute('data-target');
+          const container = document.getElementById(targetId);
+          const input = document.createElement('div');
+          input.classList.add('option-item');
+          input.innerHTML = `<input type="text" name="listbox[${targetId.split('-')[1]}][opciones][]" placeholder="Nueva opción" required>`;
+          container.appendChild(input);
+      }
+
+      if (e.target.classList.contains('removeListboxBtn')) {
+          e.target.closest('.listbox-item').remove();
+      }
+  });
 </script>
+
 </body>
 </html>
