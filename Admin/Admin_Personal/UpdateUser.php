@@ -1,10 +1,14 @@
 <?php
-include "../../database.php";
+include "../../conexion.php";
 
-$userid   = $_POST['id'] ?? null;
+$userid   = $_POST['userid'] ?? null;
 $username = $_POST['username'] ?? null;
 $password = $_POST['password'] ?? null;
 $role     = $_POST['role'] ?? null; // <── Nuevo campo
+
+include "../AdminProfileSesion.php";
+
+
 
 if (!$userid || !$username) {
     exit("❌ Faltan datos requeridos.");
@@ -22,6 +26,10 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
     } else {
         echo "❌ Error al mover la imagen.";
     }
+}
+
+if ($_SESSION['userid'] == $userid){
+    $_SESSION['profilescreen'] = $imagePath;
 }
 
 $query = "UPDATE usuarios SET username = ?";

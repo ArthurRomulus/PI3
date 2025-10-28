@@ -42,6 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
     }
 
     echo "<script>alert('Usuario registrado correctamente');</script>";
+        header("location: /PI3/Admin/Admin_Personal/");
+
     exit;
 }
 ?>
@@ -57,6 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
   <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link rel="stylesheet" href="personal.css">
   <link rel="stylesheet" href="usuariocrud.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
   <script src="../functions.js" defer></script>
@@ -71,7 +75,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
       <?php include '../date.php'; ?>
     </div>
 
+    <button class="add_user_button" onclick="openModal('addUserModal')">
+  <i class="fa-solid fa-user-plus"></i> Añadir usuario
+</button>
+
+    <!-- 🔽 FILTRO POR ROL -->
+    <div class="filter-container">
+      <label for="roleFilter"><i class="fa-solid fa-filter"></i> Filtrar por rol:</label>
+      <select id="roleFilter" onchange="filterByRole()">
+        <option value="all">Todos</option>
+        <?php
+          $rolesFilter = $conn->query("SELECT id_rol, rolename FROM roles WHERE status = 1");
+          while ($r = $rolesFilter->fetch_assoc()) {
+            echo '<option value="' . htmlspecialchars($r['id_rol']) . '">' . htmlspecialchars($r['rolename']) . '</option>';
+          }
+        ?>
+      </select>
+    </div>
+
     <div class="layout" id="graphic">
+
+
+    <div class="layout" id="graphic">
+
+
+
       <?php 
         $result = $conn->query("SELECT * FROM usuarios");
         while ($row = $result->fetch_assoc()) {
@@ -89,14 +117,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
                         data-role="' . htmlspecialchars($row['role']) . '"
                         data-image="' . htmlspecialchars($row['profilescreen']) . '">
                         Modificar usuario
-                    </button>';
-              echo '<button class="remove_user_button" onclick="this.closest(\'.empleado\').remove()">Eliminar usuario</button>';
+                    </button>'; 
+
+                    
+echo  '<button class="remove_user_button" onclick="deleteUser(' . htmlspecialchars($row['userid']) . ')">Eliminar usuario</button>';
             echo '</div>'; 
           echo '</div>';
         }
       ?>
 
-      <button class="add_user_button" onclick="openModal('addUserModal')">Añadir usuario</button>
+
     </div>
   </div>
 
@@ -154,7 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
       <button class="close-btn" onclick="closeModal('updateModal')">×</button>
 
       <h2>Modificar usuario</h2>
-      <form action="update_user.php" method="POST" enctype="multipart/form-data">
+      <form action="UpdateUser.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" id="id" name="id">
 
         <label>Username</label>
@@ -199,8 +229,57 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
       document.getElementById('role').value = button.dataset.role;
     }
     window.onclick = function(e) {
-      if (e.target.classList.contains('updateModal')) e.target.style.display = 'none';
+      if (e.target.classList.contains('updateModal')){
+        e.target.style.display = 'none';
+      }
     }
+
+    function filterByRole() {
+  const selectedRole = document.getElementById("roleFilter").value;
+  const users = document.querySelectorAll(".empleado");
+
+  users.forEach(user => {
+    const roleText = user.querySelector(".rol").textContent;
+    const roleValue = roleText.replace("Rol: ", "").trim();
+
+    if (selectedRole === "all" || selectedRole === roleValue) {
+      user.style.display = "flex";
+    } else {
+      user.style.display = "none";
+    }
+  });
+}
+
+function deleteUser(userid) {
+  if (!confirm("¿Seguro que deseas eliminar este usuario?")) return;
+
+  fetch("DeleteUser.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: "userid=" + encodeURIComponent(userid)
+  })
+  .then(response => response.text())
+  .then(data => {
+    if (data.trim() === "success") {
+      alert("Usuario eliminado correctamente");
+      const userDiv = document.getElementById("empleado_" + userid);
+      if (userDiv) userDiv.remove();
+    } else if (data.trim() === "not_found") {
+      alert("El usuario no existe.");
+    } else {
+      alert("Error al eliminar el usuario.");
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("Error al comunicarse con el servidor.");
+  });
+}
+
+
   </script>
 </body>
 </html>
+
