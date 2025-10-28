@@ -209,6 +209,20 @@ INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `producto_opciones`
+--
+
+CREATE TABLE producto_opciones (
+  id_opcion INT AUTO_INCREMENT PRIMARY KEY,
+  idp INT NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  opciones TEXT NOT NULL,
+  FOREIGN KEY (idp) REFERENCES productos(idp) ON DELETE CASCADE
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `promocion`
 --
 
@@ -497,6 +511,29 @@ ALTER TABLE `sabores`
 --
 ALTER TABLE `tamanos`
   MODIFY `tamano_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD CONSTRAINT `administradores_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `empleados_cajeros`
+--
+ALTER TABLE `empleados_cajeros`
+  ADD CONSTRAINT `empleados_cajeros_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `producto_categorias`
+--
+ALTER TABLE `producto_categorias`
+  ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
+  ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
