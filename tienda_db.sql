@@ -206,23 +206,6 @@ INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
 (108, 3),
 (108, 4);
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `producto_opciones`
---
-
-CREATE TABLE `producto_opciones` (
-  `id_opcion` INT(11) NOT NULL AUTO_INCREMENT,
-  `idp` INT(11) NOT NULL,
-  `nombre` VARCHAR(100) NOT NULL,
-  `opciones` TEXT NOT NULL,
-  PRIMARY KEY (`id_opcion`),
-  KEY `idp` (`idp`),
-  CONSTRAINT `producto_opciones_ibfk_1` FOREIGN KEY (`idp`)
-      REFERENCES `productos` (`idp`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 -- --------------------------------------------------------
 
@@ -485,6 +468,24 @@ ALTER TABLE `movimientos`
 --
 ALTER TABLE `productos`
   MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_opciones`
+--
+
+CREATE TABLE `producto_opciones` (
+  `id_opcion` INT(11) NOT NULL AUTO_INCREMENT,
+  `idp` INT(11) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  `opciones` TEXT NOT NULL,
+  PRIMARY KEY (`id_opcion`),
+  KEY `idp` (`idp`),
+  CONSTRAINT `producto_opciones_ibfk_1` FOREIGN KEY (`idp`)
+      REFERENCES `productos` (`idp`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- AUTO_INCREMENT de la tabla `promocion`
