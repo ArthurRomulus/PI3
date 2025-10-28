@@ -3,10 +3,36 @@ header('Content-Type: application/json');
 require '../conexion.php'; 
 
 try {
-    // --- OBTENER PRODUCTOS --- (Sin cambios)
-$sql_productos = "SELECT idp, namep, ruta_imagen, precio, categoria, tamano_defecto FROM productos WHERE status = 1";    $sentencia_productos = $pdo->prepare($sql_productos);
+    // --- OBTENER PRODUCTOS ---
+    // 1. Consulta actualizada: Usamos "STOCK > 0" en lugar de "status = 1"
+    $sql_productos = "SELECT idp, namep, ruta_imagen, precio, categoria, tamano_defecto 
+                      FROM productos 
+                      WHERE STOCK > 0";
+    
+    $sentencia_productos = $pdo->prepare($sql_productos);
     $sentencia_productos->execute();
-    $productos = $sentencia_productos->fetchAll();
+    // Usamos FETCH_ASSOC para que sea más fácil de manejar
+    $productos = $sentencia_productos->fetchAll(PDO::FETCH_ASSOC);
+
+    // 2. NUEVA LÓGICA: Obtener las categorías para CADA producto
+    // Preparamos una consulta que usaremos repetidamente
+    $sql_categorias = "SELECT c.nombrecategoria 
+                       FROM categorias c
+                       JOIN producto_categorias pc ON c.id_categoria = pc.id_categoria
+                       WHERE pc.idp = :idp";
+    $sentencia_categorias = $pdo->prepare($sql_categorias);
+
+    // Iteramos sobre cada producto (por referencia &) para añadirle sus categorías
+    foreach ($productos as &$producto) {
+        // Ejecutamos la consulta preparada con el ID del producto actual
+        $sentencia_categorias->execute(['idp' => $producto['idp']]);
+        $categorias_raw = $sentencia_categorias->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Creamos un nuevo campo 'categorias_nombres' en el producto
+        // Usamos array_column para obtener solo los nombres (ej: ['Frappés', 'Bebidas frias'])
+        $producto['categorias_nombres'] = array_column($categorias_raw, 'nombrecategoria');
+    }
+    unset($producto); // Rompemos la referencia del bucle
 
     // --- OBTENER MODIFICADORES --- (Sin cambios)
     $sql_sabores = "SELECT id_sabor, nombre_sabor, precio_extra, tipo_modificador FROM sabores";
@@ -14,33 +40,30 @@ $sql_productos = "SELECT idp, namep, ruta_imagen, precio, categoria, tamano_defe
     $sentencia_sabores->execute();
     $sabores_todos = $sentencia_sabores->fetchAll();
     
-    // --- LÓGICA MEJORADA PARA SEPARAR MODIFICADORES ---
     $leches = [];
-    $basesCafe = []; // Nueva categoría específica
+    $basesCafe = [];
     foreach ($sabores_todos as $sabor) {
-        // Si el tipo es LECHE_VACA o LECHE_VEGETAL, va a la lista de leches
         if (strpos($sabor['tipo_modificador'], 'LECHE') !== false) {
             $leches[] = $sabor;
         } 
-        // Si el tipo es BASE (para café), va a la lista de bases de café
         elseif ($sabor['tipo_modificador'] === 'BASE') {
             $basesCafe[] = $sabor;
         }
-        // Otros tipos como 'TÉ' simplemente se ignoran por ahora
     }
 
     // --- OBTENER TAMAÑOS --- (Sin cambios)
     $sql_tamanos = "SELECT tamano_id, nombre_tamano, precio_aumento FROM tamanos";
     $sentencia_tamanos = $pdo->prepare($sql_tamanos);
     $sentencia_tamanos->execute();
-    $tamanos = $sentencia_tamanos->fetchAll();
+    $tamanos = $sentencia_tamanos->fetchAll(PDO::FETCH_ASSOC); // Usar FETCH_ASSOC es buena práctica
 
-    // --- CONSTRUIR LA RESPUESTA CON LA NUEVA CATEGORÍA ---
+    // --- CONSTRUIR LA RESPUESTA ---
     $respuesta = [
-        "productos" => $productos,
+        // "productos" ahora contiene la lista de categorías en 'categorias_nombres'
+        "productos" => $productos, 
         "modificadores" => [
             "leches" => $leches,
-            "basesCafe" => $basesCafe // Usamos la nueva lista
+            "basesCafe" => $basesCafe
         ],
         "tamanos" => $tamanos
     ];
