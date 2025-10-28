@@ -343,7 +343,7 @@ INSERT INTO `tamanos` (`tamano_id`, `nombre_tamano`, `precio_aumento`) VALUES
 --
 
 CREATE TABLE `usuarios` (
-  `userid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL AUTO_INCREMENT,
   `profilescreen` varchar(255) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -558,3 +558,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
