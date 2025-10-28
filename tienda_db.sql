@@ -187,15 +187,11 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 -- Estructura de tabla para la tabla `producto_categorias`
 --
 
-CREATE TABLE `producto_opciones` (
-  `id_opcion` INT(11) NOT NULL AUTO_INCREMENT,
-  `idp` INT(11) NOT NULL,
-  `nombre` VARCHAR(100) NOT NULL,
-  `opciones` TEXT NOT NULL,
-  PRIMARY KEY (`id_opcion`),
-  CONSTRAINT `producto_opciones_ibfk_1` FOREIGN KEY (`idp`) 
-      REFERENCES `productos` (`idp`) ON DELETE CASCADE
+CREATE TABLE `producto_categorias` (
+  `idp` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Volcado de datos para la tabla `producto_categorias`
 --
@@ -216,13 +212,15 @@ INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
 -- Estructura de tabla para la tabla `producto_opciones`
 --
 
-CREATE TABLE producto_opciones (
-  id_opcion INT AUTO_INCREMENT PRIMARY KEY,
-  idp INT NOT NULL,
-  nombre VARCHAR(100) NOT NULL,
-  opciones TEXT NOT NULL,
-  FOREIGN KEY (idp) REFERENCES productos(idp) ON DELETE CASCADE
-);
+CREATE TABLE `producto_opciones` (
+  `id_opcion` INT(11) NOT NULL AUTO_INCREMENT,
+  `idp` INT(11) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  `opciones` TEXT NOT NULL,
+  PRIMARY KEY (`id_opcion`),
+  CONSTRAINT `producto_opciones_ibfk_1` FOREIGN KEY (`idp`) 
+      REFERENCES `productos` (`idp`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
