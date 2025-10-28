@@ -341,7 +341,6 @@ INSERT INTO `tamanos` (`tamano_id`, `nombre_tamano`, `precio_aumento`) VALUES
 --
 -- Estructura de tabla para la tabla `usuarios`
 --
-
 CREATE TABLE `usuarios` (
   `userid` int(11) NOT NULL AUTO_INCREMENT,
   `profilescreen` varchar(255) DEFAULT NULL,
@@ -350,7 +349,9 @@ CREATE TABLE `usuarios` (
   `password` varchar(255) NOT NULL,
   `role` int(11) DEFAULT 1,
   `status` tinyint(1) DEFAULT 1,
-  `archived` tinyint(1) DEFAULT 0
+  `archived` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`userid`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -455,13 +456,6 @@ ALTER TABLE `tamanos`
   ADD PRIMARY KEY (`tamano_id`);
 
 --
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`userid`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -558,4 +552,5 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
 
