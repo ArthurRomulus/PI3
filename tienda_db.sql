@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 25-10-2025 a las 01:36:14
+-- Servidor: localhost:3306
+-- Tiempo de generación: 28-10-2025 a las 01:30:07
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -240,33 +240,17 @@ INSERT INTO `promocion` (`idPromo`, `nombrePromo`, `imagen_url`, `codigo_promo`,
 --
 
 CREATE TABLE `resena` (
-<<<<<<< HEAD
   `idr` int(11) NOT NULL,
-  `userid` int(11) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
   `comentario` text DEFAULT NULL,
-  `producto` int(11) DEFAULT NULL,
-  `estrellas` int(11) DEFAULT NULL CHECK (`estrellas` between 0 and 5),
-  `date` date NOT NULL DEFAULT current_timestamp()
-=======
-  `idr` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `comentario` text COLLATE utf8mb4_general_ci,
   `calificacion` int(11) DEFAULT NULL,
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `imagen_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `etiquetas` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `imagen_url` varchar(255) DEFAULT NULL,
+  `etiquetas` varchar(255) DEFAULT NULL,
   `likes` int(11) DEFAULT 0,
-  `parent_id` int(11) NULL DEFAULT NULL
->>>>>>> karol
+  `parent_id` int(11) DEFAULT NULL,
+  `userid` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `resena`
---
-
-INSERT INTO `resena` (`idr`, `userid`, `username`, `comentario`, `producto`, `estrellas`, `date`) VALUES
-(123, 4, '123', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n', 51, 4, '2025-10-15');
 
 -- --------------------------------------------------------
 
@@ -361,6 +345,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`) VALUES
+(0, NULL, 'Koby_Tao', 'karolsinsel@gmail.com', '$2y$10$/z8GdsgLHd5twe4l9Cohtu94cxpPz1HEJVzQ317iJZoF..w0IkuCO', 4, 1, 0),
 (2, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0),
 (4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
 (8, NULL, 'cajero', 'cajero@gmail.com', '$2y$10$P100IYAw.svkWdQQBJTb7ug3pmplcd/q0lZ68fuAafQgw4SmmHX5e', 1, 1, 0),
@@ -429,12 +414,7 @@ ALTER TABLE `promocion`
 -- Indices de la tabla `resena`
 --
 ALTER TABLE `resena`
-  ADD PRIMARY KEY (`idr`),
-  ADD UNIQUE KEY `idr` (`idr`),
-  ADD UNIQUE KEY `idr_2` (`idr`),
-  ADD KEY `userid` (`userid`),
-  ADD KEY `username` (`username`),
-  ADD KEY `producto` (`producto`);
+  ADD PRIMARY KEY (`idr`);
 
 --
 -- Indices de la tabla `roles`
@@ -468,7 +448,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `cortes_caja`
@@ -498,7 +478,7 @@ ALTER TABLE `promocion`
 -- AUTO_INCREMENT de la tabla `resena`
 --
 ALTER TABLE `resena`
-  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -517,35 +497,6 @@ ALTER TABLE `sabores`
 --
 ALTER TABLE `tamanos`
   MODIFY `tamano_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `administradores`
---
-ALTER TABLE `administradores`
-  ADD CONSTRAINT `administradores_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `empleados_cajeros`
---
-ALTER TABLE `empleados_cajeros`
-  ADD CONSTRAINT `empleados_cajeros_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `producto_categorias`
---
-ALTER TABLE `producto_categorias`
-  ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
-  ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
