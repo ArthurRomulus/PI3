@@ -114,13 +114,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
                         data-id="' . htmlspecialchars($row['userid']) . '"
                         data-username="' . htmlspecialchars($row['username']) . '"
                         data-email="' . htmlspecialchars($row['email']) . '"
-                        data-role="' . htmlspecialchars($row['role']) . '"
-                        data-image="' . htmlspecialchars($row['profilescreen']) . '">
+                            data-image="' . htmlspecialchars($row['profilescreen']) . '">
                         Modificar usuario
-                    </button>'; 
-
-                    
-echo  '<button class="remove_user_button" onclick="deleteUser(' . htmlspecialchars($row['userid']) . ')">Eliminar usuario</button>';
+                    </button>';
+              echo  '<button class="remove_user_button" onclick="deleteUser(' . htmlspecialchars($row['userid']) . ')">Eliminar usuario</button>';
             echo '</div>'; 
           echo '</div>';
         }
@@ -201,14 +198,7 @@ echo  '<button class="remove_user_button" onclick="deleteUser(' . htmlspecialcha
         <input type="file" id="userprofile" name="image" accept="image/png, image/jpeg, image/webp">
 
         <label>Rol del usuario</label>
-        <select id="role" name="role">
-          <?php
-            $roles = $conn->query("SELECT id_rol, rolename FROM roles WHERE status = 1");
-            while ($rol = $roles->fetch_assoc()) {
-              echo '<option value="'. htmlspecialchars($rol['id_rol']) .'">' . htmlspecialchars($rol['rolename']) . '</option>';
-            }
-          ?>
-        </select>
+
 
         <input type="submit" value="Actualizar" class="btn-save">
       </form>

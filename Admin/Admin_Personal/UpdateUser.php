@@ -46,10 +46,6 @@ if ($imagePath) {
     $params[] = $imagePath;
 }
 
-if ($role) {
-    $query .= ", role = ?";
-    $params[] = $role;
-}
 
 $query .= " WHERE userid = ?";
 $params[] = $userid;
