@@ -3,7 +3,8 @@ include "../../conexion.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $namep = trim($_POST['name']);
-    $precio = (float)$_POST['precio'];
+    $descripcion = trim($_POST['descripcion'] ?? ''); // Nueva línea para la descripción
+    $precioBase = (float)$_POST['precio']; // precio que ingresó el usuario
     $categorias = isset($_POST['categoria']) ? $_POST['categoria'] : []; // IDs de categorías
     $sabor = (int)$_POST['sabor'];
 
@@ -19,13 +20,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- Insertar producto principal ---
-    $sql = "INSERT INTO productos (namep, precio, sabor, ruta_imagen) VALUES (?, ?, ?, ?)";
+    // --- Calcular precio final sumando opciones ---
+    $precioFinal = $precioBase;
+
+    if (isset($_POST['listbox']) && is_array($_POST['listbox'])) {
+        foreach ($_POST['listbox'] as $listbox) {
+            $opciones_raw = $listbox['opciones'] ?? [];
+            $opciones = [];
+
+            foreach ($opciones_raw as $subArray) {
+                if (is_array($subArray)) {
+                    foreach ($subArray as $op) {
+                        $opTrim = trim($op);
+                        if ($opTrim !== '') $opciones[] = $opTrim;
+                    }
+                } else {
+                    $opTrim = trim($subArray);
+                    if ($opTrim !== '') $opciones[] = $opTrim;
+                }
+            }
+
+            // Sumar precios de cada opción seleccionada
+            foreach ($opciones as $opValor) {
+                $stmt_precio = $conn->prepare("SELECT precio FROM opciones_predefinidas WHERE valor = ?");
+                $stmt_precio->bind_param("s", $opValor);
+                $stmt_precio->execute();
+                $res_precio = $stmt_precio->get_result();
+                if ($row_precio = $res_precio->fetch_assoc()) {
+                    $precioFinal += (float)$row_precio['precio'];
+                }
+                $stmt_precio->close();
+            }
+        }
+    }
+
+    // --- Insertar producto principal con precio final y descripción ---
+    $sql = "INSERT INTO productos (namep, precio, sabor, ruta_imagen, descripcion) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         die("Error en la preparación del producto: " . $conn->error);
     }
-    $stmt->bind_param("sdss", $namep, $precio, $sabor, $imagen);
+    $stmt->bind_param("sdsss", $namep, $precioFinal, $sabor, $imagen, $descripcion);
 
     if ($stmt->execute()) {
         $id_producto = $stmt->insert_id;
@@ -34,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($categorias)) {
             $stmtCat = $conn->prepare("INSERT INTO producto_categorias (idp, id_categoria) VALUES (?, ?)");
             foreach ($categorias as $id_categoria) {
-                $id_categoria = (int)$id_categoria; // asegurar entero
+                $id_categoria = (int)$id_categoria;
                 $stmtCat->bind_param("ii", $id_producto, $id_categoria);
                 $stmtCat->execute();
             }
@@ -44,20 +79,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // --- Insertar listboxes y opciones ---
         if (isset($_POST['listbox']) && is_array($_POST['listbox'])) {
             foreach ($_POST['listbox'] as $listbox) {
-                $nombre = trim($listbox['nombre']);
-                $opciones = array_filter(array_map('trim', $listbox['opciones'])); // limpiar y eliminar vacíos
-                if ($nombre && !empty($opciones)) {
-                    $opciones_json = json_encode($opciones, JSON_UNESCAPED_UNICODE);
+                $categoriaNombre = $listbox['nombre'] ?? '';
 
+                $opciones_raw = $listbox['opciones'] ?? [];
+                $opciones = [];
+                foreach ($opciones_raw as $subArray) {
+                    if (is_array($subArray)) {
+                        foreach ($subArray as $op) {
+                            $opTrim = trim($op);
+                            if ($opTrim !== '') $opciones[] = $opTrim;
+                        }
+                    } else {
+                        $opTrim = trim($subArray);
+                        if ($opTrim !== '') $opciones[] = $opTrim;
+                    }
+                }
+
+                $opciones_json = json_encode($opciones, JSON_UNESCAPED_UNICODE);
+
+                if ($categoriaNombre && !empty($opciones)) {
                     $stmt_op = $conn->prepare("INSERT INTO producto_opciones (idp, nombre, opciones) VALUES (?, ?, ?)");
-                    $stmt_op->bind_param("iss", $id_producto, $nombre, $opciones_json);
+                    $stmt_op->bind_param("iss", $id_producto, $categoriaNombre, $opciones_json);
                     $stmt_op->execute();
                     $stmt_op->close();
                 }
             }
         }
 
-        // Redirigir al panel
         header("Location: index.php");
         exit;
     } else {
