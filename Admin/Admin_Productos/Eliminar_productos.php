@@ -1,8 +1,8 @@
 <?php
 include "../../conexion.php";
 
-if (isset($_POST['id'])) {
-    $id = $_POST['id'];
+if (isset($_GET['id'])) { // Cambiar POST por GET
+    $id = $_GET['id'];
 
     // Primero, eliminamos la imagen si existe
     $queryImg = $conn->prepare("SELECT ruta_imagen FROM productos WHERE idp=?");
@@ -11,23 +11,20 @@ if (isset($_POST['id'])) {
     $result = $queryImg->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        if (!empty($row['imagen']) && file_exists($row['imagen'])) {
-            unlink($row['imagen']); // elimina el archivo físico
+        if (!empty($row['ruta_imagen']) && file_exists($row['ruta_imagen'])) {
+            unlink($row['ruta_imagen']); // elimina el archivo físico
         }
     }
 
     // Eliminamos el producto
     $stmt = $conn->prepare("DELETE FROM productos WHERE idp=?");
     $stmt->bind_param("i", $id);
-
-    if ($stmt->execute()) {
-        echo "success";
-    } else {
-        echo "error";
-    }
-
+    $stmt->execute();
     $stmt->close();
-    $conn->close();
+
+    // Redirigir de vuelta al index
+    header("Location: index.php");
+    exit;
 } else {
     echo "no_id";
 }
