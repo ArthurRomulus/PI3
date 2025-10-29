@@ -57,25 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarBarraNav(currentPage);
     }
 
-    // --- ACTUALIZAR LA FECHA EN TIEMPO REAL ---
+    // --- ACTUALIZAR LA FECHA EN TIEMPO REAL --- (Sin cambios)
     const dateElement = document.querySelector('.date');
     if (dateElement) {
-        // Arrays para los nombres en español
         const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-        
         const fechaActual = new Date();
-        
-        // Formateamos la fecha al estilo "Jueves, 5 de octubre de 2025"
         const diaSemana = dias[fechaActual.getDay()];
         const diaMes = fechaActual.getDate();
         const mes = meses[fechaActual.getMonth()];
         const anio = fechaActual.getFullYear();
-        
         dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
     }
 
-    // --- VARIABLES Y FUNCIONES DEL CARRITO ---
+    // --- VARIABLES Y FUNCIONES DEL CARRITO --- (Sin cambios)
     const cartList = [];
     const cartContent = document.querySelector('.cart-content');
     const summarySubtotal = document.querySelector('.summary-subtotal');
@@ -95,17 +90,36 @@ document.addEventListener('DOMContentLoaded', () => {
         
         productsToRender.forEach(producto => {
             const { modificadores, tamanos } = allData;
-            const esCaliente = producto.categoria === 'Bebidas calientes';
-            const tagClass = esCaliente ? 'tag-caliente' : 'tag-frio';
-            const tagTexto = esCaliente ? 'CALIENTE' : 'FRÍO';
+
+            // Lógica de etiqueta Frío/Caliente (Sin cambios)
+            let tagHtml = ''; 
+            if (producto.categorias_nombres && producto.categorias_nombres.includes('Bebidas calientes')) {
+                tagHtml = '<span class="card-tag tag-caliente">CALIENTE</span>';
+            } else if (producto.categorias_nombres && producto.categorias_nombres.includes('Bebidas frias')) {
+                tagHtml = '<span class="card-tag tag-frio">FRÍO</span>';
+            }
+            
+            // --- (INICIO) NUEVA LÓGICA PARA TAMAÑOS DE COMIDA ---
+            // 1. Definir qué categorías son "comida"
+            const foodCategories = ['Comida', 'Postres', 'Panes'];
+            let isFoodItem = false;
+            
+            // 2. Comprobar si el producto actual está en esas categorías
+            if (producto.categorias_nombres) {
+                isFoodItem = producto.categorias_nombres.some(cat => foodCategories.includes(cat));
+            }
+            // --- (FIN) NUEVA LÓGICA ---
+            
             const opcionesLecheHtml = generarOpcionesHtml(modificadores.leches, 'Tipo Leche');
             const opcionesCafeHtml = generarOpcionesHtml(modificadores.basesCafe, 'Tipo Café');
-            const tamanosHtml = generarTamanosHtml(tamanos, producto.tamano_defecto);
+            
+            // 3. Pasar el resultado (isFoodItem) a la función que genera el HTML
+            const tamanosHtml = generarTamanosHtml(tamanos, producto.tamano_defecto, isFoodItem);
             
             const tarjetaHTML = `
                 <article class="product-card-new" data-id="${producto.idp}" data-base-price="${producto.precio}" data-name="${producto.namep}">
                     <div class="card-top">
-                        <span class="card-tag ${tagClass}">${tagTexto}</span>
+                        ${tagHtml}
                         <span class="card-price">$${parseFloat(producto.precio).toFixed(2)}</span>
                     </div>
                     <div class="card-image"><img src="${producto.ruta_imagen}" alt="${producto.namep}"></div>
@@ -125,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CARGA INICIAL DE PRODUCTOS DESDE API ---
+    // --- CARGA INICIAL DE PRODUCTOS DESDE API --- (Sin cambios)
     if (contenedorProductos) {
         fetch('api.php')
             .then(response => response.json())
@@ -136,6 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderProducts(allProducts, data);
 
                 if (filterContainer) {
+                    
+                    const normalizeText = (str) => {
+                        if (!str) return "";
+                        return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    }
+
                     filterContainer.addEventListener('click', (event) => {
                         const target = event.target;
                         if (!target.matches('.cat-btn')) return;
@@ -143,15 +163,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         filterContainer.querySelector('.active').classList.remove('active');
                         target.classList.add('active');
 
-                        const filterType = target.textContent.toLowerCase();
+                        const filterType = normalizeText(target.textContent);
                         let filteredProducts = [];
 
                         if (filterType === 'todos') {
                             filteredProducts = allProducts;
-                        } else if (filterType === 'frappes') {
-                            filteredProducts = allProducts.filter(p => p.namep.toLowerCase().includes('frappé'));
-                        } else if (filterType === 'tés') {
-                            filteredProducts = allProducts.filter(p => p.namep.toLowerCase().includes('té') || p.namep.toLowerCase().includes('tea'));
+                        } else {
+                            filteredProducts = allProducts.filter(p => {
+                                if (!p.categorias_nombres || p.categorias_nombres.length === 0) {
+                                    return false;
+                                }
+                                return p.categorias_nombres.some(catName => normalizeText(catName) === filterType);
+                            });
                         }
                         
                         renderProducts(filteredProducts, data);
@@ -160,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
+    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS --- (Sin cambios)
     if (contenedorProductos) {
         contenedorProductos.addEventListener('click', (event) => {
             const target = event.target;
@@ -217,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- MANEJADOR DE EVENTOS PARA EL CARRITO ---
+    // --- MANEJADOR DE EVENTOS PARA EL CARRITO --- (Sin cambios)
     if (cartContent) {
         cartContent.addEventListener('click', e => {
             if (e.target.classList.contains('qty-btn-cart')) {
@@ -229,18 +252,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (action === 'minus') {
                     cartList[idx].qty -= 1;
                     if (cartList[idx].qty <= 0) {
-                        // Si la cantidad es 0 o menos, elimina el producto del carrito
                         cartList.splice(idx, 1);
                     }
                 }
-                renderCart(); // Vuelve a dibujar el carrito con los datos actualizados
+                renderCart(); 
             }
         });
     }
 
     // --- FUNCIONES COMPLETAS DEL CARRITO Y AUXILIARES ---
 
-    function renderCart() {
+    function renderCart() { // (Sin cambios)
         if (!cartContent) return;
         cartContent.innerHTML = '';
         if (cartList.length === 0) {
@@ -271,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSummary();
     }
 
-    function updateSummary() {
+    function updateSummary() { // (Sin cambios)
         const subtotal = cartList.reduce((sum, item) => sum + (item.price * item.qty), 0);
         const iva = subtotal * IVA_RATE;
         const total = subtotal + iva;
@@ -280,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (summaryTotal) summaryTotal.textContent = `$${(total).toFixed(2)}`;
     }
 
-    function updateCardPrice(card) {
+    function updateCardPrice(card) { // (Sin cambios)
         const basePrice = parseFloat(card.dataset.basePrice);
         const sizeButton = card.querySelector('.size-btn.active');
         const milkSelect = card.querySelector('.milk-type');
@@ -294,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.querySelector('.card-price').textContent = `$${finalPrice.toFixed(2)}`;
     }
 
-    function generarOpcionesHtml(opciones, placeholder) {
+    function generarOpcionesHtml(opciones, placeholder) { // (Sin cambios)
         let html = `<option selected disabled>${placeholder}</option>`;
         if (opciones) {
             opciones.forEach(opcion => {
@@ -304,18 +326,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
-    function generarTamanosHtml(tamanos, tamanoDefecto) {
-        const tamanoMap = {'Chico': {texto: '250ML',svg: '<svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg>'},'Mediano': {texto: '500ML',svg: '<svg viewBox="0 0 24 24"><path d="M3 8h18v10a3 3 0 01-3 3H6a3 3 0 01-3-3V8zm3-4h12v2H6V4z"/></svg>'},'Grande': {texto: '1L',svg: '<svg viewBox="0 0 24 24"><path d="M2 7h20v10a4 4 0 01-4 4H6a4 4 0 01-4-4V7zm4-4h12v2H6V3z"/></svg>'}};
+    // --- (INICIO) FUNCIÓN DE TAMAÑOS MODIFICADA ---
+    // 1. Añadimos el nuevo parámetro 'isFood' (con 'false' como valor por defecto)
+    function generarTamanosHtml(tamanos, tamanoDefecto, isFood = false) {
+        
+        // 2. Definimos el mapa de iconos (SVGs) por separado
+        const tamanoMap = {
+            'Chico': {svg: '<svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg>'},
+            'Mediano': {svg: '<svg viewBox="0 0 24 24"><path d="M3 8h18v10a3 3 0 01-3 3H6a3 3 0 01-3-3V8zm3-4h12v2H6V4z"/></svg>'},
+            'Grande': {svg: '<svg viewBox="0 0 24 24"><path d="M2 7h20v10a4 4 0 01-4 4H6a4 4 0 01-4-4V7zm4-4h12v2H6V3z"/></svg>'}
+        };
+
+        // 3. Elegimos las etiquetas de texto correctas basándonos en el flag 'isFood'
+        const labels = isFood
+            ? {'Chico': 'CH', 'Mediano': 'M', 'Grande': 'G'}
+            : {'Chico': '250ML', 'Mediano': '500ML', 'Grande': '1L'};
+
         let html = '';
         if (tamanos) {
             tamanos.forEach(tamano => {
-                const displayInfo = tamanoMap[tamano.nombre_tamano] || { texto: tamano.nombre_tamano, svg: '' };
+                // Obtenemos el SVG del mapa
+                const displayInfo = tamanoMap[tamano.nombre_tamano] || { svg: '' };
+                // Obtenemos el TEXTO del mapa de etiquetas que elegimos
+                const texto = labels[tamano.nombre_tamano] || tamano.nombre_tamano;
+                
                 const esActivo = tamano.tamano_id == tamanoDefecto ? 'active' : '';
-                html += `<button class="size-btn ${esActivo}" data-tamano-id="${tamano.tamano_id}" data-precio-aumento="${tamano.precio_aumento}">${displayInfo.svg}<span>${displayInfo.texto}</span></button>`;
+                
+                // Construimos el HTML final
+                html += `<button class="size-btn ${esActivo}" data-tamano-id="${tamano.tamano_id}" data-precio-aumento="${tamano.precio_aumento}">
+                            ${displayInfo.svg}
+                            <span>${texto}</span>
+                         </button>`;
             });
         }
         return html;
     }
+    // --- (FIN) FUNCIÓN DE TAMAÑOS MODIFICADA ---
 
     // Llamada inicial para mostrar el carrito vacío
     renderCart();
