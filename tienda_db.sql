@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-10-2025 a las 03:32:48
+-- Tiempo de generación: 29-10-2025 a las 23:49:58
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -35,6 +35,13 @@ CREATE TABLE `administradores` (
   `telefono_emergencia` varchar(15) NOT NULL,
   `direccion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `administradores`
+--
+
+INSERT INTO `administradores` (`userid`, `numero_admin`, `nombre_completo`, `telefono`, `telefono_emergencia`, `direccion`) VALUES
+(10, 'ADM001', 'Administrador General', '3120000000', '3120000001', 'Colima, México');
 
 -- --------------------------------------------------------
 
@@ -116,6 +123,106 @@ CREATE TABLE `movimientos` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `opciones_categoria`
+--
+
+CREATE TABLE `opciones_categoria` (
+  `id_categoria` int(11) NOT NULL,
+  `id_opcion_predefinida` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `opciones_categoria`
+--
+
+INSERT INTO `opciones_categoria` (`id_categoria`, `id_opcion_predefinida`) VALUES
+(3, 1),
+(3, 2),
+(3, 3),
+(3, 4),
+(3, 5),
+(3, 6),
+(3, 7),
+(3, 8),
+(4, 9),
+(4, 10),
+(4, 11),
+(5, 12),
+(5, 13),
+(5, 14),
+(5, 15),
+(6, 16),
+(6, 17),
+(6, 18),
+(7, 19),
+(7, 20),
+(7, 21),
+(8, 22),
+(8, 23),
+(8, 24),
+(9, 25),
+(9, 26),
+(9, 27),
+(10, 28),
+(10, 29),
+(10, 30),
+(10, 31),
+(10, 32);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `opciones_predefinidas`
+--
+
+CREATE TABLE `opciones_predefinidas` (
+  `id_opcion_predefinida` int(11) NOT NULL,
+  `nombre_opcion` varchar(100) NOT NULL,
+  `valor` varchar(100) NOT NULL,
+  `precio` decimal(10,2) NOT NULL DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `opciones_predefinidas`
+--
+
+INSERT INTO `opciones_predefinidas` (`id_opcion_predefinida`, `nombre_opcion`, `valor`, `precio`) VALUES
+(1, 'Tipo de café', 'Espresso', 15.00),
+(2, 'Tipo de café', 'Americano', 10.00),
+(3, 'Tipo de café', 'Capuchino', 20.00),
+(4, 'Tipo de leche', 'Entera', 10.00),
+(5, 'Tipo de leche', 'Deslactosada', 10.00),
+(6, 'Tipo de leche', 'Avena', 5.00),
+(7, 'Topping', 'Chocolate', 10.00),
+(8, 'Topping', 'Caramelo', 15.00),
+(9, 'Extras', 'Queso', 8.00),
+(10, 'Extras', 'Salsa', 14.00),
+(11, 'Extras', 'Vegetales', 20.00),
+(12, 'Topping', 'Chocolate', 8.00),
+(13, 'Topping', 'Caramelo', 12.00),
+(14, 'Sabor adicional', 'Vainilla', 10.00),
+(15, 'Sabor adicional', 'Fresa', 10.00),
+(16, 'Relleno', 'Chocolate', 15.00),
+(17, 'Relleno', 'Dulce de leche', 25.00),
+(18, 'Cobertura', 'Azúcar glas', 15.00),
+(19, 'Cobertura', 'Chocolate', 10.00),
+(20, 'Cobertura', 'Fresa', 13.00),
+(21, 'Extras', 'Nueces', 10.00),
+(22, 'Sabor', 'Frutilla', 9.00),
+(23, 'Sabor', 'Chocolate', 15.00),
+(24, 'Sabor', 'Vainilla', 12.00),
+(25, 'Topping', 'Canela', 10.00),
+(26, 'Topping', 'Nuez moscada', 10.00),
+(27, 'Sabor adicional', 'Calabaza', 9.00),
+(28, 'Tipo de té', 'Negro', 15.00),
+(29, 'Tipo de té', 'Manzanilla', 20.00),
+(30, 'Tipo de té', 'Limón', 10.00),
+(31, 'Sabor adicional', 'Miel', 12.00),
+(32, 'Sabor adicional', 'Jengibre', 14.00);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `productos`
 --
 
@@ -174,12 +281,8 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 (96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 0, 0, NULL),
 (97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 0, NULL),
 (98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 0, NULL),
-(100, 'the cofi', '../../Images/68fbfd1963946_Frappé matcha.png', 69, NULL, 1, 1, 0, 0, NULL),
-(102, 'cofff', '../../Images/68fbfe1aa4b68_Cafe carajillo.png', 67, NULL, 2, 1, 0, 0, NULL),
-(103, 'theex', '../../Images/68fbfe420c7d7_Cafe latte.png', 67, NULL, 2, 1, 0, 0, NULL),
-(104, 'Cafeee', '../../Images/68fbffd94b439_Cafe bombon.png', 67, NULL, 1, 1, 0, 0, NULL),
-(106, 'late', '../../Images/68fc00971d167_Cafe latte.png', 45, NULL, 2, 1, 0, 0, NULL),
-(108, 'Frappé', '../../Images/68fc09e70216a_Cafe latte.png', 69, 'Array', 2, 1, 0, 0, NULL);
+(131, 'cafesittiitti', '../../Images/6902957bd3840_Cafe latte.png', 65, NULL, 2, 1, 0, 0, 'contiene mas café y café y cafeee'),
+(132, 'Café sion sion', '../../Images/690295b025e7d_Cafe lechero.png', 58, NULL, 2, 1, 0, 0, 'la pension sion sion');
 
 -- --------------------------------------------------------
 
@@ -197,14 +300,8 @@ CREATE TABLE `producto_categorias` (
 --
 
 INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
-(102, 4),
-(103, 4),
-(104, 6),
-(106, 2),
-(106, 3),
-(108, 2),
-(108, 3),
-(108, 4);
+(131, 3),
+(132, 4);
 
 -- --------------------------------------------------------
 
@@ -218,6 +315,20 @@ CREATE TABLE `producto_opciones` (
   `nombre` varchar(100) NOT NULL,
   `opciones` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `producto_opciones`
+--
+
+INSERT INTO `producto_opciones` (`id_opcion`, `idp`, `nombre`, `opciones`) VALUES
+(1, 117, 'Bebidas calientes', '[\"Entera\"]'),
+(2, 117, 'Cafés', '[\"Americano\"]'),
+(3, 118, 'Bebidas calientes', '[\"Entera\"]'),
+(4, 118, 'Cafés', '[\"Avena\"]'),
+(5, 120, 'Bebidas calientes', '[\"Deslactosada\"]'),
+(6, 121, 'Bebidas calientes', '[\"Entera\"]'),
+(9, 122, 'Bebidas calientes', '[\"Deslactosada\",\"Avena\"]'),
+(10, 123, 'Bebidas calientes', '[\"Entera\"]');
 
 -- --------------------------------------------------------
 
@@ -341,17 +452,16 @@ INSERT INTO `tamanos` (`tamano_id`, `nombre_tamano`, `precio_aumento`) VALUES
 --
 -- Estructura de tabla para la tabla `usuarios`
 --
+
 CREATE TABLE `usuarios` (
-  `userid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL,
   `profilescreen` varchar(255) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `role` int(11) DEFAULT 1,
   `status` tinyint(1) DEFAULT 1,
-  `archived` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`userid`),
-  UNIQUE KEY `email` (`email`)
+  `archived` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -363,7 +473,8 @@ INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `passwor
 (2, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0),
 (4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
 (8, NULL, 'cajero', 'cajero@gmail.com', '$2y$10$P100IYAw.svkWdQQBJTb7ug3pmplcd/q0lZ68fuAafQgw4SmmHX5e', 1, 1, 0),
-(9, '../../Images/Profiles/9_68fba03670427.png', 'vc', 'vc@gmail.com', '$2y$10$QeQ4zKTvgs3fXhBg2aOpPOFADLMBnZQXNcXviq5iQTMK24uFBTV06', 2, 1, 0);
+(9, '../../Images/Profiles/9_68fba03670427.png', 'vc', 'vc@gmail.com', '$2y$10$QeQ4zKTvgs3fXhBg2aOpPOFADLMBnZQXNcXviq5iQTMK24uFBTV06', 2, 1, 0),
+(10, '../../Images/Captura de pantalla 2024-10-16 185653.png', 'Noisi', 'admin@tienda.com', '$2y$10$qgADfKAr.FHY6miNXvvybO7wi8mdjGeDkf2dmnYdaY0DThD5XAEKm', 4, 1, 0);
 
 --
 -- Índices para tablas volcadas
@@ -402,6 +513,19 @@ ALTER TABLE `movimientos`
   ADD PRIMARY KEY (`id_movimiento`);
 
 --
+-- Indices de la tabla `opciones_categoria`
+--
+ALTER TABLE `opciones_categoria`
+  ADD PRIMARY KEY (`id_categoria`,`id_opcion_predefinida`),
+  ADD KEY `id_opcion_predefinida` (`id_opcion_predefinida`);
+
+--
+-- Indices de la tabla `opciones_predefinidas`
+--
+ALTER TABLE `opciones_predefinidas`
+  ADD PRIMARY KEY (`id_opcion_predefinida`);
+
+--
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
@@ -422,7 +546,7 @@ ALTER TABLE `producto_categorias`
 --
 ALTER TABLE `producto_opciones`
   ADD PRIMARY KEY (`id_opcion`),
-  ADD KEY `idp` (`idp`);
+  ADD KEY `idx_idp` (`idp`);
 
 --
 -- Indices de la tabla `promocion`
@@ -456,6 +580,13 @@ ALTER TABLE `tamanos`
   ADD PRIMARY KEY (`tamano_id`);
 
 --
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -478,16 +609,22 @@ ALTER TABLE `movimientos`
   MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `opciones_predefinidas`
+--
+ALTER TABLE `opciones_predefinidas`
+  MODIFY `id_opcion_predefinida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_opciones`
 --
 ALTER TABLE `producto_opciones`
-  MODIFY `id_opcion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_opcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `promocion`
@@ -520,6 +657,12 @@ ALTER TABLE `tamanos`
   MODIFY `tamano_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- Restricciones para tablas volcadas
 --
 
@@ -536,21 +679,20 @@ ALTER TABLE `empleados_cajeros`
   ADD CONSTRAINT `empleados_cajeros_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `opciones_categoria`
+--
+ALTER TABLE `opciones_categoria`
+  ADD CONSTRAINT `opciones_categoria_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE,
+  ADD CONSTRAINT `opciones_categoria_ibfk_2` FOREIGN KEY (`id_opcion_predefinida`) REFERENCES `opciones_predefinidas` (`id_opcion_predefinida`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `producto_categorias`
 --
 ALTER TABLE `producto_categorias`
   ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
   ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `producto_opciones`
---
-ALTER TABLE `producto_opciones`
-  ADD CONSTRAINT `producto_opciones_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
