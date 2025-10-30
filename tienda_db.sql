@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 29-10-2025 a las 23:49:58
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: localhost
+-- Tiempo de generación: 30-10-2025 a las 06:04:03
+-- Versión del servidor: 8.0.17
+-- Versión de PHP: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -29,11 +30,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `administradores` (
   `userid` int(11) NOT NULL,
-  `numero_admin` varchar(20) NOT NULL,
-  `nombre_completo` varchar(100) NOT NULL,
-  `telefono` varchar(15) NOT NULL,
-  `telefono_emergencia` varchar(15) NOT NULL,
-  `direccion` varchar(255) NOT NULL
+  `numero_admin` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre_completo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `telefono` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `telefono_emergencia` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `direccion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -51,7 +52,7 @@ INSERT INTO `administradores` (`userid`, `numero_admin`, `nombre_completo`, `tel
 
 CREATE TABLE `categorias` (
   `id_categoria` int(11) NOT NULL,
-  `nombrecategoria` varchar(50) NOT NULL
+  `nombrecategoria` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -68,7 +69,8 @@ INSERT INTO `categorias` (`id_categoria`, `nombrecategoria`) VALUES
 (7, 'Postres'),
 (8, 'Sin café'),
 (9, 'Temporada'),
-(10, 'Tés');
+(10, 'Tés'),
+(11, 'Ensaladas');
 
 -- --------------------------------------------------------
 
@@ -85,7 +87,7 @@ CREATE TABLE `cortes_caja` (
   `saldo_real_contado` decimal(10,2) DEFAULT NULL,
   `diferencia` decimal(10,2) DEFAULT NULL,
   `id_usuario_cierre` int(11) NOT NULL,
-  `estado` enum('abierto','cerrado') NOT NULL
+  `estado` enum('abierto','cerrado') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -96,11 +98,11 @@ CREATE TABLE `cortes_caja` (
 
 CREATE TABLE `empleados_cajeros` (
   `userid` int(11) NOT NULL,
-  `numero_empleado` varchar(20) NOT NULL,
-  `nombre_completo` varchar(100) NOT NULL,
-  `telefono` varchar(15) NOT NULL,
-  `telefono_emergencia` varchar(15) NOT NULL,
-  `direccion` varchar(255) NOT NULL
+  `numero_empleado` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre_completo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `telefono` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `telefono_emergencia` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `direccion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -112,12 +114,12 @@ CREATE TABLE `empleados_cajeros` (
 CREATE TABLE `movimientos` (
   `id_movimiento` int(11) NOT NULL,
   `id_corte_caja` int(11) NOT NULL,
-  `tipo_movimiento` enum('venta','gasto','devolucion','ingreso_inicial','retiro') NOT NULL,
+  `tipo_movimiento` enum('venta','gasto','devolucion','ingreso_inicial','retiro') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `monto` decimal(10,2) NOT NULL,
-  `metodo_pago` enum('efectivo','tarjeta','transferencia') DEFAULT NULL,
-  `descripcion` varchar(255) DEFAULT NULL,
+  `metodo_pago` enum('efectivo','tarjeta','transferencia') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `id_usuario` int(11) NOT NULL,
-  `fecha_hora` timestamp NOT NULL DEFAULT current_timestamp()
+  `fecha_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -177,9 +179,9 @@ INSERT INTO `opciones_categoria` (`id_categoria`, `id_opcion_predefinida`) VALUE
 
 CREATE TABLE `opciones_predefinidas` (
   `id_opcion_predefinida` int(11) NOT NULL,
-  `nombre_opcion` varchar(100) NOT NULL,
-  `valor` varchar(100) NOT NULL,
-  `precio` decimal(10,2) NOT NULL DEFAULT 0.00
+  `nombre_opcion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `valor` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `precio` decimal(10,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -187,38 +189,38 @@ CREATE TABLE `opciones_predefinidas` (
 --
 
 INSERT INTO `opciones_predefinidas` (`id_opcion_predefinida`, `nombre_opcion`, `valor`, `precio`) VALUES
-(1, 'Tipo de café', 'Espresso', 15.00),
-(2, 'Tipo de café', 'Americano', 10.00),
-(3, 'Tipo de café', 'Capuchino', 20.00),
-(4, 'Tipo de leche', 'Entera', 10.00),
-(5, 'Tipo de leche', 'Deslactosada', 10.00),
-(6, 'Tipo de leche', 'Avena', 5.00),
-(7, 'Topping', 'Chocolate', 10.00),
-(8, 'Topping', 'Caramelo', 15.00),
-(9, 'Extras', 'Queso', 8.00),
-(10, 'Extras', 'Salsa', 14.00),
-(11, 'Extras', 'Vegetales', 20.00),
-(12, 'Topping', 'Chocolate', 8.00),
-(13, 'Topping', 'Caramelo', 12.00),
-(14, 'Sabor adicional', 'Vainilla', 10.00),
-(15, 'Sabor adicional', 'Fresa', 10.00),
-(16, 'Relleno', 'Chocolate', 15.00),
-(17, 'Relleno', 'Dulce de leche', 25.00),
-(18, 'Cobertura', 'Azúcar glas', 15.00),
-(19, 'Cobertura', 'Chocolate', 10.00),
-(20, 'Cobertura', 'Fresa', 13.00),
-(21, 'Extras', 'Nueces', 10.00),
-(22, 'Sabor', 'Frutilla', 9.00),
-(23, 'Sabor', 'Chocolate', 15.00),
-(24, 'Sabor', 'Vainilla', 12.00),
-(25, 'Topping', 'Canela', 10.00),
-(26, 'Topping', 'Nuez moscada', 10.00),
-(27, 'Sabor adicional', 'Calabaza', 9.00),
-(28, 'Tipo de té', 'Negro', 15.00),
-(29, 'Tipo de té', 'Manzanilla', 20.00),
-(30, 'Tipo de té', 'Limón', 10.00),
-(31, 'Sabor adicional', 'Miel', 12.00),
-(32, 'Sabor adicional', 'Jengibre', 14.00);
+(1, 'Tipo de café', 'Espresso', '15.00'),
+(2, 'Tipo de café', 'Americano', '10.00'),
+(3, 'Tipo de café', 'Capuchino', '20.00'),
+(4, 'Tipo de leche', 'Entera', '10.00'),
+(5, 'Tipo de leche', 'Deslactosada', '10.00'),
+(6, 'Tipo de leche', 'Avena', '5.00'),
+(7, 'Topping', 'Chocolate', '10.00'),
+(8, 'Topping', 'Caramelo', '15.00'),
+(9, 'Extras', 'Queso', '8.00'),
+(10, 'Extras', 'Salsa', '14.00'),
+(11, 'Extras', 'Vegetales', '20.00'),
+(12, 'Topping', 'Chocolate', '8.00'),
+(13, 'Topping', 'Caramelo', '12.00'),
+(14, 'Sabor adicional', 'Vainilla', '10.00'),
+(15, 'Sabor adicional', 'Fresa', '10.00'),
+(16, 'Relleno', 'Chocolate', '15.00'),
+(17, 'Relleno', 'Dulce de leche', '25.00'),
+(18, 'Cobertura', 'Azúcar glas', '15.00'),
+(19, 'Cobertura', 'Chocolate', '10.00'),
+(20, 'Cobertura', 'Fresa', '13.00'),
+(21, 'Extras', 'Nueces', '10.00'),
+(22, 'Sabor', 'Frutilla', '9.00'),
+(23, 'Sabor', 'Chocolate', '15.00'),
+(24, 'Sabor', 'Vainilla', '12.00'),
+(25, 'Topping', 'Canela', '10.00'),
+(26, 'Topping', 'Nuez moscada', '10.00'),
+(27, 'Sabor adicional', 'Calabaza', '9.00'),
+(28, 'Tipo de té', 'Negro', '15.00'),
+(29, 'Tipo de té', 'Manzanilla', '20.00'),
+(30, 'Tipo de té', 'Limón', '10.00'),
+(31, 'Sabor adicional', 'Miel', '12.00'),
+(32, 'Sabor adicional', 'Jengibre', '14.00');
 
 -- --------------------------------------------------------
 
@@ -228,15 +230,15 @@ INSERT INTO `opciones_predefinidas` (`id_opcion_predefinida`, `nombre_opcion`, `
 
 CREATE TABLE `productos` (
   `idp` int(11) NOT NULL,
-  `namep` varchar(50) NOT NULL,
-  `ruta_imagen` varchar(255) DEFAULT NULL,
-  `precio` int(11) NOT NULL CHECK (`precio` >= 0),
-  `categoria` varchar(50) DEFAULT NULL,
+  `namep` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ruta_imagen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `precio` int(11) NOT NULL,
+  `categoria` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `sabor` int(11) DEFAULT NULL,
-  `tamano_defecto` int(11) NOT NULL DEFAULT 1,
-  `VENTAS` int(11) NOT NULL DEFAULT 0,
-  `STOCK` int(11) NOT NULL DEFAULT 0,
-  `descripcion` varchar(255) DEFAULT NULL
+  `tamano_defecto` int(11) NOT NULL DEFAULT '1',
+  `VENTAS` int(11) NOT NULL DEFAULT '0',
+  `STOCK` int(11) NOT NULL DEFAULT '0',
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -259,7 +261,7 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 (64, 'Latte Almendra', '../../Images/Latte.png', 45, 'Bebidas calientes', 5, 1, 0, 0, NULL),
 (65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
 (66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(67, 'Doble', '../../Images/EspreDoble.png', 55, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(67, 'Doble', '../../Images/Espresso.png', 55, 'Bebidas calientes', 1, 1, 0, 0, NULL),
 (68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 2, 1, 0, 0, NULL),
 (69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 3, 1, 0, 0, NULL),
 (80, 'Chocolate caliente Avena', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 4, 1, 0, 0, NULL),
@@ -282,7 +284,27 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 (97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 0, NULL),
 (98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 0, NULL),
 (131, 'cafesittiitti', '../../Images/6902957bd3840_Cafe latte.png', 65, NULL, 2, 1, 0, 0, 'contiene mas café y café y cafeee'),
-(132, 'Café sion sion', '../../Images/690295b025e7d_Cafe lechero.png', 58, NULL, 2, 1, 0, 0, 'la pension sion sion');
+(132, 'Café sion sion', '../../Images/690295b025e7d_Cafe lechero.png', 58, NULL, 2, 1, 0, 0, 'la pension sion sion'),
+(133, 'Panini de aguacate', '../../Images/panini_aguacate.png', 90, '4', 1, 1, 0, 20, '40% aguacate, 20% verduras, 20% pan, 20% queso'),
+(134, 'Panini caprese', '../../Images/panini_caprese.png', 90, '4', 1, 1, 0, 20, '40% jitomate, 30% mozzarella, 20% albahaca, 10% pan'),
+(135, 'Panini pavo y queso', '../../Images/panini_pavo_queso.png', 100, '4', 1, 1, 0, 20, '45% pavo, 25% queso, 20% pan, 10% mostaza'),
+(136, 'Panini de pollo', '../../Images/panini_pollo.png', 100, '4', 1, 1, 0, 20, '40% pollo, 25% queso, 20% pan, 15% verduras'),
+(137, 'Panini de queso', '../../Images/panini_queso.png', 100, '4', 1, 1, 0, 20, '50% queso, 25% pan, 15% crema, 10% especias'),
+(138, 'Panini serrano', '../../Images/panini_serrano.png', 100, '4', 1, 1, 0, 20, '40% jamón serrano, 30% queso, 20% pan, 10% aceite de oliva'),
+(139, 'Sándwich de panela', '../../Images/sandwich_panela.png', 100, '4', 1, 1, 0, 20, '40% queso panela, 30% verduras, 20% pan, 10% aderezo'),
+(140, 'Sándwich de pavo', '../../Images/sandwich_pavo.png', 100, '4', 1, 1, 0, 20, '40% pavo, 30% queso, 20% pan, 10% mayonesa'),
+(141, 'Sándwich de queso', '../../Images/sandwich_queso.png', 100, '4', 1, 1, 0, 20, '50% queso, 25% pan, 15% mantequilla, 10% especias'),
+(142, 'Sándwich serrano', '../../Images/sandwich_serrano.png', 100, '4', 1, 1, 0, 20, '40% jamón serrano, 30% queso, 20% pan, 10% tomate'),
+(143, 'Sándwich de tocino', '../../Images/sandwich_tocino.png', 100, '4', 1, 1, 0, 20, '40% tocino, 30% queso, 20% pan, 10% jitomate'),
+(144, 'Bagel clásico', '../../Images/BagelClasic.png', 50, '7', 1, 1, 0, 20, '50% pan de bagel, 30% queso crema, 10% mantequilla, 10% miel'),
+(145, 'Bagel clásico', '../../Images/BagelClasic.png', 50, '7', 1, 1, 0, 20, '50% pan de bagel, 30% queso crema, 10% mantequilla, 10% miel'),
+(146, 'Brownies', '../../Images/brownies.png', 50, '7', 1, 1, 0, 20, '40% chocolate, 30% mantequilla, 20% harina, 10% nuez'),
+(147, 'Pastel de chocolate', '../../Images/pastel.png', 60, '7', 1, 1, 0, 20, '45% chocolate, 25% harina, 20% crema, 10% azúcar'),
+(148, 'Galleta casera', '../../Images/galleta_casera.png', 30, '7', 1, 1, 0, 20, '40% harina, 30% mantequilla, 20% chispas, 10% azúcar'),
+(149, 'Ensalada Caprese', '../../Images/ensalada_caprese.png', 100, '11', 1, 1, 0, 20, '40% jitomate, 30% queso mozzarella, 20% albahaca, 10% aceite de oliva'),
+(150, 'Ensalada Griega', '../../Images/ensalada_griega.png', 100, '11', 1, 1, 0, 20, '35% pepino, 30% tomate, 25% queso feta, 10% aceitunas'),
+(151, 'Ensalada Rusa', '../../Images/ensalada_rusa.png', 100, '11', 1, 1, 0, 20, '40% papa, 30% zanahoria, 20% chícharos, 10% mayonesa'),
+(152, 'Ensalada Verde', '../../Images/ensalada_verde.png', 100, '11', 1, 1, 0, 20, '40% lechuga, 30% espinaca, 20% pepino, 10% aderezo');
 
 -- --------------------------------------------------------
 
@@ -312,8 +334,8 @@ INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
 CREATE TABLE `producto_opciones` (
   `id_opcion` int(11) NOT NULL,
   `idp` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `opciones` text NOT NULL
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `opciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -338,16 +360,16 @@ INSERT INTO `producto_opciones` (`id_opcion`, `idp`, `nombre`, `opciones`) VALUE
 
 CREATE TABLE `promocion` (
   `idPromo` int(11) NOT NULL,
-  `nombrePromo` varchar(255) NOT NULL,
-  `imagen_url` varchar(255) DEFAULT NULL,
-  `codigo_promo` varchar(50) NOT NULL,
-  `condiciones` text DEFAULT NULL,
-  `tipo_descuento` enum('porcentaje','fijo') NOT NULL,
+  `nombrePromo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `imagen_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `codigo_promo` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `condiciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `tipo_descuento` enum('porcentaje','fijo') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `valor_descuento` decimal(10,2) NOT NULL,
   `fechaInicio` date NOT NULL,
   `fechaFin` date DEFAULT NULL,
-  `activo` tinyint(1) NOT NULL DEFAULT 1,
-  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `fecha_creacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -355,7 +377,7 @@ CREATE TABLE `promocion` (
 --
 
 INSERT INTO `promocion` (`idPromo`, `nombrePromo`, `imagen_url`, `codigo_promo`, `condiciones`, `tipo_descuento`, `valor_descuento`, `fechaInicio`, `fechaFin`, `activo`, `fecha_creacion`) VALUES
-(1, '123', '../img/1761140857_HsetxCc5.jpg', '68f8e0794c5a3', '123', 'porcentaje', 123.00, '0123-03-12', '0123-03-12', 1, '2025-10-22 13:47:37');
+(1, '123', '../img/1761140857_HsetxCc5.jpg', '68f8e0794c5a3', '123', 'porcentaje', '123.00', '0123-03-12', '0123-03-12', 1, '2025-10-22 13:47:37');
 
 -- --------------------------------------------------------
 
@@ -365,13 +387,13 @@ INSERT INTO `promocion` (`idPromo`, `nombrePromo`, `imagen_url`, `codigo_promo`,
 
 CREATE TABLE `resena` (
   `idr` int(11) NOT NULL,
-  `nombre` varchar(100) DEFAULT NULL,
-  `comentario` text DEFAULT NULL,
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `comentario` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `calificacion` int(11) DEFAULT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
-  `imagen_url` varchar(255) DEFAULT NULL,
-  `etiquetas` varchar(255) DEFAULT NULL,
-  `likes` int(11) DEFAULT 0,
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `imagen_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `etiquetas` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `likes` int(11) DEFAULT '0',
   `parent_id` int(11) DEFAULT NULL,
   `userid` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -384,9 +406,9 @@ CREATE TABLE `resena` (
 
 CREATE TABLE `roles` (
   `id_rol` int(11) NOT NULL,
-  `rolename` varchar(50) NOT NULL,
-  `currentusers` int(11) DEFAULT 0,
-  `status` tinyint(1) DEFAULT 1
+  `rolename` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `currentusers` int(11) DEFAULT '0',
+  `status` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -407,9 +429,9 @@ INSERT INTO `roles` (`id_rol`, `rolename`, `currentusers`, `status`) VALUES
 
 CREATE TABLE `sabores` (
   `id_sabor` int(11) NOT NULL,
-  `nombre_sabor` varchar(50) NOT NULL,
-  `precio_extra` decimal(5,2) NOT NULL DEFAULT 0.00,
-  `tipo_modificador` varchar(20) NOT NULL
+  `nombre_sabor` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `precio_extra` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `tipo_modificador` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -417,14 +439,14 @@ CREATE TABLE `sabores` (
 --
 
 INSERT INTO `sabores` (`id_sabor`, `nombre_sabor`, `precio_extra`, `tipo_modificador`) VALUES
-(1, 'Sin Modificador', 0.00, 'BASE'),
-(2, 'Leche Entera', 0.00, 'LECHE_VACA'),
-(3, 'Leche Deslactosada', 5.00, 'LECHE_VACA'),
-(4, 'Leche de Avena', 10.00, 'LECHE_VEGETAL'),
-(5, 'Leche de Almendra', 10.00, 'LECHE_VEGETAL'),
-(6, 'Té Manzanilla', 0.00, 'TÉ'),
-(7, 'Té Negro', 0.00, 'TÉ'),
-(8, 'Té Limón', 0.00, 'TÉ');
+(1, 'Sin Modificador', '0.00', 'BASE'),
+(2, 'Leche Entera', '0.00', 'LECHE_VACA'),
+(3, 'Leche Deslactosada', '5.00', 'LECHE_VACA'),
+(4, 'Leche de Avena', '10.00', 'LECHE_VEGETAL'),
+(5, 'Leche de Almendra', '10.00', 'LECHE_VEGETAL'),
+(6, 'Té Manzanilla', '0.00', 'TÉ'),
+(7, 'Té Negro', '0.00', 'TÉ'),
+(8, 'Té Limón', '0.00', 'TÉ');
 
 -- --------------------------------------------------------
 
@@ -434,8 +456,8 @@ INSERT INTO `sabores` (`id_sabor`, `nombre_sabor`, `precio_extra`, `tipo_modific
 
 CREATE TABLE `tamanos` (
   `tamano_id` int(11) NOT NULL,
-  `nombre_tamano` varchar(50) NOT NULL,
-  `precio_aumento` decimal(10,2) NOT NULL DEFAULT 0.00
+  `nombre_tamano` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `precio_aumento` decimal(10,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -443,9 +465,9 @@ CREATE TABLE `tamanos` (
 --
 
 INSERT INTO `tamanos` (`tamano_id`, `nombre_tamano`, `precio_aumento`) VALUES
-(1, 'Chico', 0.00),
-(2, 'Mediano', 10.00),
-(3, 'Grande', 15.00);
+(1, 'Chico', '0.00'),
+(2, 'Mediano', '10.00'),
+(3, 'Grande', '15.00');
 
 -- --------------------------------------------------------
 
@@ -455,13 +477,13 @@ INSERT INTO `tamanos` (`tamano_id`, `nombre_tamano`, `precio_aumento`) VALUES
 
 CREATE TABLE `usuarios` (
   `userid` int(11) NOT NULL,
-  `profilescreen` varchar(255) DEFAULT NULL,
-  `username` varchar(50) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` int(11) DEFAULT 1,
-  `status` tinyint(1) DEFAULT 1,
-  `archived` tinyint(1) DEFAULT 0
+  `profilescreen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `role` int(11) DEFAULT '1',
+  `status` tinyint(1) DEFAULT '1',
+  `archived` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -594,7 +616,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `cortes_caja`
@@ -618,7 +640,7 @@ ALTER TABLE `opciones_predefinidas`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_opciones`
