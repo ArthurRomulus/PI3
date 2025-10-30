@@ -1,78 +1,167 @@
-/* Fondo del modal (oscuro, ocupa toda la pantalla) */
-.updateModal {
+/* === Modal general === */
+.GeneralModal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Transparencia */
-  display: none; /* Oculto por defecto */
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  display: none;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 998;
 }
 
-/* Contenedor del contenido del modal */
+/* === Contenedor del contenido (centrado real) === */
 .modal-content {
-  background-color: #ffffff;
-  padding: 25px 30px;
-  border-radius: 12px;
-  width: 350px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  position: relative;
+  background: #d9d9d9; /* igual al fondo del modal de Editar Producto */
+  border-radius: 20px;
+  padding: 2rem;
+  width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease-out;
+  color: black;
+  position: relative; /* importante para el botón de cerrar */
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  justify-content: center;
+  z-index: 999;
 }
 
-/* Botón de cerrar (X) */
+/* === Botón de cerrar === */
 .close-btn {
   position: absolute;
   top: 10px;
   right: 15px;
-  border: none;
   background: none;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #555;
-  transition: color 0.2s ease;
-}
-
-.close-btn:hover {
-  color: #000;
-}
-
-/* Estilos para inputs y labels */
-.modal-content label {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-.modal-content input[type="text"],
-.modal-content input[type="password"],
-.modal-content input[type="file"] {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-/* Botón de enviar */
-#updateuser {
-  background-color: #4CAF50;
-  color: white;
   border: none;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 6px;
+  font-size: 1.4rem;
+  color: #333;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.2s ease;
+  transition: 0.2s;
+}
+.close-btn:hover {
+  color: #c0392b;
 }
 
-#updateuser:hover {
-  background-color: #45a049;
+/* === Título === */
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  color: #000;
+  font-weight: bold;
+}
+
+/* === Inputs y selects === */
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"],
+.modal-content input[type="file"],
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border: 1px solid #bbb;
+  background: #f3f3f3;
+  color: #000;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #666;
+  background: #fff;
+  outline: none;
+}
+
+/* === Labels === */
+.modal-content label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: #222;
+}
+
+/* === Botón principal === */
+.btn-save {
+  width: 100%;
+  background: #444;
+  border: none;
+  padding: 12px;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-save:hover {
+  background: #222;
+  transform: scale(1.02);
+}
+
+/* === Scroll del modal === */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 4px;
+}
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* === Animación === */
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
+/* === BOTÓN AÑADIR USUARIO === */
+.add_user_button {
+  display: inline-block;
+  margin: 2rem auto;
+  padding: 14px 26px;
+  background: linear-gradient(135deg, #2d3436, #636e72);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.add_user_button:hover {
+  background: linear-gradient(135deg, #000, #444);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.add_user_button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Si quieres centrarlo dentro del contenedor */
+.layout .add_user_button {
+  display: block;
+  margin: 2rem auto;
 }

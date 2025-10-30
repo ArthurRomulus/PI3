@@ -1,0 +1,114 @@
+    /* === Filtros modernos === */
+    .filtros-modern {
+      display: flex;
+      gap: 25px;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 20px 0 40px;
+      flex-wrap: wrap;
+    }
+
+    .filtros-modern .filtro {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .filtros-modern label {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .filtros-modern select {
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #f5f5f5;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .filtros-modern select:hover {
+      background: #e0e0e0;
+    }
+
+    /* === Gráfica de barras === */
+    .contenedor-grafico {
+      background: #fafafa;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    .titulo-grafica {
+      font-size: 22px;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .grafica-barras {
+      display: flex;
+      align-items: flex-end;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      padding: 20px;
+      background: linear-gradient(180deg, #f0f0f0, #ddd);
+      border-radius: 10px;
+      min-height: 420px;
+    }
+
+    .barra {
+      width: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: center;
+      position: relative;
+    }
+
+    .barra-fill {
+      width: 100%;
+      background: linear-gradient(180deg, #5b86e5, #36d1dc);
+      border-radius: 8px 8px 0 0;
+      transition: height 0.4s ease, transform 0.2s;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+    }
+
+    .barra:hover .barra-fill {
+      transform: scaleY(1.05);
+      filter: brightness(1.1);
+    }
+
+    .barra .valor {
+      position: absolute;
+      top: -25px;
+      color: #333;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .barra .nombre {
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #444;
+      word-wrap: break-word;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .barra {
+        width: 55px;
+      }
+      .titulo-grafica {
+        font-size: 18px;
+      }
+    }

@@ -1,85 +1,85 @@
+<?php
+include "../../conexion.php"; // conexión a la base de datos
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadísticas de ventas</title>
-    <link rel="stylesheet" href="../Admin_nav_bar.css">
-    <link rel="stylesheet" href="../general.css">
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Shop - Estadísticas</title>
+
+  <link rel="stylesheet" href="../general.css">
+
+  <link rel="stylesheet" href="estadisticas.css">
+  <link rel="stylesheet" href="../Admin_nav_bar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+
+  </style>
 </head>
 <body>
 
-<?php 
-    include "../Admin_nav_bar.php";  
-    include "../../conexion.php";
-?>
+  <?php include "../Admin_nav_bar.php"; ?> 
+  <div class="content">
+    <?php include "../AdminProfileSesion.php"; ?>
 
-<div class="content">
-    <div class="top-bar">
-        <?php include "../AdminProfileSesion.php"; ?>
+    <h1>📈 Estadísticas de ventas</h1>
+    <div class="topbar">
+      <?php include '../date.php'; ?>
     </div>
 
-    <h1>📊 Estadísticas de ventas</h1>
+    <!-- 🔹 Filtros modernos -->
+    <div class="filtros-modern">
+      <div class="filtro">
+        <label for="tiempo">Periodo:</label>
+        <select id="tiempo" onchange="filtrarGrafica()">
+          <option value="hoy">Hoy</option>
+          <option value="semana">Última semana</option>
+          <option value="mes">Último mes</option>
+          <option value="anio">Último año</option>
+          <option value="Todo" selected>Todo</option>
+        </select>
+      </div>
 
-    <?php
-    // Obtener las categorías únicas desde la base de datos
-    $catQuery = "SELECT DISTINCT categoria FROM productos";
-    $catResult = $conn->query($catQuery);
-    ?>
 
-    <form method="GET" class="filtros">
-        <div class="filtro">
-            <label>CATEGORÍA</label>
-            <select name="categoria" class="inputoptional">
-                <option value="">Todas</option>
-                <?php while ($cat = $catResult->fetch_assoc()) { ?>
-                    <option value="<?= $cat['categoria'] ?>" 
-                        <?= (isset($_GET['categoria']) && $_GET['categoria'] == $cat['categoria']) ? 'selected' : '' ?>>
-                        <?= $cat['categoria'] ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
-        <button type="submit" class="inputoptional">Filtrar</button>
-    </form>
-
-    <?php
-    // Filtro por categoría
-    $filtro = "";
-    if (isset($_GET['categoria']) && $_GET['categoria'] != "") {
-        $categoria = $conn->real_escape_string($_GET['categoria']);
-        $filtro = "WHERE categoria = '$categoria'";
-    }
-
-    // Consulta de productos
-    $query = "SELECT namep, VENTAS FROM productos $filtro ORDER BY VENTAS DESC";
-    $result = $conn->query($query);
-
-    // Obtener valor máximo para escalar alturas
-    $maxVentasQuery = "SELECT MAX(VENTAS) as maxVentas FROM productos $filtro";
-    $maxResult = $conn->query($maxVentasQuery);
-    $maxVentas = $maxResult->fetch_assoc()['maxVentas'] ?? 1;
-    ?>
-
-    <div class="grafico">
+    <div class="contenedor-grafico">
+      <h2 class="titulo-grafica">📊 Ventas por producto</h2>
+      <div class="grafica-barras" id="graficaBarras">
         <?php 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) { 
-                $altura = $maxVentas > 0 ? ($row['VENTAS'] / $maxVentas) * 100 : 0;
+          $query = "SELECT namep, VENTAS, categoria FROM productos ORDER BY VENTAS DESC";
+          $result = $conn->query($query);
+          $maxVentas = $conn->query("SELECT MAX(VENTAS) as max FROM productos")->fetch_assoc()['max'] ?? 1;
+          while ($row = $result->fetch_assoc()) {
+              $altura = $maxVentas > 0 ? ($row['VENTAS'] / $maxVentas) * 100 : 0;
+              echo '
+                <div class="barra" data-categoria="'.htmlspecialchars($row['categoria'] ?? 'General').'" data-ventas="'.htmlspecialchars($row['VENTAS']).'">
+                  <div class="barra-fill" style="height: '.$altura.'%;">
+                    <span class="valor">'.htmlspecialchars($row['VENTAS']).'</span>
+                  </div>
+                  <span class="nombre">'.htmlspecialchars($row['namep']).'</span>
+                </div>';
+          }
         ?>
-            <div class="barra" style="height: <?= $altura ?>%;">
-                <span><?= htmlspecialchars($row['namep']) ?></span>
-                <div class="valor"><?= $row['VENTAS'] ?></div>
-            </div>
-        <?php 
-            } 
-        } else { 
-        ?>
-            <div class="no-datos">No hay datos para mostrar.</div>
-        <?php } ?>
+      </div>
     </div>
-</div>
+  </div>
 
+  <script>
+  function filtrarGrafica() {
+    const categoria = document.getElementById("categoria").value;
+    const barras = document.querySelectorAll(".barra");
+
+    barras.forEach(barra => {
+      const cat = barra.getAttribute("data-categoria");
+      if (categoria === "" || cat === categoria) {
+        barra.style.display = "flex";
+      } else {
+        barra.style.display = "none";
+      }
+    });
+  }
+  </script>
 </body>
 </html>

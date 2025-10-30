@@ -1,9 +1,7 @@
-// === FUNCIONES PARA EL MODAL ===
 function openUpdateModal(button) {
   const modal = document.getElementById("updateModal");
   modal.style.display = "flex";
 
-  // Rellenar los campos con los datos del botón seleccionado
   document.getElementById("userid").value = button.getAttribute("data-id");
   document.getElementById("username").value = button.getAttribute("data-username");
   document.getElementById("userpassword").value = "";
@@ -15,11 +13,10 @@ function closeModal(id) {
   document.getElementById(id).style.display = "none";
 }
 
-// === ACTUALIZAR USUARIO ===
 document.getElementById("updateuser").addEventListener("click", async () => {
   const id = document.getElementById("userid").value;
   const username = document.getElementById("username").value;
-  const password = document.getElementById("userpassword").value;
+  const password = document.getElementById("password").value;
   const role = document.getElementById("role").value;
   const image = document.getElementById("userprofile").files[0];
 
@@ -28,7 +25,6 @@ document.getElementById("updateuser").addEventListener("click", async () => {
     return;
   }
 
-  // Crear FormData para enviar datos + imagen
   const formData = new FormData();
   formData.append("id", id);
   formData.append("username", username);
@@ -46,10 +42,8 @@ document.getElementById("updateuser").addEventListener("click", async () => {
     alert(result);
 
     if (result.includes("✅")) {
-      // Cerrar modal
       closeModal("updateModal");
 
-      // Actualizar datos en la interfaz
       const empleado = document.getElementById(`empleado_${id}`);
       if (empleado) {
         empleado.querySelector(".nombre").textContent = username;
@@ -70,15 +64,3 @@ document.getElementById("updateuser").addEventListener("click", async () => {
 });
 
 
-=======
-function closeModal(element){
-    document.getElementById(element).style.display = "None";
-}
-
-function openModal(element){
-    document.getElementById(element).style.display = "flex";
-}
-
-window.openModal = openModal;
-window.closeModal = closeModal;
->>>>>>> 2266480 (Initial commit)

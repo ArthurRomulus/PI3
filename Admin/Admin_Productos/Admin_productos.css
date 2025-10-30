@@ -288,5 +288,16 @@ body {
   background-color: #4b4e4c;
 }
 
+/* Scroll dentro de todos los modales */
+.modal .modal-content {
+    max-height: 80vh; /* altura máxima relativa a la ventana */
+    overflow-y: auto; /* scroll vertical si es necesario */
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-
+/* Scroll interno de cada listbox */
+.listbox-item select {
+    width: 100%;
+    min-height: 50px;
+}
