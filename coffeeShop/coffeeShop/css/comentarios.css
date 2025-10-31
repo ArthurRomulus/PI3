@@ -1,0 +1,479 @@
+:root{
+  --cafe:#79523D;
+  --cafe2:#5e3f2e;
+  --fondo:#d8beb5;
+  --panel:#cfaea5;
+  --crema:#f3e7de;
+  --borde:#6f4a36;
+  --sombra:0 6px 18px rgba(60,35,22,.12);
+}
+
+*{box-sizing:border-box}
+body{
+  background-color:#DCC0B9;
+  color:var(--cafe);
+  font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+/* ====== LAYOUT AMPLIO ====== */
+.panel-comentarios{
+  max-width:1200px;          /* muy ancho */
+  margin:80px auto 300px;
+  padding:0 16px;
+  background-color:#DCC0B9;
+}
+
+.panel{
+  background-color:#DCC0B9;
+  border:4px solid var(--borde);
+  border-radius:10px;
+  box-shadow:var(--sombra);
+  padding:20px 22px 24px;
+}
+
+.panel h2{
+  margin:0 0 6px;
+  background-color:#DCC0B9;
+  font-size:32px;
+  line-height:1.15;
+}
+
+/* ====== ESTRELLAS + CONTADOR ====== */
+.fila-top{
+  display:flex; align-items:center; justify-content:space-between;
+  margin:8px 0 12px;
+}
+.estrellas{ font-size:20px; letter-spacing:6px; color:#793410 }
+.contador{ font-weight:900; color:#793410 }
+
+/* ====== CAJA DE COMENTARIO ====== */
+.caja-comentario{ position:relative; color:#793410 }
+.caja-comentario textarea{
+  width:100%; min-height:160px; resize:vertical;
+  border:2px solid var(--cafe); border-radius:10px;
+  background:color-mix(in oklab, var(--crema) 92%, white);
+  color:#793410; padding:14px 42px 16px 14px; outline:none;
+}
+.caja-comentario textarea::placeholder{ color:#876c60 }
+.ico-bean{
+  position:absolute; left:10px; bottom:10px;
+  width:22px; height:22px; opacity:.85; object-fit:contain;
+}
+.ico-emoji{
+  position:absolute; right:12px; top:10px; color:#793410;
+}
+
+/* ====== SUBIR FOTO + ETIQUETAS (orden: foto primero) ====== */
+.fila-subida{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:18px;
+  align-items:start;
+}
+@media (max-width:800px){
+  .fila-subida{ grid-template-columns:1fr }
+}
+
+/* Botón "Subir Foto" */
+.subir-foto{
+  display:inline-flex; align-items:center; gap:12px; color:#793410; cursor:pointer;
+  border:2px solid var(--cafe); border-radius:10px; padding:12px 16px; background:#fff;
+  box-shadow:0 2px 0 var(--cafe) inset, 0 1px 0 rgba(0,0,0,.06);
+  font-weight:800;
+}
+.subir-foto .ico-cam{
+  width:40px; height:40px; display:grid; place-items:center;
+  background:#fff; border:2px solid var(--cafe); border-radius:8px;
+}
+
+/* Botón que abre opciones de etiqueta */
+.btn-etiquetas{
+  display:inline-flex; align-items:center; gap:12px;
+  padding:12px 16px;
+  border:2px solid var(--cafe); border-radius:10px;
+  background:var(--crema); color:var(--cafe); cursor:pointer; font-weight:800;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn-etiquetas:hover{ background:#efdcd2 }
+
+/* Panel/contendor de etiquetas (oculto por defecto) */
+.tags-panel{
+  grid-column:1 / -1;       /* que abarque todo el ancho debajo de los botones */
+  margin-top:10px;
+  border:2px solid var(--borde);
+  border-radius:12px;
+  background:color-mix(in oklab, var(--crema) 85%, white);
+  padding:14px;
+  display:none;              /* cambia a block o usa .open para mostrar */
+}
+.tags-panel.open{ display:block; }
+
+.tags-grid{
+  display:flex; flex-wrap:wrap; gap:10px;
+}
+.tag-chip{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  border:2px solid var(--borde);
+  background:#fff;
+  color:var(--cafe);
+  font-weight:700; font-size:14px;
+  cursor:pointer;
+}
+.tag-chip:hover{ background:var(--crema) }
+.tag-chip.is-active{
+  background:var(--cafe); color:#fff; border-color:var(--cafe2);
+}
+
+/* ====== BOTONES FINALES ====== */
+.acciones{
+  width:100%;
+  display:flex; gap:18px; justify-content:flex-end;
+  margin-top:24px;
+}
+.btn{
+  padding:12px 28px; border-radius:10px; font-weight:900; cursor:pointer;
+  border:2px solid var(--cafe);
+}
+.btn-outline{ background:transparent; color:var(--cafe) }
+.btn-outline:hover{ background-color:#DCC0B9 }
+.btn-solid{ background:var(--cafe); color:#fff }
+.btn-solid:hover{ background:var(--cafe2) }
+
+
+
+/* ======= RATING / OPINIONES ======= */
+:root{
+  --coffee:#531607; /* tono café oscuro de tus estrellas y barras */
+  --ink:#111; 
+  --track:#d9d9d9;  /* pista gris de las barras */
+}
+
+.rating{
+  background:#DCC0B9;
+  padding:26px clamp(16px,3vw,40px);
+  margin-bottom: 300px;
+}
+.rating__wrap{
+  max-width:1100px;
+  margin:auto;
+  display:grid;
+  grid-template-columns: 360px 1fr;
+  gap:clamp(20px,4vw,60px);
+  align-items:center;
+}
+.rating__summary{ position:relative; min-height:220px; }
+.rating__score{
+  font-size:clamp(2.6rem,6vw,4.4rem);
+  font-weight:800; color:var(--ink); line-height:1; margin-bottom:6px;
+}
+.rating__count{ margin:10px 0 0; color:var(--ink); font-size:clamp(.95rem,1.2vw,1.05rem); }
+
+.rating__bag {
+  position:absolute; 
+  bottom:-210px;   /* en lugar de -10px, lo bajas 100px más */
+  left:-8px;
+  width:clamp(160px,40vw,260px);
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.25));
+  pointer-events:none;
+}
+
+
+/* ======= Estrellas por máscara (relleno fraccional) ======= */
+.stars{
+  --size:22px;      
+  --gap:6px;
+  --value:5;        
+  --percent: calc((var(--value) / 5) * 100%);
+  inline-size: calc(var(--size)*5 + var(--gap)*4);
+  block-size: var(--size);
+  position:relative;
+  display:inline-block;
+}
+.stars::before,
+.stars::after{
+  content:"";
+  position:absolute; inset:0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.3l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.9 6.2 20.3l1.1-6.5L2.6 9.2l6.5-1L12 2.3z'/%3E%3C/svg%3E") 0 0/var(--size) var(--size) repeat-x;
+          mask:       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.3l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.9 6.2 20.3l1.1-6.5L2.6 9.2l6.5-1L12 2.3z'/%3E%3C/svg%3E") 0 0/var(--size) var(--size) repeat-x;
+}
+.stars::before{
+  background:transparent !important;
+  box-shadow: inset 0 0 0 2px var(--coffee);
+  opacity:0 !important;
+}
+.stars::after{
+  background:var(--coffee);
+  width:var(--percent); /* relleno fraccional */
+  overflow:hidden; display:block; border-radius:4px;
+}
+
+/* Promedio más grande */
+.stars--avg{ --size:26px; margin:2px 0 10px; }
+
+/* ======= Desglose ======= */
+.rating__breakdown{ display:grid; gap:12px; width:100%; }
+.row{
+  display:grid; grid-template-columns:auto 1fr; align-items:center; gap:16px;
+}
+
+/* Barra de progreso */
+.bar{
+  position:relative;
+  height:18px; background:var(--track);
+  border-radius:999px; box-shadow:inset 0 0 0 2px rgba(0,0,0,.15);
+  overflow:hidden;
+}
+.bar > span{
+  position:absolute; inset:0 auto 0 0;
+  width:var(--p,50%);
+  background:var(--coffee);
+  border-radius:inherit;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.25);
+}
+
+/* Accesibilidad (screen reader only) */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* Responsive */
+@media (max-width:860px){
+  .rating__wrap{ grid-template-columns:1fr; }
+  .rating__bag{ position:static; display:block; margin-top:12px; }
+}
+
+/* ======= Pequeño fix de tu panel ======= */
+.ico-bean{ position:absolute; left:8px; bottom:8px; opacity:.85; object-fit:contain; width:22px; height:22px; }
+
+/* ===================== COMENTARIOS / REVIEWS ===================== */
+:root{
+  --paper: #f6eae1;            /* crema suave para tarjetas */
+  --paper-2: #f2e4da;          /* crema un poco más oscura */
+  --ink-2: #6f4a36;            /* café texto secundario */
+  --ring: #c9ad9f;             /* borde pill */
+  --chip: #ead8cc;             /* chips de hashtags */
+  --shadow-soft: 0 6px 18px rgba(60,35,22,.08);
+}
+
+.reviews{
+  background:#DCC0B9;
+  padding: 12px clamp(16px,3vw,40px) 60px;
+}
+.reviews__wrap{
+  max-width:1100px;
+  margin:auto;
+}
+
+/* ----- Encabezado ----- */
+.reviews__header{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px;
+  margin-bottom:14px;
+}
+.reviews__header h2{
+  margin:0;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height:1.1;
+  color:#3b2a25;
+}
+
+/* Pills de filtro (ghost) */
+.pill-group{ display:flex; gap:10px; }
+.pill{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 14px; border-radius:999px;
+  font-weight:700; font-size:.95rem; cursor:pointer;
+  border:2px solid var(--ring); background:transparent; color:var(--ink-2);
+  box-shadow: var(--shadow-soft);
+}
+.pill--ghost:hover{ background:color-mix(in oklab, var(--paper-2) 60%, white); }
+
+/* ----- Subcontroles (score + select) ----- */
+.reviews__subhead{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  margin: 12px 0 22px;
+}
+.score-pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:52px; height:52px; border-radius:999px;
+  font-weight:800; background:var(--paper); color:#3b2a25;
+  border:2px solid var(--ring); box-shadow: var(--shadow-soft);
+}
+.select-pill{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:12px; cursor:pointer;
+  background:var(--paper); color:#3b2a25; border:2px solid var(--ring);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ----- Grid de tarjetas ----- */
+.reviews__grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:18px;
+}
+@media (max-width: 860px){
+  .reviews__grid{ grid-template-columns: 1fr; }
+}
+
+/* ----- Tarjeta ----- */
+.card{
+  background:#F7E7D7;
+  border:2px solid var(--borde);
+  border-radius:16px;
+  box-shadow: var(--shadow-soft);
+  padding:14px;
+  display:flex; flex-direction:column; gap:10px;
+}
+
+/* Cabecera de tarjeta */
+.card__head{
+  display:grid;
+  grid-template-columns: 44px 1fr auto; /* avatar | meta | estrellas */
+  gap:12px; align-items:center;
+}
+.avatar{
+  width:44px; height:44px; border-radius:50%;
+  border:2px solid var(--borde); object-fit:cover;
+  background:#fff;
+}
+
+
+/* Texto */
+.card__text{ margin:0; color:#3b2a25; }
+
+/* Imagen dentro de la tarjeta */
+.card__media img{
+  width:100%; height:210px; object-fit:cover;
+  border-radius:12px; border:2px solid var(--ring);
+  display:block; background:#fff;
+}
+
+/* Chips */
+.chips{ display:flex; gap:8px; flex-wrap:wrap; }
+.chip{
+  display:inline-flex; padding:6px 10px; border-radius:10px;
+  background:var(--chip); color:#3b2a25; font-weight:700; font-size:.88rem;
+  border:1px solid color-mix(in srgb, var(--ring), white 20%);
+}
+
+/* Footer de acciones */
+.card__footer{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  border-top:2px dashed color-mix(in srgb, var(--ring), #fff 30%);
+  padding-top:10px;
+}
+.act{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 12px; border-radius:10px;
+  background:#fff3; color:#3b2a25; font-weight:800;
+  border:2px solid var(--ring); cursor:pointer;
+}
+.act svg{ width:18px; height:18px; fill:currentColor; }
+.act:hover{ background:color-mix(in oklab, var(--paper) 70%, white); }
+
+/* Alineación del bloque de “Comentarios” de tu captura */
+.reviews__wrap .stars{ --coffee:#531607; }  /* asegura el tono café */
+
+
+/* ===== HEADER con el MISMO look del FOOTER (.cs-*) ===== */
+:root{
+  --coffee:#531607;
+  --bg-a:#d6b6a1;
+  --bg-b:#f1e4db;
+  --card:#f4ebe6;
+  --ink:#3d2e27;
+  --muted:#7b645b;
+  --stroke:#e5d6cb;
+  --shadow:0 14px 30px rgba(0,0,0,.12);
+  --radius:22px;
+}
+
+/* Igual a .cs-footer */
+.site-header{
+  background-color:#DCC0B9;
+  padding:24px 16px 18px;
+  color:var(--ink);
+}
+
+/* Igual a .cs-footer__wrap */
+.header-container{
+  width:98%;
+  margin:0 auto;
+  background:rgba(255,255,255,.22);
+  border-radius:28px;
+  padding:3px 18px 8px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+}
+
+/* LOGO: igual filtro y tamaño que .cs-brand__logo */
+.header-logo img{
+  width:200px; height:auto; object-fit:contain;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,.18));
+}
+.header-logo span{ font-weight:800; color:var(--ink); }
+
+/* MENÚ: colores/hover igual que .cs-links */
+.header-menu{ display:flex; gap:18px; font-weight:700; }
+.header-menu a{ color:var(--ink); text-decoration:none; }
+.header-menu a:hover{ text-decoration:underline; }
+
+/* ACCIONES: iconos redondos idénticos a .circle */
+.header-actions{ display:flex; align-items:center; gap:12px; }
+
+/* Botón de icono = copia del estilo .circle del footer */
+.icon-btn{
+  width:42px; height:42px;
+  border-radius:50%;
+  background:#f0e4db; color:var(--coffee);
+  display:grid; place-items:center; text-decoration:none;
+  box-shadow: inset 0 0 0 2px var(--stroke);
+  font-size:18px; line-height:1;
+}
+
+/* Texto auxiliar igual tono que .cs-legal / var(--muted) */
+.lang{ color:var(--muted); font-weight:700; }
+
+/* Responsive: mismo comportamiento */
+@media (max-width:980px){
+  .header-container{ justify-content:center; text-align:center; }
+}
+@media (max-width:560px){
+  .header-logo img{ width:96px; }
+}
+
+
+/* ================== SEPARADOR CAFÉ ================== */
+.coffee-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;                  /* espacio entre icono y líneas */
+  margin: 60px auto 40px;     /* separación con el contenido de arriba y el footer */
+  max-width: 1100px;
+}
+
+.coffee-separator .line {
+  width: 600px;                    /* que crezca para ocupar el ancho */
+  height: 2px;
+  background-color: #531607;  /* café oscuro */
+  border-radius: 999px;
+  opacity: 0.8;
+}
+
+.coffee-separator .coffee-icon {
+  width: 40px;                /* ajusta tamaño del icono */
+  height: 40px;
+  object-fit: contain;
+  opacity: 0.9;
+}
