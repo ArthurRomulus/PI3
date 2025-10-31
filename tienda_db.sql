@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 30-10-2025 a las 06:04:03
+-- Tiempo de generación: 31-10-2025 a las 03:36:44
 -- Versión del servidor: 8.0.17
 -- Versión de PHP: 7.3.10
 
@@ -246,43 +246,35 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `VENTAS`, `STOCK`, `descripcion`) VALUES
-(51, 'Americano', '../../Images/CafeAmer.png', 40, 'Bebidas frias', 1, 1, 1, 0, NULL),
-(52, 'Espresso', '../../Images/Espresso.png', 40, 'Bebidas calientes', 1, 1, 0, 1, NULL),
-(53, 'Macchiato', '../../Images/Macchi.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(54, 'Capucchino Entero', '../../Images/CafeCapu.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(55, 'Lechero (Entera)', '../../Images/Lechero.png', 42, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(57, 'Moka', '../../Images/Moka.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
+(1, 'Café Americano', '../../Images/Cafe_americano.png', 50, '1', NULL, 0, 0, 20, '50% café espresso, 50% agua caliente'),
+(2, 'Café Capuchino', '../../Images/cafe_capuchino.png', 60, '1', NULL, 0, 0, 20, '40% espresso, 30% leche vaporizada, 30% espuma'),
+(3, 'Café Latte', '../../Images/cafe_latte.png', 70, '1', NULL, 0, 0, 20, '40% espresso suave, 50% leche caliente, 10% espuma ligera'),
+(4, 'Café Espresso', '../../Images/Espresso.png', 60, '1', NULL, 0, 0, 20, '100% espresso concentrado en shot corto'),
+(5, 'Espresso Doble', '../../Images/EspreDoble.png', 70, '1', NULL, 0, 0, 20, '70% espresso base, 30% refuerzo extra de shot'),
+(6, 'Café Lechero', '../../Images/Lechero.png', 60, '1', NULL, 0, 0, 20, '40% café, 60% leche caliente cremosa'),
+(7, 'Chocolate Caliente', '../../Images/ChocoCali.png', 35, '1', NULL, 0, 0, 20, '60% cacao dulce, 30% leche caliente, 10% crema'),
+(8, 'Café Irlandés', '../../Images/Irlandes.png', 40, '1', NULL, 0, 0, 20, '50% café, 30% crema suave, 20% toque licorizado'),
+(9, 'Café Lungo', '../../Images/cafe_lungo.png', 40, '1', NULL, 0, 0, 20, '70% espresso extraído largo, 30% agua caliente'),
+(10, 'Café Bombón', '../../Images/Cafe_bombon.png', 45, '1', NULL, 0, 0, 20, '60% espresso intenso, 40% leche condensada dulce'),
+(11, 'Té Caliente', '../../Images/Tecali.png', 45, '1', NULL, 0, 0, 20, '70% infusión natural, 30% agua caliente filtrada'),
+(12, 'Té de Manzanilla', '../../Images/Te.png', 30, '1', NULL, 0, 0, 20, '60% flor de manzanilla, 40% agua caliente'),
+(13, 'Frappé Clásico', '../../Images/FrappeClasic.png', 90, '2', NULL, 0, 0, 20, '40% café frío, 40% leche, 20% hielo frappeado'),
+(14, 'Frappé Matcha', '../../Images/FrappMatcha.png', 95, '2', NULL, 0, 0, 20, '50% matcha, 30% leche fría, 20% hielo frappeado'),
+(15, 'Frappé Espresso', '../../Images/FrappEspresso.png', 95, '2', NULL, 0, 0, 20, '50% espresso frío, 30% leche, 20% hielo frappeado'),
+(16, 'Frappé Caramel', '../../Images/FrapCaramel.png', 100, '2', NULL, 0, 0, 20, '40% caramelo, 40% leche fría, 20% hielo frappeado'),
+(17, 'Frappé Moka', '../../Images/frappe_moka.png', 100, '2', NULL, 0, 0, 20, '40% café oscuro, 40% chocolate, 20% hielo frappeado'),
+(18, 'Frappé Cookies & Cream', '../../Images/FrappCnC.png', 105, '2', NULL, 0, 0, 20, '50% galleta, 30% leche fría, 20% hielo frappeado'),
+(19, 'Iced Coffee', '../../Images/icedCoffee.png', 85, '2', NULL, 0, 0, 20, '50% café frío, 30% leche, 20% hielo'),
+(20, 'Iced Tea Black', '../../Images/IcedTeaBlack.png', 60, '2', NULL, 0, 0, 20, '60% té negro, 30% agua fría, 10% hielo'),
+(21, 'Iced Tea', '../../Images/IcedTea.png', 60, '2', NULL, 0, 0, 20, '60% té, 30% limón, 10% hielo'),
+(22, 'Café Carajillo', '../../Images/cafe_carajillo.png', 90, '1', NULL, 0, 0, 20, '50% espresso, 40% licor, 10% espuma de leche'),
+(23, 'Café Caribeño', '../../Images/cafe_caribeño.png', 95, '1', NULL, 0, 0, 20, '40% espresso, 40% leche de coco, 20% azúcar morena'),
+(24, 'Café Macchiato', '../../Images/cafe_macchiato.png', 80, '1', NULL, 0, 0, 20, '60% espresso, 30% leche espumada, 10% crema'),
+(25, 'Café Mocca', '../../Images/cafe_mocca.png', 85, '1', NULL, 0, 0, 20, '50% espresso, 30% chocolate, 20% leche'),
+(26, 'Café Ristretto', '../../Images/cafe_ristretto.png', 75, '1', NULL, 0, 0, 20, '80% espresso concentrado, 20% espuma ligera'),
+(27, 'Café Vienés', '../../Images/cafe_vienes.png', 90, '1', NULL, 0, 0, 20, '50% espresso, 30% crema batida, 20% leche'),
+(28, 'Matcha Latte', '../../Images/matchalatte.png', 85, '1', NULL, 0, 0, 20, '50% matcha, 40% leche caliente, 10% espuma'),
 (58, 'Matcha2', '../../Images/Matchalatte.png', 65, 'Cafés', 1, 1, 0, 0, NULL),
-(59, 'Capucchino Deslactos', '../../Images/CafeCapu.png', 55, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(60, 'Irlandés', '../../Images/Irlandes.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(61, 'Latte Entero', '../../Images/Latte.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(62, 'Latter Deslactosado', '../../Images/Latte.png', 42, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(63, 'Latte Avena', '../../Images/Latte.png', 40, 'Bebidas calientes', 4, 1, 0, 0, NULL),
-(64, 'Latte Almendra', '../../Images/Latte.png', 45, 'Bebidas calientes', 5, 1, 0, 0, NULL),
-(65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(67, 'Doble', '../../Images/Espresso.png', 55, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(80, 'Chocolate caliente Avena', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 4, 1, 0, 0, NULL),
-(81, 'Frappé clásico Entero', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(82, 'Frappé clásico Deslactosado', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(83, 'Frappé moka Entero', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(84, 'Frappé moka Deslactosado', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(85, 'Frappé caramel Entero', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(86, 'Frappé caramel Deslactosado', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(87, 'Frappé cookies n cream Entero', '../../Images/FrappCnC.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(88, 'Frappé cookies n cream Deslactosado', '../../Images/FrappeClasic.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(89, 'Frappé matcha Entero', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(90, 'Frappé matcha Deslactosado', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(91, 'Frappé espresso Entero', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(92, 'Frappé espresso Deslactosado', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(93, 'Iced tea Negro', '../../Images/IcedTeaBlack.png', 45, 'Bebidas frias', 7, 1, 0, 0, NULL),
-(94, 'Iced tea Limón', '../../Images/IcedTea.png', 45, 'Bebidas frias', 8, 1, 0, 0, NULL),
-(95, 'Limonada', '../../Images/Limonadas.png', 40, 'Bebidas frias', 1, 1, 0, 0, NULL),
-(96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 0, 0, NULL),
-(97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 0, NULL),
-(98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 0, NULL),
 (131, 'cafesittiitti', '../../Images/6902957bd3840_Cafe latte.png', 65, NULL, 2, 1, 0, 0, 'contiene mas café y café y cafeee'),
 (132, 'Café sion sion', '../../Images/690295b025e7d_Cafe lechero.png', 58, NULL, 2, 1, 0, 0, 'la pension sion sion'),
 (133, 'Panini de aguacate', '../../Images/panini_aguacate.png', 90, '4', 1, 1, 0, 20, '40% aguacate, 20% verduras, 20% pan, 20% queso'),
@@ -297,7 +289,6 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 (142, 'Sándwich serrano', '../../Images/sandwich_serrano.png', 100, '4', 1, 1, 0, 20, '40% jamón serrano, 30% queso, 20% pan, 10% tomate'),
 (143, 'Sándwich de tocino', '../../Images/sandwich_tocino.png', 100, '4', 1, 1, 0, 20, '40% tocino, 30% queso, 20% pan, 10% jitomate'),
 (144, 'Bagel clásico', '../../Images/BagelClasic.png', 50, '7', 1, 1, 0, 20, '50% pan de bagel, 30% queso crema, 10% mantequilla, 10% miel'),
-(145, 'Bagel clásico', '../../Images/BagelClasic.png', 50, '7', 1, 1, 0, 20, '50% pan de bagel, 30% queso crema, 10% mantequilla, 10% miel'),
 (146, 'Brownies', '../../Images/brownies.png', 50, '7', 1, 1, 0, 20, '40% chocolate, 30% mantequilla, 20% harina, 10% nuez'),
 (147, 'Pastel de chocolate', '../../Images/pastel.png', 60, '7', 1, 1, 0, 20, '45% chocolate, 25% harina, 20% crema, 10% azúcar'),
 (148, 'Galleta casera', '../../Images/galleta_casera.png', 30, '7', 1, 1, 0, 20, '40% harina, 30% mantequilla, 20% chispas, 10% azúcar'),
@@ -640,7 +631,7 @@ ALTER TABLE `opciones_predefinidas`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
+  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_opciones`
