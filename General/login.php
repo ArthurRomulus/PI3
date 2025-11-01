@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                   header("Location: ../Cajero/Inicio/Inicio.html");
 
                 } else {
-                                  header("Location: ../Usuario/index.php");
+                                  header("Location: ../CoffeeShop/inicio/index.php");
 
                 }
                 
