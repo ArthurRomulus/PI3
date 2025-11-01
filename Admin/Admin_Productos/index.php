@@ -47,7 +47,6 @@ include "../../conexion.php";
   <a href="index.php"><button>Categorías</button></a>
   </div>
 
-  <!-- Sección de productos -->
   <h3>Productos</h3>
   <div class="products-container">
     <!-- Cuadro para agregar producto -->
@@ -55,6 +54,7 @@ include "../../conexion.php";
       <i class="fas fa-plus"></i>
       <span>Agregar Producto</span>
     </div>   
+
     <?php
     $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
     $buscar = isset($_GET['buscar']) ? $_GET['buscar'] : '';
@@ -113,13 +113,21 @@ include "../../conexion.php";
                 $cat_ids[] = $c['id_categoria'];
             }
 
-            // Obtener opciones actuales del producto
-            $listbox_query = $conn->query("SELECT opciones FROM producto_opciones WHERE idp = ".$row['idp']);
             $listbox_arr = [];
+            $listbox_query = $conn->query("
+                SELECT l.nombre AS listbox, o.valor, o.precio
+                FROM producto_opciones po
+                JOIN listbox_opciones o ON po.listbox_opcion_id = o.id
+                JOIN listboxes l ON o.listbox_id = l.id
+                WHERE po.producto_id = ".$row['idp']."
+                ORDER BY l.id, o.id
+            ");
+
             while($lb = $listbox_query->fetch_assoc()){
-                $listbox_arr[] = $lb['opciones'];
+                $listbox_arr[$lb['listbox']][] = ['valor' => $lb['valor'], 'precio' => $lb['precio']];
             }
             $data_listbox = htmlspecialchars(json_encode($listbox_arr), ENT_QUOTES);
+
             ?>
             <div class="product-card" 
                 data-id="<?php echo $row['idp']; ?>" 
@@ -167,16 +175,7 @@ include "../../conexion.php";
       <input type="number" name="precio" id="precioBase" placeholder="Precio base" required>
       <span>Precio final: $<span id="precioFinal">0.00</span></span>
 
-      <select id="categoriaSelect" name="categoria[]" multiple required>
-        <?php
-        $categoria_result = $conn->query("SELECT id_categoria, nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
-        if ($categoria_result->num_rows > 0) {
-            while($cat = $categoria_result->fetch_assoc()) {
-                echo '<option value="' . $cat['id_categoria'] . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
-            }
-        }
-        ?>
-      </select>
+      <select id="categoriaSelect" name="categoria[]" multiple required></select>
 
       <select name="sabor" required>
         <option value="">Selecciona tamaño</option>
@@ -187,264 +186,217 @@ include "../../conexion.php";
 
       <h3>Opciones Personalizadas (Opcional)</h3>
       <div id="listboxContainer" style="max-height:300px; overflow-y:auto;"></div>
+
       <button type="submit">Guardar</button>
     </form>
   </div>
 </div>
 
-<!-- Modal Editar Producto -->
+<!-- Modal Editar -->
 <div id="editModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>Editar Producto</h2>
     <form action="Editar_productos.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" id="editId" name="id">
-        <input type="text" id="editName" name="name" placeholder="Nombre del producto" required>
-        <textarea id="editDescripcion" name="descripcion" placeholder="Descripción del producto" rows="3"></textarea>
-        <input type="file" id="editImage" name="imagen" accept="image/*">
-        <input type="number" id="editPrice" name="precio" placeholder="Precio" required>
-        <span>Precio final: $<span id="editPrecioFinal">0.00</span></span>
+      <input type="hidden" id="editId" name="id">
+      <input type="text" id="editName" name="name" required>
+      <textarea id="editDescripcion" name="descripcion" rows="3"></textarea>
+      <input type="file" id="editImage" name="imagen" accept="image/*">
+      <input type="number" id="editPrice" name="precio" required>
+      <span>Precio final: $<span id="editPrecioFinal">0.00</span></span>
 
-        <select id="editCategoria" name="categoria[]" multiple required>
-          <?php
-          $categoria_result = $conn->query("SELECT id_categoria, nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
-          if ($categoria_result->num_rows > 0) {
-              while($cat = $categoria_result->fetch_assoc()) {
-                  echo '<option value="' . $cat['id_categoria'] . '">' . htmlspecialchars($cat['nombrecategoria']) . '</option>';
-              }
-          }
-          ?>
-        </select>
+      <select id="editCategoria" name="categoria[]" multiple required></select>
 
-        <select id="editSabor" name="sabor" required>
-          <option value="">Selecciona tamaño</option>
-          <option value="1">Pequeño</option>
-          <option value="2">Mediano</option>
-          <option value="3">Grande</option>
-        </select>
+      <select id="editSabor" name="sabor" required>
+        <option value="">Selecciona tamaño</option>
+        <option value="1">Pequeño</option>
+        <option value="2">Mediano</option>
+        <option value="3">Grande</option>
+      </select>
 
-        <h3>Opciones Personalizadas</h3>
-        <div id="editListboxContainer"></div>
+      <h3>Opciones Personalizadas</h3>
+      <div id="editListboxContainer"></div>
 
-        <button type="submit">Actualizar</button>
+      <button type="submit">Actualizar</button>
     </form>
   </div>
 </div>
 
 <script>
-const productModal = document.getElementById('productModal');
 const openModalBtn = document.getElementById('openModal');
+const productModal = document.getElementById('productModal');
+const editModal = document.getElementById('editModal');
 const closeBtns = document.querySelectorAll('.modal .close');
-const categoriaSelect = document.getElementById('categoriaSelect');
-const listboxContainer = document.getElementById('listboxContainer');
-const precioBaseInput = document.getElementById('precioBase');
-const precioFinalSpan = document.getElementById('precioFinal');
 
-// Abrir modal Agregar
+// Abrir modal
 openModalBtn.onclick = () => {
     productModal.style.display = 'flex';
-    cargarListboxesBase();
+    cargarCategorias('#categoriaSelect');
+    cargarListboxes('#listboxContainer');
     actualizarPrecio();
 };
 
-// Cerrar modales
-closeBtns.forEach(btn => btn.onclick = () => btn.parentElement.parentElement.style.display = 'none');
+closeBtns.forEach(btn => btn.onclick = () => btn.closest('.modal').style.display = 'none');
 window.onclick = e => { if(e.target.classList.contains('modal')) e.target.style.display = 'none'; }
 
-// Hacer multi-select amigable
+// --- Selección solo con click ---
 function enableFriendlyMultiSelect(select) {
-  select.addEventListener('mousedown', function (e) {
-    e.preventDefault();
-    const option = e.target;
-    option.selected = !option.selected;
-    select.dispatchEvent(new Event('change', { bubbles: true }));
-  });
+    select.addEventListener('mousedown', e => {
+        e.preventDefault();
+        e.target.selected = !e.target.selected;
+        select.dispatchEvent(new Event('change'));
+    });
 }
 
-enableFriendlyMultiSelect(categoriaSelect);
+// --- Cargar categorías ---
+function cargarCategorias(selectId, seleccionadas = []) {
+    const select = document.querySelector(selectId);
+    select.innerHTML = '';
+    fetch('../../conexion.php') 
+        .then(() => {
+            <?php
+            $cat_res = $conn->query("SELECT id_categoria, nombrecategoria FROM categorias ORDER BY nombrecategoria ASC");
+            while($cat = $cat_res->fetch_assoc()) {
+                echo "select.innerHTML += `<option value='{$cat['id_categoria']}'>{$cat['nombrecategoria']}</option>`;";
+            }
+            ?>
+            enableFriendlyMultiSelect(select);
 
-// Crear listbox
-function crearListboxBase(index, categoriaId, categoriaNombre) {
-    const listboxDiv = document.createElement('div');
-    listboxDiv.classList.add('listbox-item');
-    listboxDiv.innerHTML = `<hr>
-        <h4>${categoriaNombre} (Opcional)</h4>
-        <div class="opciones-container"></div>
-    `;
-    listboxContainer.appendChild(listboxDiv);
-    const container = listboxDiv.querySelector('.opciones-container');
-
-    fetch(`get_opciones_categoria.php?id_categoria=${categoriaId}`)
-        .then(res => res.json())
-        .then(data => {
-            if (!data || data.length === 0) return;
-            const grupos = {};
-            data.forEach(op => {
-                const key = op.nombre_opcion || 'Opciones';
-                if (!grupos[key]) grupos[key] = [];
-                grupos[key].push(op);
-            });
-
-            let grupoIndex = 0;
-            Object.keys(grupos).forEach(nombre_opcion => {
-                const grupoDiv = document.createElement('div');
-                grupoDiv.classList.add('grupo-opcion');
-                grupoDiv.innerHTML = `<label>${nombre_opcion}</label>
-                                      <select name="listbox[${index}][opciones][${grupoIndex}][]" multiple></select>`;
-                container.appendChild(grupoDiv);
-
-                const select = grupoDiv.querySelector('select');
-                grupos[nombre_opcion].forEach(op => {
-                    const option = document.createElement('option');
-                    option.value = op.valor;
-                    option.textContent = `${op.valor} (+$${parseFloat(op.precio).toFixed(2)})`;
-                    option.dataset.precio = op.precio;
-                    select.appendChild(option);
-                });
-
-                select.addEventListener('change', actualizarPrecio);
-                enableFriendlyMultiSelect(select);
-                grupoIndex++;
+            // Marcar las categorías ya seleccionadas
+            seleccionadas.forEach(id => {
+                const opt = select.querySelector(`option[value='${id}']`);
+                if(opt) opt.selected = true;
             });
         });
 }
 
-// Cargar listboxes según categorías seleccionadas
-function cargarListboxesBase() {
-    const selected = Array.from(categoriaSelect.selectedOptions).map(o => ({id:o.value, nombre:o.textContent}));
-    listboxContainer.innerHTML = '';
-    selected.forEach((cat, idx) => crearListboxBase(idx+1, cat.id, cat.nombre));
+
+// --- Cargar listboxes (todos siempre visibles) ---
+function cargarListboxes(containerId) {
+  const container = document.querySelector(containerId);
+  container.innerHTML = '';
+
+  fetch('get_todas_opciones.php')
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !Array.isArray(data)) return;
+
+      let index = 0;
+      data.forEach(listbox => {
+        const div = document.createElement('div');
+        div.style.border = "1px solid #ccc";
+        div.style.padding = "5px";
+        div.style.marginBottom = "5px";
+        div.style.display = "flex";
+        div.style.flexDirection = "column";
+
+        // Contenedor de label y checkbox
+        const labelContainer = document.createElement('div');
+        labelContainer.style.display = "flex";
+        labelContainer.style.alignItems = "center";
+        labelContainer.style.marginBottom = "5px";
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'listbox_selected[]';
+        checkbox.value = listbox.listbox_id; // ID real del listbox
+        checkbox.style.marginRight = "5px";
+
+        const label = document.createElement('label');
+        label.textContent = listbox.listbox_nombre;
+
+        labelContainer.appendChild(checkbox);
+        labelContainer.appendChild(label);
+
+        // Select de opciones
+        const sel = document.createElement('select');
+        sel.multiple = true;
+        sel.style.width = "100%";
+        sel.style.marginTop = "5px";
+        sel.style.maxHeight = "120px";
+        sel.style.overflowY = "auto";
+        sel.disabled = true;
+
+        // Rellenar las opciones
+        listbox.opciones.forEach(op => {
+          const opt = document.createElement('option');
+          opt.value = op.opcion_id;
+          opt.textContent = `${op.valor} (+$${op.precio})`;
+          opt.dataset.precio = op.precio;
+          sel.appendChild(opt);
+        });
+
+        div.appendChild(labelContainer);
+        div.appendChild(sel);
+        container.appendChild(div);
+        index++;
+      });
+
+      // Habilitar o deshabilitar selects cuando se seleccionan los listboxes
+      container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const select = cb.closest('div').querySelector('select');
+          select.disabled = !cb.checked;
+          if (!cb.checked) select.selectedIndex = -1; // limpiar si se desmarca
+
+          // Limitar máximo 2 listboxes
+          const checked = container.querySelectorAll('input[type="checkbox"]:checked');
+          if (checked.length > 2) {
+            cb.checked = false;
+            select.disabled = true;
+            alert('Solo puedes seleccionar máximo 2 listboxes.');
+          }
+        });
+      });
+    })
+    .catch(err => console.error("Error cargando listboxes:", err));
 }
 
-// Calcular precio final
+
+
+
+// --- Precio final ---
+const precioBaseInput = document.getElementById('precioBase');
+const precioFinalSpan = document.getElementById('precioFinal');
 function actualizarPrecio() {
     let base = parseFloat(precioBaseInput.value) || 0;
     let adicional = 0;
-    document.querySelectorAll('#listboxContainer .listbox-item select').forEach(select => {
-        Array.from(select.selectedOptions).forEach(option => {
-            adicional += parseFloat(option.dataset.precio) || 0;
-        });
+    document.querySelectorAll('#listboxContainer select').forEach(sel => {
+        Array.from(sel.selectedOptions).forEach(opt => adicional += parseFloat(opt.dataset.precio)||0);
     });
-    precioFinalSpan.textContent = (base + adicional).toFixed(2);
+    precioFinalSpan.textContent = (base+adicional).toFixed(2);
 }
-
 precioBaseInput.addEventListener('input', actualizarPrecio);
-categoriaSelect.addEventListener('change', cargarListboxesBase);
 
 // --- Editar producto ---
-const editModal = document.getElementById('editModal');
-const editId = document.getElementById('editId');
-const editName = document.getElementById('editName');
-const editDescripcion = document.getElementById('editDescripcion');
-const editPrice = document.getElementById('editPrice');
-const editCategoria = document.getElementById('editCategoria');
-const editSabor = document.getElementById('editSabor');
-const editListboxContainer = document.getElementById('editListboxContainer');
-const editPrecioFinal = document.getElementById('editPrecioFinal');
-
-enableFriendlyMultiSelect(editCategoria);
-
-function crearListboxEditar(index, categoriaId, categoriaNombre, selectedOptions = []) {
-    const listboxDiv = document.createElement('div');
-    listboxDiv.classList.add('listbox-item');
-    listboxDiv.innerHTML = `<hr>
-        <h4>${categoriaNombre} (Opcional)</h4>
-        <div class="opciones-container"></div>
-    `;
-    editListboxContainer.appendChild(listboxDiv);
-    const container = listboxDiv.querySelector('.opciones-container');
-
-    fetch(`get_opciones_categoria.php?id_categoria=${categoriaId}`)
-        .then(res => res.json())
-        .then(data => {
-            if (!data || data.length === 0) return;
-
-            const grupos = {};
-            data.forEach(op => {
-                const key = op.nombre_opcion || 'Opciones';
-                if (!grupos[key]) grupos[key] = [];
-                grupos[key].push(op);
-            });
-
-            let grupoIndex = 0;
-            Object.keys(grupos).forEach(nombre_opcion => {
-                const grupoDiv = document.createElement('div');
-                grupoDiv.classList.add('grupo-opcion');
-                grupoDiv.innerHTML = `<label>${nombre_opcion}</label>
-                                      <select name="listbox[${index}][opciones][${grupoIndex}][]" multiple></select>`;
-                container.appendChild(grupoDiv);
-
-                const select = grupoDiv.querySelector('select');
-                grupos[nombre_opcion].forEach(op => {
-                    const option = document.createElement('option');
-                    option.value = op.valor;
-                    option.textContent = `${op.valor} (+$${parseFloat(op.precio).toFixed(2)})`;
-                    option.dataset.precio = op.precio;
-                    if (selectedOptions.includes(op.valor)) option.selected = true;
-                    select.appendChild(option);
-                });
-
-                select.addEventListener('change', actualizarPrecioEditar);
-                enableFriendlyMultiSelect(select);
-                grupoIndex++;
-            });
-        });
-}
-
-function cargarListboxesEditar() {
-    const selected = Array.from(editCategoria.selectedOptions).map(o => ({id:o.value, nombre:o.textContent}));
-    const productCard = document.querySelector(`.product-card[data-id="${editId.value}"]`);
-    let selectedValues = [];
-    if (productCard) {
-        selectedValues = JSON.parse(productCard.dataset.listbox || '[]');
-    }
-
-    editListboxContainer.innerHTML = '';
-    selected.forEach((cat, idx) => crearListboxEditar(idx+1, cat.id, cat.nombre, selectedValues));
-    actualizarPrecioEditar();
-}
-
-function actualizarPrecioEditar() {
-    let base = parseFloat(editPrice.value) || 0;
-    let adicional = 0;
-    document.querySelectorAll('#editListboxContainer .listbox-item select').forEach(select => {
-        Array.from(select.selectedOptions).forEach(option => {
-            adicional += parseFloat(option.dataset.precio) || 0;
-        });
-    });
-    editPrecioFinal.textContent = (base + adicional).toFixed(2);
-}
-
-editCategoria.addEventListener('change', cargarListboxesEditar);
-editPrice.addEventListener('input', actualizarPrecioEditar);
-
 document.querySelectorAll('.product-card .edit').forEach(btn => {
-    btn.addEventListener('click', e => {
+    btn.onclick = e => {
         const card = e.target.closest('.product-card');
-        editId.value = card.dataset.id;
-        editName.value = card.dataset.nombre;
-        editDescripcion.value = card.dataset.descripcion;
-        editPrice.value = card.dataset.precio;
-        editSabor.value = card.dataset.sabor;
+        document.getElementById('editId').value = card.dataset.id;
+        document.getElementById('editName').value = card.dataset.nombre;
+        document.getElementById('editDescripcion').value = card.dataset.descripcion;
+        document.getElementById('editPrice').value = card.dataset.precio;
+        // Categorías seleccionadas
+        const cat_ids = card.dataset.categorias_ids ? card.dataset.categorias_ids.split(',') : [];
+        cargarCategorias('#editCategoria', cat_ids);
+        // Asignar tamaño actual
+        const sabor = card.dataset.sabor; // 1,2 o 3
+        document.getElementById('editSabor').value = sabor;
 
-        const catIds = card.dataset.categorias_ids.split(',').map(id => id.trim());
-        Array.from(editCategoria.options).forEach(opt => {
-            opt.selected = catIds.includes(opt.value);
-        });
-
-        cargarListboxesEditar();
+        const listboxData = card.dataset.listbox ? JSON.parse(card.dataset.listbox) : {};
+        cargarListboxes('#editListboxContainer', listboxData);
         editModal.style.display = 'flex';
-    });
+    };
 });
 
-// Eliminar producto
+// --- Eliminar producto ---
 document.querySelectorAll('.product-card .delete').forEach(btn => {
-    btn.addEventListener('click', e => {
+    btn.onclick = e => {
         if(confirm('¿Seguro que deseas eliminar este producto?')){
             const id = e.target.closest('.product-card').dataset.id;
             window.location.href = `Eliminar_productos.php?id=${id}`;
         }
-    });
+    };
 });
 </script>
 
