@@ -1,24 +1,54 @@
 /* --- Estilos generales --- */
 body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  display: flex;
-  background-color: #C0C0C0;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    background-color: #d7d7d7;
 }
 
 /* --- Contenido principal --- */
 .content {
-  margin-left: 220px;
-  padding: 20px;
-  flex: 1;
-  position: relative;
-  z-index: 1;
+    margin-left: 220px;
+    padding: 20px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    background-color: #C0C0C0;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 635px;
+    height: max-content;
+    margin-top: 15px;
+    scrollbar-width: auto;
+    scrollbar-color: #8c8f96 #D7D7D7;
+    max-width: 1260px;
+}
 
-  border: 15px solid #D7D7D7;
-  border-radius: 20px;
+.content::-webkit-scrollbar {
+  width: 16px; /* Ancho total de la pista */
+}
 
-  min-height: calc(100vh - 40px);
-  box-sizing: border-box;
+/* La PISTA (el fondo de la barra) */
+.content::-webkit-scrollbar-track {
+  /* ESTA ES LA CLAVE: 
+     Le damos un color de fondo (el gris claro de tu sidebar) */
+  background-color: #D7D7D7;
+  border-radius: 50px;
+}
+
+/* La BARRA MÓVIL (la que se arrastra) */
+.content::-webkit-scrollbar-thumb {
+  background-color: #8c8f96; /* Color de la barra */
+  border-radius: 20px;       /* Redondeada */
+  border: 5px solid #D7D7D7; 
+  background-clip: content-box; /* El fondo solo se pinta adentro del borde */
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  border-color: #c1c1c1; /* Opcional: aclara la pista al pasar el mouse */
 }
 
 html, body {
@@ -27,16 +57,16 @@ html, body {
 
 /* --- Títulos --- */
 .content h1 {
-  font-size: 40px;
-  margin-bottom: 25px;
-  color: #FFFFFF;
+    font-size: 40px;
+    margin: 0;
+    color: #FFFFFF;
 }
 
 .content h2 {
-  font-size: 28px;
-  margin-bottom: 30px;
-  color: #000000;
-  text-align: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #000000;
+    text-align: center;
 }
 
 /* --- Contenedor de perfil --- */
@@ -49,14 +79,16 @@ html, body {
 }
 
 /* --- Información del admin --- */
-.profile-info { background-color: #D7D7D7;
-  border-radius: 15px;
-  padding: 60px; /* espacio interno generoso */
-  width: 800px; /* ancho más grande */
-  min-height: 500px; /* altura mayor para llenar pantalla */
-  color: #1C1B1F;
-  box-sizing: border-box; /* incluye padding en el ancho */
-  font-size: 20px; /* letra más grande */ }
+.profile-info {
+    background-color: #D7D7D7;
+    border-radius: 15px;
+    padding: 35px 45px 32px 35px;
+    flex: 2;
+    max-height: 500px;
+    color: #1C1B1F;
+    box-sizing: border-box;
+    font-size: 20px;
+}
 
 .profile-info h3 {
   margin-bottom: 25px;
@@ -122,19 +154,23 @@ html, body {
 }
 
 .modal-content {
-  background-color: #C0C0C0;
-  padding: 30px;
-  border-radius: 20px;
-  width: 450px;
-  max-width: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    background-color: #C0C0C0;
+    padding: 15px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    /* min-height: 400px; */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 11;
+    justify-content: flex-start;
 }
 
 .modal-content h2 {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* (Un poco más de espacio que antes) */
   font-size: 24px;
   color: #1C1B1F;
 }
@@ -142,25 +178,25 @@ html, body {
 .modal-content label {
   font-weight: bold;
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 0; /* <-- ELIMINAMOS el margen viejo */
 }
 
 .modal-content input,
 .modal-content select {
   width: 100%;
-  padding: 12px;
+  padding: 8px 12px; /* <-- PADDING REDUCIDO (antes era 12px) */
   border-radius: 10px;
   border: 1px solid #ccc;
   background-color: #D7D7D7;
   outline: none;
   font-size: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 0; /* <-- ELIMINAMOS el margen viejo */
   box-sizing: border-box;
 }
 
 .modal-content button {
   width: 100%;
-  padding: 14px;
+  padding: 10px; /* <-- PADDING REDUCIDO (antes era 14px) */
   border: none;
   border-radius: 10px;
   background-color: #8c8f96;
@@ -168,17 +204,27 @@ html, body {
   font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
+  margin-top: 10px; /* <-- Pequeño espacio extra antes del botón */
 }
 
 .modal-content button:hover {
   background-color: #4b4e4c;
 }
 
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* <-- Espacio reducido y uniforme entre TODOS los elementos */
+  flex-grow: 0; /* Evita que el formulario se estire */
+}
+
 .modal-content .close {
   align-self: flex-end;
   cursor: pointer;
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 30px;
+  color: #555;
+  line-height: 0.5;
+  margin-bottom: 5px;
 }
 
 /* --- Responsividad --- */

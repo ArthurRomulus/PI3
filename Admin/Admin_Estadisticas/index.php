@@ -14,10 +14,6 @@ include "../../conexion.php"; // conexión a la base de datos
   <link rel="stylesheet" href="estadisticas.css">
   <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-
-  </style>
 </head>
 <body>
 

@@ -130,23 +130,23 @@
   }
 }
 
-
-
 /* === BOTÓN AÑADIR USUARIO === */
 .add_user_button {
-  display: inline-block;
-  margin: 2rem auto;
-  padding: 14px 26px;
-  background: linear-gradient(135deg, #2d3436, #636e72);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    display: inline-block;
+    margin: 0rem auto;
+    padding: 14px 15px;
+    background: linear-gradient(135deg, #2d3436, #636e72);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    right: 550px;
 }
 
 .add_user_button:hover {

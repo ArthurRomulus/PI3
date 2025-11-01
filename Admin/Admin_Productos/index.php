@@ -19,7 +19,7 @@ include "../../conexion.php";
     <?php include "../AdminProfileSesion.php"; ?>
   </div>
 
-  <h1>Coffee Shop</h1>
+  <h1>Blackwood Coffee</h1>
   <h3>Categorías</h3>
   <form method="GET" action="index.php">
       <input type="search" name="buscar" placeholder="Buscar..." 

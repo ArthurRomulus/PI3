@@ -62,17 +62,47 @@
   }
 
   .content {
-    min-height: 88vh;
-    font-family: Arial, sans-serif;
-    background: #bfbfbf;
-    margin: 20px;
-    border-radius: 30px;
+    margin-left: 220px;
     padding: 20px;
     flex: 1;
-    min-width: 280px;
-      margin-left: 220px; /* como ya tenías */
+    position: relative;
+    z-index: 1;
+    background-color: #C0C0C0;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 635px;
+    height: max-content;
+    margin-top: 15px;
+    scrollbar-width: auto;
+    scrollbar-color: #8c8f96 #D7D7D7;
+}
 
-  }
+.content::-webkit-scrollbar {
+  width: 16px; /* Ancho total de la pista */
+}
+
+/* La PISTA (el fondo de la barra) */
+.content::-webkit-scrollbar-track {
+  /* ESTA ES LA CLAVE: 
+     Le damos un color de fondo (el gris claro de tu sidebar) */
+  background-color: #D7D7D7;
+  border-radius: 50px;
+}
+
+/* La BARRA MÓVIL (la que se arrastra) */
+.content::-webkit-scrollbar-thumb {
+  background-color: #8c8f96; /* Color de la barra */
+  border-radius: 20px;       /* Redondeada */
+  border: 5px solid #D7D7D7; 
+  background-clip: content-box; /* El fondo solo se pinta adentro del borde */
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  border-color: #c1c1c1; /* Opcional: aclara la pista al pasar el mouse */
+}
 
   h1 {
     position: absolute;
