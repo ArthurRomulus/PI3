@@ -1,10 +1,43 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// bloquear si no está logueado
+if (empty($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
+    header("Location: /PI3/General/login.php");
+    exit;
+}
+
+// DATOS DE SESIÓN (que ya guardamos en login.php)
+$nombre        = $_SESSION['username']        ?? 'Usuario';
+$email         = $_SESSION['email']           ?? '—';
+$avatar        = $_SESSION['profilescreen']   ?? null;
+$telefono      = $_SESSION['telefono']        ?? '—';
+$fechaNacRaw   = $_SESSION['fecha_nac']       ?? '';
+$zonaHoraria   = $_SESSION['zona_horaria']    ?? '(UTC -06:00) Guadalajara, CDMX';
+
+// formatear fecha de nacimiento a dd/mm/YYYY si viene tipo 2025-10-31
+$fechaNacBonita = '—';
+if (!empty($fechaNacRaw) && $fechaNacRaw !== '0000-00-00') {
+    $ts = strtotime($fechaNacRaw);
+    if ($ts !== false) {
+        $fechaNacBonita = date("d/m/Y", $ts);
+    }
+}
+
+// "Miembro desde": si quieres algo real, puedes guardarlo en la BD (ej: created_at).
+// Por ahora lo dejamos fijo o en blanco elegante:
+$miembroDesde = '—';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil — Coffee Shop</title>
-    <link rel="stylesheet" href="css/perfil.css" />
+    <link rel="stylesheet" href="perfil.css" />
   </head>
   <body>
     <div class="shell">
@@ -12,15 +45,23 @@
         <!-- SIDEBAR -->
         <aside class="sidebar">
           <div class="brand">
-            <img
-              class="avatar"
-              src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=256&auto=format&fit=crop"
-              alt="Avatar"
-            />
+            <?php if (!empty($avatar)): ?>
+              <img
+                class="avatar"
+                src="<?php echo htmlspecialchars($avatar); ?>"
+                alt="Avatar de <?php echo htmlspecialchars($nombre); ?>"
+              />
+            <?php else: ?>
+              <img
+                class="avatar"
+                src="https://ui-avatars.com/api/?name=<?php echo urlencode($nombre); ?>&background=DCC0B9&color=531607"
+                alt="Avatar"
+              />
+            <?php endif; ?>
           </div>
 
           <nav class="nav">
-            <a class="active" href="perfil.usuario.html">
+            <a class="active" href="perfil_usuario.php">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -32,7 +73,8 @@
               </svg>
               Perfil
             </a>
-            <a href="editar_perfil.html">
+
+            <a href="editar_perfil.php">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -44,7 +86,8 @@
               </svg>
               Editar perfil
             </a>
-            <a href="cambiar_pass.html">
+
+            <a href="cambiar_pass.php">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -57,7 +100,8 @@
               </svg>
               Cambiar contraseña
             </a>
-            <a href="historial_compras.html">
+
+            <a href="historial_compras.php">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -74,7 +118,7 @@
           <div class="sidebar-bottom">
             <img
               class="sidebar-logo"
-              src="assest/logocafe.png"
+              src="../../images/logocafe.png"
               alt="Coffee Shop"
             />
           </div>
@@ -84,7 +128,7 @@
         <main class="main">
           <div class="panel">
             <div class="inner">
-              <h1>¡Hola, Dimas!</h1>
+              <h1>¡Hola, <?php echo htmlspecialchars($nombre); ?>!</h1>
               <p class="hello">
                 Bienvenido a tu perfil. Aquí puedes consultar tu información
                 personal y actividad dentro del sistema Coffee-Shop ☕
@@ -96,14 +140,23 @@
                   <div class="card">
                     <div class="body">
                       <div class="profile-mini">
-                        <img
-                          src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=256&auto=format&fit=crop"
-                          alt=""
-                        />
+                        <?php if (!empty($avatar)): ?>
+                          <img
+                            src="<?php echo htmlspecialchars($avatar); ?>"
+                            alt="Foto de perfil"
+                          />
+                        <?php else: ?>
+                          <img
+                            src="https://ui-avatars.com/api/?name=<?php echo urlencode($nombre); ?>&background=DCC0B9&color=531607"
+                            alt="Foto de perfil"
+                          />
+                        <?php endif; ?>
                         <div>
-                          <div class="name">Dimas Rolón Aram Sebastián</div>
+                          <div class="name">
+                            <?php echo htmlspecialchars($nombre); ?>
+                          </div>
                           <div class="meta">
-                            <span class="dot"></span>Guadalajara, MX
+                            <span class="dot"></span>Tu cuenta Coffee-Shop
                           </div>
                         </div>
                       </div>
@@ -118,15 +171,19 @@
 
                       <dl class="data">
                         <dt>Email</dt>
-                        <dd>d***@ejemplo.com</dd>
+                        <dd><?php echo htmlspecialchars($email); ?></dd>
+
                         <dt>Teléfono</dt>
-                        <dd>+52 33 1234 5678</dd>
+                        <dd><?php echo htmlspecialchars($telefono ?: '—'); ?></dd>
+
                         <dt>Fecha de nacimiento</dt>
-                        <dd>22/06/2004</dd>
+                        <dd><?php echo htmlspecialchars($fechaNacBonita); ?></dd>
+
                         <dt>Miembro desde</dt>
-                        <dd>2023</dd>
+                        <dd><?php echo htmlspecialchars($miembroDesde); ?></dd>
+
                         <dt>Zona horaria</dt>
-                        <dd>(UTC -06:00) Guadalajara, CDMX</dd>
+                        <dd><?php echo htmlspecialchars($zonaHoraria); ?></dd>
                       </dl>
                     </div>
                   </div>
@@ -146,9 +203,9 @@
                           font-size: 14px;
                         "
                       >
-                        <li>• Compraste un <b>Cappuccino</b> el 20/10/2025</li>
-                        <li>• Canjeaste 50 puntos por un <b>Latte</b></li>
-                        <li>• Actualizaste tu perfil el 18/10/2025</li>
+                        <li>• Iniciaste sesión correctamente ✅</li>
+                        <li>• Puedes ver tu historial de compras en "Historial de Compras"</li>
+                        <li>• Puedes cambiar tu contraseña en "Cambiar contraseña"</li>
                       </ul>
                     </div>
                   </div>
@@ -157,15 +214,21 @@
                     <div class="body">
                       <h2>Acciones rápidas</h2>
                       <div class="actions">
-                        <a class="btn" href="editar_perfil.html"
-                          >Editar perfil</a
-                        >
-                        <a class="btn" href="historial_compras.html"
-                          >Ver historial</a
-                        >
-                        <a class="btn" href="cerrar_sesion.html"
-                          >Cerrar sesión</a
-                        >
+                        <a class="btn" href="editar_perfil.php">Editar perfil</a>
+                        <a class="btn" href="historial_compras.php">Ver historial</a>
+                        <a href="/PI3/General/logout.php"
+                          style="
+                            display:inline-block;
+                            background:#531607;
+                            color:#fff;
+                            text-decoration:none;
+                            font-weight:700;
+                            padding:10px 16px;
+                            border-radius:10px;
+                            box-shadow:0 8px 16px rgba(83,22,7,.4);
+                          ">
+                          Cerrar sesión
+                        </a>
                       </div>
                     </div>
                   </div>

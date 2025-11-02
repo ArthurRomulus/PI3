@@ -1,15 +1,18 @@
-// cambiar_contrasena.js
+// cambiarcontraseña.js
 document.addEventListener('DOMContentLoaded', () => {
-  const form = document.querySelector('form.grid');
+  const form = document.getElementById('formChangePwd');
   const oldPwd = document.getElementById('pwd-old');
   const newPwd = document.getElementById('pwd-new');
   const confirmPwd = document.getElementById('pwd-confirm');
   const strengthWrap = document.querySelector('.strength');
   const strengthBar = strengthWrap?.querySelector('.bar');
   const strengthLabel = strengthWrap?.querySelector('.label');
-  const submitBtn = form.querySelector('.actions .btn[type="submit"], .actions button[type="submit"]') || form.querySelector('.actions .btn');
-  
-  // Crear un "relleno" dentro de la barra si no existe (para controlar el % vía JS)
+  const submitBtn = form.querySelector('.actions .btn[type="submit"]');
+  const msgAjax = document.createElement('div');
+  msgAjax.id = 'msgAjax';
+  form.parentElement.prepend(msgAjax); // lo pone arriba del <form> dentro de la card
+
+  // Relleno dinámico de la barrita de fuerza
   if (strengthBar && !strengthBar.querySelector('.fill')) {
     const fill = document.createElement('div');
     fill.className = 'fill';
@@ -21,75 +24,94 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const strengthFill = strengthBar?.querySelector('.fill');
 
-  // --- Mostrar/Ocultar contraseña con el icono .eye ---
-  // El HTML tiene <span class="eye"></span> dentro de .field
+  // Toggle ver/ocultar contraseña
   document.querySelectorAll('.field .eye').forEach(eye => {
-    const input = eye.previousElementSibling; // el <input> justo antes del span.eye
+    const input = eye.previousElementSibling;
     if (!(input instanceof HTMLInputElement)) return;
 
-    const toggle = () => {
-      const isPwd = input.type === 'password';
-      input.type = isPwd ? 'text' : 'password';
-      eye.classList.toggle('is-open', isPwd);
-      // estética rápida: cambiar fondo cuando está abierto
-      eye.style.background = isPwd ? '#f6eee9' : '#fff';
+    const setVisible = (vis) => {
+      input.type = vis ? 'text' : 'password';
+      eye.classList.toggle('is-open', vis);
+      eye.style.background = vis ? '#f6eee9' : '#fff';
     };
 
-    // click para alternar; mousedown para “ver mientras presionas” (opcional)
-    eye.addEventListener('click', toggle);
-    eye.addEventListener('mousedown', () => { if (input.type === 'password') { input.type = 'text'; eye.classList.add('is-open'); }});
-    eye.addEventListener('mouseup', () => { if (eye.classList.contains('is-open')) { input.type = 'password'; eye.classList.remove('is-open'); }});
-    eye.addEventListener('mouseleave', () => { if (eye.classList.contains('is-open')) { input.type = 'password'; eye.classList.remove('is-open'); }});
+    eye.addEventListener('click', () => {
+      const isPwd = input.type === 'password';
+      setVisible(isPwd);
+    });
+
+    eye.addEventListener('mousedown', () => {
+      if (input.type === 'password') setVisible(true);
+    });
+    eye.addEventListener('mouseup', () => {
+      if (eye.classList.contains('is-open')) setVisible(false);
+    });
+    eye.addEventListener('mouseleave', () => {
+      if (eye.classList.contains('is-open')) setVisible(false);
+    });
   });
 
-  // --- Evaluación de fuerza de contraseña ---
   function evaluateStrength(pwd) {
     let score = 0;
-    const hasLen = pwd.length >= 8;
+    const hasLen   = pwd.length >= 8;
     const hasUpper = /[A-ZÁÉÍÓÚÑ]/.test(pwd);
     const hasLower = /[a-záéíóúñ]/.test(pwd);
-    const hasNum = /\d/.test(pwd);
-    const hasSym = /[^A-Za-z0-9]/.test(pwd);
+    const hasNum   = /\d/.test(pwd);
+    const hasSym   = /[^A-Za-z0-9]/.test(pwd);
 
-    score += hasLen ? 1 : 0;
-    score += hasUpper ? 1 : 0;
-    score += hasLower ? 1 : 0;
-    score += hasNum ? 1 : 0;
-    score += hasSym ? 1 : 0;
+    if (hasLen)   score++;
+    if (hasUpper) score++;
+    if (hasLower) score++;
+    if (hasNum)   score++;
+    if (hasSym)   score++;
 
-    // porcentaje y etiqueta/color
-    let pct = ['0%','25%','45%','65%','85%','100%'][score];
+    const pctMap = ['0%','25%','45%','65%','85%','100%'];
+    let pct   = pctMap[score];
     let label = 'Muy débil';
-    let color = '#c56a57'; // rojo café
+    let color = '#c56a57';
 
-    if (score >= 2) { label = 'Débil'; color = '#c56a57'; }
-    if (score >= 3) { label = 'Media'; color = '#caa061'; }
-    if (score >= 4) { label = 'Fuerte'; color = '#8bbf7c'; }
-    if (score === 5){ label = 'Muy fuerte'; color = '#4fae5a'; }
+    if (score >= 2) { label = 'Débil';        color = '#c56a57'; }
+    if (score >= 3) { label = 'Media';        color = '#caa061'; }
+    if (score >= 4) { label = 'Fuerte';       color = '#8bbf7c'; }
+    if (score === 5){ label = 'Muy fuerte';   color = '#4fae5a'; }
 
-    return { score, pct, label, color, rules: { hasLen, hasUpper, hasLower, hasNum, hasSym } };
+    return {
+      score,
+      pct,
+      label,
+      color,
+      rules: { hasLen, hasUpper, hasLower, hasNum, hasSym }
+    };
   }
 
-  // --- Señalar requisitos cumplidos dentro de la lista (si decides marcarlos) ---
-  const rulesList = form.querySelector('.rules ul');
-  function paintRules(r) {
+  function paintRules(rulesState) {
+    const rulesList = form.querySelector('.rules ul');
     if (!rulesList) return;
-    const items = rulesList.querySelectorAll('li');
-    // Espera el orden: len, mayus/minus, número, especial
-    const states = [r.hasLen, (r.hasUpper && r.hasLower), r.hasNum, r.hasSym];
-    items.forEach((li, i) => {
-      li.style.opacity = states[i] ? '1' : '.6';
-      li.style.color = states[i] ? '#2f6f3a' : '#3e2c24';
-      li.style.fontWeight = states[i] ? '700' : '400';
+
+    // orden visual:
+    // 1) mínimo 8
+    // 2) mayus/minus
+    // 3) número
+    // 4) especial
+    const okStates = [
+      rulesState.hasLen,
+      (rulesState.hasUpper && rulesState.hasLower),
+      rulesState.hasNum,
+      rulesState.hasSym
+    ];
+
+    [...rulesList.querySelectorAll('li')].forEach((li, i) => {
+        const ok = okStates[i];
+        li.style.opacity = ok ? '1' : '.6';
+        li.style.color = ok ? '#2f6f3a' : '#3e2c24';
+        li.style.fontWeight = ok ? '700' : '400';
     });
   }
 
-  // --- Validación general + actualización de UI ---
   function updateUI() {
     const pwd = newPwd.value.trim();
     const res = evaluateStrength(pwd);
 
-    // Actualiza barra y etiqueta
     if (strengthFill) {
       strengthFill.style.width = res.pct;
       strengthFill.style.background = res.color;
@@ -100,21 +122,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     paintRules(res.rules);
 
-    // Coincidencia con confirmación
+    // confirmar coincide
     const matches = pwd.length > 0 && pwd === confirmPwd.value.trim();
     confirmPwd.style.borderColor = matches ? '#1a7f37' : '#c56a57';
 
-    // No permitir la misma que la anterior
+    // distinta de la anterior
     const differentFromOld = pwd.length > 0 && oldPwd.value.trim() !== pwd;
 
-    // Habilitar Guardar solo si:
-    // - cumple >=4 reglas (fuerte o mejor), 
-    // - coincide confirmación, 
-    // - es distinta de la anterior
+    // habilitar submit si cumple:
     const ok = (res.score >= 4) && matches && differentFromOld;
+
     if (submitBtn) {
       submitBtn.disabled = !ok;
-      submitBtn.style.opacity = ok ? '1' : '.6';
+      submitBtn.style.opacity = ok ? '1' : '.5';
       submitBtn.style.pointerEvents = ok ? 'auto' : 'none';
     }
   }
@@ -126,20 +146,83 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   updateUI();
 
-  // --- Submit (demo): evita envío real y muestra confirmación ---
-  form.addEventListener('submit', (e) => {
+  // submit AJAX
+  form.addEventListener('submit', async e => {
     e.preventDefault();
-    // Seguridad básica: última validación
     updateUI();
-    if (submitBtn?.disabled) return;
+    if (submitBtn.disabled) return;
 
-    // Aquí harías tu petición fetch/AJAX a tu endpoint PHP.
-    // Ejemplo visual:
-    alert('✅ Contraseña actualizada correctamente.');
-    // Limpia campos
-    oldPwd.value = '';
-    newPwd.value = '';
-    confirmPwd.value = '';
+    msgAjax.innerHTML = "";
+
+    const fd = new FormData();
+    fd.append('pwd_old', oldPwd.value.trim());
+    fd.append('pwd_new', newPwd.value.trim());
+    fd.append('pwd_confirm', confirmPwd.value.trim());
+    fd.append('ajax', '1'); // <- para que PHP sepa que responda JSON
+
+    try {
+      const resp = await fetch('cambiar_pass.php', {
+        method: 'POST',
+        body: fd,
+        credentials: 'same-origin'
+      });
+
+      const data = await resp.json();
+
+      if (data.ok) {
+        msgAjax.innerHTML = `
+          <div class="alert-ok" style="
+            background:#e8ffe8;
+            border:2px solid #1a7f37;
+            color:#1a7f37;
+            font-weight:600;
+            border-radius:10px;
+            padding:10px 14px;
+            font-family:'Montaga',serif;
+            font-size:.9rem;
+            margin-bottom:16px;
+          ">
+            ${data.success || 'Contraseña actualizada correctamente.'}
+          </div>
+        `;
+        oldPwd.value = '';
+        newPwd.value = '';
+        confirmPwd.value = '';
+      } else {
+        msgAjax.innerHTML = `
+          <div class="alert-err" style="
+            background:#ffeded;
+            border:2px solid #c56a57;
+            color:#c56a57;
+            font-weight:600;
+            border-radius:10px;
+            padding:10px 14px;
+            font-family:'Montaga',serif;
+            font-size:.9rem;
+            margin-bottom:16px;
+          ">
+            ${data.error || 'No se pudo actualizar la contraseña.'}
+          </div>
+        `;
+      }
+    } catch (err) {
+      msgAjax.innerHTML = `
+        <div class="alert-err" style="
+          background:#ffeded;
+          border:2px solid #c56a57;
+          color:#c56a57;
+          font-weight:600;
+          border-radius:10px;
+          padding:10px 14px;
+          font-family:'Montaga',serif;
+          font-size:.9rem;
+          margin-bottom:16px;
+        ">
+          Error de conexión con el servidor.
+        </div>
+      `;
+    }
+
     updateUI();
   });
 });

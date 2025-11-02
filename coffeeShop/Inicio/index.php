@@ -1,3 +1,15 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// bandera limpia para usar después en el footer
+$usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === true;
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,34 +30,53 @@
     />
   </head>
   <body>
-    <footer class="site-footer">
-      <div class="footer-container">
-        <!-- LOGO -->
-        <div class="footer-logo">
-          <a href="index.php">
-            <img src="../../Images/logocafe.png" alt="Coffee Shop logo" />
-          </a>
-          <span>COFFEE SHOP</span>
-        </div>
+<footer class="site-footer">
+  <div class="footer-container">
+    <!-- LOGO -->
+    <div class="footer-logo">
+      <a href="/PI3/coffeeShop/inicio/index.php">
+        <img src="../../Images/logocafe.png" alt="Coffee Shop logo" />
+      </a>
+      <span>COFFEE SHOP</span>
+    </div>
 
-        <!-- MENÚ -->
-        <nav class="footer-menu">
-          <a href="index.php">Inicio</a>
-          <a href="../catalogo/bebidas_frias.php">Catálogo</a>
-          <a href="../comentarios/comentarios.php">Comentarios</a>
-          <a href="../acercade/acercade.php">Acerca de</a>
-        </nav>
+    <!-- MENÚ -->
+    <nav class="footer-menu">
+      <a href="/PI3/coffeeShop/inicio/index.php">Inicio</a>
+      <a href="/PI3/coffeeShop/catalogo/bebidas_frias.php">Catálogo</a>
+      <a href="/PI3/coffeeShop/comentarios/comentarios.php">Comentarios</a>
+      <a href="/PI3/coffeeShop/acercade/acercade.php">Acerca de</a>
+    </nav>
 
-        <!-- ACCIONES -->
-        <div class="footer-actions">
-          <a href="../../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
-          <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
-  🛒 <span></span>
-</a>
-          <span class="lang">ESP | ING</span>
-        </div>
-      </div>
-    </footer>
+    <!-- ACCIONES -->
+    <div class="footer-actions">
+      <a
+        href="<?php echo $usuarioLogueado
+          ? '/PI3/coffeeShop/perfil/perfil_usuario.php'
+          : '/PI3/General/login.php'; ?>"
+        class="icon-btn"
+        aria-label="Cuenta"
+        title="<?php echo $usuarioLogueado ? 'Mi perfil' : 'Iniciar sesión'; ?>"
+        style="display:flex;align-items:center;gap:6px;"
+      >
+        👤
+        <?php if ($usuarioLogueado): ?>
+          <span style="font-size:.7rem;color:#4CAF50;font-weight:600;line-height:1;">
+            sesión
+          </span>
+        <?php endif; ?>
+      </a>
+
+      <!-- carrito -->
+      <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
+        🛒 <span></span>
+      </a>
+
+      <span class="lang">ESP | ING</span>
+    </div>
+  </div>
+</footer>
+
     <!--Primera parte(sabor que inspira)-->
     <section class="hero-sabor">
       <div class="hero-wrap">

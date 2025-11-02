@@ -106,7 +106,7 @@
     <section class="features">
       <div class="features-box">
         <div class="feature-item">
-          <img src="../../images/icon.png" alt="Sustainability" />
+          <img src="../../images/icon1.png" alt="Sustainability" />
           <p>Sustainability</p>
         </div>
 
