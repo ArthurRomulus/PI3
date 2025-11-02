@@ -586,6 +586,44 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       <span class="cs-line"></span>
     </div>
 
-    <script src="../app.js"></script>
+     <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+    <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+    <aside
+      class="mini-cart"
+      id="miniCart"
+      aria-hidden="true"
+      aria-labelledby="mcTitle"
+      role="dialog"
+    >
+      <header class="mc-header">
+        <h3 id="mcTitle">Tu carrito</h3>
+        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+          ✕
+        </button>
+      </header>
+
+      <div class="mc-body">
+        <ul class="mc-list" id="mcList">
+          <!-- items por JS -->
+        </ul>
+        <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
+      </div>
+
+      <footer class="mc-footer">
+        <div class="mc-total">
+          <span>Total</span>
+          <strong id="mcTotal">$0.00 MXN</strong>
+        </div>
+        <a href="carrito.php" class="mc-btn">Ir a pagar</a>
+      </footer>
+    </aside>
+
+    <script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+
+    <script src="../catalogo/app.js"></script>
   </body>
 </html>

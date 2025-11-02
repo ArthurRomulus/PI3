@@ -4,30 +4,41 @@
   const $ = (s, r = document) => r.querySelector(s);
 
   // ============================
-  // 1) Config base imágenes
+  // 0) CONFIG GLOBAL
   // ============================
-const IMG_BASE = "../../Images/";
-const IMG_PLACEHOLDER = IMG_BASE + "placeholder.png";
+  // Ruta base para imágenes de productos
+  const IMG_BASE = "../../Images/";
+  const IMG_PLACEHOLDER = IMG_BASE + "placeholder.png";
 
-function resolveImgPath(raw) {
-  let s = (raw || "").toString().trim();
-  if (!s) return IMG_PLACEHOLDER;
+  // Ruta base para el API del carrito.
+  // Cada página puede definir window.CART_API_URL antes de cargar este script.
+  // Ejemplo en catalogo.php:
+  //   window.CART_API_URL = 'cart_api.php';
+  // Ejemplo en comentarios.php:
+  //   window.CART_API_URL = '../catalogo/cart_api.php';
+  const CART_API = window.CART_API_URL || "cart_api.php";
 
-  if (/^https?:\/\//i.test(s)) return s; // URL absoluta
+  function resolveImgPath(raw) {
+    let s = (raw || "").toString().trim();
+    if (!s) return IMG_PLACEHOLDER;
 
-  s = s.replace(/\\/g, "/")
-       .replace(/^\.\/+/, "")
-       .replace(/^(\.\.\/)+/, "")
-       .replace(/^assest\//i, "")
-       .replace(/^assets?\//i, "")
-       .replace(/^images?\//i, "");
+    // URL absoluta
+    if (/^https?:\/\//i.test(s)) return s;
 
-  return encodeURI(IMG_BASE + s);
-}
+    // Normalizamos rutas locales
+    s = s
+      .replace(/\\/g, "/")
+      .replace(/^\.\/+/, "")
+      .replace(/^(\.\.\/)+/, "")
+      .replace(/^assest\//i, "")
+      .replace(/^assets?\//i, "")
+      .replace(/^images?\//i, "");
 
+    return encodeURI(IMG_BASE + s);
+  }
 
   // ============================
-  // 2) Filtro desplegable
+  // 1) Filtro desplegable de categorías (catálogo)
   // ============================
   function initFiltro() {
     const btn = $("#btn-filtrar");
@@ -57,61 +68,72 @@ function resolveImgPath(raw) {
   }
 
   // ============================
-  // 3) Carga AJAX de productos
+  // 2) Carga AJAX de productos (catálogo)
   // ============================
   function initProductosAJAX() {
-    const grid = document.querySelector(".hotdrinks__grid[data-autoload='ajax']");
+    const grid = document.querySelector(
+      '.hotdrinks__grid[data-autoload="ajax"]'
+    );
+
+    // Si esta página no tiene grid (por ejemplo comentarios.php), no hacemos nada
     if (!grid) {
-      console.log("[AJAX] No hay .hotdrinks__grid[data-autoload='ajax']");
+      console.log(
+        "[AJAX] No hay .hotdrinks__grid[data-autoload='ajax'] en esta página (normal)"
+      );
       return;
     }
 
     const categoriaAttr = grid.getAttribute("data-categoria") || "";
-    console.log("[AJAX] Grid detectada. Categoría:", categoriaAttr || "(todas)");
+    console.log(
+      "[AJAX] Grid detectada. Categoría:",
+      categoriaAttr || "(todas)"
+    );
 
     function renderCard(p) {
-  const sku = (p.idp ?? "").toString();
-  const disponible = Number(p.STOCK ?? 0) > 0;
-  const img = resolveImgPath(p.ruta_imagen);
+      const sku = (p.idp ?? "").toString();
+      const disponible = Number(p.STOCK ?? 0) > 0;
+      const img = resolveImgPath(p.ruta_imagen);
 
-  const precioBase   = Number(p.precio_base ?? p.precio ?? 0);
-  const extraSabor   = Number(p?.sabor?.precio_extra ?? 0);
-  const extraTam     = Number(p?.tamano?.precio_aumento ?? 0);
-  const precioTotal  = Number(p.precio_total ?? (precioBase + extraSabor + extraTam));
-  const precioTxt    = precioTotal.toFixed(2);
+      const precioBase = Number(p.precio_base ?? p.precio ?? 0);
+      const extraSabor = Number(p?.sabor?.precio_extra ?? 0);
+      const extraTam = Number(p?.tamano?.precio_aumento ?? 0);
+      const precioTotal = Number(
+        p.precio_total ?? precioBase + extraSabor + extraTam
+      );
+      const precioTxt = precioTotal.toFixed(2);
 
-  // ya NO ponemos ts-meta en absoluto
-  return `
-    <article class="ts-card"
-      data-id="${sku}"
-      data-name="${p.namep || ""}"
-      data-price="${precioTotal}"
-      data-foto="${img}">
-      <div class="ts-stage">
-        <img src="${img}" alt="${p.namep || ""}"
-             loading="lazy" decoding="async"
-             onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';">
-        <div class="ts-rate"><strong>4.6</strong> ★</div>
-      </div>
+      return `
+        <article class="ts-card"
+          data-id="${sku}"
+          data-name="${p.namep || ""}"
+          data-price="${precioTotal}"
+          data-foto="${img}">
+          <div class="ts-stage">
+            <img src="${img}" alt="${p.namep || ""}"
+                 loading="lazy" decoding="async"
+                 onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';">
+            <div class="ts-rate"><strong>4.6</strong> ★</div>
+          </div>
 
-      <h4 class="ts-name">
-        ${p.namep || ""}
-        <small style="opacity:.7">• SKU ${sku || "—"}</small>
-      </h4>
+          <h4 class="ts-name">
+            ${p.namep || ""}
+            <small style="opacity:.7">• SKU ${sku || "—"}</small>
+          </h4>
 
-      <p class="ts-desc">${p.descripcion || ""}</p>
+          <p class="ts-desc">${p.descripcion || ""}</p>
 
-      <div class="ts-info">
-        <span>${disponible ? "Disponible" : "Agotado"}</span>
-        <span class="ts-price">$${precioTxt} MXN</span>
-        <button class="ts-cart" ${disponible ? "" : "disabled"}>🛒</button>
-      </div>
-    </article>
-  `;
-}
-
+          <div class="ts-info">
+            <span>${disponible ? "Disponible" : "Agotado"}</span>
+            <span class="ts-price">$${precioTxt} MXN</span>
+            <button class="ts-cart" ${disponible ? "" : "disabled"}>🛒</button>
+          </div>
+        </article>
+      `;
+    }
 
     async function cargarCategoria(cat) {
+      // IMPORTANTE: esta URL es relativa al archivo que contiene este script,
+      // o sea catalogo/*.php. Para comentarios no se ejecuta porque no hay grid.
       const u = new URL("./get_productos.php", location.href);
       if (cat) u.searchParams.set("categoria", cat);
 
@@ -140,7 +162,9 @@ function resolveImgPath(raw) {
         if (Array.isArray(data.items) && data.items.length) {
           grid.innerHTML = data.items.map(renderCard).join("");
         } else {
-          grid.innerHTML = prevHTML || `
+          grid.innerHTML =
+            prevHTML ||
+            `
             <p style="grid-column:1/-1; text-align:center; padding:16px;">
               No hay productos para esta categoría.
             </p>`;
@@ -154,22 +178,28 @@ function resolveImgPath(raw) {
   }
 
   // ============================
-  // 4) Mini-carrito Drawer
+  // 3) Mini-carrito Drawer (catálogo + comentarios + donde lo pongas)
   // ============================
   function initMiniCart() {
+    // soporta tus dos variantes de IDs/clases según las páginas
     const openBtn = $("#open-cart") || $("#navCartBtn");
     const overlay = $("#mc-overlay") || $("#mcOverlay");
     const drawer = $("#mini-cart") || $("#miniCart");
     const closeBtn = $("#mc-close") || $("#mcClose");
     const list = $("#mc-list") || $("#mcList");
-    const emptyMsg = (list ? list.querySelector(".mc__empty") : null) || $("#mcEmpty");
+    const emptyMsg =
+      (list ? list.querySelector(".mc__empty") : null) || $("#mcEmpty");
     const totalEl = $("#mc-total") || $("#mcTotal");
     const badge = $("#nav-cart-count") || $("#open-cart span");
 
+    // si la página no tiene mini-cart HTML, no hacemos nada
     if (!overlay || !drawer || !list || !totalEl) return;
 
     const fmt = (n) =>
-      Number(n || 0).toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+      Number(n || 0).toLocaleString("es-MX", {
+        style: "currency",
+        currency: "MXN",
+      });
 
     async function j(url, opt) {
       try {
@@ -192,7 +222,9 @@ function resolveImgPath(raw) {
 
     overlay.addEventListener("click", closeCart);
     closeBtn?.addEventListener("click", closeCart);
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeCart();
+    });
 
     openBtn?.addEventListener("click", (e) => {
       e.preventDefault();
@@ -202,13 +234,15 @@ function resolveImgPath(raw) {
 
     async function refreshBadge() {
       try {
-        const d = await j("cart_api.php?action=count");
+        const d = await j(CART_API + "?action=count");
         if (d.ok && badge) badge.textContent = d.count ?? 0;
-      } catch {}
+      } catch {
+        // ignore
+      }
     }
 
     async function loadMiniCart() {
-      const d = await j("cart_api.php?action=list");
+      const d = await j(CART_API + "?action=list");
       if (!d.ok) {
         list.innerHTML = "";
         if (emptyMsg) emptyMsg.textContent = "No se pudo cargar el carrito.";
@@ -226,10 +260,13 @@ function resolveImgPath(raw) {
 
       if (emptyMsg) emptyMsg.style.display = "none";
 
-      list.innerHTML = d.items.map((p) => `
+      list.innerHTML = d.items
+        .map(
+          (p) => `
         <li class="mc-item" data-id="${p.id}">
-          <img class="mc-img" src="${p.foto || IMG_PLACEHOLDER}"
-               alt="${p.nombre || ""}"
+          <img class="mc-img" src="${
+            p.foto || IMG_PLACEHOLDER
+          }" alt="${p.nombre || ""}"
                onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';">
           <div>
             <p class="mc-name">${p.nombre || "Producto"}</p>
@@ -245,25 +282,38 @@ function resolveImgPath(raw) {
             <button type="button" class="mc-close mc-del" title="Eliminar">🗑</button>
           </div>
         </li>
-      `).join("");
+      `
+        )
+        .join("");
 
       totalEl.textContent = fmt(d.total);
 
+      // botones +/-, eliminar
       list.querySelectorAll(".mc-item").forEach((li) => {
         const id = li.dataset.id;
-        li.querySelector(".qty-minus")?.addEventListener("click", () => updateQty(id, -1));
-        li.querySelector(".qty-plus")?.addEventListener("click", () => updateQty(id, +1));
-        li.querySelector(".mc-del")?.addEventListener("click", () => setQty(id, 0));
+        li
+          .querySelector(".qty-minus")
+          ?.addEventListener("click", () => updateQty(id, -1));
+        li
+          .querySelector(".qty-plus")
+          ?.addEventListener("click", () => updateQty(id, +1));
+        li
+          .querySelector(".mc-del")
+          ?.addEventListener("click", () => setQty(id, 0));
       });
 
       await refreshBadge();
     }
 
     async function setQty(id, qty) {
-      const r = await j("cart_api.php", {
+      const r = await j(CART_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "update", id, qty: Math.max(0, qty) }),
+        body: JSON.stringify({
+          action: "update",
+          id,
+          qty: Math.max(0, qty),
+        }),
       });
       if (r.ok) await loadMiniCart();
     }
@@ -275,6 +325,7 @@ function resolveImgPath(raw) {
       await setQty(id, cur + delta);
     }
 
+    // click "🛒" en tarjeta producto => agregar al carrito
     document.addEventListener("click", async (e) => {
       const btn = e.target.closest(".ts-cart");
       if (!btn) return;
@@ -288,11 +339,18 @@ function resolveImgPath(raw) {
       const foto = card.dataset.foto || IMG_PLACEHOLDER;
 
       try {
-        const r = await fetch("cart_api.php", {
+        const r = await fetch(CART_API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "add", id, qty: 1, nombre, precio, foto })
-        }).then(x => x.json());
+          body: JSON.stringify({
+            action: "add",
+            id,
+            qty: 1,
+            nombre,
+            precio,
+            foto,
+          }),
+        }).then((x) => x.json());
 
         if (r?.ok) {
           await refreshBadge();
@@ -307,16 +365,17 @@ function resolveImgPath(raw) {
       }
     });
 
+    // inicial
     refreshBadge();
   }
 
   // ============================
-  // 5) Boot
+  // 4) Boot
   // ============================
   function boot() {
-    initFiltro();
-    initProductosAJAX();
-    initMiniCart();
+    initFiltro();        // solo actúa si existe el menú de filtro
+    initProductosAJAX(); // solo actúa si existe la grid de productos
+    initMiniCart();      // actúa si existe el mini-carrito
   }
 
   if (document.readyState !== "loading") boot();

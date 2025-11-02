@@ -1,3 +1,25 @@
+<?php
+// Inicia sesión si no existe (importante para detectar si el usuario ya inició)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verificamos si hay sesión activa
+$usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === true;
+
+// Si hay sesión, podemos leer algunos datos
+if ($usuarioLogueado) {
+    $userid   = $_SESSION['userid']        ?? null;
+    $username = $_SESSION['username']      ?? 'Usuario';
+    $email    = $_SESSION['email']         ?? '';
+    $avatar   = $_SESSION['profilescreen'] ?? null;
+} else {
+    // Si no hay sesión, inicializamos vacíos para evitar errores
+    $userid = $username = $email = $avatar = null;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -38,7 +60,16 @@
 
         <!-- ACCIONES -->
         <div class="footer-actions">
-          <a href="../../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
+          <a
+  href="<?php echo $usuarioLogueado
+    ? '/PI3/coffeeShop/perfil/perfil_usuario.php'
+    : '/PI3/General/login.php'; ?>"
+  class="icon-btn"
+  aria-label="Cuenta"
+  title="<?php echo $usuarioLogueado ? 'Mi perfil' : 'Iniciar sesión'; ?>">
+  👤
+</a>
+
           <!-- Carrito con contador (IMPORTANTE: id en el botón y en el badge) -->
           <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
   🛒 <span></span>

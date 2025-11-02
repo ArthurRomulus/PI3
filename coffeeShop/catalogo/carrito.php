@@ -9,7 +9,7 @@ require_once __DIR__ . '/db.php';
   <meta charset="UTF-8">
   <title>Carrito • Coffee-Shop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="Style.css">
+  <link rel="stylesheet" href="../inicio/Style.css">
   <style>
     .cart-wrap{max-width:900px;margin:24px auto;padding:0 12px}
     .cart-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.08)}
@@ -41,7 +41,7 @@ require_once __DIR__ . '/db.php';
     </table>
 
     <div style="margin-top:16px; text-align:right;">
-      <a href="index.php" class="btn">Seguir comprando</a>
+      <a href="../catalogo/bebidas_frias.php" class="btn">Seguir comprando</a>
       <button class="btn btn-dark">Pagar</button>
     </div>
   </div>

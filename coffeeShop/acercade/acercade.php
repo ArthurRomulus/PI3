@@ -1,3 +1,26 @@
+<?php
+// Inicia sesión si no existe (importante para detectar si el usuario ya inició)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verificamos si hay sesión activa
+$usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === true;
+
+// Si hay sesión, podemos leer algunos datos
+if ($usuarioLogueado) {
+    $userid   = $_SESSION['userid']        ?? null;
+    $username = $_SESSION['username']      ?? 'Usuario';
+    $email    = $_SESSION['email']         ?? '';
+    $avatar   = $_SESSION['profilescreen'] ?? null;
+} else {
+    // Si no hay sesión, inicializamos vacíos para evitar errores
+    $userid = $username = $email = $avatar = null;
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -29,10 +52,20 @@
 
         <!-- ACCIONES -->
         <div class="footer-actions">
-          <a href="../../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
-          <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
+          <a
+  href="<?php echo $usuarioLogueado
+    ? '/PI3/coffeeShop/perfil/perfil_usuario.php'
+    : '/PI3/General/login.php'; ?>"
+  class="icon-btn"
+  aria-label="Cuenta"
+  title="<?php echo $usuarioLogueado ? 'Mi perfil' : 'Iniciar sesión'; ?>">
+  👤
+</a>
+
+<a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
   🛒 <span></span>
 </a>
+
           <span class="lang">ESP | ING</span>
         </div>
       </div>
@@ -333,6 +366,47 @@
     </div>
 
     <div class="cs-legal">
-      <script src="../app.js"></script>
-  </body>
+
+     <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+<div class="mc-overlay" id="mcOverlay" hidden></div>
+
+<aside
+  class="mini-cart"
+  id="miniCart"
+  aria-hidden="true"
+  aria-labelledby="mcTitle"
+  role="dialog"
+>
+  <header class="mc-header">
+    <h3 id="mcTitle">Tu carrito</h3>
+    <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+      ✕
+    </button>
+  </header>
+
+  <div class="mc-body">
+    <ul class="mc-list" id="mcList">
+      <!-- items por JS -->
+    </ul>
+    <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
+  </div>
+
+  <footer class="mc-footer">
+    <div class="mc-total">
+      <span>Total</span>
+      <strong id="mcTotal">$0.00 MXN</strong>
+    </div>
+    <a href="../catalogo/carrito.php" class="mc-btn">Ir a pagar</a>
+  </footer>
+</aside>
+
+
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+<!-- Scripts -->
+<script src="../catalogo/app.js"></script>
+</body>
 </html>
+
