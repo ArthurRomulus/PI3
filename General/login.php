@@ -4,6 +4,7 @@ session_start();
 
 // Incluye el archivo de conexión a la base de datos
 include '../conexion.php';
+
 // Variable para almacenar mensajes de error
 $error_message = '';
 
@@ -15,16 +16,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = trim($_POST['password']);
 
     // 2. Preparar la consulta para evitar inyección SQL
-    // Seleccionamos el id, el username y el password del usuario que coincida
-    $sql = "SELECT userid, email, password, username, role, profilescreen FROM usuarios WHERE email = ?";
-    
+    //    >> IMPORTANTE: ahora pedimos también apellido, telefono, fecha_nac, zona_horaria
+    $sql = "SELECT 
+                userid,
+                email,
+                password,
+                username,
+                role,
+                profilescreen,
+                apellido,
+                telefono,
+                fecha_nac,
+                zona_horaria
+            FROM usuarios 
+            WHERE email = ?";
+
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {
-        // Si la preparación de la consulta falla, es un error del servidor
         $error_message = "Error interno del servidor. Inténtalo más tarde.";
     } else {
-        // 3. Vincular el parámetro (el username del formulario)
+        // 3. Vincular el parámetro (email)
         $stmt->bind_param("s", $email);
 
         // 4. Ejecutar la consulta
@@ -35,49 +47,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // 6. Verificar si se encontró un usuario
         if ($result->num_rows === 1) {
-            // El usuario existe, ahora verificamos la contraseña
             $user = $result->fetch_assoc();
             
-            // Comparamos la contraseña enviada con el hash guardado en la BD
-            // password_verify() es la función segura para hacer esto
+            // Verificamos contraseña con password_verify
             if (password_verify($password, $user['password'])) {
-                // ¡Contraseña correcta! El inicio de sesión es exitoso.
-                
-                // Guardamos los datos del usuario en la sesión
-                $_SESSION['userid'] = $user['userid'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['role'] = $user['role'];
-                $_SESSION['profilescreen'] = $user['profilescreen'];
+                // ✅ Login correcto
 
+                // Guardamos datos del usuario en la sesión
+                $_SESSION['userid']         = $user['userid'];
+                $_SESSION['email']          = $user['email'];
+                $_SESSION['username']       = $user['username'];
+                $_SESSION['role']           = $user['role'];
+                $_SESSION['profilescreen']  = $user['profilescreen'];
+
+                // NUEVOS CAMPOS → también a la sesión
+                $_SESSION['apellido']       = $user['apellido'] ?? '';
+                $_SESSION['telefono']       = $user['telefono'] ?? '';
+                $_SESSION['fecha_nac']      = $user['fecha_nac'] ?? '';
+                $_SESSION['zona_horaria']   = $user['zona_horaria'] ?? '';
+
+                // ✅ Bandera de sesión iniciada
+                $_SESSION['logueado']       = true;
+
+                // Redirección según rol
                 if ($user['role'] == 4) {
-                    header("Location: ../Admin/Admin_Inicio");
-
+                    header("Location: ../Admin/Admin_Inicio/index.php");
                 } elseif ($user['role'] == 2) {
-                                  header("Location: ../Cajero/Inicio/Inicio.html");
-
+                    header("Location: ../Cajero/Inicio/Inicio.html");
                 } else {
-                                  header("Location: ../CoffeeShop/inicio/index.php");
-
+                    // Usuario normal / cliente
+                    header("Location: ../coffeeShop/inicio/index.php");
                 }
-                
-                // Redirigimos al usuario a una página de bienvenida o al panel principal
-                exit(); // Es importante terminar el script después de una redirección
 
+                exit(); // Detener ejecución después de redirigir
             } else {
-                // La contraseña es incorrecta
-                echo "<div class='mensaje-error'>Contraseña incorrecta o email incorrecto.</div>";
+                // Contraseña incorrecta
+                $error_message = "Contraseña incorrecta o email incorrecto.";
             }
         } else {
-            // El usuario no fue encontrado en la base de datos
-            echo "<div class='mensaje-error'>Contraseña incorrecta o email incorrecto.</div>";
+            // Usuario no encontrado
+            $error_message = "Contraseña incorrecta o email incorrecto.";
         }
 
-        // Cerrar la sentencia preparada
         $stmt->close();
     }
-    
-    // Cerrar la conexión
+
     $conn->close();
 }
 ?>
@@ -90,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <title>Coffee & Frappé - Iniciar Sesión</title>
   <link rel="stylesheet" href="login.css">
   <style>
-    /* Estilo para los mensajes de error */
     .mensaje-error {
       background-color: #ffdddd;
       border: 1px solid #f44336;
@@ -99,6 +112,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       margin-bottom: 20px;
       text-align: center;
       border-radius: 5px;
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -121,7 +136,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       <div class="form-container" id="formContainer">
         <h2 id="formTitle">☕ Iniciar Sesión</h2>
-        
+
+        <?php if (!empty($error_message)): ?>
+          <div class="mensaje-error"><?php echo $error_message; ?></div>
+        <?php endif; ?>
+
         <form id="loginForm" method="POST" action="login.php">
           <input type="email" name="email" placeholder="Email" required>
           <input type="password" name="password" placeholder="Contraseña" required>
@@ -132,11 +151,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
-  <a href="../Usuario/index.php" target="_blank" class="logo-fijo">
+
+  <a href="../coffeeShop/inicio/index.php" class="logo-fijo">
     <img src="../images/logo.png" alt="Logo Blackwood Coffee">
   </a>
 </body>
 </html>
-
-
-
