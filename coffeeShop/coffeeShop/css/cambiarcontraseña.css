@@ -1,0 +1,206 @@
+:root{
+  --coffee:#5b3527;
+  --beige:#DCC0B9;
+  --ink:#202327;
+  --ink-soft:#5e4c45;
+  --panel:#ffffff;
+  --card:#ead4ca;
+  --input:#f7eadf;
+  --border:#c9b2a8;
+  --radius:14px;
+  --shadow:0 18px 40px rgba(43,25,18,.08);
+  --ring:0 0 0 3px rgba(91,53,39,.20);
+}
+
+*{box-sizing:border-box}
+body{margin:0; background:var(--beige); color:var(--ink); font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+
+/* Layout base */
+.shell{max-width:1180px; margin:28px auto; padding:0 18px}
+.app{display:grid; grid-template-columns:260px 1fr; border:1px solid var(--coffee); border-radius:var(--radius); overflow:hidden; background:#fff; box-shadow:var(--shadow)}
+
+/* Sidebar */
+.sidebar{position:relative; background:var(--beige); padding:18px 14px 80px; border-right:1px solid var(--coffee)}
+.sidebar::after{content:""; position:absolute; right:0; top:0; width:1px; height:100%; background:var(--coffee); opacity:.9}
+.brand{display:flex; justify-content:center; align-items:center; padding:8px 4px 10px}
+.avatar{width:110px; height:110px; border-radius:50%; object-fit:cover; border:3px solid var(--input); outline:2px solid var(--coffee); box-shadow:0 10px 18px rgba(0,0,0,.08)}
+.nav{margin-top:18px; display:flex; flex-direction:column; gap:8px}
+.nav a{display:flex; align-items:center; gap:10px; padding:14px 12px; text-decoration:none; color:var(--coffee); border:1px solid transparent; border-radius:12px; transition:.15s ease}
+.nav a:hover{background:var(--input); border-color:var(--border)}
+.nav a.active{background:var(--input); border-color:var(--coffee); font-weight:600}
+.sidebar-bottom{position:absolute; left:0; right:0; bottom:8px; display:flex; justify-content:center}
+.sidebar-logo{width:210px; opacity:.9}
+
+/* Main */
+.main{background:var(--beige); padding:26px 28px}
+.panel{background:var(--beige); border:1px solid var(--coffee); border-radius:var(--radius); box-shadow:var(--shadow)}
+.panel .inner{padding:22px 24px}
+h1{margin:0 0 18px; font-size:28px; color:var(--coffee)}
+
+/* Card contenedora */
+.card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+.card .body{padding:18px}
+
+/* Grid formulario */
+.grid{display:grid; gap:16px; grid-template-columns:repeat(12,1fr)}
+.col-12{grid-column:span 12}
+
+/* Campos */
+label{display:block; font-weight:600; margin-bottom:8px; color:#3e2c24}
+.field{position:relative}
+input[type="password"]{
+  width:100%; background:var(--input); border:1px solid var(--border); border-radius:12px;
+  padding:12px 40px 12px 14px; color:var(--ink); outline:none; transition:.15s ease
+}
+input[type="password"]:focus{border-color:var(--coffee); box-shadow:var(--ring)}
+.eye{
+  position:absolute; right:12px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; border-radius:50%; background:#fff; border:1px solid var(--border);
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
+}
+
+/* Strength bar (estático) */
+.strength{margin-top:10px}
+.strength .bar{
+  height:8px; border-radius:999px; background:#e9d7cf; position:relative; overflow:hidden; border:1px solid #d7c2b9
+}
+.strength .bar-weak::after{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:25%; background:#c56a57;
+}
+.strength .label{display:inline-block; margin-top:6px; font-size:12px; color:#7a5a4e}
+
+/* Reglas */
+.rules{background:#fff; border:1px dashed #d6c2b8; border-radius:12px; padding:12px 14px; color:#3e2c24}
+.rules p{margin:0 0 6px}
+.rules ul{margin:0; padding-left:16px}
+.rules .hint{margin:10px 0 0; font-size:12px; color:#7a5a4e}
+
+/* Acciones */
+.actions{display:flex; gap:10px; margin-top:6px}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:11px 18px; border-radius:12px; border:1px solid var(--border); cursor:pointer; font-weight:600;
+  background:#fff; color:var(--coffee); text-decoration:none; transition:.15s ease;
+}
+.btn:hover{transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.12); border-color:var(--coffee); background:var(--input)}
+.btn.secondary{background:#fff}
+
+/* Responsive */
+@media (max-width:960px){
+  .app{grid-template-columns:1fr}
+  .sidebar{border-right:none; border-bottom:1px solid var(--coffee)}
+}
+
+/* agrega al final de tu CSS */
+.strength .bar-weak::after{ display:none !important; }
+
+
+/* Antes solo tenías input[type="password"] */
+.field input[type="password"],
+.field input[type="text"]{
+  width:100%;
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 40px 12px 14px; /* deja espacio al ojo */
+  color:var(--ink);
+  outline:none;
+  transition:.15s ease;
+}
+
+/* Focus para ambos tipos */
+.field input[type="password"]:focus,
+.field input[type="text"]:focus{
+  border-color:var(--coffee);
+  box-shadow:var(--ring);
+}
+/* === ICONOS DE LA SIDEBAR / MENÚ === */
+.nav svg {
+  width: 16px;
+  height: 16px;
+  color: var(--coffee);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espacio entre ícono y texto */
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--coffee);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.nav a:hover svg {
+  transform: scale(1.1);
+}
+
+.nav a.active svg {
+  color: #3b241b; /* tono más oscuro al estar activo */
+}
+
+/* === BOTONES DEL SIDEBAR (Perfil, Editar perfil, etc.) === */
+.nav {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* más espacio entre botones */
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--coffee);
+  background-color: transparent;
+  padding: 25px 14px; /* controla la altura total */
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-size: 15px;
+  line-height: 1.5;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+/* Hover con mismo estilo que tus botones grandes */
+.nav a:hover {
+  background: var(--input);
+  border-color: var(--coffee);
+  transform: translateX(3px);
+  box-shadow: 0 8px 22px rgba(91, 53, 39, 0.15);
+}
+
+/* Activo: mismo beige claro y borde café */
+.nav a.active {
+  background: var(--input) !important;
+  border-color: var(--coffee) !important;
+  color: var(--coffee) !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(91, 53, 39, 0.15);
+}
+
+/* Íconos más pequeños y alineados */
+.nav svg {
+  width: 18px;
+  height: 18px;
+  color: var(--coffee);
+  flex-shrink: 0;
+  transition: transform .15s ease, color .15s ease;
+}
+
+/* Ícono crece un poco en hover */
+.nav a:hover svg {
+  transform: scale(1.1);
+}
+
+/* Ajuste general */
+.nav a:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
