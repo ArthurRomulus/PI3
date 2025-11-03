@@ -9,16 +9,26 @@ if (empty($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     exit;
 }
 
-// datos sesión (estos deben venir de tu tabla usuarios)
-$userid    = $_SESSION['userid']         ?? null;
-$nombre    = $_SESSION['username']       ?? 'Usuario';
-$email     = $_SESSION['email']          ?? '';
-$avatar    = $_SESSION['profilescreen']  ?? null;
+// datos de sesión
+$userid    = $_SESSION['userid']        ?? null;
+$nombre    = $_SESSION['username']      ?? 'Usuario';
+$email     = $_SESSION['email']         ?? '';
+$avatar    = $_SESSION['profilescreen'] ?? ''; // ej "../images/profiles/avatar_user_16.jpg"
 
-$apellido  = $_SESSION['apellido']       ?? '';
-$telefono  = $_SESSION['telefono']       ?? '';
-$fechaNac  = $_SESSION['fecha_nac']      ?? '';
+$apellido  = $_SESSION['apellido']      ?? '';
+$telefono  = $_SESSION['telefono']      ?? '';
+$fechaNac  = $_SESSION['fecha_nac']     ?? '';
 $zonaHorariaActual = $_SESSION['zona_horaria'] ?? '(UTC -06:00) Guadalajara, CDMX';
+
+// función fallback si no hay avatar todavía
+function getAvatarSrc($avatar, $nombre) {
+    if (!empty($avatar)) {
+        return htmlspecialchars($avatar);
+    }
+    // avatar genérico con iniciales
+    return "https://ui-avatars.com/api/?name=" . urlencode($nombre) .
+           "&background=DCC0B9&color=531607";
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -31,31 +41,52 @@ $zonaHorariaActual = $_SESSION['zona_horaria'] ?? '(UTC -06:00) Guadalajara, CDM
   <body>
     <div class="shell">
       <div class="app">
+
         <!-- Sidebar -->
         <aside class="sidebar">
           <!-- FOTO + CÁMARA -->
           <div class="brand">
-            <?php if (!empty($avatar)): ?>
-              <img
-                class="avatar"
-                src="<?php echo htmlspecialchars($avatar); ?>"
-                alt="Avatar de <?php echo htmlspecialchars($nombre); ?>"
-              />
-            <?php else: ?>
-              <img
-                class="avatar"
-                src="https://ui-avatars.com/api/?name=<?php echo urlencode($nombre); ?>&background=DCC0B9&color=531607"
-                alt="Avatar genérico"
-              />
-            <?php endif; ?>
+  <div class="avatar-wrapper">
+    <img
+      class="avatar"
+      src="<?php echo getAvatarSrc($avatar, $nombre); ?>"
+      alt="Avatar de <?php echo htmlspecialchars($nombre); ?>"
+    />
 
-            <!-- Input oculto para subir imagen -->
-            <input type="file" id="upload-photo" accept="image/*" hidden
-                   onchange="document.getElementById('nueva_foto').files = this.files;" />
+    <!-- Botón cámara arriba a la derecha -->
+    <label
+      for="nueva_foto"
+      class="cam-badge"
+      aria-label="Cambiar foto"
+      title="Cambiar foto"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </label>
+  </div>
+
+  <!-- Input oculto -->
+  <input
+    type="file"
+    id="nueva_foto"
+    name="nueva_foto"
+    accept="image/*"
+    form="form-perfil"
+    hidden
+  />
 
             <!-- Botón cámara -->
             <label
-              for="upload-photo"
+              for="nueva_foto"
               class="cam-badge"
               aria-label="Cambiar foto"
               title="Cambiar foto"
@@ -122,6 +153,7 @@ $zonaHorariaActual = $_SESSION['zona_horaria'] ?? '(UTC -06:00) Guadalajara, CDM
         <main class="main">
           <h1>Información del Usuario</h1>
           <div class="card">
+
             <div class="section">
               <p class="muted">
                 Actualiza tu información básica de cuenta / Edita tu perfil
@@ -129,110 +161,111 @@ $zonaHorariaActual = $_SESSION['zona_horaria'] ?? '(UTC -06:00) Guadalajara, CDM
             </div>
 
             <div class="section">
-              <!-- AHORA YA VA A GUARDAR -->
-              <form class="grid"
-                    action="guardar_perfil.php"
-                    method="post"
-                    enctype="multipart/form-data">
+              <!-- FORMULARIO -->
+              <form
+                id="form-perfil"
+                class="grid"
+                action="guardar_perfil.php"
+                method="post"
+                enctype="multipart/form-data"
+              >
 
                 <!-- ID oculto -->
                 <input type="hidden" name="userid"
-                       value="<?php echo htmlspecialchars($userid); ?>">
+                  value="<?php echo htmlspecialchars($userid); ?>">
 
-               <div class="col-12">
-  <label for="email">(Email)</label>
-  <div class="field">
-    <input
-      id="email"
-      name="email"
-      type="email"
-      value="<?php echo htmlspecialchars($email); ?>"
-      placeholder="tu@email.com"
-      required
-    />
-  </div>
-</div>
+                <div class="col-12">
+                  <label for="email">(Email)</label>
+                  <div class="field">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value="<?php echo htmlspecialchars($email); ?>"
+                      placeholder="tu@email.com"
+                      required
+                    />
+                  </div>
+                </div>
 
-<div class="col-6">
-  <label for="fname">Nombre</label>
-  <input
-    id="fname"
-    name="nombre"
-    type="text"
-    value="<?php echo htmlspecialchars($nombre); ?>"
-    placeholder="—"
-    required
-  />
-</div>
+                <div class="col-6">
+                  <label for="fname">Nombre</label>
+                  <input
+                    id="fname"
+                    name="nombre"
+                    type="text"
+                    value="<?php echo htmlspecialchars($nombre); ?>"
+                    required
+                  />
+                </div>
 
-<div class="col-6">
-  <label for="sname">Apellido</label>
-  <input
-    id="sname"
-    name="apellido"
-    type="text"
-    value="<?php echo htmlspecialchars($apellido); ?>"
-    placeholder="—"
-  />
-</div>
+                <div class="col-6">
+                  <label for="sname">Apellido</label>
+                  <input
+                    id="sname"
+                    name="apellido"
+                    type="text"
+                    value="<?php echo htmlspecialchars($apellido); ?>"
+                  />
+                </div>
 
-<div class="col-6">
-  <label for="lname">Número</label>
-  <input
-    id="lname"
-    name="telefono"
-    type="text"
-    value="<?php echo htmlspecialchars($telefono); ?>"
-    placeholder="—"
-  />
-</div>
+                <div class="col-6">
+                  <label for="lname">Número</label>
+                  <input
+                    id="lname"
+                    name="telefono"
+                    type="text"
+                    value="<?php echo htmlspecialchars($telefono); ?>"
+                  />
+                </div>
 
-<div class="col-6">
-  <label for="dob">Fecha de nacimiento</label>
-  <input
-    id="dob"
-    name="fecha_nac"
-    type="date"
-    value="<?php echo htmlspecialchars($fechaNac); ?>"
-  />
-</div>
+                <div class="col-6">
+                  <label for="dob">Fecha de nacimiento</label>
+                  <input
+                    id="dob"
+                    name="fecha_nac"
+                    type="date"
+                    value="<?php echo htmlspecialchars($fechaNac); ?>"
+                  />
+                </div>
 
-<div class="col-12">
-  <label for="tz">Zona horaria</label>
-  <div class="select-wrap">
-    <select id="tz" name="zona_horaria">
-      <option <?php echo ($zonaHorariaActual === '(UTC -06:00) Guadalajara, CDMX') ? 'selected' : ''; ?>>
-        (UTC -06:00) Guadalajara, CDMX
-      </option>
-      <option <?php echo ($zonaHorariaActual === '(UTC -06:00) Manzanillo, Colima') ? 'selected' : ''; ?>>
-        (UTC -06:00) Manzanillo, Colima
-      </option>
-      <option <?php echo ($zonaHorariaActual === '(UTC +05:30) India Standard Time') ? 'selected' : ''; ?>>
-        (UTC +05:30) India Standard Time
-      </option>
-      <option <?php echo ($zonaHorariaActual === '(UTC +09:00) Tokyo') ? 'selected' : ''; ?>>
-        (UTC +09:00) Tokyo
-      </option>
-    </select>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <path d="M6 9l6 6 6-6" />
-    </svg>
-  </div>
-  <p class="tz-hint">
-    Selecciona tu zona horaria para mostrar correctamente horas y fechas.
-  </p>
-</div>
+                <div class="col-12">
+                  <label for="tz">Zona horaria</label>
+                  <div class="select-wrap">
+                    <select id="tz" name="zona_horaria">
+                      <option <?php echo ($zonaHorariaActual === '(UTC -06:00) Guadalajara, CDMX') ? 'selected' : ''; ?>>
+                        (UTC -06:00) Guadalajara, CDMX
+                      </option>
+                      <option <?php echo ($zonaHorariaActual === '(UTC -06:00) Manzanillo, Colima') ? 'selected' : ''; ?>>
+                        (UTC -06:00) Manzanillo, Colima
+                      </option>
+                      <option <?php echo ($zonaHorariaActual === '(UTC +05:30) India Standard Time') ? 'selected' : ''; ?>>
+                        (UTC +05:30) India Standard Time
+                      </option>
+                      <option <?php echo ($zonaHorariaActual === '(UTC +09:00) Tokyo') ? 'selected' : ''; ?>>
+                        (UTC +09:00) Tokyo
+                      </option>
+                    </select>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </div>
+                  <p class="tz-hint">
+                    Selecciona tu zona horaria para mostrar correctamente horas y fechas.
+                  </p>
+                </div>
 
-<div class="col-12 actions">
-  <button type="submit" class="btn">Guardar</button>
-  <button type="button" class="btn secondary" onclick="window.location='perfil_usuario.php'">Cancelar</button>
-</div>
+                <div class="col-12 actions">
+                  <button type="submit" class="btn">Guardar</button>
+                  <button type="button" class="btn secondary" onclick="window.location='perfil_usuario.php'">Cancelar</button>
+                </div>
 
               </form>
             </div>
           </div>
         </main>
+
       </div>
     </div>
   </body>
