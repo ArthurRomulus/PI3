@@ -52,14 +52,27 @@ $conn->close();
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Perfil de Admin</title>
 <link rel="stylesheet" href="../Admin_nav_bar.css">
+
 <link rel="stylesheet" href="Admin_perfil.css">
+<link rel="stylesheet" href="../general.css">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="../../theme-toggle.js" defer></script>
 </head>
 <body>
 <?php include '../Admin_nav_bar.php'; ?>
 
 <div class="content">
-    <h1>Coffee Shop</h1>
+    <div class="profile-theme-switch-container">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
+        </div>
+    <h1>Blackwood Coffee</h1>
 
     <div class="welcome-text">
         <h2>Bienvenido de nuevo, <?= htmlspecialchars($display_name); ?></h2>

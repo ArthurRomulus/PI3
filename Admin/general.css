@@ -62,17 +62,47 @@
   }
 
   .content {
-    min-height: 88vh;
-    font-family: Arial, sans-serif;
-    background: #bfbfbf;
-    margin: 20px;
-    border-radius: 30px;
+    margin-left: 220px;
     padding: 20px;
     flex: 1;
-    min-width: 280px;
-      margin-left: 220px; /* como ya tenías */
+    position: relative;
+    z-index: 1;
+    background-color: #C0C0C0;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 635px;
+    height: max-content;
+    margin-top: 15px;
+    scrollbar-width: auto;
+    scrollbar-color: #8c8f96 #D7D7D7;
+}
 
-  }
+.content::-webkit-scrollbar {
+  width: 16px; /* Ancho total de la pista */
+}
+
+/* La PISTA (el fondo de la barra) */
+.content::-webkit-scrollbar-track {
+  /* ESTA ES LA CLAVE: 
+     Le damos un color de fondo (el gris claro de tu sidebar) */
+  background-color: #D7D7D7;
+  border-radius: 50px;
+}
+
+/* La BARRA MÓVIL (la que se arrastra) */
+.content::-webkit-scrollbar-thumb {
+  background-color: #8c8f96; /* Color de la barra */
+  border-radius: 20px;       /* Redondeada */
+  border: 5px solid #D7D7D7; 
+  background-clip: content-box; /* El fondo solo se pinta adentro del borde */
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  border-color: #c1c1c1; /* Opcional: aclara la pista al pasar el mouse */
+}
 
   h1 {
     position: absolute;
@@ -85,3 +115,564 @@
   h3, h4 {
     color: #333;
   }
+
+/* --- Estilos para el Interruptor de Tema --- */
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; 
+    height: 28px; 
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 28px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; 
+    width: 20px;  
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #FFD700; 
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px); 
+}
+
+  /* --- ESTILOS DEL MODO OSCURO --- */
+body.dark-mode {
+    background-color: #1a1a1a;
+}
+
+/* Contenido general */
+body.dark-mode .content {
+    background-color: #252525;
+}
+
+body.dark-mode h1,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode .admin-name {
+    color: #f0f0f0;
+}
+
+body.dark-mode .admin-profile {
+    background: #333;
+}
+
+body.dark-mode .theme-switch-wrapper {
+    color: #f0f0f0; /* Texto "Modo Oscuro" en modo oscuro */
+}
+
+/* Estilos de Comentarios */
+body.dark-mode .Comentarios {
+    background-color: #1e1e1e;
+    box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
+}
+
+body.dark-mode .comentario {
+    background: #333333;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .comentario:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .usernameco {
+    color: #f5f5f5;
+}
+
+body.dark-mode .descriptioncoment {
+    color: #dcdcdc;
+}
+
+body.dark-mode .fecha {
+    color: #999;
+}
+
+body.dark-mode .profileimgco {
+    border-color: #555;
+}
+
+body.dark-mode .estrella.vacia {
+    color: #555;
+}
+
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1C1B1F; 
+    /* ¡Ya no tiene position: absolute! */
+}
+
+/* --- Estilos Modo Oscuro para Productos --- */
+
+/* Barra de búsqueda */
+body.dark-mode input[type="search"] {
+    background-color: #444;
+    border-color: #555;
+    color: #eee;
+}
+
+body.dark-mode input[type="search"]::placeholder {
+    color: #999;
+}
+
+/* Botones de Categorías */
+body.dark-mode .button-group button {
+    background-color: #444;
+    color: #eee;
+    border: 1px solid #555;
+}
+
+body.dark-mode .button-group button.selected {
+    background-color: #FFD700;
+    color: #111;
+    border-color: #FFD700;
+}
+
+/* Botón "Añadir producto" */
+body.dark-mode .add-product-btn {
+    background-color: #FFD700;
+    color: #111;
+    box-shadow: none;
+}
+
+body.dark-mode .add-product-btn:hover {
+    background-color: #ffeb3b;
+}
+
+/* Tarjetas de Producto */
+body.dark-mode .product-card {
+    background: #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border: 1px solid #444;
+}
+
+body.dark-mode .product-card h4,
+body.dark-mode .product-card p {
+    color: #f0f0f0;
+}
+
+body.dark-mode .product-card .price {
+    color: #FFD700; /* Color de acento para el precio */
+}
+
+/* Los botones de Editar/Eliminar en la tarjeta ya tienen colores
+   fuertes (azul/rojo) que se ven bien sobre fondo oscuro,
+   así que solo añadimos un hover si lo deseamos. */
+body.dark-mode .product-card .actions .edit:hover,
+body.dark-mode .product-card .actions .delete:hover {
+     opacity: 0.85;
+}
+
+/* --- Fin Estilos Modo Oscuro Productos --- */
+
+body.dark-mode .logoutButton {
+    background-color: #555; /* Un gris más oscuro para el fondo */
+    color: #eee;           /* Texto más claro */
+    border: 1px solid #666; /* Un borde sutil si lo deseas */
+}
+
+body.dark-mode .logoutButton:hover {
+    background-color: #666; /* Un gris un poco más claro al pasar el mouse */
+}
+
+/* --- Estilos Modo Oscuro para Botón Añadir Promoción (Acento) --- */
+
+body.dark-mode .btn-add-promo {
+    background-color: #555; /* Un gris oscuro */
+    color: #eee;           /* Texto claro */
+    box-shadow: none;
+    border: 1px solid #666;
+}
+
+body.dark-mode .btn-add-promo:hover {
+    background-color: #666;
+}
+
+/* --- Estilos Modo Oscuro para Tarjetas de Promociones --- */
+
+body.dark-mode .promo-card {
+    background-color: #333;
+    border: 1px solid #444;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .promo-name,
+body.dark-mode .promo-price,
+body.dark-mode .promo-validity {
+    color: #f0f0f0;
+}
+
+/* Mantenemos los colores de estado, pero puedes ajustarlos */
+body.dark-mode .promo-status.active { 
+    color: #4CAF50; /* Verde */
+}
+body.dark-mode .promo-status.expiring { 
+    color: #FFA500; /* Naranja */
+}
+body.dark-mode .promo-status.expired { 
+    color: #999;    /* Gris */
+}
+
+/* Iconos de acciones (editar/eliminar) */
+body.dark-mode .promo-actions i {
+    color: #f0f0f0;
+    background-color: #444;
+}
+
+body.dark-mode .promo-actions i:hover {
+    background-color: #555;
+}
+
+/* --- Estilos Modo Oscuro para Estadísticas --- */
+
+/* Filtros */
+body.dark-mode .filtros-modern label {
+    color: #f0f0f0;
+}
+
+body.dark-mode .filtros-modern select {
+    background: #444;
+    color: #eee;
+    box-shadow: none;
+}
+
+body.dark-mode .filtros-modern select:hover {
+    background: #555;
+}
+
+/* Contenedor de la gráfica */
+body.dark-mode .contenedor-grafico {
+    background: #2a2a2a;
+}
+
+body.dark-mode .titulo-grafica {
+    color: #f0f0f0;
+}
+
+/* Fondo de la gráfica */
+body.dark-mode .grafica-barras {
+    background: linear-gradient(180deg, #3a3a3a, #2c2c2c);
+}
+
+/* Etiquetas de la gráfica */
+body.dark-mode .barra .nombre {
+    color: #ccc;
+}
+
+/* Valor (número) sobre la barra */
+body.dark-mode .barra-fill .valor {
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Sombra para legibilidad */
+}
+
+/* --- Estilos Modo Oscuro para Personal/Usuarios --- */
+
+/* Filtro de roles */
+body.dark-mode label[for="roleFilter"] {
+    color: #f0f0f0;
+}
+
+body.dark-mode #roleFilter {
+    background: #444;
+    color: #eee;
+    border-color: #555;
+}
+
+/* Botón "Añadir Usuario" */
+body.dark-mode .add_user_button {
+    background: linear-gradient(135deg, #555, #777);
+    color: #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .add_user_button:hover {
+    background: linear-gradient(135deg, #666, #888);
+}
+
+/* Tarjetas de empleado */
+body.dark-mode .empleado {
+    background-color: #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .empleado .info strong,
+body.dark-mode .empleado .info span,
+body.dark-mode .empleado .info .rol {
+    color: #f0f0f0;
+}
+
+body.dark-mode .modify_button,
+body.dark-mode .remove_user_button {
+    background-color: #555;
+    color: #eee;
+}
+
+body.dark-mode .modify_button:hover,
+body.dark-mode .remove_user_button:hover {
+    background-color: #666;
+}
+
+/* Modales (Pop-ups) */
+body.dark-mode .modal-content {
+  background: #3a3a3a;
+  color: #f0f0f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode .modal-content h2 {
+  color: #fff;
+}
+
+body.dark-mode .modal-content .close-btn {
+  color: #ccc;
+}
+
+body.dark-mode .modal-content label {
+  color: #f0f0f0;
+}
+
+body.dark-mode .modal-content input[type="text"],
+body.dark-mode .modal-content input[type="email"],
+body.dark-mode .modal-content input[type="password"],
+body.dark-mode .modal-content select {
+  background-color: #555;
+  color: #eee;
+  border-color: #666;
+}
+
+body.dark-mode .modal-content .btn-save {
+  background: #555;
+  color: #eee;
+}
+body.dark-mode .modal-content .btn-save:hover {
+  background: #666;
+}
+
+/* Contenedor principal .layout */
+body.dark-mode .layout {
+    background-color: #202020; /* Un gris oscuro, diferente al del body */
+}
+
+/* ============================================================
+==> INICIO: ESTILOS MODO OSCURO para BARRA LATERAL (NAV-BAR)
+============================================================
+*/
+
+/* --- Fondo de la barra --- */
+body.dark-mode .sidebar {
+    background-color: #2C2C2C;  /* Un gris oscuro para el fondo */
+    color: #f0f0f0;            /* Texto general claro */
+}
+
+/* --- Ítems de navegación --- */
+body.dark-mode .nav-item {
+    color: #f0f0f0;  /* Texto de los ítems (Inicio, Productos, etc.) */
+}
+
+/* --- Hover (al pasar el mouse) --- */
+body.dark-mode .nav-item:hover {
+    background-color: #444; /* Un gris un poco más claro para el hover */
+}
+
+/* --- Ítem activo (la página actual) --- */
+body.dark-mode .nav-item.active {
+    background-color: #555; /* Un color distintivo para el ítem activo */
+}
+
+/* ============================================================
+==> INICIO: ESTILOS MODO OSCURO para PERFIL DE ADMIN
+============================================================
+*/
+
+/* Fondo del contenido de la página de perfil */
+body.dark-mode .content {
+    background-color: #2a2a2a; /* Fondo oscuro para el .content */
+    scrollbar-color: #555 #333; /* Scrollbar oscuro */
+}
+
+body.dark-mode .content::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+body.dark-mode .content::-webkit-scrollbar-track {
+  background-color: #333;
+}
+
+/* Cabecera del perfil */
+body.dark-mode .profile-header {
+    background: #333; /* Fondo de la tarjeta de perfil */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* Info (Nombre y Rol) */
+body.dark-mode .profile-info h1,
+body.dark-mode .profile-info p {
+    color: #f0f0f0;
+}
+
+/* Detalles (Email, Teléfono, etc.) */
+body.dark-mode .profile-details {
+    background: #2C2C2C; /* Fondo para la sección de detalles */
+}
+
+body.dark-mode .detail-item strong,
+body.dark-mode .detail-item span {
+    color: #ddd;
+}
+
+/* Botón de editar */
+body.dark-mode .profile-actions .edit-btn {
+    background: #555;
+    color: #eee;
+}
+
+body.dark-mode .profile-actions .edit-btn:hover {
+    background: #666;
+}
+
+/*
+ === Modal de Editar Perfil ===
+*/
+
+/* Estos estilos ya deberían estar cubiertos por 
+   las reglas de ".modal-content" de Personal, 
+   pero los añadimos por si acaso.
+*/
+
+body.dark-mode #editModal .modal-content {
+    background: #3a3a3a;
+    color: #f0f0f0;
+}
+
+body.dark-mode #editModal .modal-content h2 {
+    color: #fff;
+}
+
+body.dark-mode #editModal .modal-content .close {
+    color: #ccc;
+}
+
+body.dark-mode #editModal .modal-content label {
+    color: #f0f0f0;
+}
+
+body.dark-mode #editModal .modal-content input[type="text"],
+body.dark-mode #editModal .modal-content input[type="email"],
+body.dark-mode #editModal .modal-content input[type="file"] {
+    background-color: #555;
+    color: #eee;
+    border-color: #666;
+}
+
+body.dark-mode #editModal .modal-content button {
+    background: #555;
+    color: #eee;
+}
+body.dark-mode #editModal .modal-content button:hover {
+    background: #666;
+}
+
+/* Detalles (Email, Teléfono, etc.) */
+body.dark-mode .content .profile-details {
+    background: #2C2C2C !important; /* Fondo para la sección de detalles */
+}
+
+body.dark-mode .content .detail-item strong,
+body.dark-mode .content .detail-item span {
+    color: #ddd !important;
+}
+
+/* Botón de editar */
+body.dark-mode .content .profile-actions .edit-btn {
+    background: #555 !important;
+    color: #eee !important;
+}
+
+body.dark-mode .profile-container .profile-info h1,
+body.dark-mode .profile-container .profile-info p {
+    color: #f0f0f0 !important;
+}
+
+/* Foto de perfil (borde) */
+body.dark-mode .profile-picture {
+    border-color: #444 !important; /* Cambia el borde blanco a un gris oscuro */
+}
+
+/* --- Estilos para Modo Oscuro: Contenedores de la tarjeta de perfil (los '2 cuadros') --- */
+
+/* Estilos para el contenedor de la imagen de perfil (cuadro 1) */
+body.dark-mode .profile-picture {
+  background-color: #2c2c2c; /* Fondo más oscuro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra para resaltar */
+}
+
+/* Estilos para el contenedor principal de información (cuadro 2) */
+body.dark-mode .profile-info {
+  background-color: #3a3a3a; /* Fondo más oscuro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* También es importante asegurar que el texto sea claro en esos contenedores */
+body.dark-mode .profile-info h3,
+body.dark-mode .profile-info p {
+  color: #f0f0f0; /* Color de texto claro */
+}
+
+/* Si el contenedor principal del 'content' tiene un estilo de modo oscuro,
+  como el que ya tienes para .content .profile-details, también puedes 
+  revisar si el .content mismo requiere un ajuste:
+*/
+body.dark-mode .content {
+    background-color: #1a1a1a; /* Fondo principal del área de contenido oscuro */
+    scrollbar-color: #555 #1a1a1a; /* Ajuste para la barra de desplazamiento en modo oscuro */
+}
+
+/* Ajuste de color para los títulos dentro de .content si los hay */
+/* Ajuste de color para los títulos dentro de .content si los hay */
+body.dark-mode .content h2, /* <-- ¡Añade esta línea! */
+body.dark-mode .content h3,
+body.dark-mode .content h4 {
+    color: #FFFFFF; /* Esto lo pintará de blanco */
+}
+
+/* --- Estilos para Modo Oscuro: Botón 'Editar Información' --- */
+
+/* Selecciona el botón por su ID si se llama 'openEditModal' */
+body.dark-mode #openEditModal {
+  background-color: #555; /* Un gris oscuro para el botón en modo oscuro */
+  color: #eee;           /* Texto claro */
+  border: 1px solid #777; /* Borde suave */
+}
+
+body.dark-mode #openEditModal:hover {
+  background-color: #666; /* Un gris un poco más claro al pasar el ratón */
+  color: #fff;
+}

@@ -6,23 +6,34 @@
   <title>Panel de Control</title>
   <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link rel="stylesheet" href="../general.css">
+  <script src="../../theme-toggle.js" defer></script>
   <style>
+    /* Estilos para el .content (Panel de Control)
+       Apila todo verticalmente y quita la altura fija.
+    */
 
-    .content {
-        font-family: Arial, sans-serif;
-        background: #bfbfbf;
-        margin: 20px;
-        height: 88vh;
-        border-radius: 30px;
-        padding: 20px;
-        flex: 1; /* se adapta dentro del layout */
-        min-width: 280px;
-        display: flex;
-              margin-left: 220px; /* como ya tenías */
-
-        align-items: center;
+    /* Estilos para el texto "Bienvenido"
+       (Sin 'position: absolute')
+    */
+    .text {
+      font-size: 40px;
+      line-height: 1.5;
+      color: white; 
+      margin-top: 30px; /* Le da espacio DEBAJO de la barra de perfil */
     }
 
+    /* Estilos para el logo (SIN 'position: absolute')
+       Ahora es un elemento normal
+    */
+    .img-logo {
+        width: 80%; /* Ancho relativo al contenedor .content */
+        max-width: 500px; /* Un tamaño máximo */
+        height: auto;     /* Mantiene la proporción */
+        opacity: 0.2;     
+        margin-top: 40px; /* Espacio DEBAJO del texto "Bienvenido" */
+    }
+
+    /* Esto es del "arrow" que tenías, lo dejamos */
     .arrow {
       width: 0;
       height: 0;
@@ -32,74 +43,13 @@
       margin-right: 20px;
     }
 
-    .text {
-      font-size: 40px;
-      line-height: 1.5;
-      color: white;
-    }
-
-    .admin2-profile {
-      display: flex;
-      gap: 20px;
-      background: #D7D7D7;
-      padding: 20px 25px;
-      border-radius: 40px;
-      flex-wrap: wrap;
-      flex-direction: row;
-    }
-
-    .admin2-textadmin {
-      font-size: 30px;
-      font-weight: 600;
-      color: #1C1B1F;
-    }
-
-    .admin2-name {
-      font-size: 22px;
-      margin-top: 50px;
-      font-weight: 600;
-      color: #1C1B1F;
-
-    }
-
-    .admin2-profile img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #8c8f96;
-    }
-
-.top2-bar {
-  position: absolute;
-  top: 20px;
-  left: 50%;              /* la llevamos al centro */
-  transform: translateX(-50%); /* ajusta al centro exacto */
-  display: flex;
-  align-items: center;
-  z-index: 10;
-}
-
-.img-logo {
-    width: 100vw;
-    height: auto;
-    max-width: 100vh;
-    opacity: 0.5;
-}
-
   </style>
 </head>
 <body>
   <?php include "../Admin_nav_bar.php"; ?>
 
-
   <div class="content">
-
-
-    <div class="top2-bar">
-         <?php include "../AdminProfileSesion.php"; ?>
-    </div>
-
+    <?php include "../AdminProfileSesion.php"; ?>
     <div class="arrow"></div>
     <div class="text">
       <p>¡Se le da la bienvenida al panel de control!</p>

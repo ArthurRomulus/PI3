@@ -10,6 +10,8 @@ include "../../conexion.php";
   <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link rel="stylesheet" href="Admin_productos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../general.css">
+  <script src="../../theme-toggle.js" defer></script>
 </head>
 <body>
 <?php include '../Admin_nav_bar.php'; ?>
@@ -19,7 +21,7 @@ include "../../conexion.php";
     <?php include "../AdminProfileSesion.php"; ?>
   </div>
 
-  <h1>Coffee Shop</h1>
+  <h1>Blackwood Coffee</h1>
   <h3>Categorías</h3>
   <form method="GET" action="index.php">
       <input type="search" name="buscar" placeholder="Buscar..." 

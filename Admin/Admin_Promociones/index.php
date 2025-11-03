@@ -11,6 +11,8 @@ include "../../conexion.php";
     <link rel="stylesheet" href="../Admin_nav_bar.css">
     <link rel="stylesheet" href="Admin_promociones.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../general.css">
+<script src="../../theme-toggle.js" defer></script>
 </head>
 <body>
     <?php include '../Admin_nav_bar.php'; ?>
@@ -21,18 +23,17 @@ include "../../conexion.php";
             <?php include "../AdminProfileSesion.php"; ?>
         </div>
 
-        <h1>Coffee Shop</h1>
+        <h1>Blackwood Coffee</h1>
 
         <!-- Botón Agregar Promoción -->
+        <!-- Título del listado -->
+        <h3>Promociones</h3>
+
         <div class="promo-header">
             <button class="btn-add-promo" id="openPromoModal">
                 <i class="fas fa-plus"></i> Agregar Promoción
             </button>
         </div>
-
-        <!-- Título del listado -->
-        <h3>Promociones</h3>
-
         <!-- Grid de promociones dinámico -->
         <div class="promos-container">
         <?php

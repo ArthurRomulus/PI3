@@ -53,13 +53,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coffee Shop - Usuarios</title>
+  <title>Blackwood Coffee - Usuarios</title>
 
   <link rel="stylesheet" href="../general.css">
   <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link rel="stylesheet" href="personal.css">
   <link rel="stylesheet" href="usuariocrud.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="../../theme-toggle.js" defer></script>
 
 </head>
 <body>
@@ -67,17 +68,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
 
   <?php include "../Admin_nav_bar.php"; ?> 
 
-  <div class="content">
+  <div class="content" style="margin-left: 220px; padding: 20px; flex: 1;">
     <?php include "../AdminProfileSesion.php"; ?>
 
-    <h1>Coffee shop</h1> 
+    <h1>Blackwood Coffee</h1> 
     <div class="topbar">
       <?php include '../date.php'; ?>
     </div>
 
     <button class="add_user_button" onclick="openModal('addUserModal')">
-  <i class="fa-solid fa-user-plus"></i> Añadir usuario
-</button>
+    <i class="fa-solid fa-user-plus"></i> Añadir usuario
+    </button>
 
     <!-- 🔽 FILTRO POR ROL -->
     <div class="filter-container">
@@ -92,14 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
         ?>
       </select>
     </div>
-
     <div class="layout" id="graphic">
-
-
-    <div class="layout" id="graphic">
-
-
-
       <?php 
         $result = $conn->query("SELECT * FROM usuarios");
         while ($row = $result->fetch_assoc()) {
@@ -123,38 +117,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
         }
       ?>
 
-
     </div>
   </div>
 
-  <!-- MODAL NUEVO USUARIO -->
   <div class="GeneralModal" id="addUserModal" style="display:none;">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal('addUserModal')">×</button>
       <h2>Registrar nuevo usuario</h2>
       <form action="" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="new_user" value="1">
-
         <label>Nombre de usuario</label>
         <input type="text" name="username" required>
-
         <label>Email</label>
         <input type="email" name="email" required>
-
         <label>Contraseña</label>
         <input type="password" name="password" required>
-
         <label>Teléfono</label>
         <input type="text" name="telefono" required>
-
         <label>Teléfono de emergencia</label>
         <input type="text" name="telefono_emergencia" required>
-
         <label>Dirección</label>
         <input type="text" name="direccion" required>
-
         <label>Rol del usuario</label>
         <select name="role" required>
+
           <?php
             $resultRoles = $conn->query("SELECT id_rol, rolename FROM roles WHERE status = 1");
             if ($resultRoles && $resultRoles->num_rows > 0) {
@@ -166,45 +152,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
             }
           ?>
         </select>
-
         <label>Imagen de perfil</label>
         <input type="file" name="image" accept="image/png, image/jpeg, image/webp">
-
         <input type="submit" value="Guardar" class="btn-save">
       </form>
     </div>
   </div>
 
   <!-- MODAL MODIFICAR -->
+
   <div class="GeneralModal" id="updateModal" style="display:none;">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal('updateModal')">×</button>
-
       <h2>Modificar usuario</h2>
       <form action="UpdateUser.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" id="id" name="id">
-
         <label>Username</label>
         <input type="text" id="username" name="username">
-
         <label>email</label>
         <input type="text" id="email" name="email">
-
-
         <label>Contraseña</label>
         <input type="password" id="password" name="password">
-
         <label>Imagen de perfil</label>
         <input type="file" id="userprofile" name="image" accept="image/png, image/jpeg, image/webp">
-
         <label>Rol del usuario</label>
-
-
         <input type="submit" value="Actualizar" class="btn-save">
       </form>
     </div>
   </div>
-
+  
   <script>
     function openModal(id) {
       document.getElementById(id).style.display = "block";
