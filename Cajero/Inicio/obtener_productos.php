@@ -1,81 +1,42 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-require_once __DIR__ . '/../conexion.php';
+
+// 1. RUTA CORREGIDA
+require_once __DIR__ . '/../conexion.php'; 
 
 try {
-    // Obtener categoría del query string si existe
-    $categoria = isset($_GET['categoria']) ? strtolower(trim($_GET['categoria'])) : null;
-    // Obtener término de búsqueda si existe
     $busqueda = isset($_GET['buscar']) ? strtolower(trim($_GET['buscar'])) : null;
 
     $where = [];
     $params = [];
 
-    // Construir la condición WHERE basada en los filtros
-    if ($categoria && $categoria !== 'categorías') {
-        $where[] = "LOWER(categoria) LIKE :categoria";
-        $params['categoria'] = '%' . $categoria . '%';
-    }
-
+    // 2. COLUMNAS CORREGIDAS (namep)
     if ($busqueda) {
-        $where[] = "(LOWER(nombre) LIKE :busqueda OR LOWER(descripcion) LIKE :busqueda)";
+        $where[] = "(LOWER(namep) LIKE :busqueda OR LOWER(descripcion) LIKE :busqueda)";
         $params['busqueda'] = '%' . $busqueda . '%';
+    } else {
+        echo json_encode(['success' => true, 'data' => []]);
+        exit;
     }
 
-    // Construir la consulta SQL
-    $sql = "SELECT id, nombre, descripcion, precio, imagen_url, categoria FROM productos";
+    // 3. COLUMNAS CORREGIDAS (idp, namep, ruta_imagen) y alias para el JS
+    $sql = "SELECT idp, namep AS nombre, descripcion, precio, ruta_imagen AS imagen_url, categoria 
+            FROM productos";
+
     if (!empty($where)) {
         $sql .= " WHERE " . implode(" AND ", $where);
     }
-    $sql .= " ORDER BY nombre ASC";
+    
+    // 4. COLUMNA CORREGIDA (namep)
+    $sql .= " ORDER BY namep ASC";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Normalizar rutas de imagen
-    foreach ($productos as &$p) {
-        if (empty($p['imagen_url'])) {
-            $p['imagen_url'] = null;
-            continue;
-        }
-
-        if (preg_match('#^https?://#i', $p['imagen_url'])) {
-            continue;
-        }
-
-        $orig = ltrim($p['imagen_url'], '/');
-        $basename = basename($orig);
-        $candidates = [
-            '../img/' . $basename,
-            'img/' . $basename,
-            '../../img/' . $basename,
-            '../Admin/img/' . $basename,
-            '../../Admin/img/' . $basename
-        ];
-
-        $found = false;
-        foreach ($candidates as $candidate) {
-            $fsPath = realpath(__DIR__ . '/' . $candidate);
-            if ($fsPath && file_exists($fsPath)) {
-                $docRoot = realpath($_SERVER['DOCUMENT_ROOT']);
-                $relativeWebPath = str_replace($docRoot, '', $fsPath);
-                $relativeWebPath = str_replace('\\', '/', $relativeWebPath);
-                $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
-                $p['imagen_url'] = $baseUrl . $relativeWebPath;
-                $found = true;
-                break;
-            }
-        }
-
-        if (!$found) {
-            $p['imagen_url'] = null;
-        }
-    }
-
+    
     echo json_encode([
         'success' => true,
-        'data' => $productos
+        'data' => $productos // El JS de búsqueda espera los productos dentro de 'data'
     ], JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
@@ -85,3 +46,4 @@ try {
         'error' => 'Error al obtener productos: ' . $e->getMessage()
     ]);
 }
+?>
