@@ -7,6 +7,18 @@
 
     <link rel="stylesheet" href="../general.css">
     <link rel="stylesheet" href="comentario.css">
+    <style>
+        .estrellas-mostradas-admin {
+          margin-top: 5px;
+          font-size: 1.1rem;
+        }
+        .estrellas-mostradas-admin .estrella {
+          color: #CCC;
+        }
+        .estrellas-mostradas-admin .estrella.rellena {
+          color: #FFD700;
+        }
+    </style>
 </head>
 <body>
 
@@ -24,48 +36,67 @@
         <?php
         include "../../conexion.php";
 
-        $result = $conn->query("SELECT * FROM resena");
+        // 1. Leemos la nueva estructura (con 'calificacion', 'fecha', etc.)
+        $result = $conn->query("SELECT * FROM resena ORDER BY fecha DESC");
 
         while ($row = $result->fetch_assoc()) {
-            // Obtener datos del usuario
-            $pfp = $conn->query("SELECT profilescreen, username FROM usuarios WHERE userid = '" . $conn->real_escape_string($row['userid']) . "'");
-            $pfp_row = $pfp->fetch_assoc();
 
             echo "<div class='comentario' id='" . htmlspecialchars($row['idr']) . "'>";
 
-            // Imagen de perfil
-            echo "<img class='profileimgco' src='" . htmlspecialchars($pfp_row['profilescreen']) . "' alt='Profile Image'>";
+            // --- INICIO DE CAMBIOS ---
+            
+            // 2. Obtener datos del usuario (SIEMPRE Y CUANDO HAYA UN userid)
+            $avatar_src = '../../images/DefaultProfile.png'; // Avatar por defecto (asumiendo que tienes uno)
+            $nombre_usuario = htmlspecialchars($row['nombre']); // Nombre de la reseña (invitado)
 
-            // Contenedor principal del texto
+            if ($row['userid']) { // Si el comentario fue hecho por un usuario logueado
+                // Preparamos la consulta para evitar inyecciones
+                $pfp_stmt = $conn->prepare("SELECT profilescreen, username FROM usuarios WHERE userid = ?");
+                $pfp_stmt->bind_param("i", $row['userid']);
+                $pfp_stmt->execute();
+                $pfp_result = $pfp_stmt->get_result();
+                
+                if ($pfp_row = $pfp_result->fetch_assoc()) {
+                    if (!empty($pfp_row['profilescreen'])) {
+                        // La ruta sube 2 niveles (desde Admin/Comentarios/ hasta la raíz) y luego baja a images
+                        $avatar_src = '../../images/' . htmlspecialchars($pfp_row['profilescreen']); 
+                    }
+                    $nombre_usuario = htmlspecialchars($pfp_row['username']); // Usamos el nombre de la tabla usuarios
+                }
+                $pfp_stmt->close();
+            }
+
+            // Imagen de perfil
+            echo "<img class='profileimgco' src='" . $avatar_src . "' alt='Avatar'>";
+            
             echo "<div class='contenido-comentario'>";
             
-            // Cabecera: nombre + fecha
-            echo "<div class='cabecera'>";
-            echo "<p class='usernameco'>" . htmlspecialchars($pfp_row['username']) . "</p>";
-            echo "<span class='fecha'>" . htmlspecialchars($row['date']) . "</span>";
+            // Info del comentario (Nombre y Fecha)
+            echo "<div class='info-coment'>"; // (Necesitarás esta clase en tu CSS)
+                echo "<p class='username'>" . $nombre_usuario . "</p>";
+                echo "<p class='fecha-coment'>" . date('d/m/Y', strtotime($row['fecha'])) . "</p>";
             echo "</div>";
 
-            // Calificación en estrellas (dinámica)
-            $estrellas = intval($row['estrellas']);
-            echo "<div class='estrellas'>";
-            for ($i = 1; $i <= 5; $i++) {
-                if ($i <= $estrellas) {
-                    echo "<span class='estrella llena'>&#9733;</span>"; // Estrella llena
-                } else {
-                    echo "<span class='estrella vacia'>&#9734;</span>"; // Estrella vacía
+
+            // 3. Mostrar estrellas (si no es una respuesta)
+            if ($row['parent_id'] == NULL) { // Solo las reseñas padres tienen calificación
+                echo "<div class='estrellas-mostradas-admin'>";
+                for ($i = 1; $i <= 5; $i++) {
+                    echo "<span class='estrella " . ($i <= $row['calificacion'] ? 'rellena' : '') . "'>★</span>"; 
                 }
+                echo "</div>";
+            } else {
+                echo "<p style='font-style:italic; color:#777; margin-top: 8px;'>Es una respuesta.</p>";
             }
-            echo "</div>";
 
-            // Comentario debajo del nombre
+            // 4. Texto del comentario
             echo "<p class='descriptioncoment'>" . htmlspecialchars($row['comentario']) . "</p>";
 
-            // Producto asociado
-            $pro = $conn->query("SELECT * FROM productos WHERE idp = ". $row['producto']);
-            $pro_row = $pro->fetch_assoc();
-            echo "<p class='producto-coment'> Producto o Servicio: " . htmlspecialchars($pro_row['namep']) . "</p>";
+            // 5. (ELIMINADO) Ya no existe la columna 'producto', así que no se puede mostrar.
+            
+            // --- FIN DE CAMBIOS ---
 
-            // Botón eliminar
+            // Botón eliminar (esto estaba bien, posts to delete_comentario.php)
             echo "<form method='POST' action='delete_comentario.php'>";
             echo "<input type='hidden' name='idr' value='" . htmlspecialchars($row['idr']) . "'>";
             echo "<button class='deletebutton'>Eliminar</button>";
@@ -82,29 +113,6 @@
 </html>
 
 <?php
-// Eliminar comentario
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['idr'])) {
-        $idr = $_POST['idr'];
-
-        include "../../conexion.php";
-
-        $stmt = $conn->prepare("DELETE FROM resena WHERE idr = ?");
-        $stmt->bind_param("i", $idr);
-
-        if ($stmt->execute()) {
-            header("Location: index.php");
-            exit();
-        } else {
-            echo "Error al eliminar el comentario: " . $conn->error;
-        }
-
-        $stmt->close();
-        $conn->close();
-    } else {
-        echo "ID de comentario no proporcionado.";
-    }
-} else {
-    // No mostrar mensaje si solo se carga la página
-}
+// (ELIMINADO: El bloque PHP de eliminación que estaba aquí después de </html>)
+// La eliminación ya se maneja en 'delete_comentario.php'
 ?>
