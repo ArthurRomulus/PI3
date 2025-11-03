@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>BlackWood Coffe</title>
+  <title>BlackWood Coffe - Productos</title>
   <link rel="stylesheet" href="productos.css">
 </head>
 <body>
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarBarraNav(currentPage);
     }
 
-    // --- ACTUALIZAR LA FECHA EN TIEMPO REAL --- (Sin cambios)
+    // --- ACTUALIZAR LA FECHA EN TIEMPO REAL ---
     const dateElement = document.querySelector('.date');
     if (dateElement) {
         const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
     }
 
-    // --- VARIABLES Y FUNCIONES DEL CARRITO --- (Sin cambios)
+    // --- VARIABLES Y FUNCIONES DEL CARRITO ---
     const cartList = [];
     const cartContent = document.querySelector('.cart-content');
     const summarySubtotal = document.querySelector('.summary-subtotal');
@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA DE PRODUCTOS ---
     const contenedorProductos = document.querySelector('.products');
     const filterContainer = document.querySelector('.cats');
+    const scrollContainer = document.querySelector('.main-scroll'); // <-- Contenedor de scroll
     let allProducts = [];
 
     // --- Función para mostrar productos en la página ---
@@ -91,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         productsToRender.forEach(producto => {
             const { modificadores, tamanos } = allData;
 
-            // Lógica de etiqueta Frío/Caliente (Sin cambios)
             let tagHtml = ''; 
             if (producto.categorias_nombres && producto.categorias_nombres.includes('Bebidas calientes')) {
                 tagHtml = '<span class="card-tag tag-caliente">CALIENTE</span>';
@@ -99,21 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 tagHtml = '<span class="card-tag tag-frio">FRÍO</span>';
             }
             
-            // --- (INICIO) NUEVA LÓGICA PARA TAMAÑOS DE COMIDA ---
-            // 1. Definir qué categorías son "comida"
             const foodCategories = ['Comida', 'Postres', 'Panes'];
             let isFoodItem = false;
-            
-            // 2. Comprobar si el producto actual está en esas categorías
             if (producto.categorias_nombres) {
                 isFoodItem = producto.categorias_nombres.some(cat => foodCategories.includes(cat));
             }
-            // --- (FIN) NUEVA LÓGICA ---
             
             const opcionesLecheHtml = generarOpcionesHtml(modificadores.leches, 'Tipo Leche');
             const opcionesCafeHtml = generarOpcionesHtml(modificadores.basesCafe, 'Tipo Café');
-            
-            // 3. Pasar el resultado (isFoodItem) a la función que genera el HTML
             const tamanosHtml = generarTamanosHtml(tamanos, producto.tamano_defecto, isFoodItem);
             
             const tarjetaHTML = `
@@ -139,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CARGA INICIAL DE PRODUCTOS DESDE API --- (Sin cambios)
+    // --- CARGA INICIAL DE PRODUCTOS DESDE API ---
     if (contenedorProductos) {
         fetch('api.php')
             .then(response => response.json())
@@ -147,10 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.error) { console.error('Error desde API:', data.error); return; }
                 
                 allProducts = data.productos;
-                renderProducts(allProducts, data);
+                renderProducts(allProducts, data); // Dibuja los productos
 
+                // --- FILTROS DE CATEGORÍAS ---
                 if (filterContainer) {
-                    
                     const normalizeText = (str) => {
                         if (!str) return "";
                         return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -180,10 +173,54 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderProducts(filteredProducts, data);
                     });
                 }
+
+                // --- INICIO DEL CÓDIGO DE HIGHLIGHT (LÓGICA MEJORADA) ---
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('id');
+
+                if (productId) {
+                    setTimeout(() => { // Espera 100ms a que se pinten las tarjetas
+                        const targetCard = document.querySelector(`.product-card-new[data-id="${productId}"]`);
+
+                        if (targetCard && scrollContainer) {
+                            
+                            let hasAnimated = false; // Flag para evitar doble ejecución
+
+                            // 1. Función que dispara la animación
+                            const doAnimate = () => {
+                                if (hasAnimated) return; // Si ya se ejecutó, no hacer nada
+                                hasAnimated = true;
+                                
+                                // Limpia el listener por si acaso
+                                scrollContainer.removeEventListener('scrollend', doAnimate);
+
+                                // Aplica el salto
+                                targetCard.classList.add('product-highlight');
+                                
+                                // Quita la clase después de la animación
+                                setTimeout(() => {
+                                    targetCard.classList.remove('product-highlight');
+                                }, 600); // 0.8s
+                            };
+
+                            // 2. Escucha el evento 'scrollend'
+                            scrollContainer.addEventListener('scrollend', doAnimate, { once: true });
+                            
+                            // 3. Inicia el scroll SUAVE
+                            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            
+                            // 4. FALLBACK: Si el scroll no se dispara (ya está en vista)
+                            // se ejecuta después de 700ms
+                            setTimeout(doAnimate, 700);
+                        }
+                    }, 100); 
+                }
+                // --- FIN DEL CÓDIGO DE HIGHLIGHT ---
+
             });
     }
 
-    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS --- (Sin cambios)
+    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
     if (contenedorProductos) {
         contenedorProductos.addEventListener('click', (event) => {
             const target = event.target;
@@ -240,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- MANEJADOR DE EVENTOS PARA EL CARRITO --- (Sin cambios)
+    // --- MANEJADOR DE EVENTOS PARA EL CARRITO ---
     if (cartContent) {
         cartContent.addEventListener('click', e => {
             if (e.target.classList.contains('qty-btn-cart')) {
@@ -262,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNCIONES COMPLETAS DEL CARRITO Y AUXILIARES ---
 
-    function renderCart() { // (Sin cambios)
+    function renderCart() { 
         if (!cartContent) return;
         cartContent.innerHTML = '';
         if (cartList.length === 0) {
@@ -293,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSummary();
     }
 
-    function updateSummary() { // (Sin cambios)
+    function updateSummary() { 
         const subtotal = cartList.reduce((sum, item) => sum + (item.price * item.qty), 0);
         const iva = subtotal * IVA_RATE;
         const total = subtotal + iva;
@@ -302,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (summaryTotal) summaryTotal.textContent = `$${(total).toFixed(2)}`;
     }
 
-    function updateCardPrice(card) { // (Sin cambios)
+    function updateCardPrice(card) { 
         const basePrice = parseFloat(card.dataset.basePrice);
         const sizeButton = card.querySelector('.size-btn.active');
         const milkSelect = card.querySelector('.milk-type');
@@ -316,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.querySelector('.card-price').textContent = `$${finalPrice.toFixed(2)}`;
     }
 
-    function generarOpcionesHtml(opciones, placeholder) { // (Sin cambios)
+    function generarOpcionesHtml(opciones, placeholder) { 
         let html = `<option selected disabled>${placeholder}</option>`;
         if (opciones) {
             opciones.forEach(opcion => {
@@ -326,18 +363,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
-    // --- (INICIO) FUNCIÓN DE TAMAÑOS MODIFICADA ---
-    // 1. Añadimos el nuevo parámetro 'isFood' (con 'false' como valor por defecto)
     function generarTamanosHtml(tamanos, tamanoDefecto, isFood = false) {
-        
-        // 2. Definimos el mapa de iconos (SVGs) por separado
         const tamanoMap = {
             'Chico': {svg: '<svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg>'},
             'Mediano': {svg: '<svg viewBox="0 0 24 24"><path d="M3 8h18v10a3 3 0 01-3 3H6a3 3 0 01-3-3V8zm3-4h12v2H6V4z"/></svg>'},
             'Grande': {svg: '<svg viewBox="0 0 24 24"><path d="M2 7h20v10a4 4 0 01-4 4H6a4 4 0 01-4-4V7zm4-4h12v2H6V3z"/></svg>'}
         };
-
-        // 3. Elegimos las etiquetas de texto correctas basándonos en el flag 'isFood'
         const labels = isFood
             ? {'Chico': 'CH', 'Mediano': 'M', 'Grande': 'G'}
             : {'Chico': '250ML', 'Mediano': '500ML', 'Grande': '1L'};
@@ -345,23 +376,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
         if (tamanos) {
             tamanos.forEach(tamano => {
-                // Obtenemos el SVG del mapa
                 const displayInfo = tamanoMap[tamano.nombre_tamano] || { svg: '' };
-                // Obtenemos el TEXTO del mapa de etiquetas que elegimos
                 const texto = labels[tamano.nombre_tamano] || tamano.nombre_tamano;
-                
                 const esActivo = tamano.tamano_id == tamanoDefecto ? 'active' : '';
                 
-                // Construimos el HTML final
                 html += `<button class="size-btn ${esActivo}" data-tamano-id="${tamano.tamano_id}" data-precio-aumento="${tamano.precio_aumento}">
                             ${displayInfo.svg}
                             <span>${texto}</span>
-                         </button>`;
+                        </button>`;
             });
         }
         return html;
     }
-    // --- (FIN) FUNCIÓN DE TAMAÑOS MODIFICADA ---
 
     // Llamada inicial para mostrar el carrito vacío
     renderCart();

@@ -520,3 +520,29 @@ body{
   .header h1{ font-size:18px; }
   .products{ grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } /* Corregido: tamaño de tarjetas en móvil */
 }
+
+/* --- ESTILOS PARA EL HIGHLIGHT (VERSIÓN "POP") --- */
+
+.product-highlight {
+  position: relative;
+  z-index: 10;
+  /* CAMBIO: Animación más rápida */
+  animation: pop-highlight 0.6s ease-out; 
+}
+
+@keyframes pop-highlight {
+  0% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  40% {
+    /* El "salto": crece 10% y sube 8px */
+    transform: scale(1.1) translateY(-8px); 
+    box-shadow: 0 12px 30px rgba(198, 134, 68, 0.7);
+  }
+  100% {
+    /* Vuelve a su lugar */
+    transform: scale(1) translateY(0);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+}
