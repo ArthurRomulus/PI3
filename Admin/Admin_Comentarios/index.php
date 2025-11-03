@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Shop - Comentarios</title>
+    <title>Blackwood Coffee - Comentarios</title>
 
     <link rel="stylesheet" href="../general.css">
     <link rel="stylesheet" href="comentario.css">
+
+    <script src="../../theme-toggle.js" defer></script>
+
     <style>
         .estrellas-mostradas-admin {
           margin-top: 5px;
@@ -26,8 +29,7 @@
 
     <div class="content">
         <?php include "../AdminProfileSesion.php"; ?>
-
-        <h1>Coffee Shop</h1> 
+        <h1>Blackwood Coffee</h1> 
         <div class="topbar">
             <?php include '../date.php'; ?>
         </div>

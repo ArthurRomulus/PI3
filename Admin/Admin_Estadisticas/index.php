@@ -7,13 +7,14 @@ include "../../conexion.php"; // conexión a la base de datos
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coffee Shop - Estadísticas</title>
+  <title>Blackwood Coffee - Estadísticas</title>
 
   <link rel="stylesheet" href="../general.css">
 
   <link rel="stylesheet" href="estadisticas.css">
   <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <script src="../../theme-toggle.js" defer></script>
 </head>
 <body>
 

@@ -1,3 +1,9 @@
+.content {
+    margin-left: 220px;
+    padding: 20px;
+    flex: 1;
+}
+
 .empleado {
     background-color: #E6E6E6;
     border-radius: 20px;

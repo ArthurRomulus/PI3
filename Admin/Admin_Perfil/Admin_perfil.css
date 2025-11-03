@@ -271,3 +271,11 @@ html, body {
     font-size: 28px;
   }
 }
+
+/* --- Contenedor para el interruptor de tema en Perfil --- */
+.profile-theme-switch-container {
+    position: absolute;
+    top: 25px;   /* Distancia desde arriba */
+    right: 30px; /* Distancia desde la derecha */
+    z-index: 3; /* Para que esté por encima de todo */
+}

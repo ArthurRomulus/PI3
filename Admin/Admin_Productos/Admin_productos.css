@@ -102,17 +102,19 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* --- Títulos --- */
+/* --- Arreglo de Superposición (FORZADO) --- */
+
 .content h1 {
-  font-size: 40px;
-  margin-bottom: 25px;
-  color: #FFFFFF;
+    position: static !important;  /* Anula el 'absolute' */
+    top: auto !important;         /* Anula el 'top' */
+    color: #ffffff !important;   /* Anula el color blanco */
+    margin-top: 10px;
 }
 
 .content h3 {
-  font-size: 26px;
-  margin: 25px 0 15px;
-  color: #FFFFFF;
+    position: static !important;  /* Anula el 'absolute' */
+    top: auto !important;         /* Anula el 'top' */
+    color: #ffffff !important;   /* Anula el color blanco */
 }
 
 /* --- Barra superior con perfil --- */
