@@ -1,24 +1,20 @@
 // Script para cargar promociones desde la base de datos y aplicar búsqueda/filtrado
-// Solo filtrado en el front-end
-
 document.addEventListener('DOMContentLoaded', () => {
     const apiUrl = 'obtener_promociones.php';
     const grid = document.querySelector('.promotions-grid');
+    const scrollContainer = document.querySelector('.main-content'); // Contenedor de scroll
     
-    // ----- CORREGIDO -----
-    // El input de búsqueda ahora tiene la clase '.search'
     const searchInput = document.querySelector('.search'); 
-    // Los botones de filtro ahora tienen la clase '.cat-btn'
     const filterButtons = document.querySelectorAll('.cat-btn');
-    // ---------------------
-
-    let promotions = [];
+    
+    let allPromos = []; // Almacena todas las promociones
 
     function createCard(p) {
-        const card = document.createElement('div');
+        const card = document.createElement('article');
         card.className = 'promo-card';
+        card.dataset.id = p.idPromo; // <-- ¡MUY IMPORTANTE!
 
-        // Inferir categoría simple desde tipo_descuento o condiciones si no existe
+        // Inferir categoría
         let category = (p.tipo_descuento || '').toLowerCase();
         if (category.includes('bebida')) category = 'bebidas';
         else if (category.includes('comida')) category = 'comida';
@@ -31,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         title.textContent = p.nombrePromo || 'Promoción';
         const desc = document.createElement('p');
         desc.textContent = p.condiciones || '';
+        
         if (p.imagen_url) {
             const img = document.createElement('img');
             img.src = p.imagen_url;
@@ -59,37 +56,87 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchTerm = searchInput.value.toLowerCase();
         const activeFilter = document.querySelector('.cat-btn.active').dataset.filter || 'all';
 
-        const filtered = promotions.filter(p => {
+        const filtered = allPromos.filter(p => {
             let category = (p.tipo_descuento || '').toLowerCase();
             if (category.includes('bebida')) category = 'bebidas';
             else if (category.includes('comida')) category = 'comida';
             else if (category.includes('postre')) category = 'postres';
             else category = 'general';
-            const matchesFilter = (activeFilter === 'all' || category === activeFilter);
+            
+            const matchesFilter = (activeFilter === 'all' || category.includes(activeFilter));
+            
             const text = `${p.nombrePromo} ${p.condiciones}`.toLowerCase();
             const matchesSearch = text.includes(searchTerm);
+            
             return matchesFilter && matchesSearch;
         });
         render(filtered);
     }
+
+    // --- LÓGICA DE HIGHLIGHT (SALTO) ---
+    function highlightPromoFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const promoId = urlParams.get('id');
+
+        if (promoId) {
+            setTimeout(() => { // Espera 100ms a que se pinten las tarjetas
+                const targetCard = document.querySelector(`.promo-card[data-id="${promoId}"]`);
+
+                if (targetCard && scrollContainer) {
+                    
+                    let hasAnimated = false; // Flag para evitar doble ejecución
+
+                    // 1. Función que dispara la animación
+                    const doAnimate = () => {
+                        if (hasAnimated) return; // Si ya se ejecutó, no hacer nada
+                        hasAnimated = true;
+                        
+                        // Limpia el listener
+                        scrollContainer.removeEventListener('scrollend', doAnimate);
+
+                        // Aplica el salto
+                        targetCard.classList.add('promo-highlight');
+                        
+                        // Quita la clase después de la animación
+                        setTimeout(() => {
+                            targetCard.classList.remove('promo-highlight');
+                        }, 600); // 1.5s
+                    };
+
+                    // 2. Escucha el evento 'scrollend'
+                    scrollContainer.addEventListener('scrollend', doAnimate, { once: true });
+                    
+                    // 3. Inicia el scroll SUAVE
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // 4. FALLBACK: Si el scroll no se dispara (ya está en vista)
+                    setTimeout(doAnimate, 700);
+                }
+            }, 100);
+        }
+    }
+
+    // --- FIN DE LÓGICA HIGHLIGHT ---
+
 
     // Fetch promociones una sola vez
     fetch(apiUrl)
         .then(res => res.json())
         .then(json => {
             if (!json.success) throw new Error(json.error || 'Error al obtener promociones');
-            promotions = json.data || [];
-            render(promotions);
+            allPromos = json.data || []; // <-- Tu PHP usa 'data', esto es correcto
+            render(allPromos); // Dibuja las promos
+            
+            // --- ¡AQUÍ SE LLAMA LA FUNCIÓN DE SALTO! ---
+            highlightPromoFromURL();
             
             // Enlazar eventos de filtro/búsqueda
-            // (Esto fallaba antes y causaba que no se viera nada)
             filterButtons.forEach(btn => btn.addEventListener('click', (e) => {
                 filterButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 applyFilters();
             }));
             
-            // Comprobamos que searchInput no sea null antes de añadir el listener
             if (searchInput) {
                 searchInput.addEventListener('input', applyFilters);
             }

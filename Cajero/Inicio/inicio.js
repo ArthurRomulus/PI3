@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- URLs y Selectores Principales ---
-    const apiUrl = 'obtener_productos.php';
-    const searchInput = document.querySelector('.search');
-    const catButtons = document.querySelectorAll('.cat-btn');
-    const productsContainer = document.querySelector('.products');
-    let allProducts = [];
+    const carouselApiUrl = 'obtener_carouseles.php'; 
+    
+    // --- Selectores de Carruseles ---
+    const verticalCarousel = $('#vertical-carousel'); // Contenedor padre
+    const trackPromociones = $('#carousel-promociones .carousel-track');
+    const trackBebidas = $('#carousel-bebidas .carousel-track');
+    const trackComidas = $('#carousel-comidas .carousel-track');
+    const allHorizontalCarousels = $('.carousel-track');
 
     // --- Selectores del Carrito ---
     const cartList = [];
@@ -13,17 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryIVA = document.querySelector('.summary-iva');
     const summaryTotal = document.querySelector('.summary-total');
 
-    // --- Selectores del Modal ---
-    const modalBg = document.getElementById('modal-bg');
-    const modalTitle = document.getElementById('modal-title');
-    const modalLeche = document.getElementById('modal-leche');
-    const modalTamano = document.getElementById('modal-tamano');
-    let modalProduct = null;
-
-    // --- LÓGICA DEL CARRITO Y MODAL (Movida desde inicio.html) ---
+    // --- LÓGICA DEL CARRITO ---
 
     function getProductData(card) {
-        // Función auxiliar para leer datos de una tarjeta de producto
         return {
             name: card.querySelector('.product-title').textContent,
             desc: card.querySelector('.product-sub').textContent,
@@ -48,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         summaryTotal.textContent = `$${(subtotal + iva).toFixed(2)}`;
     }
 
-    // Event listener para los botones +/- del carrito
     cartContent.addEventListener('click', e => {
         if (e.target.classList.contains('qty-btn')) {
             const idx = +e.target.dataset.idx;
@@ -62,150 +56,181 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Event listeners del modal
-    modalBg.addEventListener('click', e => {
-        if (e.target === modalBg) modalBg.style.display = 'none';
-    });
-    document.getElementById('modal-cancelar').onclick = () => modalBg.style.display = 'none';
-    document.getElementById('modal-agregar').onclick = () => {
-        if (!modalProduct) return;
-        const leche = modalLeche.value;
-        const tamano = modalTamano.value;
-        const data = { ...modalProduct, leche, tamano };
-        const idx = cartList.findIndex(p => p.name === data.name && p.desc === data.desc && p.leche === data.leche && p.tamano === data.tamano);
-        if (idx >= 0) {
-            cartList[idx].qty += 1;
-        } else {
-            cartList.push({ ...data, qty: 1 });
-        }
-        renderCart();
-        modalBg.style.display = 'none';
-    };
-
     // --- LÓGICA DE CARGA DE PRODUCTOS ---
 
     // Función para crear una tarjeta de producto
     function createProductCard(product) {
         const card = document.createElement('article');
         card.className = 'product-card';
+
+        if (product.idp) { 
+            card.dataset.id = product.idp;
+            card.dataset.type = 'producto';
+        } else if (product.idPromo) { 
+            card.dataset.id = product.idPromo;
+            card.dataset.type = 'promocion';
+        }
+
+        let displayPrice = parseFloat(product.precio).toFixed(2);
+        
+        if (product.idPromo || product.idp) { 
+             displayPrice = "Ver Más"; 
+        }
+
         card.innerHTML = `
             <div class="product-img">
-                ${product.imagen_url ? `<img src="${product.imagen_url}" width="80" height="60" alt="${product.nombre}">` : '<img src="../img/placeholder.png" width="80" height="60" alt="Sin imagen">'}
+                ${product.imagen_url ? `<img src="${product.imagen_url}" alt="${product.nombre}">` : '<img src="../img/placeholder.png" alt="Sin imagen">'}
             </div>
-            <h3 class="product-title">${product.nombre}</h3>
-            <p class="product-sub">${product.descripcion || ''}</p>
-            <div class="product-footer">
-                <div class="price">$${parseFloat(product.precio).toFixed(2)}</div>
-                <button class="add-btn" aria-label="Agregar al carrito">
-                    <svg width="18" height="18" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14l.84-2h7.45c.75 0 1.41-.41 1.75-1.03l3.24-5.88A1 1 0 0 0 20.45 4H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25z"/>
-                    </svg>
-                </button>
+            <div class="product-tag">
+                <h3 class="product-title">${product.nombre}</h3>
+                <p class="product-sub">${product.descripcion || ''}</p>
+                <div class="product-footer">
+                    <div class="price">${displayPrice}</div>
+                </div>
             </div>
         `;
         return card;
     }
 
-    // Función para cargar productos desde el servidor (esta ya era funcional)
-    async function loadProducts(categoria = '', busqueda = '') {
-        try {
-            let url = apiUrl;
-            const params = new URLSearchParams();
-            // Asegurarse de que 'categorías' se trate como 'todas'
-            if (categoria && categoria !== 'categorías') params.append('categoria', categoria);
-            if (busqueda) params.append('buscar', busqueda);
-            if (params.toString()) url += '?' + params.toString();
+    // --- ¡LÓGICA DE CARRUSELES (TU VERSIÓN CORRECTA)! ---
 
-            const response = await fetch(url);
+    // Opciones para los 3 carruseles HIJOS (horizontales)
+    const horizontalSlickOptions = {
+        dots: false,
+        infinite: true,
+        draggable: true,       // <-- ARRASTRE FUNCIONA
+        
+        // --- CAMBIOS PARA ARREGLAR ARRASTRE ---
+        speed: 500,          // Velocidad de transición 0.5s
+        autoplay: true,
+        autoplaySpeed: 2000,   // Pausa de 1 segundos (TU VALOR)
+        // cssEase y autoplaySpeed: 0 eliminados
+
+        slidesToShow: 4,         // Muestra 4
+        slidesToScroll: 1,         // Mueve 1
+        pauseOnHover: true,  
+        
+        // --- CAMBIO PARA ARREGLAR SIMETRÍA ---
+        variableWidth: false   // <-- Slick controlará el ancho, no el CSS
+    };
+    
+    // Opciones para el carrusel PADRE (vertical)
+    const verticalSlickOptions = {
+        vertical: true,        // Movimiento vertical
+        verticalSwiping: true, // Permite arrastrar verticalmente
+        slidesToShow: 1,       // Muestra 1 sección a la vez
+        slidesToScroll: 1,
+        arrows: false,         // Sin flechas de subir/bajar
+        dots: true,            // Muestra los puntos de navegación
+        autoplay: true,        // Se mueve solo
+        autoplaySpeed: 6000,   // Cambia de sección cada 5 segundos (TU VALOR)
+        pauseOnHover: true,    // Se detiene si el usuario interactúa
+        pauseOnDotsHover: true // Se detiene si pone el mouse en los puntos
+    };
+
+    // Función que INICIA los 3 carruseles horizontales
+    function initHorizontalCarousels() {
+        if (trackPromociones.children().length > 0) trackPromociones.slick(horizontalSlickOptions);
+        if (trackBebidas.children().length > 0) trackBebidas.slick(horizontalSlickOptions);
+        if (trackComidas.children().length > 0) trackComidas.slick(horizontalSlickOptions);
+    }
+    
+    // Función para renderizar productos (con relleno para bucle)
+    function renderProducts(container, products) {
+        if ($(container).hasClass('slick-initialized')) {
+            $(container).slick('unslick');
+        }
+        
+        // El relleno es necesario para el autoplay infinito
+        const minSlides = horizontalSlickOptions.slidesToShow + 2; // Necesitamos más de las que se ven
+        let productsToRender = [...products]; 
+
+        if (productsToRender.length > 0 && productsToRender.length < minSlides) {
+            const originalProducts = [...productsToRender]; 
+            while (productsToRender.length < minSlides) {
+                productsToRender.push(...originalProducts); 
+            }
+        }
+
+        container.empty(); // Limpiamos
+
+        if (!productsToRender.length) {
+            container.html('<p style="color: white; padding-left: 10px;">No se encontraron productos.</p>');
+            return;
+        }
+        
+        productsToRender.forEach(product => {
+            container.append(createProductCard(product));
+        });
+    }
+
+    // Función principal que carga todo
+    async function loadCarousels() {
+        try {
+            const response = await fetch(carouselApiUrl);
             const data = await response.json();
 
-            if (!data.success) throw new Error(data.error || 'Error al cargar productos');
+            if (!data.success) throw new Error(data.error || 'Error al cargar carruseles');
 
-            allProducts = data.data;
-            renderProducts(allProducts);
+            // 1. Dibuja los productos en los carruseles hijos
+            renderProducts(trackPromociones, data.promociones);
+            renderProducts(trackBebidas, data.bebidas);
+            renderProducts(trackComidas, data.comidas);
             
-            // ¡IMPORTANTE! Volver a enlazar eventos después de renderizar
+            // 2. Inicia los 3 carruseles horizontales
+            initHorizontalCarousels();
+
+            // 3. Inicia el carrusel vertical PADRE
+            verticalCarousel.slick(verticalSlickOptions);
+            
+            // --- 4. LÓGICA DE PAUSA/PLAY (CORREGIDA) ---
+            
+            // EL 'beforeChange' FUE ELIMINADO
+            
+            // CADA VEZ QUE EL CARRUSEL VERTICAL CAMBIA DE SLIDE...
+            verticalCarousel.on('afterChange', (event, slick, currentSlide) => {
+                // 1. Pausa TODOS los carruseles (para detener el que se acaba de ocultar)
+                
+                // 2. Reanuda SOLO el carrusel horizontal que se está mostrando ahora
+                const currentCarousel = $(slick.$slides[currentSlide]).find('.carousel-track');
+                currentCarousel.slick('slickPlay');
+            });
+            
+            // 5. Pausa inicial (solo el primero debe estar activo)
+            allHorizontalCarousels.slick('slickPause');
+            $(verticalCarousel.slick('getSlick').$slides[0]).find('.carousel-track').slick('slickPlay');
+
+            // 6. Enlaza los eventos de doble clic
             attachProductEvents();
 
         } catch (error) {
             console.error('Error:', error);
-            productsContainer.innerHTML = '<p>Error al cargar productos. Por favor, intente más tarde.</p>';
+            // Manejo de error si la carga falla
+            $('#vertical-carousel').html('<p style="color: white; padding: 20px;">Error al cargar. Intente de nuevo más tarde.</p>');
         }
     }
 
-    // Función para renderizar productos
-    function renderProducts(products) {
-        productsContainer.innerHTML = '';
-        if (!products.length) {
-            productsContainer.innerHTML = '<p>No se encontraron productos.</p>';
-            return;
-        }
-        products.forEach(product => {
-            productsContainer.appendChild(createProductCard(product));
-        });
-    }
-
-    // ¡¡AQUÍ ESTÁ LA MAGIA!!
-    // Esta función ahora usa la lógica del carrito/modal que movimos a este archivo.
+    // Función que enlaza los eventos de clic
     function attachProductEvents() {
-        // Evento para ABRIR MODAL al hacer clic en la tarjeta
+        // Evento para REDIRIGIR (con Doble Clic)
         document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('click', e => {
-                if (e.target.closest('.add-btn')) return; // Si se hizo clic en el +, no abrir modal
-                
-                // Usar la lógica del modal
-                modalProduct = getProductData(card);
-                modalTitle.textContent = modalProduct.name;
-                modalLeche.selectedIndex = 0;
-                modalTamano.selectedIndex = 0;
-                modalBg.style.display = 'flex';
-            });
-        });
+            card.addEventListener('dblclick', e => { 
+                if (e.target.closest('.add-btn')) return;
+                const id = card.dataset.id;
+                const type = card.dataset.type; 
 
-        // Evento para AÑADIR AL CARRITO con el botón '+'
-        document.querySelectorAll('.add-btn').forEach(btn => {
-            btn.addEventListener('click', e => {
-                e.stopPropagation(); // Evitar que el clic también abra el modal
-                
-                // Usar la lógica de añadir al carrito
-                const card = btn.closest('.product-card');
-                const data = getProductData(card);
-                const leche = "Entera"; // Opciones por defecto
-                const tamano = "Chico";
-                
-                const idx = cartList.findIndex(p => p.name === data.name && p.desc === data.desc && p.leche === leche && p.tamano === tamano);
-                if (idx >= 0) {
-                    cartList[idx].qty += 1;
-                } else {
-                    cartList.push({ ...data, leche, tamano, qty: 1 });
+                if (type === 'producto' && id) {
+                    window.location.href = `../Productos/productos.html?id=${id}`;
+                } else if (type === 'promocion' && id) {
+                    window.location.href = `../Promocion/promociones.html?id=${id}`;
                 }
-                renderCart();
             });
         });
+
+        
     }
-
-    // --- INICIALIZACIÓN Y EVENTOS DE FILTRO ---
-
-    // Manejador de búsqueda con debounce (esto ya estaba bien)
-    let searchTimeout;
-    searchInput.addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const categoria = document.querySelector('.cat-btn.active')?.textContent.toLowerCase() || '';
-            loadProducts(categoria, searchInput.value);
-        }, 300); // Espera 300ms después de que el usuario deja de escribir
-    });
-
-    // Manejador de categorías (esto ya estaba bien)
-    catButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            catButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            loadProducts(btn.textContent.toLowerCase(), searchInput.value);
-        });
-    });
 
     // --- Carga Inicial ---
-    renderCart(); // Renderizar el carrito vacío al inicio
-    loadProducts(); // Cargar productos iniciales
+    renderCart();
+    loadCarousels();
 });
