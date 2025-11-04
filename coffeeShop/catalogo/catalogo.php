@@ -67,6 +67,8 @@ $categoria_result = $conn->query($categoria_query);
   <link rel="stylesheet" href="../inicio/Style.css" />
   <link rel="stylesheet" href="catalogo.css" />
   <link rel="icon" href="../../images/logotipocafes.png" />
+  <link href="../general.css" rel="stylesheet"/>
+
 </head>
 <body>
 <?php include "../nav_bar.php"; ?>
@@ -156,5 +158,42 @@ $categoria_result = $conn->query($categoria_query);
 </section>
 
 <?php include "../footer.php"; ?>
+ <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+    <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+    <aside
+      class="mini-cart"
+      id="miniCart"
+      aria-hidden="true"
+      aria-labelledby="mcTitle"
+      role="dialog"
+    >
+      <header class="mc-header">
+        <h3 id="mcTitle">Tu carrito</h3>
+        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+          ✕
+        </button>
+      </header>
+
+      <div class="mc-body">
+        <ul class="mc-list" id="mcList">
+          <!-- items por JS -->
+        </ul>
+        <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
+      </div>
+
+      <footer class="mc-footer">
+        <div class="mc-total">
+          <span>Total</span>
+          <strong id="mcTotal">$0.00 MXN</strong>
+        </div>
+        <a href="carrito.php" class="mc-btn">Ir a pagar</a>
+      </footer>
+    </aside>
 </body>
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+
 </html>
