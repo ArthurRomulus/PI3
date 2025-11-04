@@ -546,3 +546,16 @@ body{
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
 }
+
+/* --- (NUEVO) Estilo para Listbox Deshabilitado --- */
+.option-select select:disabled {
+  background-color: #f0e2d0; /* Un beige más claro */
+  color: var(--muted);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.option-select select:disabled::after {
+  /* Oculta la flecha 'V' si está deshabilitado */
+  display: none;
+}
