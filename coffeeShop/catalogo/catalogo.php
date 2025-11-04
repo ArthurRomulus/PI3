@@ -1,424 +1,160 @@
 <?php
-// Inicia sesión si no existe (importante para detectar si el usuario ya inició)
+// Inicia sesión si no existe
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Verificamos si hay sesión activa
+include "../../conexion.php"; // Conexión a BD
+
+// Verificamos si hay sesión activa (por si muestras el nombre del usuario)
 $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === true;
 
-// Si hay sesión, podemos leer algunos datos
-if ($usuarioLogueado) {
-    $userid   = $_SESSION['userid']        ?? null;
-    $username = $_SESSION['username']      ?? 'Usuario';
-    $email    = $_SESSION['email']         ?? '';
-    $avatar   = $_SESSION['profilescreen'] ?? null;
-} else {
-    // Si no hay sesión, inicializamos vacíos para evitar errores
-    $userid = $username = $email = $avatar = null;
+// Obtenemos la categoría seleccionada (si no hay, mostramos todas)
+$categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+$buscar = isset($_GET['buscar']) ? $_GET['buscar'] : '';
+
+// Consulta de productos con filtrado por categoría o búsqueda
+$sql = "SELECT p.*, GROUP_CONCAT(c.nombrecategoria SEPARATOR ', ') AS categorias
+        FROM productos p
+        LEFT JOIN producto_categorias pc ON p.idp = pc.idp
+        LEFT JOIN categorias c ON pc.id_categoria = c.id_categoria";
+
+$params = [];
+$types = "";
+$conditions = [];
+
+if ($buscar) {
+    $conditions[] = "p.namep LIKE ?";
+    $params[] = "%$buscar%";
+    $types .= "s";
 }
+
+if ($categoria) {
+    $conditions[] = "c.nombrecategoria = ?";
+    $params[] = $categoria;
+    $types .= "s";
+}
+
+if ($conditions) {
+    $sql .= " WHERE " . implode(" AND ", $conditions);
+}
+
+$sql .= " GROUP BY p.idp ORDER BY p.idp ASC";
+
+$stmt = $conn->prepare($sql);
+if ($params) {
+    $stmt->bind_param($types, ...$params);
+}
+$stmt->execute();
+$result = $stmt->get_result();
+
+$productos = [];
+while ($row = $result->fetch_assoc()) {
+    $productos[] = $row;
+}
+
+// Obtenemos todas las categorías para los botones
+$categoria_query = "SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC";
+$categoria_result = $conn->query($categoria_query);
 ?>
-
-
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coffee-Shop • Catálogo</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coffee-Shop • Catálogo</title>
 
-    <!-- Tus estilos -->
-    <link rel="stylesheet" href="../inicio/Style.css" />
-    <link rel="stylesheet" href="catalogo.css" />
-    <link rel="icon" href="../images/logotipocafes.png" />
-    <link href="../general.css" rel="stylesheet"/>
-  </head>
-  <body>
-<<<<<<< HEAD
+  <link rel="stylesheet" href="../inicio/Style.css" />
+  <link rel="stylesheet" href="catalogo.css" />
+  <link rel="icon" href="../../images/logotipocafes.png" />
+</head>
+<body>
 <?php include "../nav_bar.php"; ?>
-=======
-    <script src="../../theme-toggle.js" defer></script>
-    <!-- “Header” (tu footer superior con menú) -->
-    <footer class="site-footer">
-      <div class="footer-container">
-        <!-- LOGO -->
-        <div class="footer-logo">
-          <a href="index.php">
-            <img src="../../images/logo.png" alt="Blackwood Coffee logo" />
-          </a>
-          <span>BLACKWOOD COFFEE</span>
-        </div>
 
-        <!-- MENÚ -->
-        <nav class="footer-menu">
-          <a href="../inicio/index.php">Inicio</a>
-          <a href="catalogo.php">Catálogo</a>
-          <a href="../comentarios/comentarios.php">Comentarios</a>
-          <a href="../acercade/acercade.php">Acerca de</a>
+<section class="catalogo" aria-labelledby="catalogo-title">
+  <div class="catalogo__wrap">
+    <h2 id="catalogo-title">Catálogo</h2>
 
-          <div class="theme-switch-container">
-            <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
-            <label for="theme-toggle" class="theme-toggle-label"></label>
-          </div>
-
-        </nav>
-
-        <!-- ACCIONES -->
-        <div class="footer-actions">
-          <a
-  href="<?php echo $usuarioLogueado
-    ? '/PI3/coffeeShop/perfil/perfil_usuario.php'
-    : '/PI3/General/login.php'; ?>"
-  class="icon-btn"
-  aria-label="Cuenta"
-  title="<?php echo $usuarioLogueado ? 'Mi perfil' : 'Iniciar sesión'; ?>">
-  👤
-</a>
-
-
-          <!-- Carrito con contador (IMPORTANTE: id en el botón y en el badge) -->
-          <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
-  🛒 <span></span>
-</a>
-
-          <span class="lang">ESP | ING</span>
-        </div>
-      </div>
-    </footer>
->>>>>>> karol
-    
-    <!-- ========== CATALOGO (sección superior) ========== -->
-    <section class="catalogo" aria-labelledby="catalogo-title">
-      <div class="catalogo__wrap">
-        <h2 id="catalogo-title">Catálogo</h2>
-
-        <div class="catalogo__grid">
-          <a class="item" href="catalogo.php">
-            <img
-              src="../../images/icon_bebidas_calientes.png"
-              alt="Bebidas calientes"
-            />
-            <span>Bebidas calientes</span>
-          </a>
-
-          <a class="item" href="bebidas_frias.php">
-            <img src="../../images/icon_bebidas_ffrias.png" alt="Bebidas frías" />
-            <span>Bebidas frías</span>
-          </a>
-
-          <a class="item" href="paninis(catalogo).php">
-            <img src="../../images/seccion_paninis.png" alt="Paninis" />
-            <span>Paninis</span>
-          </a>
-
-          <a class="item" href="postres(catalogo).php">
-            <img src="../../images/seecion_postres.png" alt="Postres" />
-            <span>Postres</span>
-          </a>
-
-          <a class="item" href="productos(catalogo).php">
-            <img src="../../images/ensalada_seccion.png" alt="Ensaladas" />
-            <span>Ensaladas</span>
-          </a>
-        </div>
-
-        <div class="catalogo__divider">
-          <span class="line"></span>
-          <img src="../../images/iconcofe2.png" alt="" aria-hidden="true" />
-          <span class="line"></span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== CARTAS DEL CATALOGO (dinámicas desde BD) ========== -->
-    <section class="hotdrinks" aria-labelledby="hotdrinks-title">
-      <div class="hotdrinks__wrap">
-        <h2 id="hotdrinks-title">Bebidas Calientes</h2>
-
-        <!-- === BUSCADOR + BOTÓN FILTRAR CON MENÚ FLOTANTE === -->
-        <div
-          class="hotdrinks__search"
-          id="filtro-wrap"
-          style="position: relative"
-        >
-          <input type="text" placeholder="Ingresa nombre de bebida o snack" />
-          <button
-            id="btn-filtrar"
-            class="icon"
-            aria-label="Filtrar"
-            type="button"
-            style="
-              background: #7a4b34;
-              color: #fff;
-              border-radius: 8px;
-              padding: 6px 14px;
-              border: none;
-              font-weight: bold;
-              font-size: 15px;
-              margin-left: 8px;
-              display: flex;
-              align-items: center;
-              gap: 6px;
-              cursor: pointer;
-              margin-right: -20px;
-            "
-          >
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M3 5h18v2H3V5zm4 6h10v2H7v-2zm-2 6h14v2H5v-2z"
-              />
-            </svg>
-            <span>Filtrar</span>
-          </button>
-
-          <div
-            id="menu-filtrar"
-            style="
-              display: none;
-              position: absolute;
-              right: 0;
-              top: 48px;
-              background: #fff;
-              border: 2px solid #7a4b34;
-              border-radius: 10px;
-              box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-              overflow: hidden;
-              z-index: 1000;
-              min-width: 220px;
-            "
-          >
-            <a href="catalogo.php" class="f-item">☕ Bebidas calientes</a>
-            <a href="bebidas_frias.php" class="f-item">🧊 Bebidas frías</a>
-            <a href="paninis.php" class="f-item">🥪 Paninis</a>
-            <a href="postres.php" class="f-item">🍰 Postres</a>
-            <a href="productos(catalogo).php" class="f-item">🥗 Ensaladas</a>
-          </div>
-        </div>
-        <!-- GRID donde se insertan las tarjetas -->
-
-<div class="hotdrinks__grid" data-autoload="ajax" data-categoria="1"></div>
-
-        <style>
-          #menu-filtrar .f-item {
-            display: block;
-            padding: 10px 14px;
-            color: #7a4b34;
-            text-decoration: none;
-            font-weight: 600;
-          }
-          #menu-filtrar .f-item:hover {
-            background: #f2e1d0;
-          }
-          #filtro-wrap {
-            gap: 8px;
-          }
-        </style>
-
-
-
-        <!-- Divisor inferior -->
-        <div class="hotdrinks__divider">
-          <span class="line"></span>
-          <img
-            src="../../images/icon_bebidas_calientes.png"
-            alt=""
-            aria-hidden="true"
-          />
-          <span class="line"></span>
-        </div>
-      </div>
-    </section>
-
-<<<<<<< HEAD
-    <?php include "../footer.php"; ?>
-=======
-    <!-- ========== Footer inferior del sitio (como ya lo tienes) ========== -->
-    <footer class="cs-footer" aria-labelledby="footer-title">
-      <h2 id="footer-title" class="sr-only">Información del sitio</h2>
-      <div class="cs-footer__wrap">
-        <aside class="cs-brand">
-          <img
-            class="cs-brand__logo"
-            src="../../images/logo.png"
-            alt="Blackwood Coffee"
-          />
-        </aside>
-
-        <div class="cs-cards">
-          <section class="cs-card">
-            <h3>News & updates</h3>
-            <form class="cs-news" action="#" method="post">
-              <label class="sr-only" for="newsletter">Correo electrónico</label>
-              <input
-                id="newsletter"
-                type="email"
-                placeholder="correo electrónico"
-                required
-              />
-              <button type="submit" class="cs-btn">Suscribir</button>
-            </form>
-          </section>
-
-          <section class="cs-card">
-            <h3>Contáctanos</h3>
-            <ul class="cs-list">
-              <li>
-                <span class="cs-ico" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24">
-                    <path
-                      d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  ></span
-                >
-                <a href="mailto:coffee_shop@gmail.com">coffee_shop@gmail.com</a>
-              </li>
-              <li>
-                <span class="cs-ico" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24">
-                    <path
-                      d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.6-.36 12.3 12.3 0 0 0 3.8.6 1.5 1.5 0 0 1 1.5 1.5V20a1.5 1.5 0 0 1-1.5 1.5A18.5 18.5 0 0 1 3 7.5 1.5 1.5 0 0 1 4.5 6H7a1.5 1.5 0 0 1 1.5 1.5c0 1.3.2 2.6.6 3.8a1.5 1.5 0 0 1-.36 1.6Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  ></span
-                >
-                <a href="tel:+523141495067">+52 314 149 5067</a>
-              </li>
-              <li>
-                <span class="cs-ico" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24">
-                    <path
-                      d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  ></span
-                >
-                <span>Manzanillo, Col. • Campus Naranjo</span>
-              </li>
-            </ul>
-          </section>
-
-          <nav class="cs-card" aria-label="Conoce más">
-            <h3>Conoce más</h3>
-            <ul class="cs-links">
-              <li>
-                <a href="../inicio/index.php"
-                  ><span class="chev" aria-hidden="true">›</span> Inicio</a
-                >
-              </li>
-              <li>
-                <a href="../catalogo/catalogo.php"
-                  ><span class="chev" aria-hidden="true">›</span> Catálogo</a
-                >
-              </li>
-              <li>
-                <a href="../comentarios/comentarios.php"
-                  ><span class="chev" aria-hidden="true">›</span> Comentarios</a
-                >
-              </li>
-              <li>
-                <a href="../acercade/acercade.php"
-                  ><span class="chev" aria-hidden="true">›</span> Acerca de</a
-                >
-              </li>
-            </ul>
-          </nav>
-
-          <section class="cs-card">
-            <h3>Síguenos</h3>
-            <div class="cs-social">
-              <a
-                href="https://facebook.com"
-                aria-label="Facebook"
-                class="circle"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M13 22v-9h3l1-4h-4V7a1 1 0 0 1 1-1h3V2h-3a5 5 0 0 0-5 5v2H6v4h3v9h4Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </a>
-              <a
-                href="https://instagram.com"
-                aria-label="Instagram"
-                class="circle"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm6.5-.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </a>
-            </div>
-
-            <div class="cs-hours">
-              <h4>Horarios</h4>
-              <p>Lun–Vier: 9:00–21:00</p>
-              <p>Sab–Dom: 10:00–20:00</p>
-            </div>
-          </section>
-        </div>
-
-        <div class="cs-bottom">
-          <span class="cs-line"></span>
-          <span class="cs-bean" aria-hidden="true">
-            <img
-              src="../../images/iconcofe.png"
-              alt="icono café"
-              style="width: 32px; height: 32px; object-fit: contain"
-            />
-          </span>
-          <span class="cs-line"></span>
-        </div>
-        <div class="cs-legal"></div>
-      </div>
-    </footer>
->>>>>>> karol
-
-    <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
-    <div class="mc-overlay" id="mcOverlay" hidden></div>
-
-    <aside
-      class="mini-cart"
-      id="miniCart"
-      aria-hidden="true"
-      aria-labelledby="mcTitle"
-      role="dialog"
-    >
-      <header class="mc-header">
-        <h3 id="mcTitle">Tu carrito</h3>
-        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
-          ✕
+    <!-- Botones de categorías -->
+    <div class="button-group" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
+      <a href="catalogo.php">
+        <button style="padding:8px 14px; border:none; background:#7a4b34; color:#fff; border-radius:6px; cursor:pointer;">
+          Todo
         </button>
-      </header>
+      </a>
+      <?php
+      if ($categoria_result->num_rows > 0) {
+          while ($cat = $categoria_result->fetch_assoc()) {
+              $cat_nombre = $cat['nombrecategoria'];
+              $activo = ($categoria === $cat_nombre) ? "background:#d8b597;color:#000;font-weight:bold;" : "";
+              echo '<a href="catalogo.php?categoria=' . urlencode($cat_nombre) . '">
+                      <button style="padding:8px 14px; border:none; background:#7a4b34; color:#fff; border-radius:6px; cursor:pointer;' . $activo . '">' 
+                      . htmlspecialchars($cat_nombre) . '</button>
+                    </a>';
+          }
+      }
+      ?>
+    </div>
 
-      <div class="mc-body">
-        <ul class="mc-list" id="mcList">
-          <!-- items por JS -->
-        </ul>
-        <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
-      </div>
+    <!-- Buscador -->
+    <form method="GET" action="catalogo.php" style="margin-bottom:20px;">
+      <input type="text" name="buscar" placeholder="Buscar producto..." 
+             value="<?php echo htmlspecialchars($buscar); ?>"
+             style="padding:8px; border:1px solid #ccc; border-radius:6px; width:60%;">
+      <?php if($categoria): ?>
+        <input type="hidden" name="categoria" value="<?php echo htmlspecialchars($categoria); ?>">
+      <?php endif; ?>
+      <button type="submit" style="padding:8px 14px; background:#7a4b34; color:#fff; border:none; border-radius:6px; cursor:pointer;">Buscar</button>
+    </form>
 
-      <footer class="mc-footer">
-        <div class="mc-total">
-          <span>Total</span>
-          <strong id="mcTotal">$0.00 MXN</strong>
-        </div>
-        <a href="carrito.php" class="mc-btn">Ir a pagar</a>
-      </footer>
-    </aside>
+    <div class="catalogo__divider">
+      <span class="line"></span>
+      <img src="../../images/iconcofe2.png" alt="" aria-hidden="true"/>
+      <span class="line"></span>
+    </div>
+  </div>
+</section>
 
-    <script>
-  window.CART_API_URL = 'cart_api.php';
-</script>
-<script src="app.js"></script>
+<section class="hotdrinks" aria-labelledby="hotdrinks-title">
+  <div class="hotdrinks__wrap">
+    <h2 id="hotdrinks-title">
+      <?php echo $categoria ? htmlspecialchars($categoria) : "Todos los productos"; ?>
+    </h2>
 
-    <script src="app.js"></script>
-  </body>
+    <!-- GRID DE PRODUCTOS -->
+    <div class="hotdrinks__grid">
+      <?php if (count($productos) > 0): ?>
+        <?php foreach ($productos as $producto): ?>
+          <article class="ts-card" data-id="<?= htmlspecialchars($producto['idp']) ?>">
+            <div class="ts-stage">
+              <img src="<?= htmlspecialchars($producto['ruta_imagen'] ?? '../../images/placeholder.png') ?>"
+                   alt="<?= htmlspecialchars($producto['namep']) ?>"
+                   onerror="this.onerror=null;this.src='../../images/placeholder.png';" />
+            </div>
+            <h4 class="ts-name"><?= htmlspecialchars($producto['namep']) ?></h4>
+            <p class="ts-desc"><?= htmlspecialchars($producto['descripcion'] ?? '') ?></p>
+            <div class="ts-info">
+              <span><?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?></span>
+              <span class="ts-price">$<?= number_format($producto['precio'], 2) ?> MXN</span>
+              <button class="ts-cart">🛒</button>
+            </div>
+          </article>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p style="grid-column:1/-1; text-align:center; opacity:.7; padding:16px;">
+          No hay productos en esta categoría.
+        </p>
+      <?php endif; ?>
+    </div>
+
+    <div class="hotdrinks__divider">
+      <span class="line"></span>
+      <img src="../../images/icon_bebidas_calientes.png" alt="" aria-hidden="true"/>
+      <span class="line"></span>
+    </div>
+  </div>
+</section>
+
+<?php include "../footer.php"; ?>
+</body>
 </html>

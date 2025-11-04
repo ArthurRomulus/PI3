@@ -33,6 +33,7 @@ include "../../conexion.php";
   </form>
 
   <div class="button-group">
+    <a href="index.php"><button>Todo</button></a>
   <?php
   $categoria_query = "SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC";
   $categoria_result = $conn->query($categoria_query);
@@ -46,7 +47,6 @@ include "../../conexion.php";
       }
   }
   ?>
-  <a href="index.php"><button>Categorías</button></a>
   </div>
 
   <h3>Productos</h3>
