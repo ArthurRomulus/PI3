@@ -29,7 +29,7 @@ if ($usuarioLogueado) {
     <link rel="stylesheet" href="../inicio/Style.css" />
     <link rel="icon" href="../../images/logocafe.png" />
     <link rel="stylesheet" href="catalogo.css" />
-
+    <link href="../general.css" rel="stylesheet"/>
     <style>
       .hotdrinks__search{
         display:flex; align-items:center; gap:8px; flex-wrap:wrap;
@@ -40,14 +40,16 @@ if ($usuarioLogueado) {
     </style>
   </head>
   <body>
+    <script src="../../theme-toggle.js" defer></script>
     <footer class="site-footer">
       <div class="footer-container">
         <!-- LOGO -->
         <div class="footer-logo">
           <a href="index.php">
-            <img src="../../images/logocafe.png" alt="Coffee Shop logo" />
+            <img src="../../images/logo.png" alt="Blackwood Coffee logo" />
+           
           </a>
-          <span>COFFEE SHOP</span>
+          <span>BLACKWOOD COFFEE</span>
         </div>
 
         <!-- MENÚ -->
@@ -56,6 +58,12 @@ if ($usuarioLogueado) {
           <a href="bebidas_frias.php">Catálogo</a>
           <a href="../comentarios/comentarios.php">Comentarios</a>
           <a href="../acercade/acercade.php">Acerca de</a>
+
+          <div class="theme-switch-container">
+            <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
+            <label for="theme-toggle" class="theme-toggle-label"></label>
+          </div>
+
         </nav>
 
         <!-- ACCIONES -->
@@ -192,7 +200,7 @@ if ($usuarioLogueado) {
       <div class="cs-footer__wrap">
         <!-- Marca -->
         <aside class="cs-brand">
-          <img class="cs-brand__logo" src="../../images/logocafe.png" alt="Coffee Shop">
+          <img class="cs-brand__logo" src="../../images/logo.png" alt="Blackwood Coffee">
         </aside>
 
         <!-- Tarjetas -->

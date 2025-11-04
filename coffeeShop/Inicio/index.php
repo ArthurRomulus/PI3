@@ -20,24 +20,21 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
     <link rel="stylesheet" href="style_index.css">
     <link rel="icon" href="../../Images/logocafe.png" />
     <link rel="icon" href="../../Images/logotipocafes.png" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Montaga&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Montaga&display=swap" rel="stylesheet"/>
+    <link href="../general.css" rel="stylesheet"/>
+    
   </head>
   <body>
+    <script src="../../theme-toggle.js" defer></script>
 <footer class="site-footer">
   <div class="footer-container">
     <!-- LOGO -->
     <div class="footer-logo">
       <a href="/PI3/coffeeShop/inicio/index.php">
-        <img src="../../Images/logocafe.png" alt="Coffee Shop logo" />
+        <img src="../../Images/logo.png" alt="Blackwood Coffee logo" />
       </a>
-      <span>COFFEE SHOP</span>
+      <span>BLACKWOOD COFFEE</span>
     </div>
 
     <!-- MENÚ -->
@@ -46,6 +43,12 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
       <a href="/PI3/coffeeShop/catalogo/bebidas_frias.php">Catálogo</a>
       <a href="/PI3/coffeeShop/comentarios/comentarios.php">Comentarios</a>
       <a href="/PI3/coffeeShop/acercade/acercade.php">Acerca de</a>
+
+      <div class="theme-switch-container">
+        <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
+        <label for="theme-toggle" class="theme-toggle-label"></label>
+      </div>
+
     </nav>
 
     <!-- ACCIONES -->
@@ -501,7 +504,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
   <div class="cs-footer__wrap">
     <!-- Marca -->
     <aside class="cs-brand">
-      <img class="cs-brand__logo" src="../../Images/logocafe.png" alt="Coffee Shop">
+      <img class="cs-brand__logo" src="../../Images/logo.png" alt="Blackwood Coffee">
     </aside>
 
     <!-- Tarjetas -->

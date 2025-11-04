@@ -7,16 +7,18 @@
     <link rel="stylesheet" href="../inicio/Style.css" />
     <link rel="icon" href="../../images/logotipocafes.png" />
     <link rel="stylesheet" href="catalogo.css" />
+    <link href="../general.css" rel="stylesheet"/>
   </head>
   <body>
+    <script src="../../theme-toggle.js" defer></script>
     <!-- Top bar -->
     <footer class="site-footer">
       <div class="footer-container">
         <div class="footer-logo">
           <a href="index.php">
-            <img src="../../images/logocafe.png" alt="Coffee Shop logo" />
+            <img src="../../images/logo.png" alt="Blackwood Coffee logo" />
           </a>
-          <span>COFFEE SHOP</span>
+          <span>BLACKWOOD COFFEE</span>
         </div>
 
         <nav class="footer-menu">
@@ -24,6 +26,12 @@
           <a href="bebidas_frias.php">Catálogo</a>
           <a href="../comentarios/comentarios.php">Comentarios</a>
           <a href="../acercade/acercade.php">Acerca de</a>
+
+          <div class="theme-switch-container">
+            <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
+            <label for="theme-toggle" class="theme-toggle-label"></label>
+          </div>
+
         </nav>
 
         <div class="footer-actions">
@@ -160,7 +168,7 @@
       <div class="cs-footer__wrap">
         <!-- Marca -->
         <aside class="cs-brand">
-          <img class="cs-brand__logo" src="../../images/logocafe.png" alt="Coffee Shop">
+          <img class="cs-brand__logo" src="../../images/logo.png" alt="Blackwood Coffee">
         </aside>
 
         <!-- Tarjetas -->
