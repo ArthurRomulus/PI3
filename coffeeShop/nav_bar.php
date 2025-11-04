@@ -1,3 +1,4 @@
+<script src="../../theme-toggle.js" defer></script>
 <footer class="site-footer">
   <div class="footer-container">
     <!-- LOGO -->
@@ -15,6 +16,11 @@
       <a href="/PI3/coffeeShop/comentarios/comentarios.php">Comentarios</a>
       <a href="/PI3/coffeeShop/acercade/acercade.php">Acerca de</a>
     </nav>
+
+      <div class="theme-switch-container">
+        <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
+        <label for="theme-toggle" class="theme-toggle-label"></label>
+      </div>
 
     <!-- ACCIONES -->
     <div class="footer-actions">
