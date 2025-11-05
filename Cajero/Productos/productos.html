@@ -81,16 +81,64 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA DE PRODUCTOS ---
     const contenedorProductos = document.querySelector('.products');
     const filterContainer = document.querySelector('.cats');
-    const scrollContainer = document.querySelector('.main-scroll'); // <-- Contenedor de scroll
+    const scrollContainer = document.querySelector('.main-scroll');
     let allProducts = [];
 
-    // --- Función para mostrar productos en la página ---
+    // --- (NUEVO) FUNCIÓN PARA GENERAR LOS LISTBOX DINÁMICOS ---
+    function generarModificadoresHtml(producto) {
+        let html = '';
+        
+        if (producto.modificadores && producto.modificadores.length > 0) {
+            // CASO 1: El producto SÍ tiene modificadores
+            producto.modificadores.forEach(grupo => {
+                html += `<div class="option-select">
+                           <select class="modifier-select" data-id-grupo="${grupo.id}">
+                             <option value="0" data-precio-extra="0" selected disabled>${grupo.nombre}</option>`;
+                
+                grupo.opciones.forEach(opcion => {
+                    const precioTexto = opcion.precio > 0 ? ` (+$${parseFloat(opcion.precio).toFixed(2)})` : '';
+                    html += `<option value="${opcion.id}" data-precio-extra="${opcion.precio}">
+                               ${opcion.valor}${precioTexto}
+                             </option>`;
+                });
+                
+                html += `</select></div>`;
+            });
+            
+            // Si solo tiene 1 modificador, añadimos uno falso para mantener la estética
+            if (producto.modificadores.length === 1) {
+                 html += `<div class="option-select">
+                            <select class="modifier-select" disabled>
+                              <option>Sin opciones</option>
+                            </select>
+                          </div>`;
+            }
+
+        } else {
+            // CASO 2: El producto NO tiene modificadores (Muffin, Croissant)
+            // Genera dos listbox bloqueados
+            html = `<div class="option-select">
+                        <select class="modifier-select" disabled>
+                          <option>Sin opciones</option>
+                        </select>
+                      </div>
+                      <div class="option-select">
+                        <select class="modifier-select" disabled>
+                          <option>Sin opciones</option>
+                        </select>
+                      </div>`;
+        }
+        
+        return html;
+    }
+
+    // --- (ACTUALIZADO) Función para mostrar productos en la página ---
     function renderProducts(productsToRender, allData) {
         if (!contenedorProductos) return;
         contenedorProductos.innerHTML = '';
         
         productsToRender.forEach(producto => {
-            const { modificadores, tamanos } = allData;
+            const { tamanos } = allData; // Ya no necesitamos 'modificadores' globales
 
             let tagHtml = ''; 
             if (producto.categorias_nombres && producto.categorias_nombres.includes('Bebidas calientes')) {
@@ -105,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 isFoodItem = producto.categorias_nombres.some(cat => foodCategories.includes(cat));
             }
             
-            const opcionesLecheHtml = generarOpcionesHtml(modificadores.leches, 'Tipo Leche');
-            const opcionesCafeHtml = generarOpcionesHtml(modificadores.basesCafe, 'Tipo Café');
+            // --- ¡CAMBIOS AQUÍ! ---
+            const modificadoresHtml = generarModificadoresHtml(producto);
             const tamanosHtml = generarTamanosHtml(tamanos, producto.tamano_defecto, isFoodItem);
             
             const tarjetaHTML = `
@@ -118,8 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="card-image"><img src="${producto.ruta_imagen}" alt="${producto.namep}"></div>
                     <div class="card-badge">${producto.namep}</div>
                     <div class="card-options">
-                        <div class="option-select"><select class="milk-type">${opcionesLecheHtml}</select></div>
-                        <div class="option-select"><select class="coffee-type">${opcionesCafeHtml}</select></div>
+                        
+                        ${modificadoresHtml} 
+                        
                         <div class="option-row quantity-selector">
                             <button class="quantity-btn minus">-</button><span class="quantity-value">1</span><button class="quantity-btn plus">+</button>
                         </div>
@@ -137,7 +186,11 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('api.php')
             .then(response => response.json())
             .then(data => {
-                if (data.error) { console.error('Error desde API:', data.error); return; }
+                if (data.error || !data.success) { 
+                    console.error('Error desde API:', data.error); 
+                    if(data.trace) console.error('Trace:', data.trace);
+                    return; 
+                }
                 
                 allProducts = data.productos;
                 renderProducts(allProducts, data); // Dibuja los productos
@@ -174,59 +227,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
-                // --- INICIO DEL CÓDIGO DE HIGHLIGHT (LÓGICA MEJORADA) ---
+                // --- CÓDIGO DE HIGHLIGHT (Sin cambios) ---
                 const urlParams = new URLSearchParams(window.location.search);
                 const productId = urlParams.get('id');
 
                 if (productId) {
-                    setTimeout(() => { // Espera 100ms a que se pinten las tarjetas
+                    setTimeout(() => { 
                         const targetCard = document.querySelector(`.product-card-new[data-id="${productId}"]`);
 
                         if (targetCard && scrollContainer) {
-                            
-                            let hasAnimated = false; // Flag para evitar doble ejecución
-
-                            // 1. Función que dispara la animación
+                            let hasAnimated = false; 
                             const doAnimate = () => {
-                                if (hasAnimated) return; // Si ya se ejecutó, no hacer nada
+                                if (hasAnimated) return;
                                 hasAnimated = true;
-                                
-                                // Limpia el listener por si acaso
                                 scrollContainer.removeEventListener('scrollend', doAnimate);
-
-                                // Aplica el salto
                                 targetCard.classList.add('product-highlight');
-                                
-                                // Quita la clase después de la animación
                                 setTimeout(() => {
                                     targetCard.classList.remove('product-highlight');
-                                }, 600); // 0.8s
+                                }, 600); 
                             };
-
-                            // 2. Escucha el evento 'scrollend'
                             scrollContainer.addEventListener('scrollend', doAnimate, { once: true });
-                            
-                            // 3. Inicia el scroll SUAVE
                             targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            
-                            // 4. FALLBACK: Si el scroll no se dispara (ya está en vista)
-                            // se ejecuta después de 700ms
                             setTimeout(doAnimate, 700);
                         }
                     }, 100); 
                 }
-                // --- FIN DEL CÓDIGO DE HIGHLIGHT ---
-
             });
     }
 
-    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
+    // --- (ACTUALIZADO) MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
     if (contenedorProductos) {
+        // Evento para botones y clics dentro de la tarjeta
         contenedorProductos.addEventListener('click', (event) => {
             const target = event.target;
             const card = target.closest('.product-card-new');
             if (!card) return;
 
+            // Cantidad (Sin cambios)
             if (target.matches('.quantity-btn')) {
                 const quantitySpan = card.querySelector('.quantity-value');
                 let quantity = parseInt(quantitySpan.textContent);
@@ -236,6 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateCardPrice(card);
             }
 
+            // Tamaños (Sin cambios)
             if (target.closest('.size-btn')) {
                 const sizeButton = target.closest('.size-btn');
                 card.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
@@ -243,22 +281,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateCardPrice(card);
             }
 
+            // Añadir al Carrito (Lógica actualizada)
             if (target.matches('.add-to-cart-btn')) {
-                const milkSelect = card.querySelector('.milk-type');
-                const coffeeSelect = card.querySelector('.coffee-type');
-                if (milkSelect.selectedIndex === 0 || coffeeSelect.selectedIndex === 0) {
-                    alert('Por favor, selecciona tipo de leche y café.');
+                
+                let allOptionsSelected = true;
+                let optionsDesc = [];
+                let optionsPrice = 0;
+
+                // Valida los listbox dinámicos
+                const modifiers = card.querySelectorAll('.modifier-select:not(:disabled)');
+                modifiers.forEach(select => {
+                    if (select.selectedIndex === 0) {
+                        allOptionsSelected = false;
+                    }
+                    const selectedOption = select.options[select.selectedIndex];
+                    optionsDesc.push(selectedOption.text.split(' (')[0]); // Solo el nombre
+                    optionsPrice += parseFloat(selectedOption.dataset.precioExtra || 0);
+                });
+
+                if (!allOptionsSelected && modifiers.length > 0) {
+                    alert('Por favor, selecciona todas las opciones.');
                     return;
                 }
+
                 const activeSizeButton = card.querySelector('.size-btn.active');
-                const unitPrice = parseFloat(card.querySelector('.card-price').textContent.replace('$', '')) / parseInt(card.querySelector('.quantity-value').textContent);
+                const sizeName = activeSizeButton ? activeSizeButton.querySelector('span').textContent : 'N/A';
+                const sizePrice = activeSizeButton ? parseFloat(activeSizeButton.dataset.precioAumento) : 0;
+                
+                const basePrice = parseFloat(card.dataset.basePrice);
+                const quantity = parseInt(card.querySelector('.quantity-value').textContent);
+                const unitPrice = basePrice + sizePrice + optionsPrice;
+                
+                const requests = card.querySelector('.extra-requests-input').value.trim();
+                if(requests) {
+                    optionsDesc.push(`(${requests})`);
+                }
+
                 const productData = {
-                    name: card.dataset.name, price: unitPrice, qty: parseInt(card.querySelector('.quantity-value').textContent),
-                    size: activeSizeButton ? activeSizeButton.querySelector('span').textContent : 'N/A',
-                    milk: milkSelect.options[milkSelect.selectedIndex].text, coffee: coffeeSelect.options[coffeeSelect.selectedIndex].text,
-                    requests: card.querySelector('.extra-requests-input').value.trim(), imgSrc: card.querySelector('.card-image img').src
+                    name: card.dataset.name,
+                    price: unitPrice,
+                    qty: quantity,
+                    size: sizeName,
+                    desc: optionsDesc.join(', '), // Descripción dinámica
+                    imgSrc: card.querySelector('.card-image img').src,
+                    // Clave única para agrupar en carrito
+                    cartKey: `${card.dataset.name}|${sizeName}|${optionsDesc.join(',')}` 
                 };
-                const existingProduct = cartList.find(item => item.name === productData.name && item.size === productData.size && item.milk === productData.milk && item.coffee === productData.coffee && item.requests === productData.requests);
+
+                const existingProduct = cartList.find(item => item.cartKey === productData.cartKey);
+                
                 if (existingProduct) {
                     existingProduct.qty += productData.qty;
                 } else {
@@ -268,16 +339,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
+        // Evento para actualizar precio al cambiar listbox o tamaño
+        // (Ahora escucha 'change' en toda la sección de productos)
         contenedorProductos.addEventListener('change', (event) => {
             const target = event.target;
-            if (target.matches('.milk-type') || target.matches('.coffee-type')) {
+            if (target.matches('.modifier-select') || target.matches('.size-btn')) {
                 const card = target.closest('.product-card-new');
                 if (card) updateCardPrice(card);
             }
         });
     }
     
-    // --- MANEJADOR DE EVENTOS PARA EL CARRITO ---
+    // --- (ACTUALIZADO) MANEJADOR DE EVENTOS PARA EL CARRITO ---
     if (cartContent) {
         cartContent.addEventListener('click', e => {
             if (e.target.classList.contains('qty-btn-cart')) {
@@ -299,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNCIONES COMPLETAS DEL CARRITO Y AUXILIARES ---
 
+    // (ACTUALIZADA) renderCart
     function renderCart() { 
         if (!cartContent) return;
         cartContent.innerHTML = '';
@@ -308,10 +382,10 @@ document.addEventListener('DOMContentLoaded', () => {
             cartList.forEach((item, idx) => {
                 const div = document.createElement('div');
                 div.className = 'cart-item';
-                let optionsDesc = `${item.milk}, ${item.coffee}, ${item.size}`;
-                if (item.requests) {
-                    optionsDesc += ` (${item.requests})`;
-                }
+                
+                // Usa la descripción dinámica
+                let optionsDesc = `${item.size}, ${item.desc}`;
+
                 div.innerHTML = `
                     <div class="cart-thumb"><img src="${item.imgSrc}" alt="${item.name}"></div>
                     <div class="cart-info">
@@ -339,30 +413,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (summaryTotal) summaryTotal.textContent = `$${(total).toFixed(2)}`;
     }
 
-    function updateCardPrice(card) { 
+    // (ACTUALIZADA) updateCardPrice
+    function updateCardPrice(card) {
         const basePrice = parseFloat(card.dataset.basePrice);
+        
+        // Suma de precios de modificadores
+        let modifiersPrice = 0;
+        const modifiers = card.querySelectorAll('.modifier-select:not(:disabled)');
+        modifiers.forEach(select => {
+            if(select.selectedIndex > 0) {
+                modifiersPrice += parseFloat(select.options[select.selectedIndex].dataset.precioExtra);
+            }
+        });
+
+        // Precio de tamaño
         const sizeButton = card.querySelector('.size-btn.active');
-        const milkSelect = card.querySelector('.milk-type');
-        const coffeeSelect = card.querySelector('.coffee-type');
         const sizeIncrease = sizeButton ? parseFloat(sizeButton.dataset.precioAumento) : 0;
-        const milkExtra = milkSelect.selectedIndex > 0 ? parseFloat(milkSelect.options[milkSelect.selectedIndex].dataset.precioExtra) : 0;
-        const coffeeExtra = coffeeSelect.selectedIndex > 0 ? parseFloat(coffeeSelect.options[coffeeSelect.selectedIndex].dataset.precioExtra) : 0;
+        
+        // Cantidad
         const quantity = parseInt(card.querySelector('.quantity-value').textContent);
-        const unitPrice = basePrice + sizeIncrease + milkExtra + coffeeExtra;
+        
+        // Cálculo final
+        const unitPrice = basePrice + sizeIncrease + modifiersPrice;
         const finalPrice = unitPrice * quantity;
+        
         card.querySelector('.card-price').textContent = `$${finalPrice.toFixed(2)}`;
     }
 
-    function generarOpcionesHtml(opciones, placeholder) { 
-        let html = `<option selected disabled>${placeholder}</option>`;
-        if (opciones) {
-            opciones.forEach(opcion => {
-                html += `<option value="${opcion.id_sabor}" data-precio-extra="${opcion.precio_extra}">${opcion.nombre_sabor} ${opcion.precio_extra > 0 ? `(+$${parseFloat(opcion.precio_extra).toFixed(2)})` : ''}</option>`;
-            });
-        }
-        return html;
-    }
+    // (ELIMINADA) La vieja función generarOpcionesHtml
+    // function generarOpcionesHtml(opciones, placeholder) { ... }
 
+    // (SIN CAMBIOS) generarTamanosHtml
     function generarTamanosHtml(tamanos, tamanoDefecto, isFood = false) {
         const tamanoMap = {
             'Chico': {svg: '<svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg>'},

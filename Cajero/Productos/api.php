@@ -1,77 +1,95 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 require '../conexion.php'; 
 
+/*
+Esta API SÍ utiliza tus nuevas tablas:
+- listboxes (para 'Tipo Leche')
+- listbox_opciones (para 'Entera', 'Almendra', etc.)
+- producto_listbox (para vincular un producto con un listbox)
+*/
+
 try {
-    // --- OBTENER PRODUCTOS ---
-    // 1. Consulta actualizada: Usamos "STOCK > 0" en lugar de "status = 1"
+    $response = [
+        'success' => false,
+        'productos' => [],
+        'tamanos' => [],
+    ];
+
+    // --- 1. OBTENER TODOS LOS TAMAÑOS (Sin cambios) ---
+    $sql_tamanos = "SELECT tamano_id, nombre_tamano, precio_aumento FROM tamanos";
+    $response['tamanos'] = $pdo->query($sql_tamanos)->fetchAll(PDO::FETCH_ASSOC);
+
+    // --- 2. OBTENER PRODUCTOS (Sin cambios) ---
     $sql_productos = "SELECT idp, namep, ruta_imagen, precio, categoria, tamano_defecto 
                       FROM productos 
                       WHERE STOCK > 0";
-    
-    $sentencia_productos = $pdo->prepare($sql_productos);
-    $sentencia_productos->execute();
-    // Usamos FETCH_ASSOC para que sea más fácil de manejar
-    $productos = $sentencia_productos->fetchAll(PDO::FETCH_ASSOC);
+    $productos = $pdo->query($sql_productos)->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. NUEVA LÓGICA: Obtener las categorías para CADA producto
-    // Preparamos una consulta que usaremos repetidamente
+    // --- 3. PREPARAR CONSULTAS PARA MODIFICADORES (Lógica nueva) ---
+    
+    // Consulta para obtener las categorías de un producto
     $sql_categorias = "SELECT c.nombrecategoria 
                        FROM categorias c
                        JOIN producto_categorias pc ON c.id_categoria = pc.id_categoria
                        WHERE pc.idp = :idp";
-    $sentencia_categorias = $pdo->prepare($sql_categorias);
+    $stmt_categorias = $pdo->prepare($sql_categorias);
 
-    // Iteramos sobre cada producto (por referencia &) para añadirle sus categorías
-    foreach ($productos as &$producto) {
-        // Ejecutamos la consulta preparada con el ID del producto actual
-        $sentencia_categorias->execute(['idp' => $producto['idp']]);
-        $categorias_raw = $sentencia_categorias->fetchAll(PDO::FETCH_ASSOC);
+    // Consulta para obtener los GRUPOS (listboxes) de un producto
+    $sql_grupos = "SELECT g.id, g.nombre
+                   FROM listboxes g
+                   JOIN producto_listbox pl ON g.id = pl.listbox_id
+                   WHERE pl.producto_id = :idp
+                   ORDER BY g.id ASC"; // Asegura un orden consistente
+    $stmt_grupos = $pdo->prepare($sql_grupos);
+
+    // Consulta para obtener las OPCIONES de un grupo (listbox)
+    $sql_opciones = "SELECT id, valor, precio
+                     FROM listbox_opciones
+                     WHERE listbox_id = :id_grupo";
+    $stmt_opciones = $pdo->prepare($sql_opciones);
+
+
+    // --- 4. CONSTRUIR CADA PRODUCTO ---
+    foreach ($productos as &$producto) { // Bucle por referencia
         
-        // Creamos un nuevo campo 'categorias_nombres' en el producto
-        // Usamos array_column para obtener solo los nombres (ej: ['Frappés', 'Bebidas frias'])
+        // Añadir categorías (como tenías antes)
+        $stmt_categorias->execute(['idp' => $producto['idp']]);
+        $categorias_raw = $stmt_categorias->fetchAll(PDO::FETCH_ASSOC);
         $producto['categorias_nombres'] = array_column($categorias_raw, 'nombrecategoria');
-    }
-    unset($producto); // Rompemos la referencia del bucle
 
-    // --- OBTENER MODIFICADORES --- (Sin cambios)
-    $sql_sabores = "SELECT id_sabor, nombre_sabor, precio_extra, tipo_modificador FROM sabores";
-    $sentencia_sabores = $pdo->prepare($sql_sabores);
-    $sentencia_sabores->execute();
-    $sabores_todos = $sentencia_sabores->fetchAll();
-    
-    $leches = [];
-    $basesCafe = [];
-    foreach ($sabores_todos as $sabor) {
-        if (strpos($sabor['tipo_modificador'], 'LECHE') !== false) {
-            $leches[] = $sabor;
-        } 
-        elseif ($sabor['tipo_modificador'] === 'BASE') {
-            $basesCafe[] = $sabor;
+        // Añadir modificadores (Lógica nueva)
+        $producto['modificadores'] = []; // Inicializa el array de modificadores
+        
+        // Busca los grupos (listboxes) asignados a este producto
+        $stmt_grupos->execute(['idp' => $producto['idp']]);
+        $grupos = $stmt_grupos->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($grupos as $grupo) {
+            // Para cada grupo (ej. "Tipo Leche"), busca sus opciones
+            $stmt_opciones->execute(['id_grupo' => $grupo['id']]);
+            $opciones = $stmt_opciones->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Añade las opciones al grupo
+            $grupo['opciones'] = $opciones;
+            
+            // Añade el grupo completo (con sus opciones) al producto
+            $producto['modificadores'][] = $grupo;
         }
     }
 
-    // --- OBTENER TAMAÑOS --- (Sin cambios)
-    $sql_tamanos = "SELECT tamano_id, nombre_tamano, precio_aumento FROM tamanos";
-    $sentencia_tamanos = $pdo->prepare($sql_tamanos);
-    $sentencia_tamanos->execute();
-    $tamanos = $sentencia_tamanos->fetchAll(PDO::FETCH_ASSOC); // Usar FETCH_ASSOC es buena práctica
+    // Asignar los productos procesados a la respuesta
+    $response['productos'] = $productos;
+    $response['success'] = true;
 
-    // --- CONSTRUIR LA RESPUESTA ---
-    $respuesta = [
-        // "productos" ahora contiene la lista de categorías en 'categorias_nombres'
-        "productos" => $productos, 
-        "modificadores" => [
-            "leches" => $leches,
-            "basesCafe" => $basesCafe
-        ],
-        "tamanos" => $tamanos
-    ];
-    
-    echo json_encode($respuesta);
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
 
-} catch (PDOException $e) {
+} catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(["error" => "Error en la base de datos: " . $e->getMessage()]);
+    echo json_encode([
+        'success' => false, 
+        'error' => 'Error en la API: ' . $e->getMessage(),
+        'trace' => $e->getTraceAsString() // (Opcional: para depuración)
+    ]);
 }
 ?>
