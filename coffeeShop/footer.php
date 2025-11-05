@@ -1,6 +1,6 @@
     <!-- ===================== FOOTER ===================== -->
 <footer class="cs-footer" aria-labelledby="footer-title">
-  <h2 id="footer-title" class="sr-only">Información del sitio</h2>
+  <h2 id="footer-title" class="sr-only" data-translate="Información del sitio">Información del sitio</h2>
 
   <div class="cs-footer__wrap">
     <!-- Marca -->
@@ -12,16 +12,16 @@
     <div class="cs-cards">
       <!-- Newsletter / Pago -->
       <section class="cs-card">
-  <h3>News & updates</h3>
+  <h3 data-translate="Noticias y actualizaciones">Noticias y actualizaciones</h3>
   <form class="cs-news" action="#" method="post">
-          <label class="sr-only" for="newsletter">Correo electrónico</label>
-          <input id="newsletter" type="email" placeholder="correo electrónico" required>
-          <button type="submit" class="cs-btn">Suscribir</button>
+          <label class="sr-only" for="newsletter" data-translate="Correo electrónico">Correo electrónico</label>
+          <input id="newsletter" type="email" placeholder="correo electrónico" required data-translate="Correo electrónico"/>
+          <button type="submit" class="cs-btn" data-translate="Suscribir">Suscribir</button>
         </form>
       </section>
       <!-- Contacto -->
       <section class="cs-card">
-        <h3>Contáctanos</h3>
+        <h3 data-translate="Contáctanos">Contáctanos</h3>
         <ul class="cs-list">
           <li>
             <span class="cs-ico" aria-hidden="true">
@@ -51,18 +51,18 @@
 
       <!-- Enlaces -->
       <nav class="cs-card" aria-label="Conoce más">
-        <h3>Conoce más</h3>
+        <h3 data-translate="Conoce más">Conoce más</h3>
         <ul class="cs-links">
-          <li><a href="../inicio/index.php"><span class="chev" aria-hidden="true">›</span> Inicio</a></li>
-          <li><a href="../catalogo/catalogo.php"><span class="chev" aria-hidden="true">›</span> Catálogo</a></li>
-          <li><a href="../comentarios/comentarios.php"><span class="chev" aria-hidden="true">›</span> Comentarios</a></li>
-          <li><a href="../acercade/acercade.php"><span class="chev" aria-hidden="true">›</span> Acerca de</a></li>
+          <li><a href="../inicio/index.php" data-translate="Inicio"><span class="chev" aria-hidden="true">›</span> Inicio</a></li>
+          <li><a href="../catalogo/catalogo.php" data-translate="Catálogo"><span class="chev" aria-hidden="true">›</span> Catálogo</a></li>
+          <li><a href="../comentarios/comentarios.php" data-translate="Comentarios"><span class="chev" aria-hidden="true">›</span> Comentarios</a></li>
+          <li><a href="../acercade/acercade.php" data-translate="Acerca de"><span class="chev" aria-hidden="true">›</span> Acerca de</a></li>
         </ul>
       </nav>
 
       <!-- Redes + Horarios -->
       <section class="cs-card">
-        <h3>Síguenos</h3>
+        <h3 data-translate="Síguenos">Síguenos</h3>
         <div class="cs-social">
           <a href="https://facebook.com" aria-label="Facebook" class="circle">
             <svg viewBox="0 0 24 24"><path d="M13 22v-9h3l1-4h-4V7a1 1 0 0 1 1-1h3V2h-3a5 5 0 0 0-5 5v2H6v4h3v9h4Z" fill="currentColor"/></svg>
@@ -73,7 +73,7 @@
         </div>
 
         <div class="cs-hours">
-          <h4>Horarios</h4>
+          <h4 data-translate="Horarios">Horarios</h4>
           <p>Lun–Vier: 9:00–21:00</p>
           <p>Sab–Dom: 10:00–20:00</p>
         </div>

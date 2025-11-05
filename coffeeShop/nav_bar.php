@@ -11,10 +11,10 @@
 
     <!-- MENÚ -->
     <nav class="footer-menu">
-      <a href="/PI3/coffeeShop/inicio/index.php">Inicio</a>
-      <a href="/PI3/coffeeShop/catalogo/catalogo.php">Catálogo</a>
-      <a href="/PI3/coffeeShop/comentarios/comentarios.php">Comentarios</a>
-      <a href="/PI3/coffeeShop/acercade/acercade.php">Acerca de</a>
+      <a href="/PI3/coffeeShop/inicio/index.php" data-translate="Inicio">Inicio</a>
+      <a href="/PI3/coffeeShop/catalogo/catalogo.php" data-translate="Catálogo">Catálogo</a>
+      <a href="/PI3/coffeeShop/comentarios/comentarios.php" data-translate="Comentarios">Comentarios</a>
+      <a href="/PI3/coffeeShop/acercade/acercade.php" data-translate="Acerca de ">Acerca de</a>
     </nav>
 
       <div class="theme-switch-container">
@@ -46,7 +46,37 @@
         🛒 <span></span>
       </a>
 
-      <span class="lang">ESP | ING</span>
+      <div class="lang-switch">
+        <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
+        <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
+      </div>
+      <style>
+        .lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-flag {
+  width: 28px;
+  height: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  border-radius: 3px;
+}
+
+.lang-flag:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.lang-flag.active {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(133, 73, 5, 0.8);
+}
+      </style>
+
     </div>
   </div>
 </footer>

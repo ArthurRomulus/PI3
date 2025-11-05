@@ -26,13 +26,17 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
     
   </head>
   <body>
-<?php include "../nav_bar.php"; ?>
+  <?php include "../nav_bar.php"; ?>
     <!--Primera parte(sabor que inspira)-->
     <section class="hero-sabor">
       <div class="hero-wrap">
         <div class="hero-texto">
-          <h2>SABOR QUE INSPIRA</h2>
-          <p>
+          <h2 data-translate="SABOR QUE INSPIRA">SABOR QUE INSPIRA</h2>
+
+          <p data-translate= "En nuestra cafetería hacemos de cada momento algo especial. No solo
+            servimos café de calidad, también tenemos una variedad de postres
+            para acompañar tus días. Un espacio tranquilo, acogedor y lleno de
+            sabor, pensado para que disfrutes a tu manera">
             En nuestra cafetería hacemos de cada momento algo especial. No solo
             servimos café de calidad, también tenemos una variedad de postres
             para acompañar tus días. Un espacio tranquilo, acogedor y lleno de
@@ -56,7 +60,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
     <section class="ts-section">
       <div class="ts-title-line">
         <span class="ts-line"></span>
-        <span class="ts-title-text">Más Vendidos</span>
+        <span class="ts-title-text" data-translate="Más Vendidos">Más Vendidos</span>
         <span class="ts-line"></span>
       </div>
       <!-- Iconos sueltos en el lienzo de Más Vendidos -->
@@ -123,7 +127,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
       <!-- Botón Catálogo -->
       <div class="catalogo-btn">
         <a href="../catalogo/catalogo.php">
-          <span>Catalogo</span>
+          <span data-translate="Catalogo">Catalogo</span>
           <img src="../../Images/catalogicon.png" alt="Icono Catalogo" />
         </a>
       </div>
@@ -134,7 +138,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
      <section class="ts-section">
       <div class="ts-title-line">
         <span class="ts-line"></span>
-        <span class="ts-title-text">Nuestros Servicios</span>
+        <span class="ts-title-text" data-translate="Nuestros Servicios">Nuestros Servicios</span>
         <span class="ts-line"></span>
       </div>
       <!-- Iconos sueltos en el lienzo de Más Vendidos -->
@@ -146,7 +150,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
 <div class="hero-texto">
   <div class="hero-line">
 
-    <p class="hero-texto__contenido">
+    <p class="hero-texto__contenido" data-translate="Contamos con los mejores servicios para que disfrute <br> unas tardes de café de calidad y snacks deliciosos">
       Contamos con los mejores servicios para que disfrute <br> unas tardes de café de calidad y snacks deliciosos.
     </p>
 
@@ -169,7 +173,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Espacio 100% Familiar</h3>
+            <h3 class="svc__label" data-translate="Espacio 100% Familiar">Espacio 100% Familiar</h3>
           </li>
           <!-- 2 -->
           <li class="svc__card">
@@ -180,7 +184,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Vigilancia todo el día</h3>
+            <h3 class="svc__label" data-translate="Vigilancia todo el dia">Vigilancia todo el día</h3>
           </li>
           <!-- 3 -->
           <li class="svc__card">
@@ -191,14 +195,14 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Espacio libre de ruido</h3>
+            <h3 class="svc__label" data-translate="Espacio ibre de ruido">Espacio libre de ruido</h3>
           </li>
           <!-- 4 -->
           <li class="svc__card">
             <figure class="svc__icon">
               <img src="../../Images/wifi.png" alt="Wi-Fi gratuito" loading="lazy" />
             </figure>
-            <h3 class="svc__label">Wi-FI Gratuito</h3>
+            <h3 class="svc__label" data-translate="Wi-Fi Gratuito">Wi-FI Gratuito</h3>
           </li>
           <!-- 5 -->
           <li class="svc__card">
@@ -209,7 +213,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Grandes Descuentos</h3>
+            <h3 class="svc__label" data-translate="Grandes Descuentos">Grandes Descuentos</h3>
           </li>
           <!-- 6 -->
           <li class="svc__card">
@@ -220,13 +224,13 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Accesibilidad a todo público</h3>
+            <h3 class="svc__label" data-translate="Accesibilidad a todo publico">Accesibilidad a todo público</h3>
           </li>
         </ul>
 
       <div class="catalogo-btn">
         <a href="../acercade/acercade.php">
-          <span>Acerca de Nosotros</span>
+          <span data-translate="Acerca de Nosotros">Acerca de Nosotros</span>
         </a>
       </div>
 
@@ -238,18 +242,22 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
 
     <!-- Texto -->
     <div class="promo__text">
-      <h2 id="promo-title" class="promo__title">¡Haz tu pedido hoy!</h2>
-      <p class="promo__desc">No esperes más para disfrutar el sabor que despierta tus sentidos y te llena de energía.
+      <h2 id="promo-title" class="promo__title" data-translate="¡Haz tu pedido hoy!">¡Haz tu pedido hoy!</h2>
+      <p class="promo__desc" data-translate="No esperes más para disfrutar el sabor que despierta tus sentidos y te llena de energía.
+Cada taza está preparada con pasión, utilizando granos seleccionados que reflejan el esfuerzo de nuestros caficultores y el amor por el buen café.
+Aquí no solo servimos una bebida: creamos momentos, compartimos historias y transformamos lo cotidiano en algo especial.
+Empieza tu día con el aroma que inspira, con el sabor que reconforta y con la calidad que mereces.
+Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días comienzan con una buena taza de café">No esperes más para disfrutar el sabor que despierta tus sentidos y te llena de energía.
 Cada taza está preparada con pasión, utilizando granos seleccionados que reflejan el esfuerzo de nuestros caficultores y el amor por el buen café.
 Aquí no solo servimos una bebida: creamos momentos, compartimos historias y transformamos lo cotidiano en algo especial.
 Empieza tu día con el aroma que inspira, con el sabor que reconforta y con la calidad que mereces.
 Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días comienzan con una buena taza de café.
       </p>
-      <h1 class="promo__price">Desde $45 MXN</h1>
+      <h1 class="promo__price" data-translate="Desde $45 MXN">Desde $45 MXN</h1>
 
       <div class="promo__cta">
-        <a href="#visit" class="btn btn--dark">Visítanos</a>
-        <a href="#menu" class="btn btn--light">Conoce el menú</a>
+        <a href="#visit" class="btn btn--dark" data-translate="Visítanos">Visítanos</a>
+        <a href="#menu" class="btn btn--light" data-translate="Conoce el menú">Conoce el menú</a>
       </div>
 
       <!-- Sticker debajo de los botones -->
@@ -276,7 +284,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
 <section class="our-products" id="our-products">
   <div class="op-wrap">
     <h2 class="op-title">
-      <span>Otros Productos</span>
+      <span data-translate="Otros Productos">Otros Productos</span>
     </h2>
 
     <div class="op-grid">
@@ -335,8 +343,8 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       Café de origen premium con tueste medio, manteniendo la frescura.
     </p>
     <div class="op-buttons">
-      <a class="op-btn" href="#">Ver más</a>
-      <button class="op-cart-btn">
+      <a class="op-btn" href="#" data-translate="Ver más">Ver más</a>
+      <button class="op-cart-btn" data-translate="Agregar al carrito">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H19M7 13l1.5-6h9.6M9 21a1 1 0 100-2 1 1 0 000 2zm10 0a1 1 0 100-2 1 1 0 000 2z"/>
@@ -364,8 +372,8 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       Ideal para postres o para disfrutar frío con leche vegetal.
     </p>
     <div class="op-buttons">
-      <a class="op-btn" href="#">Ver más</a>
-      <button class="op-cart-btn">
+      <a class="op-btn" href="#" data-translate="Ver más">Ver más</a>
+      <button class="op-cart-btn" data-translate="Agregar al carrito">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H19M7 13l1.5-6h9.6M9 21a1 1 0 100-2 1 1 0 000 2z"/>
@@ -391,21 +399,21 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
     <!-- Tarjeta de texto -->
     <div class="delivery__card">
       <header class="delivery__header">
-        <h2 id="delivery-title" class="delivery__title">
+        <h2 id="delivery-title" class="delivery__title" data-translate="Envíos a Manzanillo">
           Envíos a<br>Manzanillo
           <img src="../../Images/envios.png" alt="Sticker decorativo" class="delivery__sticker">
         </h2>
         <hr class="delivery__line" />
       </header>
 
-      <p class="delivery__desc">
+      <p class="delivery__desc" data-translate="Llevamos el mejor café hasta tu puerta en Manzanillo">
   Llevamos el mejor café hasta<br>tu puerta en Manzanillo
       </p>
-      <p class="delivery__small">
+      <p class="delivery__small" data-translate="Rápido, fresco y con la misma calidad que en tienda">
   Rápido, fresco y con la misma<br>calidad que en tienda
       </p>
 
-      <a href="#ubicaciones" class="btn btn--dark">
+      <a href="#ubicaciones" class="btn btn--dark" data-translate="ver ubicaciones de entrega">
         <img src="../../Images/locationicon.png" alt="" class="btn__icon" />
         ver ubicaciones de entrega
       </a>
@@ -457,7 +465,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       role="dialog"
     >
       <header class="mc-header">
-        <h3 id="mcTitle">Tu carrito</h3>
+        <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
         <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
           ✕
         </button>
@@ -467,7 +475,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
         <ul class="mc-list" id="mcList">
           <!-- items por JS -->
         </ul>
-        <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
+        <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
       </div>
 
       <footer class="mc-footer">
@@ -475,7 +483,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
           <span>Total</span>
           <strong id="mcTotal">$0.00 MXN</strong>
         </div>
-        <a href="carrito.php" class="mc-btn">Ir a pagar</a>
+        <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
       </footer>
     </aside>
 
@@ -483,4 +491,5 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
   window.CART_API_URL = '../catalogo/cart_api.php';
 </script>
 <script src="../catalogo/app.js"></script>
+<script src="../../translate.js"></script>
 </html>
