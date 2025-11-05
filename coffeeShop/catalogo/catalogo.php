@@ -67,18 +67,22 @@ $categoria_result = $conn->query($categoria_query);
   <link rel="stylesheet" href="../inicio/Style.css" />
   <link rel="stylesheet" href="catalogo.css" />
   <link rel="icon" href="../../images/logotipocafes.png" />
+  <link href="../general.css" rel="stylesheet"/>
+
 </head>
 <body>
 <?php include "../nav_bar.php"; ?>
 
 <section class="catalogo" aria-labelledby="catalogo-title">
   <div class="catalogo__wrap">
-    <h2 id="catalogo-title">Catálogo</h2>
+    <h2 id="catalogo-title" data-translate="Catálogo">Catálogo</h2>
 
     <!-- Botones de categorías -->
     <div class="button-group" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
       <a href="catalogo.php">
-        <button style="padding:8px 14px; border:none; background:#7a4b34; color:#fff; border-radius:6px; cursor:pointer;">
+        <button 
+          style="padding:8px 14px; border:none; background:#7a4b34; color:#fff; border-radius:6px; cursor:pointer;"
+          data-translate="Todo">
           Todo
         </button>
       </a>
@@ -88,13 +92,17 @@ $categoria_result = $conn->query($categoria_query);
               $cat_nombre = $cat['nombrecategoria'];
               $activo = ($categoria === $cat_nombre) ? "background:#d8b597;color:#000;font-weight:bold;" : "";
               echo '<a href="catalogo.php?categoria=' . urlencode($cat_nombre) . '">
-                      <button style="padding:8px 14px; border:none; background:#7a4b34; color:#fff; border-radius:6px; cursor:pointer;' . $activo . '">' 
-                      . htmlspecialchars($cat_nombre) . '</button>
+                      <button 
+                        style="padding:8px 14px; border:none; background:#7a4b34; color:#fff; border-radius:6px; cursor:pointer;' . $activo . '"
+                        data-translate="' . htmlspecialchars($cat_nombre) . '">' 
+                        . htmlspecialchars($cat_nombre) . '
+                      </button>
                     </a>';
           }
       }
       ?>
     </div>
+
 
     <!-- Buscador -->
     <form method="GET" action="catalogo.php" style="margin-bottom:20px;">
@@ -104,7 +112,7 @@ $categoria_result = $conn->query($categoria_query);
       <?php if($categoria): ?>
         <input type="hidden" name="categoria" value="<?php echo htmlspecialchars($categoria); ?>">
       <?php endif; ?>
-      <button type="submit" style="padding:8px 14px; background:#7a4b34; color:#fff; border:none; border-radius:6px; cursor:pointer;">Buscar</button>
+      <button type="submit" style="padding:8px 14px; background:#7a4b34; color:#fff; border:none; border-radius:6px; cursor:pointer;" data-translate="Buscar">Buscar</button>
     </form>
 
     <div class="catalogo__divider">
@@ -117,9 +125,10 @@ $categoria_result = $conn->query($categoria_query);
 
 <section class="hotdrinks" aria-labelledby="hotdrinks-title">
   <div class="hotdrinks__wrap">
-    <h2 id="hotdrinks-title">
-      <?php echo $categoria ? htmlspecialchars($categoria) : "Todos los productos"; ?>
+    <h2 id="hotdrinks-title" data-translate="<?= htmlspecialchars($categoria ? $categoria : 'Todos los productos') ?>">
+      <?= htmlspecialchars($categoria ? $categoria : 'Todos los productos') ?>
     </h2>
+
 
     <!-- GRID DE PRODUCTOS -->
     <div class="hotdrinks__grid">
@@ -131,17 +140,20 @@ $categoria_result = $conn->query($categoria_query);
                    alt="<?= htmlspecialchars($producto['namep']) ?>"
                    onerror="this.onerror=null;this.src='../../images/placeholder.png';" />
             </div>
-            <h4 class="ts-name"><?= htmlspecialchars($producto['namep']) ?></h4>
-            <p class="ts-desc"><?= htmlspecialchars($producto['descripcion'] ?? '') ?></p>
-            <div class="ts-info">
-              <span><?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?></span>
-              <span class="ts-price">$<?= number_format($producto['precio'], 2) ?> MXN</span>
+            <h4 class="ts-name" data-translate="<?= htmlspecialchars($producto['namep']) ?>">
+              <?= htmlspecialchars($producto['namep']) ?>
+            </h4>
+            <p class="ts-desc" data-translate="<?= htmlspecialchars($producto['descripcion'] ?? '') ?>">
+              <?= htmlspecialchars($producto['descripcion'] ?? '') ?>
+            </p>
+            <span data-translate="<?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>">
+              <?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>
+            </span>
               <button class="ts-cart">🛒</button>
-            </div>
           </article>
         <?php endforeach; ?>
       <?php else: ?>
-        <p style="grid-column:1/-1; text-align:center; opacity:.7; padding:16px;">
+        <p style="grid-column:1/-1; text-align:center; opacity:.7; padding:16px;" data-translate="No hay productos en esta categoría.">
           No hay productos en esta categoría.
         </p>
       <?php endif; ?>
@@ -156,5 +168,43 @@ $categoria_result = $conn->query($categoria_query);
 </section>
 
 <?php include "../footer.php"; ?>
+ <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+    <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+    <aside
+      class="mini-cart"
+      id="miniCart"
+      aria-hidden="true"
+      aria-labelledby="mcTitle"
+      role="dialog"
+    >
+      <header class="mc-header">
+        <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
+        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+          ✕
+        </button>
+      </header>
+
+      <div class="mc-body">
+        <ul class="mc-list" id="mcList">
+          <!-- items por JS -->
+        </ul>
+        <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
+      </div>
+
+      <footer class="mc-footer">
+        <div class="mc-total">
+          <span data-translate="Total">Total</span>
+          <strong id="mcTotal">$0.00 MXN</strong>
+        </div>
+        <a href="carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
+      </footer>
+    </aside>
 </body>
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+<script src="../../translate.js"></script>
+
 </html>

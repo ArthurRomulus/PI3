@@ -26,70 +26,17 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
     
   </head>
   <body>
-<<<<<<< HEAD
-<?php include "../nav_bar.php"; ?>
-=======
-    <script src="../../theme-toggle.js" defer></script>
-<footer class="site-footer">
-  <div class="footer-container">
-    <!-- LOGO -->
-    <div class="footer-logo">
-      <a href="/PI3/coffeeShop/inicio/index.php">
-        <img src="../../Images/logo.png" alt="Blackwood Coffee logo" />
-      </a>
-      <span>BLACKWOOD COFFEE</span>
-    </div>
-
-    <!-- MENÚ -->
-    <nav class="footer-menu">
-      <a href="/PI3/coffeeShop/inicio/index.php">Inicio</a>
-      <a href="/PI3/coffeeShop/catalogo/bebidas_frias.php">Catálogo</a>
-      <a href="/PI3/coffeeShop/comentarios/comentarios.php">Comentarios</a>
-      <a href="/PI3/coffeeShop/acercade/acercade.php">Acerca de</a>
-
-      <div class="theme-switch-container">
-        <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox">
-        <label for="theme-toggle" class="theme-toggle-label"></label>
-      </div>
-
-    </nav>
-
-    <!-- ACCIONES -->
-    <div class="footer-actions">
-      <a
-        href="<?php echo $usuarioLogueado
-          ? '/PI3/coffeeShop/perfil/perfil_usuario.php'
-          : '/PI3/General/login.php'; ?>"
-        class="icon-btn"
-        aria-label="Cuenta"
-        title="<?php echo $usuarioLogueado ? 'Mi perfil' : 'Iniciar sesión'; ?>"
-        style="display:flex;align-items:center;gap:6px;"
-      >
-        👤
-        <?php if ($usuarioLogueado): ?>
-          <span style="font-size:.7rem;color:#4CAF50;font-weight:600;line-height:1;">
-            sesión
-          </span>
-        <?php endif; ?>
-      </a>
-
-      <!-- carrito -->
-      <a href="#" id="open-cart" class="icon-btn" aria-label="Carrito" title="Carrito">
-        🛒 <span></span>
-      </a>
-
-      <span class="lang">ESP | ING</span>
-    </div>
-  </div>
-</footer>
->>>>>>> karol
-
+  <?php include "../nav_bar.php"; ?>
     <!--Primera parte(sabor que inspira)-->
     <section class="hero-sabor">
       <div class="hero-wrap">
         <div class="hero-texto">
-          <h2>SABOR QUE INSPIRA</h2>
-          <p>
+          <h2 data-translate="SABOR QUE INSPIRA">SABOR QUE INSPIRA</h2>
+
+          <p data-translate= "En nuestra cafetería hacemos de cada momento algo especial. No solo
+            servimos café de calidad, también tenemos una variedad de postres
+            para acompañar tus días. Un espacio tranquilo, acogedor y lleno de
+            sabor, pensado para que disfrutes a tu manera">
             En nuestra cafetería hacemos de cada momento algo especial. No solo
             servimos café de calidad, también tenemos una variedad de postres
             para acompañar tus días. Un espacio tranquilo, acogedor y lleno de
@@ -113,7 +60,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
     <section class="ts-section">
       <div class="ts-title-line">
         <span class="ts-line"></span>
-        <span class="ts-title-text">Más Vendidos</span>
+        <span class="ts-title-text" data-translate="Más Vendidos">Más Vendidos</span>
         <span class="ts-line"></span>
       </div>
       <!-- Iconos sueltos en el lienzo de Más Vendidos -->
@@ -180,7 +127,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
       <!-- Botón Catálogo -->
       <div class="catalogo-btn">
         <a href="../catalogo/catalogo.php">
-          <span>Catalogo</span>
+          <span data-translate="Catalogo">Catalogo</span>
           <img src="../../Images/catalogicon.png" alt="Icono Catalogo" />
         </a>
       </div>
@@ -191,7 +138,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
      <section class="ts-section">
       <div class="ts-title-line">
         <span class="ts-line"></span>
-        <span class="ts-title-text">Nuestros Servicios</span>
+        <span class="ts-title-text" data-translate="Nuestros Servicios">Nuestros Servicios</span>
         <span class="ts-line"></span>
       </div>
       <!-- Iconos sueltos en el lienzo de Más Vendidos -->
@@ -203,7 +150,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
 <div class="hero-texto">
   <div class="hero-line">
 
-    <p class="hero-texto__contenido">
+    <p class="hero-texto__contenido" data-translate="Contamos con los mejores servicios para que disfrute <br> unas tardes de café de calidad y snacks deliciosos">
       Contamos con los mejores servicios para que disfrute <br> unas tardes de café de calidad y snacks deliciosos.
     </p>
 
@@ -226,7 +173,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Espacio 100% Familiar</h3>
+            <h3 class="svc__label" data-translate="Espacio 100% Familiar">Espacio 100% Familiar</h3>
           </li>
           <!-- 2 -->
           <li class="svc__card">
@@ -237,7 +184,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Vigilancia todo el día</h3>
+            <h3 class="svc__label" data-translate="Vigilancia todo el dia">Vigilancia todo el día</h3>
           </li>
           <!-- 3 -->
           <li class="svc__card">
@@ -248,14 +195,14 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Espacio libre de ruido</h3>
+            <h3 class="svc__label" data-translate="Espacio ibre de ruido">Espacio libre de ruido</h3>
           </li>
           <!-- 4 -->
           <li class="svc__card">
             <figure class="svc__icon">
               <img src="../../Images/wifi.png" alt="Wi-Fi gratuito" loading="lazy" />
             </figure>
-            <h3 class="svc__label">Wi-FI Gratuito</h3>
+            <h3 class="svc__label" data-translate="Wi-Fi Gratuito">Wi-FI Gratuito</h3>
           </li>
           <!-- 5 -->
           <li class="svc__card">
@@ -266,7 +213,7 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Grandes Descuentos</h3>
+            <h3 class="svc__label" data-translate="Grandes Descuentos">Grandes Descuentos</h3>
           </li>
           <!-- 6 -->
           <li class="svc__card">
@@ -277,13 +224,13 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
                 loading="lazy"
               />
             </figure>
-            <h3 class="svc__label">Accesibilidad a todo público</h3>
+            <h3 class="svc__label" data-translate="Accesibilidad a todo publico">Accesibilidad a todo público</h3>
           </li>
         </ul>
 
       <div class="catalogo-btn">
         <a href="../acercade/acercade.php">
-          <span>Acerca de Nosotros</span>
+          <span data-translate="Acerca de Nosotros">Acerca de Nosotros</span>
         </a>
       </div>
 
@@ -295,18 +242,22 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
 
     <!-- Texto -->
     <div class="promo__text">
-      <h2 id="promo-title" class="promo__title">¡Haz tu pedido hoy!</h2>
-      <p class="promo__desc">No esperes más para disfrutar el sabor que despierta tus sentidos y te llena de energía.
+      <h2 id="promo-title" class="promo__title" data-translate="¡Haz tu pedido hoy!">¡Haz tu pedido hoy!</h2>
+      <p class="promo__desc" data-translate="No esperes más para disfrutar el sabor que despierta tus sentidos y te llena de energía.
+Cada taza está preparada con pasión, utilizando granos seleccionados que reflejan el esfuerzo de nuestros caficultores y el amor por el buen café.
+Aquí no solo servimos una bebida: creamos momentos, compartimos historias y transformamos lo cotidiano en algo especial.
+Empieza tu día con el aroma que inspira, con el sabor que reconforta y con la calidad que mereces.
+Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días comienzan con una buena taza de café">No esperes más para disfrutar el sabor que despierta tus sentidos y te llena de energía.
 Cada taza está preparada con pasión, utilizando granos seleccionados que reflejan el esfuerzo de nuestros caficultores y el amor por el buen café.
 Aquí no solo servimos una bebida: creamos momentos, compartimos historias y transformamos lo cotidiano en algo especial.
 Empieza tu día con el aroma que inspira, con el sabor que reconforta y con la calidad que mereces.
 Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días comienzan con una buena taza de café.
       </p>
-      <h1 class="promo__price">Desde $45 MXN</h1>
+      <h1 class="promo__price" data-translate="Desde $45 MXN">Desde $45 MXN</h1>
 
       <div class="promo__cta">
-        <a href="#visit" class="btn btn--dark">Visítanos</a>
-        <a href="#menu" class="btn btn--light">Conoce el menú</a>
+        <a href="#visit" class="btn btn--dark" data-translate="Visítanos">Visítanos</a>
+        <a href="#menu" class="btn btn--light" data-translate="Conoce el menú">Conoce el menú</a>
       </div>
 
       <!-- Sticker debajo de los botones -->
@@ -333,7 +284,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
 <section class="our-products" id="our-products">
   <div class="op-wrap">
     <h2 class="op-title">
-      <span>Otros Productos</span>
+      <span data-translate="Otros Productos">Otros Productos</span>
     </h2>
 
     <div class="op-grid">
@@ -392,8 +343,8 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       Café de origen premium con tueste medio, manteniendo la frescura.
     </p>
     <div class="op-buttons">
-      <a class="op-btn" href="#">Ver más</a>
-      <button class="op-cart-btn">
+      <a class="op-btn" href="#" data-translate="Ver más">Ver más</a>
+      <button class="op-cart-btn" data-translate="Agregar al carrito">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H19M7 13l1.5-6h9.6M9 21a1 1 0 100-2 1 1 0 000 2zm10 0a1 1 0 100-2 1 1 0 000 2z"/>
@@ -421,8 +372,8 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       Ideal para postres o para disfrutar frío con leche vegetal.
     </p>
     <div class="op-buttons">
-      <a class="op-btn" href="#">Ver más</a>
-      <button class="op-cart-btn">
+      <a class="op-btn" href="#" data-translate="Ver más">Ver más</a>
+      <button class="op-cart-btn" data-translate="Agregar al carrito">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H19M7 13l1.5-6h9.6M9 21a1 1 0 100-2 1 1 0 000 2z"/>
@@ -448,21 +399,21 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
     <!-- Tarjeta de texto -->
     <div class="delivery__card">
       <header class="delivery__header">
-        <h2 id="delivery-title" class="delivery__title">
+        <h2 id="delivery-title" class="delivery__title" data-translate="Envíos a Manzanillo">
           Envíos a<br>Manzanillo
           <img src="../../Images/envios.png" alt="Sticker decorativo" class="delivery__sticker">
         </h2>
         <hr class="delivery__line" />
       </header>
 
-      <p class="delivery__desc">
+      <p class="delivery__desc" data-translate="Llevamos el mejor café hasta tu puerta en Manzanillo">
   Llevamos el mejor café hasta<br>tu puerta en Manzanillo
       </p>
-      <p class="delivery__small">
+      <p class="delivery__small" data-translate="Rápido, fresco y con la misma calidad que en tienda">
   Rápido, fresco y con la misma<br>calidad que en tienda
       </p>
 
-      <a href="#ubicaciones" class="btn btn--dark">
+      <a href="#ubicaciones" class="btn btn--dark" data-translate="ver ubicaciones de entrega">
         <img src="../../Images/locationicon.png" alt="" class="btn__icon" />
         ver ubicaciones de entrega
       </a>
@@ -501,101 +452,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       </div>
 </section>
 
-<<<<<<< HEAD
 <?php include "../footer.php"; ?>
-=======
-    <!-- ===================== FOOTER ===================== -->
-<footer class="cs-footer" aria-labelledby="footer-title">
-  <h2 id="footer-title" class="sr-only">Información del sitio</h2>
-
-  <div class="cs-footer__wrap">
-    <!-- Marca -->
-    <aside class="cs-brand">
-      <img class="cs-brand__logo" src="../../Images/logo.png" alt="Blackwood Coffee">
-    </aside>
-
-    <!-- Tarjetas -->
-    <div class="cs-cards">
-      <!-- Newsletter / Pago -->
-      <section class="cs-card">
-  <h3>News & updates</h3>
-  <form class="cs-news" action="#" method="post">
-          <label class="sr-only" for="newsletter">Correo electrónico</label>
-          <input id="newsletter" type="email" placeholder="correo electrónico" required>
-          <button type="submit" class="cs-btn">Suscribir</button>
-        </form>
-      </section>
-      <!-- Contacto -->
-      <section class="cs-card">
-        <h3>Contáctanos</h3>
-        <ul class="cs-list">
-          <li>
-            <span class="cs-ico" aria-hidden="true">
-              <!-- mail -->
-              <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2
-              2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2
-              0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5Z" fill="currentColor"/></svg>
-            </span>
-            <a href="mailto:coffee_shop@gmail.com">coffee_shop@gmail.com</a>
-          </li>
-          <li>
-            <span class="cs-ico" aria-hidden="true">
-              <!-- phone -->
-              <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.6-.36 12.3 12.3 0 0 0 3.8.6 1.5 1.5 0 0 1 1.5 1.5V20a1.5 1.5 0 0 1-1.5 1.5A18.5 18.5 0 0 1 3 7.5 1.5 1.5 0 0 1 4.5 6H7a1.5 1.5 0 0 1 1.5 1.5c0 1.3.2 2.6.6 3.8a1.5 1.5 0 0 1-.36 1.6Z" fill="currentColor"/></svg>
-            </span>
-            <a href="tel:+523141495067">+52 314 149 5067</a>
-          </li>
-          <li>
-            <span class="cs-ico" aria-hidden="true">
-              <!-- pin -->
-              <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z" fill="currentColor"/></svg>
-            </span>
-            <span>Manzanillo, Col. • Campus Naranjo</span>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Enlaces -->
-      <nav class="cs-card" aria-label="Conoce más">
-        <h3>Conoce más</h3>
-        <ul class="cs-links">
-          <li><a href="index.php"><span class="chev" aria-hidden="true">›</span> Inicio</a></li>
-          <li><a href="../catalogo/bebidas_frias.php"><span class="chev" aria-hidden="true">›</span> Catálogo</a></li>
-          <li><a href="../comentarios/comentarios.php"><span class="chev" aria-hidden="true">›</span> Comentarios</a></li>
-          <li><a href="../acercade/acercade.php"><span class="chev" aria-hidden="true">›</span> Acerca de</a></li>
-        </ul>
-      </nav>
-
-      <!-- Redes + Horarios -->
-      <section class="cs-card">
-        <h3>Síguenos</h3>
-        <div class="cs-social">
-          <a href="https://facebook.com" aria-label="Facebook" class="circle">
-            <svg viewBox="0 0 24 24"><path d="M13 22v-9h3l1-4h-4V7a1 1 0 0 1 1-1h3V2h-3a5 5 0 0 0-5 5v2H6v4h3v9h4Z" fill="currentColor"/></svg>
-          </a>
-          <a href="https://instagram.com" aria-label="Instagram" class="circle">
-            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm6.5-.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z" fill="currentColor"/></svg>
-          </a>
-        </div>
-
-        <div class="cs-hours">
-          <h4>Horarios</h4>
-          <p>Lun–Vier: 9:00–21:00</p>
-          <p>Sab–Dom: 10:00–20:00</p>
-        </div>
-      </section>
-
-    </div>
-
-    <!-- Línea inferior -->
-    <div class="cs-bottom">
-      <span class="cs-line"></span>
-      <span class="cs-bean" aria-hidden="true">
-        <img src="../../images/iconcofe.png" alt="icono café" style="width:32px; height:32px; object-fit:contain;" />
-      </span>
-      <span class="cs-line"></span>
-    </div>
->>>>>>> karol
 
      <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
     <div class="mc-overlay" id="mcOverlay" hidden></div>
@@ -608,7 +465,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       role="dialog"
     >
       <header class="mc-header">
-        <h3 id="mcTitle">Tu carrito</h3>
+        <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
         <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
           ✕
         </button>
@@ -618,7 +475,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
         <ul class="mc-list" id="mcList">
           <!-- items por JS -->
         </ul>
-        <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
+        <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
       </div>
 
       <footer class="mc-footer">
@@ -626,7 +483,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
           <span>Total</span>
           <strong id="mcTotal">$0.00 MXN</strong>
         </div>
-        <a href="carrito.php" class="mc-btn">Ir a pagar</a>
+        <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
       </footer>
     </aside>
 
@@ -634,7 +491,5 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
   window.CART_API_URL = '../catalogo/cart_api.php';
 </script>
 <script src="../catalogo/app.js"></script>
-
-    <script src="../catalogo/app.js"></script>
-  </body>
+<script src="../../translate.js"></script>
 </html>

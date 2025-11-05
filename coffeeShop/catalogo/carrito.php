@@ -1,7 +1,7 @@
 <?php
 // carrito.php
 session_start();
-require_once __DIR__ . '/db.php';
+include "../../conexion.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -41,7 +41,7 @@ require_once __DIR__ . '/db.php';
     </table>
 
     <div style="margin-top:16px; text-align:right;">
-      <a href="../catalogo/bebidas_frias.php" class="btn">Seguir comprando</a>
+      <a href="../catalogo/catalogo.php" class="btn">Seguir comprando</a>
       <button class="btn btn-dark">Pagar</button>
     </div>
   </div>

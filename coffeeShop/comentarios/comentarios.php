@@ -30,6 +30,7 @@ if ($usuarioLogueado) {
     <link rel="stylesheet" href="Style.css" /> 
     <link rel="stylesheet" href="comentarios.css" />
     <link rel="icon" href="/images/logocafe.png" />
+    <link href="../general.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </head>
   
