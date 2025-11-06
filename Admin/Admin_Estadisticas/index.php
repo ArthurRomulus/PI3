@@ -22,7 +22,7 @@ include "../../conexion.php"; // conexión a la base de datos
   <div class="content">
     <?php include "../AdminProfileSesion.php"; ?>
 
-    <h1>📈 Estadísticas de ventas</h1>
+    <h1 data-translate="📈 Estadísticas de ventas">📈 Estadísticas de ventas</h1>
     <div class="topbar">
       <?php include '../date.php'; ?>
     </div>
@@ -42,7 +42,7 @@ include "../../conexion.php"; // conexión a la base de datos
 
 
     <div class="contenedor-grafico">
-      <h2 class="titulo-grafica">📊 Ventas por producto</h2>
+      <h2 class="titulo-grafica" data-translate="📊 Ventas por producto">📊 Ventas por producto</h2>
       <div class="grafica-barras" id="graficaBarras">
         <?php 
           $query = "SELECT namep, VENTAS, categoria FROM productos ORDER BY VENTAS DESC";
@@ -78,5 +78,6 @@ include "../../conexion.php"; // conexión a la base de datos
     });
   }
   </script>
+  <script src="../../translate.js"></script>
 </body>
 </html>

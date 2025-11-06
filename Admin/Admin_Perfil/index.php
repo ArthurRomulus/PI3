@@ -64,30 +64,38 @@ $conn->close();
 <?php include '../Admin_nav_bar.php'; ?>
 
 <div class="content">
-    <div class="profile-theme-switch-container">
-            <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="theme-toggle">
-                    <input type="checkbox" id="theme-toggle" />
-                    <div class="slider round"></div>
-                </label>
-            </div>
+    <div class="profile-theme-lang-container">
+        <div class="lang-switch">
+            <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
+            <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
         </div>
+
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="theme-toggle">
+                <input type="checkbox" id="theme-toggle" />
+                <div class="slider round"></div>
+            </label>
+        </div>
+    </div>
     <h1>Blackwood Coffee</h1>
 
     <div class="welcome-text">
-        <h2>Bienvenido de nuevo, <?= htmlspecialchars($display_name); ?></h2>
+        <h2 data-translate="Bienvenido de nuevo, <?= htmlspecialchars($display_name); ?>">Bienvenido de nuevo, <?= htmlspecialchars($display_name); ?></h2>
     </div>
 
     <div class="profile-container">
         <div class="profile-info">
-            <h3>Información del Usuario</h3>
-            <p><strong>Nombre:</strong> <?= htmlspecialchars($display_name); ?></p>
-            <p><strong>Correo:</strong> <?= htmlspecialchars($user_email); ?></p>
-            <p><strong>Teléfono:</strong> <?= htmlspecialchars($user_phone); ?></p>
-            <p><strong>Teléfono de emergencia:</strong> <?= htmlspecialchars($user_emergency); ?></p>
-            <p><strong>Dirección:</strong> <?= htmlspecialchars($user_address); ?></p>
-            <p><strong>Rol:</strong> <?= htmlspecialchars($role_name); ?></p>
-            <button class="btn-edit" id="openEditModal">Editar Información</button>
+            <h3 data-translate="Información del Usuario">Información del Usuario</h3>
+            <p><strong><span data-translate="Nombre">Nombre</span>:</strong> <?= htmlspecialchars($display_name); ?></p>
+            <p><strong><span data-translate="Correo">Correo</span>:</strong> <?= htmlspecialchars($user_email); ?></p>
+            <p><strong><span data-translate="Teléfono">Teléfono</span>:</strong> <?= htmlspecialchars($user_phone); ?></p>
+            <p><strong><span data-translate="Teléfono de emergencia">Teléfono de emergencia</span>:</strong> <?= htmlspecialchars($user_emergency); ?></p>
+            <p><strong><span data-translate="Dirección">Dirección</span>:</strong> <?= htmlspecialchars($user_address); ?></p>
+            <p><strong><span data-translate="Rol">Rol</span>:</strong> <?= htmlspecialchars($role_name); ?></p>
+
+            <button class="btn-edit" id="openEditModal">
+                <span data-translate="Editar Información">Editar Información</span>
+            </button>
         </div>
         <div class="profile-picture">
             <img src="<?= htmlspecialchars($user_data['profilescreen']); ?>" alt="Perfil Admin">
@@ -98,32 +106,32 @@ $conn->close();
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Editar Información</h2>
+            <h2 data-translate="Editar Información">Editar Información</h2>
             <form action="editar_perfil.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="userid" value="<?= $user_data['userid']; ?>">
 
-                <label>Nombre completo:</label>
+                <label data-translate="Nombre completo:">Nombre completo:</label>
                 <input type="text" name="nombre_completo" value="<?= htmlspecialchars($display_name); ?>">
 
-                <label>Correo:</label>
+                <label data-translate="Correo:">Correo:</label>
                 <input type="email" name="email" value="<?= htmlspecialchars($user_email); ?>">
 
-                <label>Teléfono:</label>
+                <label data-translate="Teléfono">Teléfono:</label>
                 <input type="text" name="telefono" value="<?= htmlspecialchars($user_phone); ?>">
 
-                <label>Teléfono de emergencia:</label>
+                <label data-translate="Teléfono de emergencia:">Teléfono de emergencia:</label>
                 <input type="text" name="telefono_emergencia" value="<?= htmlspecialchars($user_emergency); ?>">
 
-                <label>Dirección:</label>
+                <label data-translate="Dirección">Dirección:</label>
                 <input type="text" name="direccion" value="<?= htmlspecialchars($user_address); ?>">
 
-                <label>Foto de perfil:</label>
+                <label data-translate="Foto de perfil:">Foto de perfil:</label>
                 <input type="file" name="profile_pic" accept="image/*">
 
-                <label>Rol:</label>
+                <label data-translate="Rol:">Rol:</label>
                 <input type="text" value="<?= $role_name ?>" readonly>
 
-                <button type="submit">Guardar Cambios</button>
+                <button type="submit" data-translate="Guardar Cambios">Guardar Cambios</button>
             </form>
         </div>
     </div>
@@ -138,5 +146,6 @@ openEditBtn.onclick = () => editModal.style.display = 'flex';
 closeEditBtn.onclick = () => editModal.style.display = 'none';
 window.onclick = (e) => { if(e.target == editModal) editModal.style.display = 'none'; }
 </script>
+<script src="../../translate.js"></script>
 </body>
 </html>
