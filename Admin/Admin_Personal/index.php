@@ -77,14 +77,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
     </div>
 
     <button class="add_user_button" onclick="openModal('addUserModal')">
-    <i class="fa-solid fa-user-plus"></i> Añadir usuario
+        <i class="fa-solid fa-user-plus"></i> <span data-translate="Añadir usuario">Añadir usuario</span>
     </button>
+
 
     <!-- 🔽 FILTRO POR ROL -->
     <div class="filter-container">
-      <label for="roleFilter"><i class="fa-solid fa-filter"></i> Filtrar por rol:</label>
+      <label for="roleFilter"><i class="fa-solid fa-filter"></i> <span data-translate="Filtrar por rol"> Filtrar por rol:</label>
       <select id="roleFilter" onchange="filterByRole()">
-        <option value="all">Todos</option>
+        <option value="all" data-translate="Todos">Todos</option>
         <?php
           $rolesFilter = $conn->query("SELECT id_rol, rolename FROM roles WHERE status = 1");
           while ($r = $rolesFilter->fetch_assoc()) {
@@ -101,17 +102,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
             echo '<img src="' . htmlspecialchars($row['profilescreen'] ?: '../../Images/default_profile.png') . '" alt="Perfil">';
             echo '<div class="info">';
               echo '<strong class="nombre">' . htmlspecialchars($row['username']) . '</strong>';
-              echo '<span class="rol">Rol: ' . htmlspecialchars($row['role']) . '</span>'; 
+              echo '<span class="rol"><span data-translate="Rol">Rol</span>: <span data-translate="' . htmlspecialchars($row['role']) . '">' . htmlspecialchars($row['role']) . '</span></span>';
               echo '<span class="email">Email: ' . htmlspecialchars($row['email']) . '</span>'; 
               echo '<button class="modify_button" 
-                        onclick="openUpdateModal(this)"
-                        data-id="' . htmlspecialchars($row['userid']) . '"
-                        data-username="' . htmlspecialchars($row['username']) . '"
-                        data-email="' . htmlspecialchars($row['email']) . '"
-                            data-image="' . htmlspecialchars($row['profilescreen']) . '">
-                        Modificar usuario
-                    </button>';
-              echo  '<button class="remove_user_button" onclick="deleteUser(' . htmlspecialchars($row['userid']) . ')">Eliminar usuario</button>';
+                    onclick="openUpdateModal(this)"
+                    data-id="' . htmlspecialchars($row['userid']) . '"
+                    data-username="' . htmlspecialchars($row['username']) . '"
+                    data-email="' . htmlspecialchars($row['email']) . '"
+                    data-image="' . htmlspecialchars($row['profilescreen']) . '">
+                    <span data-translate="Modificar usuario">Modificar usuario</span>
+                  </button>';
+               echo '<button class="remove_user_button" onclick="deleteUser(' . htmlspecialchars($row['userid']) . ')">
+                    <span data-translate="Eliminar usuario">Eliminar usuario</span>
+                  </button>';
             echo '</div>'; 
           echo '</div>';
         }
@@ -123,22 +126,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
   <div class="GeneralModal" id="addUserModal" style="display:none;">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal('addUserModal')">×</button>
-      <h2>Registrar nuevo usuario</h2>
+      <h2 data-translate="Registrar nuevo usuario">Registrar nuevo usuario</h2>
       <form action="" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="new_user" value="1">
-        <label>Nombre de usuario</label>
+        <label data-translate="Nombre de usuario">Nombre de usuario</label>
         <input type="text" name="username" required>
-        <label>Email</label>
+        <label data-translate="Email">Email</label>
         <input type="email" name="email" required>
-        <label>Contraseña</label>
+        <label data-translate="Contraseña">Contraseña</label>
         <input type="password" name="password" required>
-        <label>Teléfono</label>
+        <label data-translate="Teléfono">Teléfono</label>
         <input type="text" name="telefono" required>
-        <label>Teléfono de emergencia</label>
+        <label data-translate="Teléfono de emergencia">Teléfono de emergencia</label>
         <input type="text" name="telefono_emergencia" required>
-        <label>Dirección</label>
+        <label data-translate="Dirección">Dirección</label>
         <input type="text" name="direccion" required>
-        <label>Rol del usuario</label>
+        <label data-translate="Rol de usuario">Rol del usuario</label>
         <select name="role" required>
 
           <?php
@@ -152,9 +155,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
             }
           ?>
         </select>
-        <label>Imagen de perfil</label>
+        <label data-translate="Imagen de perfil">Imagen de perfil</label>
         <input type="file" name="image" accept="image/png, image/jpeg, image/webp">
-        <input type="submit" value="Guardar" class="btn-save">
+        <input type="submit" value="Guardar" class="btn-save" data-translate-value="Guardar">
       </form>
     </div>
   </div>
@@ -164,19 +167,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
   <div class="GeneralModal" id="updateModal" style="display:none;">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal('updateModal')">×</button>
-      <h2>Modificar usuario</h2>
+      <h2 data-translate="Modificar usuario">Modificar usuario</h2>
       <form action="UpdateUser.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" id="id" name="id">
-        <label>Username</label>
+        <label data-translate="Nombre de usuario">Nombre de usuario</label>
         <input type="text" id="username" name="username">
-        <label>email</label>
+        <label data-translate="email">email</label>
         <input type="text" id="email" name="email">
-        <label>Contraseña</label>
+        <label data-translate="Contraseña">Contraseña</label>
         <input type="password" id="password" name="password">
-        <label>Imagen de perfil</label>
+        <label data-translate="Imagen de perfil">Imagen de perfil</label>
         <input type="file" id="userprofile" name="image" accept="image/png, image/jpeg, image/webp">
-        <label>Rol del usuario</label>
-        <input type="submit" value="Actualizar" class="btn-save">
+        <label data-translate="Rol del usuario">Rol del usuario</label>
+        <input type="submit" value="Actualizar" class="btn-save" data-translate-value="Actualizar">
       </form>
     </div>
   </div>
@@ -246,6 +249,7 @@ function deleteUser(userid) {
 
 
   </script>
+  <script src="../../translate.js"></script>
 </body>
 </html>
 

@@ -27,13 +27,14 @@ include "../../conexion.php";
 
         <!-- Botón Agregar Promoción -->
         <!-- Título del listado -->
-        <h3>Promociones</h3>
+        <h3 data-translate="Promociones">Promociones</h3>
 
         <div class="promo-header">
             <button class="btn-add-promo" id="openPromoModal">
-                <i class="fas fa-plus"></i> Agregar Promoción
+                <i class="fas fa-plus"></i> <span data-translate="Agregar Promoción">Agregar Promoción</span>
             </button>
         </div>
+
         <!-- Grid de promociones dinámico -->
         <div class="promos-container">
         <?php
@@ -60,6 +61,7 @@ include "../../conexion.php";
                     $estado_texto = "Activa";
                     $estado_clase = "active";
                 }
+                
         ?>
             <div class="promo-card"
                 data-id="<?php echo $row['idPromo']; ?>"
@@ -71,21 +73,29 @@ include "../../conexion.php";
                 data-condiciones="<?php echo $row['condiciones']; ?>"
                 data-imagen="<?php echo $row['imagen_url']; ?>">
                 
-                <img src="<?php echo $row['imagen_url'] ? $row['imagen_url'] : 'img/default.png'; ?>" alt="<?php echo $row['nombrePromo']; ?>">
+                <img src="<?php echo $row['imagen_url'] ? $row['imagen_url'] : 'img/default.png'; ?>" 
+                    alt="<?php echo $row['nombrePromo']; ?>" 
+                    data-translate="<?php echo $row['nombrePromo']; ?>">
 
                 <div class="promo-info">
-                    <span class="promo-status <?php echo $estado_clase; ?>">
+                    <span class="promo-status <?php echo $estado_clase; ?>" 
+                        data-translate="<?php echo $estado_texto; ?>">
                         <?php echo $estado_texto; ?>
                     </span>
-                    <h4 class="promo-name"><?php echo $row['nombrePromo']; ?></h4>
-                    <span class="promo-price">
+                    <h4 class="promo-name" data-translate="<?php echo $row['nombrePromo']; ?>">
+                        <?php echo $row['nombrePromo']; ?>
+                    </h4>
+                    <span class="promo-price" data-translate="<?php echo $row['tipo_descuento'] == 'porcentaje' ? $row['valor_descuento'].'%' : '$'.$row['valor_descuento']; ?>">
                         <?php echo $row['tipo_descuento'] == 'porcentaje' ? $row['valor_descuento'].'%' : '$'.$row['valor_descuento']; ?>
                     </span>
                     <?php if(!empty($row['condiciones'])): ?>
-                        <span class="promo-conditions"><?php echo $row['condiciones']; ?></span>
+                        <span class="promo-conditions" data-translate="<?php echo $row['condiciones']; ?>">
+                            <?php echo $row['condiciones']; ?>
+                        </span>
                     <?php endif; ?>
-                    <span class="promo-validity">
-                        Vigencia: válido hasta el <?php echo date('d M', strtotime($row['fechaFin'])); ?>
+
+                    <span class="promo-validity" data-translate="Vigencia: válido hasta <?php echo date('d M', strtotime($row['fechaFin'])); ?>">
+                        Vigencia: válido hasta <?php echo date('d M', strtotime($row['fechaFin'])); ?>
                     </span>
 
                     <div class="promo-actions">
@@ -107,19 +117,35 @@ include "../../conexion.php";
     <div id="promoModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Agregar Promoción</h2>
+            <h2 data-translate="Agregar Promoción">Agregar Promoción</h2>
             <form action="Guardar_promociones.php" method="POST" enctype="multipart/form-data">
-                <input type="text" name="nombre" placeholder="Título de la promoción" required>
+                <label data-translate="Titulo de la promoción:">Título de la promoción:</label>
+                <input type="text" name="nombre" placeholder="Título de la promoción" data-translate-placeholder="Título de la promoción" required>
+
+                <label data-translate="Imagen:">Imagen:</label>
                 <input type="file" name="imagen" accept="image/*" required>
+
+                <label data-translate="Fecha de inicio:">Fecha de inicio:</label>
                 <input type="date" name="fecha_inicio" required>
+
+                <label data-translate="Fecha de finalización:">Fecha de finalización:</label>
                 <input type="date" name="fecha_final" required>
-                <input type="number" name="valor_descuento" placeholder="Valor del descuento" required>
-                <select name="tipo_descuento" required>
-                    <option value="fijo">Fijo</option>
-                    <option value="porcentaje">Porcentaje</option>
+
+                <label data-translate="Valor del descuento:">Valor del descuento:</label>
+                <input type="number" name="valor_descuento" placeholder="Valor del descuento" data-translate-placeholder="valor del descuento" required>
+
+                <label data-translate="Tipo de descuento">Tipo de descuento:</label>
+                <select id="editTipoDescuento" name="tipo_descuento" required>
+                    <option value="fijo" data-translate="Fijo">Fijo</option>
+                    <option value="porcentaje" data-translate="Porcentaje">Porcentaje</option>
                 </select>
-                <textarea name="condiciones" placeholder="Condiciones de la promoción"></textarea>
-                <button type="submit">Guardar</button>
+
+
+
+                <label data-translate="Condiciones">Condiciones:</label>
+                <textarea name="condiciones" placeholder="Condiciones de la promoción" data-translate-placeholder="Condiciones de la promoción"></textarea>
+
+                <button type="submit" data-translate="Guardar">Guardar</button>
             </form>
         </div>
     </div>
@@ -128,23 +154,39 @@ include "../../conexion.php";
     <div id="editPromoModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Editar Promoción</h2>
+            <h2 data-translate="Editar Promoción">Editar Promoción</h2>
             <form action="Editar_promociones.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="editId" name="id">
-                <input type="text" id="editNombre" name="nombre" placeholder="Título de la promoción" required>
+
+                <label data-translate="Titulo de la promoción:">Título de la promoción:</label>
+                <input type="text" id="editNombre" name="nombre" placeholder="Título de la promoción" data-translate-placeholder="Título de la promoción" required>
+
+                <label data-translate="Imagen">Imagen:</label>
                 <input type="file" id="editImagen" name="imagen" accept="image/*">
+
+                <label data-translate="Fecha de inicio:">Fecha de inicio:</label>
                 <input type="date" id="editFechaInicio" name="fecha_inicio" required>
+
+                <label data-translate="Fecha de finalización:">Fecha de finalización:</label>
                 <input type="date" id="editFechaFinal" name="fecha_final" required>
-                <input type="number" id="editValorDescuento" name="valor_descuento" placeholder="Valor del descuento" required>
+
+                <label data-translate="Valor del descuento:">Valor del descuento:</label>
+                <input type="number" id="editValorDescuento" name="valor_descuento" placeholder="Valor del descuento" data-translate-placeholder="Valor del decuento" required>
+
+                <label data-translate="Tipo de descuento:">Tipo de descuento:</label>
                 <select id="editTipoDescuento" name="tipo_descuento" required>
-                    <option value="fijo">Fijo</option>
-                    <option value="porcentaje">Porcentaje</option>
+                    <option value="fijo" data-translate="Fijo">Fijo</option>
+                    <option value="porcentaje" data-translate="Porcentaje">Porcentaje</option>
                 </select>
-                <textarea id="editCondiciones" name="condiciones" placeholder="Condiciones de la promoción"></textarea>
-                <button type="submit">Actualizar</button>
+                
+                <label data-translate="Condiciones">Condiciones:</label>
+                <textarea id="editCondiciones" name="condiciones" placeholder="Condiciones de la promoción" data-translate-placeholder="Condiciones de la promoción"></textarea>
+
+                <button type="submit" data-translate="Actualizar">Actualizar</button>
             </form>
         </div>
     </div>
+
 
     <!-- Scripts -->
     <script>
@@ -199,5 +241,6 @@ include "../../conexion.php";
             });
         });
     </script>
+    <script src="../../translate.js"></script>
 </body>
 </html>
