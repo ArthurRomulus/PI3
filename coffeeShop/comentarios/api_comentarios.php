@@ -2,7 +2,7 @@
 session_start(); // <-- CAMBIO 1: Iniciar sesión
 header('Content-Type: application/json; charset=utf-8');
 // require_once __DIR__ . '/../conexion.php'; // <-- Ruta antigua
-require_once __DIR__ . '/../conexion.php'; // <-- CAMBIO 2: Ruta corregida
+require_once __DIR__ . '/../../conexion.php'; // <-- CAMBIO 2: Ruta corregida
 
 $respuesta = ['success' => false, 'data' => [], 'error' => ''];
 
