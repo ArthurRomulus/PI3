@@ -101,7 +101,7 @@
             // Botón eliminar (esto estaba bien, posts to delete_comentario.php)
             echo "<form method='POST' action='delete_comentario.php'>";
             echo "<input type='hidden' name='idr' value='" . htmlspecialchars($row['idr']) . "'>";
-            echo "<button class='deletebutton'>Eliminar</button>";
+            echo "<button class='deletebutton' data-translate='Eliminar'>Eliminar</button>";
             echo "</form>";
 
             echo "</div>"; // cierre contenido-comentario
@@ -110,7 +110,7 @@
         ?>
         </div>
     </div>
-    
+<script src="../../translate.js"></script>
 </body>
 </html>
 

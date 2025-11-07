@@ -129,14 +129,14 @@ try {
             if (empty($etiquetas)) { $etiquetas = null; }
 
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-                $directorio_subidas = __DIR__ . '/../uploads/comentarios/'; 
+                $directorio_subidas = __DIR__ . '../../uploads/comentarios/'; 
                 if (!file_exists($directorio_subidas)) { mkdir($directorio_subidas, 0777, true); }
                 $nombre_archivo = uniqid() . '-' . basename($_FILES['imagen']['name']);
                 $ruta_archivo = $directorio_subidas . $nombre_archivo;
                 $tipo_archivo = strtolower(pathinfo($ruta_archivo, PATHINFO_EXTENSION));
                 if (!in_array($tipo_archivo, ['jpg', 'png', 'jpeg'])) { throw new Exception('Solo JPG, JPEG, PNG.'); }
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_archivo)) {
-                    $imagen_url_db = '../uploads/comentarios/' . $nombre_archivo; 
+                    $imagen_url_db = '../../uploads/comentarios/' . $nombre_archivo; 
                 } else { throw new Exception('Error al mover archivo.'); }
             }
             

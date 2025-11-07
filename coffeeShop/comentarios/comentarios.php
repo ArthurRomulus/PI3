@@ -36,6 +36,7 @@ if ($usuarioLogueado) {
   
   <body>
     <script src="../../theme-toggle.js" defer></script>
+<<<<<<< HEAD
     <footer class="site-footer">
       <div class="footer-container">
         <!-- LOGO -->
@@ -81,15 +82,18 @@ if ($usuarioLogueado) {
       </div>
     </footer>
 
+=======
+    <?php include "../nav_bar.php"; ?>
+>>>>>>> 1351722676daddc0d741c5d884048464a8eb83c9
     <main class="panel-comentarios">
       
       <section class="panel" id="panel-formulario">
-        <h2>¡Déjanos tu opinión!</h2>
+        <h2 data-translate="¡Déjanos tu opinión!">¡Déjanos tu opinión!</h2>
         
         <form id="form-comentario" class="form-comentario-nuevo" data-username="<?php echo htmlspecialchars($username); ?>" enctype="multipart/form-data">
             
             <div class="form-grupo-rating-central">
-                <label>Calificación de nuestros servicios:</label>
+                <label data-translate="Calificación de nuestros servicios:">Calificación de nuestros servicios:</label>
                 <div class="rating-estrellas">
                     <input type="radio" id="estrella5" name="calificacion" value="5" required><label for="estrella5" title="5 estrellas">★</label>
                     <input type="radio" id="estrella4" name="calificacion" value="4"><label for="estrella4" title="4 estrellas">★</label>
@@ -106,29 +110,29 @@ if ($usuarioLogueado) {
             <div class="form-fila-media">
                 <div class="form-grupo-upload">
                     <label for="imagen" class="btn-upload">
-                        <i class="fas fa-camera"></i> Subir Foto
+                        <i class="fas fa-camera"></i>  <span data-translate="Subir Foto"> Subir Foto</span>
                     </label>
                     <input type="file" id="imagen" name="imagen" accept="image/png, image/jpeg">
-                    <span id="file-name" class="file-name-display">Ningún archivo</span>
+                    <span id="file-name" class="file-name-display" data-translate="Ningún archivo">Ningún archivo</span>
                 </div>
 
                 <div class="form-grupo-tags">
-                    <label for="etiquetas" class="label-listbox">Selecciona etiquetas:</label>
+                    <label for="etiquetas" class="label-listbox" data-translate="Selecciona etiquetas:">Selecciona etiquetas:</label>
                     <select id="etiquetas" name="etiquetas[]" multiple>
-                        <option value="café">Café</option>
-                        <option value="postre">Postre</option>
-                        <option value="comida">Comida</option>
-                        <option value="servicio">Servicio</option>
-                        <option value="ambiente">Ambiente</option>
-                        <option value="bueno">Bueno</option>
-                        <option value="malo">Malo</option>
+                        <option value="café" data-translate="Café">Café</option>
+                        <option value="postre" data-translate="Postre">Postre</option>
+                        <option value="comida" data-translate="Comida">Comida</option>
+                        <option value="servicio" data-translate="Servicio">Servicio</option>
+                        <option value="ambiente" data-translate="Ambiente">Ambiente</option>
+                        <option value="bueno" data-translate="Bueno">Bueno</option>
+                        <option value="malo" data-translate="Malo">Malo</option>
                     </select>
                 </div>
                 </div>
 
             <div class="form-fila-botones">
-                <button type="reset" class="btn-cancelar">Borrar</button>
-                <button type="submit" class="btn-enviar">Subir</button>
+                <button type="reset" class="btn-cancelar" data-translate="Borrar">Borrar</button>
+                <button type="submit" class="btn-enviar" data-translate="Subir">Subir</button>
             </div>
             
             <p id="form-mensaje"></p> 
@@ -138,7 +142,9 @@ if ($usuarioLogueado) {
               <div class="resena-promedio">
                   <div class="promedio-numero" id="promedio-numero-display">0.0</div>
                   <div class="promedio-estrellas" id="promedio-estrellas-display"></div>
-                  <div class="promedio-total" id="promedio-total-display">(0 reseñas)</div>
+                  <div class="promedio-total" id="promedio-total-display">
+                  (<span id="total-reviews-count">0</span> <span data-translate="reseñas">reseñas</span>)
+                </div>
               </div>
               <div class="resena-desglose" id="desglose-barras-container"></div>
             </div>
@@ -149,29 +155,30 @@ if ($usuarioLogueado) {
       <section class="reviews" aria-labelledby="reviews-title">
         <div class="reviews__wrap">
           <header class="reviews__header">
-            <h2 id="reviews-title">Comentarios</h2>
+            <h2 id="reviews-title" data-translate="Comentarios">Comentarios</h2>
             <div class="reviews__controls">
               <div class="pill-group">
-                <button class="pill pill--ghost">Más recientes</button>
-                <button class="pill pill--ghost">Con foto</button>
+                <button class="pill pill--ghost" data-translate="Más recientes">Más recientes</button>
+                <button class="pill pill--ghost"data-translate="Con foto">Con foto</button>
               </div>
             </div>
           </header>
 
           <div class="reviews__subhead">
             <span class="score-pill" id="review-score-pill">0.0</span> <div class="select-pill" role="listbox" aria-label="Clasificación">
-              <span>Clasificación</span>
+              <span data-translate="Clasificación">Clasificación</span>
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z" /></svg>
             </div>
           </div>
 
           <div class="reviews__grid" id="reviews-grid-container">
-            <p>Cargando comentarios...</p>
+            <p data-translate="Cargando comentarios...">Cargando comentarios...</p>
           </div>
           
         </div>
       </section>
       </main> 
+<<<<<<< HEAD
           <!-- ===================== FOOTER ===================== -->
 <footer class="cs-footer" aria-labelledby="footer-title">
   <h2 id="footer-title" class="sr-only">Información del sitio</h2>
@@ -265,6 +272,12 @@ if ($usuarioLogueado) {
     </div>
 
     <script src="comentarios.js" defer></script>
+=======
+<?php include "../footer.php"; ?>
+
+    <script src="comentarios.js" defer></script>
+    <script src="../../translate.js"></script>
+>>>>>>> 1351722676daddc0d741c5d884048464a8eb83c9
 
   </body>
 </html>
