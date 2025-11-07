@@ -1353,41 +1353,6 @@ body {
 
  /* ============ OPINIONES DE LOS CLIENTES ============*/
  /* ======= COMENTARIOS (CSS) ======= */
-:root{
-  --coffee:#531607;
-  --bg:#f6eadf;
-  --card:#fff7f0;
-  --ink:#3d2e27;
-  --muted:#8c746a;
-  --chip:#eee1d8;
-  --stroke:#e7d6cb;
-  --shadow:0 8px 20px rgba(0,0,0,.10);
-  --radius:16px;
-}
-
-.reviews{
-  background-color: #DCC0B9;               /* fondo claro (tal cual la captura) */
-  padding:24px 16px 36px;
-}
-.reviews__wrap{
-  max-width:980px;
-  margin:auto;
-}
-
-/* Header principal */
-.reviews__header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
-  
-}
-.reviews__header h2{
-  margin:0;
-  font-size:clamp(1.4rem, 1.2rem + 1vw, 2rem);
-  color:var(--ink);
-  font-weight:800;
-}
 
 /* Píldoras */
 .pill-group{ display:flex; gap:10px; }
