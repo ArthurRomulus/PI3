@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </form>
             `;
             container.innerHTML = formHTML;
-            // 👇 Fuerza la traducción cuando se crea el formulario dinámicamente
+            //Fuerza la traducción cuando se crea el formulario dinámicamente
             if (typeof applyTranslation === 'function') {
                 const lang = localStorage.getItem('lang') || 'es';
                 applyTranslation(lang);
