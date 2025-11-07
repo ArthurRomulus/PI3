@@ -29,6 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
     btnEn.classList.toggle("active", lang === "en");
   }
 
+  const customTranslations = {
+    "Nombre:": "Name",
+    "Numero empleado:": "Employee Number",
+    "Cerrar Sesión":"Log Out",
+    "Cerrar sesión":"Log Out",
+  };
+
   async function applyTranslation(lang) {
     const elements = document.querySelectorAll("[data-translate], [data-translate-placeholder], [data-translate-value]");
     // Recolecta todos los textos que necesitan traducción
@@ -69,28 +76,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Aplica traducción o texto original
-    elements.forEach(el => {
+     elements.forEach(el => {
       if (lang === "es") {
         el.textContent = el.dataset.translate || el.textContent;
-
-        // Placeholder
-        if (el.dataset.translatePlaceholder) {
-          el.placeholder = el.dataset.translatePlaceholder;
-        }
-        // Value
-        if (el.dataset.translateValue) {
-          el.value = el.dataset.translateValue;
-        }
-
+        if (el.dataset.translatePlaceholder) el.placeholder = el.dataset.translatePlaceholder;
+        if (el.dataset.translateValue) el.value = el.dataset.translateValue;
       } else {
-        el.textContent = cached[el.dataset.translate] || el.dataset.translate;
+        const getTranslation = (key) =>
+          customTranslations[key] || cached[key] || key;
 
-        if (el.dataset.translatePlaceholder) {
-          el.placeholder = cached[el.dataset.translatePlaceholder] || el.dataset.translatePlaceholder;
-        }
-        if (el.dataset.translateValue) {
-          el.value = cached[el.dataset.translateValue] || el.dataset.translateValue;
-        }
+        if (el.dataset.translate)
+          el.textContent = getTranslation(el.dataset.translate);
+        if (el.dataset.translatePlaceholder)
+          el.placeholder = getTranslation(el.dataset.translatePlaceholder);
+        if (el.dataset.translateValue)
+          el.value = getTranslation(el.dataset.translateValue);
       }
     });
   }
