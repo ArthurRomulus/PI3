@@ -28,8 +28,8 @@ body{margin:0; background:var(--beige); color:var(--ink); font:15px/1.45 system-
 .nav a:hover{background:var(--input); border-color:var(--coffee); transform:translateX(3px); box-shadow:0 8px 22px rgba(91,53,39,.15)}
 .nav a.active{background:var(--input) !important; border-color:var(--coffee) !important; color:var(--coffee) !important; font-weight:600}
 .nav svg{width:16px; height:16px; color:var(--coffee)}
-.sidebar-bottom{position:absolute; left:0; right:0; bottom:8px; display:flex; justify-content:center}
-.sidebar-logo{width:210px; opacity:.9}
+.sidebar-bottom{position:absolute; left:0; right:0; bottom:-15px; display:flex; justify-content:center}
+.sidebar-logo{width:180px; opacity:.9}
 
 /* Main */
 .main{background:var(--beige); padding:26px 28px}
@@ -88,3 +88,75 @@ h1{margin:0 0 18px; font-size:28px; color:var(--coffee)}
 .pager .page{display:inline-flex; padding:8px 12px; border-radius:10px; background:var(--input); border:1px solid var(--coffee); color:var(--coffee); font-weight:700}
 
 /*
+
+/* ==== MINI-CARRITO (drawer & overlay) ==== */
+.badge{
+  display:inline-block; min-width:18px; padding:2px 6px; border-radius:999px;
+  background:#ffede0; font-weight:700; font-size:12px; vertical-align:middle;
+}
+
+/* Botón de carrito (badge) — por si falta */
+.icon-btn span{ display:inline-block; min-width:18px; padding:2px 6px; border-radius:999px; background:#ffede0; font-weight:700; font-size:12px; vertical-align:middle; }
+
+.mc-overlay{
+  position: fixed; inset:0; background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px); z-index: 999; transition: opacity .2s ease;
+}
+.mc-overlay[hidden]{ opacity:0; pointer-events:none; }
+
+.mini-cart{
+  position: fixed; top:0; right:0; height:100dvh; width:min(92vw,380px);
+  background:#F2E1D0; color:#3C1501; border-left:2px solid #79523D;
+  box-shadow:-10px 0 28px rgba(0,0,0,.15);
+  transform:translateX(100%); transition:transform .25s ease; z-index:1000;
+  display:flex; flex-direction:column;
+}
+
+.mini-cart{ position:fixed !important; right:0 !important; top:0 !important; z-index:1000 !important; }
+.mini-cart.is-open{ transform:translateX(0) !important; }
+
+.mini-cart.is-open{ transform:translateX(0); }
+
+.mc-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; border-bottom:1px solid #d8c7bd; background:#F2E1D0;
+}
+.mc-header h3{ margin:0; font-size:18px; letter-spacing:.2px; }
+.mc-close{
+  appearance:none; border:0; background:#ffede0; color:#3C1501; font-weight:700;
+  width:32px; height:32px; border-radius:8px; cursor:pointer;
+}
+.mc-close:hover{ filter:brightness(1.06); }
+
+.mc-body{ padding:10px 12px; overflow:auto; flex:1; }
+.mc-empty{ text-align:center; opacity:.7; padding:28px 8px; }
+
+.mc-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.mc-item{
+  display:grid; grid-template-columns:64px 1fr auto; gap:10px; align-items:center;
+  background:#fff; border:1px solid #e8dcd6; border-radius:12px; padding:8px;
+}
+.mc-img{ width:64px; height:64px; object-fit:cover; border-radius:10px; background:#faf6f3; }
+.mc-name{ font-weight:800; margin:0 0 2px; }
+.mc-meta{ font-size:12px; opacity:.8; }
+.mc-price{ font-weight:800; }
+.mc-qty{
+  display:inline-flex; align-items:center; gap:6px;
+  border:1px solid #d9c8bf; border-radius:8px; padding:3px 6px; margin-top:6px;
+}
+.mc-qty button{ width:22px; height:22px; border:0; background:#ffede0; border-radius:6px; cursor:pointer; }
+.mc-qty input{ width:28px; text-align:center; border:0; background:transparent; font-weight:700; }
+
+.mc-footer{ padding:12px; border-top:1px solid #d8c7bd; background:#F2E1D0; }
+.mc-total{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.mc-btn{
+  display:block; text-align:center; padding:12px; border-radius:12px;
+  background:#6a2b16; color:#fff; font-weight:800; text-decoration:none;
+}
+
+.footer-actions .cart-badge{
+  display:inline-block; min-width:18px; padding:2px 6px;
+  border-radius:999px; background:#ffede0; font-weight:700; font-size:12px;
+  vertical-align:middle;
+}
+

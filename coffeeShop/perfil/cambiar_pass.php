@@ -19,7 +19,7 @@ if (empty($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     header("Location: /PI3/General/login.php");
     exit;
 }
-
+$usuarioLogueado = isset($_SESSION['logueado']) && $_SESSION['logueado'] === true;
 require_once '../../conexion.php'; // AJUSTA la ruta si tu conexion.php está en otra carpeta
 
 $userid   = $_SESSION['userid'];
@@ -120,6 +120,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cambiar contraseña — Coffee Shop</title>
     <link rel="stylesheet" href="cambiarcontraseña.css" />
+    <link rel="stylesheet" href="../general.css" />
     <style>
       .alert-ok{
         background:#e6ffed;
@@ -150,6 +151,7 @@ $conn->close();
     </style>
   </head>
   <body>
+    <?php include "../nav_bar.php"; ?> 
     <div class="shell">
       <div class="app">
         <!-- SIDEBAR -->
@@ -176,34 +178,34 @@ $conn->close();
                 <circle cx="12" cy="7" r="4" />
                 <path d="M5.5 21a6.5 6.5 0 0 1 13 0" />
               </svg>
-              Perfil
+              <spand data-translate="Perfil">Perfil</span>
             </a>
             <a href="editar_perfil.php">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M7 12h10M7 8h4M7 16h6" />
               </svg>
-              Editar perfil
+              <spand data-translate="Editar perfil">Editar perfil</span>
             </a>
             <a class="active" href="cambiar_pass.php">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
               </svg>
-              Cambiar contraseña
+              <span data-translate="Cambiar contraseña">Cambiar contraseña</span>
             </a>
             <a href="historial_compras.php">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="16" rx="2" />
                 <path d="M7 8h10M7 12h10M7 16h6" />
               </svg>
-              Historial de Compras
+              <spand data-translate="Historial de compras">Historial de Compras</span>
             </a>
           </nav>
 
           <div class="sidebar-bottom">
             <img
               class="sidebar-logo"
-              src="../../images/logocafe.png"
+              src="../../images/logo.png"
               alt="Coffee Shop"
             />
           </div>
@@ -213,7 +215,7 @@ $conn->close();
         <main class="main">
           <div class="panel">
             <div class="inner">
-              <h1>Cambiar contraseña</h1>
+              <h1 data-translate="Cambiar contraseña">Cambiar contraseña</h1>
 
               <?php if (!empty($mensaje_ok)): ?>
                 <div class="alert-ok"><?php echo $mensaje_ok; ?></div>
@@ -234,7 +236,7 @@ $conn->close();
                   >
                     <!-- Actual -->
                     <div class="col-12">
-                      <label for="pwd-old">Contraseña actual</label>
+                      <label for="pwd-old" data-translate="Contraseña actual">Contraseña actual</label>
                       <div class="field">
                         <input
                           id="pwd-old"
@@ -249,7 +251,7 @@ $conn->close();
 
                     <!-- Nueva -->
                     <div class="col-12">
-                      <label for="pwd-new">Nueva contraseña</label>
+                      <label for="pwd-new" data-translate="Nueva contraseña">Nueva contraseña</label>
                       <div class="field">
                         <input
                           id="pwd-new"
@@ -264,13 +266,13 @@ $conn->close();
                       <!-- Medidor -->
                       <div class="strength">
                         <div class="bar bar-weak"></div>
-                        <span class="label">Débil</span>
+                        <span class="label" data-translate="Débil">Débil</span>
                       </div>
                     </div>
 
                     <!-- Confirmación -->
                     <div class="col-12">
-                      <label for="pwd-confirm">Confirmar contraseña</label>
+                      <label for="pwd-confirm" data-translate="Confirmar contraseña">Confirmar contraseña</label>
                       <div class="field">
                         <input
                           id="pwd-confirm"
@@ -286,14 +288,14 @@ $conn->close();
                     <!-- Requisitos -->
                     <div class="col-12">
                       <div class="rules">
-                        <p>La contraseña debe incluir:</p>
+                        <p data-translate="La contraseña debe incluir:">La contraseña debe incluir:</p>
                         <ul>
-                          <li>• Mínimo 8 caracteres</li>
-                          <li>• Una mayúscula y una minúscula</li>
-                          <li>• Un número</li>
-                          <li>• Un carácter especial</li>
+                          <li data-translate="• Mínimo 8 caracteres">• Mínimo 8 caracteres</li>
+                          <li data-translate="• Una mayúscula y una minúscula">• Una mayúscula y una minúscula</li>
+                          <li data-translate="• Un número">• Un número</li>
+                          <li data-translate="• Un carácter especial">• Un carácter especial</li>
                         </ul>
-                        <p class="hint">
+                        <p class="hint" data-translate="Sugerencia: activa la autenticación de dos factores (2FA) en Seguridad.">
                           Sugerencia: activa la autenticación de dos factores (2FA) en Seguridad.
                         </p>
                       </div>
@@ -301,8 +303,8 @@ $conn->close();
 
                     <!-- Acciones -->
                     <div class="col-12 actions">
-                      <button type="submit" class="btn">Guardar</button>
-                      <a class="btn secondary" href="perfil_usuario.php">Cancelar</a>
+                      <button type="submit" class="btn" data-translate="Guardar">Guardar</button>
+                      <a class="btn secondary" href="perfil_usuario.php" data-translate="Guardar">Cancelar</a>
                     </div>
                   </form>
                 </div> <!-- body -->
@@ -313,5 +315,42 @@ $conn->close();
       </div>
     </div>
     <script src="cambiarcontraseña.js" defer></script>
+    <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+    <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+    <aside
+      class="mini-cart"
+      id="miniCart"
+      aria-hidden="true"
+      aria-labelledby="mcTitle"
+      role="dialog"
+    >
+      <header class="mc-header">
+        <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
+        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+          ✕
+        </button>
+      </header>
+
+      <div class="mc-body">
+        <ul class="mc-list" id="mcList">
+          <!-- items por JS -->
+        </ul>
+        <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
+      </div>
+
+      <footer class="mc-footer">
+        <div class="mc-total">
+          <span data-translate="Total">Total</span>
+          <strong id="mcTotal">$0.00 MXN</strong>
+        </div>
+        <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
+      </footer>
+    </aside>
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+<script src="../../translate.js"></script>  
   </body>
 </html>
