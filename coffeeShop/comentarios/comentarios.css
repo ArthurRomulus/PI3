@@ -65,8 +65,6 @@ body{
   border-radius: 2px;
   max-width: 400px;
 }
-
-
 /* ==================================================== */
 /* === ESTILOS PARA EL FORMULARIO DE 3 CAMPOS (HÍBRIDO) === */
 /* ==================================================== */
@@ -832,9 +830,14 @@ body{
 }
 .card__media img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   object-fit: cover;
+  max-width: 400px;
+  max-height: 300px;
+  border-radius: 20px;
+  position: relative;
+  left: 45px;
 }
 
 /* Chips (etiquetas) */
