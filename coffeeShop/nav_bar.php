@@ -1,4 +1,4 @@
-<script src="../../theme-toggle.js" defer></script>
+<script src="/PI3/theme-toggle.js" defer></script>
 <footer class="site-footer">
   <div class="footer-container">
     <!-- LOGO -->
@@ -74,6 +74,112 @@
 .lang-flag.active {
   opacity: 1;
   box-shadow: 0 0 6px rgba(133, 73, 5, 0.8);
+}
+/* FOOTER */
+.site-footer {
+  background-color: #DCC0B9;
+  padding: 20px 40px;
+  font-family: Arial, sans-serif;
+  position: relative;
+}
+
+
+/* Línea inferior recortada */
+.site-footer::after {
+  content: "";
+  position: absolute;
+  bottom: 30px;
+  left: 100px;  
+  right: 50px;  
+  height: 1px;
+  background: #531607;
+  border-radius: 2px;
+}
+
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* LOGO */
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  color: #531607;
+  margin-left: -40px;
+}
+
+.footer-logo img {
+  width: 100px;
+  height: auto;
+}
+
+/* MENÚ */
+.footer-menu {
+  display: flex;
+  gap: 60px;
+}
+
+/* MENÚ */
+.footer-menu a {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 400;
+  color: #531607;             
+  transition: all 0.3s ease;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 2px solid transparent; 
+}
+
+/* Al pasar el mouse */
+.footer-menu a:hover {
+  border-color: #531607;       
+  color: #531607;             
+  background-color: transparent; 
+}
+
+/* Al hacer clic */
+.footer-menu a:active {
+  border-color: #8a4b2c;     
+  color: #8a4b2c;            
+  background-color: transparent;
+}
+
+/* ACCIONES */
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  font-weight: 400;
+}
+
+.footer-actions .icon-btn {
+  font-size: 18px;
+  text-decoration: none;
+  color: #3b2a25;
+}
+
+.footer-actions .icon-btn:hover {
+  color: #8a4b2c;
+}
+
+.footer-actions .lang {
+  font-size: 14px;
+  color: #531607;
+}
+
+/* COPYRIGHT */
+.footer-copy {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 12px;
+  color: #555;
 }
       </style>
 

@@ -8,6 +8,7 @@ if (empty($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     header("Location: /PI3/General/login.php");
     exit;
 }
+$usuarioLogueado = isset($_SESSION['logueado']) && $_SESSION['logueado'] === true;
 
 // DATOS DE SESIÓN (que ya guardamos en login.php)
 $nombre        = $_SESSION['username']        ?? 'Usuario';
@@ -38,8 +39,12 @@ $miembroDesde = '—';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil — Coffee Shop</title>
     <link rel="stylesheet" href="perfil.css" />
+    <link rel="stylesheet" href="../general.css" />
+    
   </head>
   <body>
+    
+    <?php include "../nav_bar.php"; ?>
     <div class="shell">
       <div class="app">
         <!-- SIDEBAR -->
@@ -71,7 +76,7 @@ $miembroDesde = '—';
                 <circle cx="12" cy="7" r="4" />
                 <path d="M5.5 21a6.5 6.5 0 0 1 13 0" />
               </svg>
-              Perfil
+              <span data-translate="Perfil">Perfil</span>
             </a>
 
             <a href="editar_perfil.php">
@@ -84,7 +89,7 @@ $miembroDesde = '—';
                 <circle cx="12" cy="12" r="10" />
                 <path d="M7 12h10M7 8h4M7 16h6" />
               </svg>
-              Editar perfil
+              <span data-translate="Editar perfil">Editar perfil</span>
             </a>
 
             <a href="cambiar_pass.php">
@@ -98,7 +103,7 @@ $miembroDesde = '—';
                   d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"
                 />
               </svg>
-              Cambiar contraseña
+              <span data-translate="Cambiar contraseña">Cambiar contraseña</span>
             </a>
 
             <a href="historial_compras.php">
@@ -111,14 +116,14 @@ $miembroDesde = '—';
                 <rect x="3" y="4" width="18" height="16" rx="2" />
                 <path d="M7 8h10M7 12h10M7 16h6" />
               </svg>
-              Historial de Compras
+              <span data-translate="Historial de Compras">Historial de Compras</span>
             </a>
           </nav>
 
           <div class="sidebar-bottom">
             <img
               class="sidebar-logo"
-              src="../../images/logocafe.png"
+              src="../../images/logo.png"
               alt="Coffee Shop"
             />
           </div>
@@ -129,7 +134,8 @@ $miembroDesde = '—';
           <div class="panel">
             <div class="inner">
               <h1>¡Hola, <?php echo htmlspecialchars($nombre); ?>!</h1>
-              <p class="hello">
+              <p class="hello" data-translate="Bienvenido a tu perfil. Aquí puedes consultar tu información
+                personal y actividad dentro del sistema Coffee-Shop ☕">
                 Bienvenido a tu perfil. Aquí puedes consultar tu información
                 personal y actividad dentro del sistema Coffee-Shop ☕
               </p>
@@ -156,7 +162,7 @@ $miembroDesde = '—';
                             <?php echo htmlspecialchars($nombre); ?>
                           </div>
                           <div class="meta">
-                            <span class="dot"></span>Tu cuenta Coffee-Shop
+                            <span class="dot"></span> <span data-translate="Tu cuenta Coffee-Shop">Tu cuenta Coffee-Shop</span>
                           </div>
                         </div>
                       </div>
@@ -170,19 +176,19 @@ $miembroDesde = '—';
                       />
 
                       <dl class="data">
-                        <dt>Email</dt>
+                        <dt data-translate="Correo electrónico">Correo electrónico</dt>
                         <dd><?php echo htmlspecialchars($email); ?></dd>
 
-                        <dt>Teléfono</dt>
+                        <dt data-translate="Teléfono">Teléfono</dt>
                         <dd><?php echo htmlspecialchars($telefono ?: '—'); ?></dd>
 
-                        <dt>Fecha de nacimiento</dt>
+                        <dt data-translate="Fecha de nacimiento">Fecha de nacimiento</dt>
                         <dd><?php echo htmlspecialchars($fechaNacBonita); ?></dd>
 
-                        <dt>Miembro desde</dt>
+                        <dt data-translate="Miembro desde">Miembro desde</dt>
                         <dd><?php echo htmlspecialchars($miembroDesde); ?></dd>
 
-                        <dt>Zona horaria</dt>
+                        <dt data-translate="Zona horaria">Zona horaria</dt>
                         <dd><?php echo htmlspecialchars($zonaHoraria); ?></dd>
                       </dl>
                     </div>
@@ -193,7 +199,7 @@ $miembroDesde = '—';
                 <div class="col-right">
                   <div class="card">
                     <div class="body">
-                      <h2>Actividad reciente</h2>
+                      <h2 data-translate="Actividad reciente">Actividad reciente</h2>
                       <ul
                         style="
                           list-style: none;
@@ -203,19 +209,19 @@ $miembroDesde = '—';
                           font-size: 14px;
                         "
                       >
-                        <li>• Iniciaste sesión correctamente ✅</li>
-                        <li>• Puedes ver tu historial de compras en "Historial de Compras"</li>
-                        <li>• Puedes cambiar tu contraseña en "Cambiar contraseña"</li>
+                        <li data-translate="• Iniciaste sesión correctamente ✅">• Iniciaste sesión correctamente ✅</li>
+                        <li data-translate="• Puedes ver tu historial de compras en Historial de Compras">• Puedes ver tu historial de compras en Historial de Compras</li>
+                        <li data-translate="• Puedes cambiar tu contraseña en Cambiar contraseña">• Puedes cambiar tu contraseña en Cambiar contraseña</li>
                       </ul>
                     </div>
                   </div>
 
                   <div class="card" style="margin-top: 18px">
                     <div class="body">
-                      <h2>Acciones rápidas</h2>
+                      <h2 data-translate="Acciones rápidas">Acciones rápidas</h2>
                       <div class="actions">
-                        <a class="btn" href="editar_perfil.php">Editar perfil</a>
-                        <a class="btn" href="historial_compras.php">Ver historial</a>
+                        <a class="btn" href="editar_perfil.php" data-translate="Editar perfil">Editar perfil</a>
+                        <a class="btn" href="historial_compras.php" data-translate="Ver historial">Ver historial</a>
                         <a href="/PI3/General/logout.php"
                           style="
                             display:inline-block;
@@ -227,7 +233,7 @@ $miembroDesde = '—';
                             border-radius:10px;
                             box-shadow:0 8px 16px rgba(83,22,7,.4);
                           ">
-                          Cerrar sesión
+                          <span data-translate="Cerrar sesión">Cerrar sesión</span>
                         </a>
                       </div>
                     </div>
@@ -240,5 +246,43 @@ $miembroDesde = '—';
         </main>
       </div>
     </div>
+<?php include "../footer.php"; ?>
+<!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+    <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+    <aside
+      class="mini-cart"
+      id="miniCart"
+      aria-hidden="true"
+      aria-labelledby="mcTitle"
+      role="dialog"
+    >
+      <header class="mc-header">
+        <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
+        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+          ✕
+        </button>
+      </header>
+
+      <div class="mc-body">
+        <ul class="mc-list" id="mcList">
+          <!-- items por JS -->
+        </ul>
+        <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
+      </div>
+
+      <footer class="mc-footer">
+        <div class="mc-total">
+          <span data-translate="Total">Total</span>
+          <strong id="mcTotal">$0.00 MXN</strong>
+        </div>
+        <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
+      </footer>
+    </aside>
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+<script src="../../translate.js"></script>  
   </body>
 </html>
