@@ -73,15 +73,6 @@
 
 </div>
 
-<?php
-  $productos = $conn->query("SELECT * FROM productos");
-  $lista = [];
-  while ($p = $productos->fetch_assoc()) {
-    $lista[] = $p;
-  }
-  echo json_encode($lista);
-?>;
-
 <script>
 // ============ DATOS DE PRODUCTOS DESDE PHP ============
 const productos = <?php
