@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-11-2025 a las 03:29:59
+-- Tiempo de generación: 09-11-2025 a las 06:39:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -35,13 +35,6 @@ CREATE TABLE `administradores` (
   `telefono_emergencia` varchar(15) NOT NULL,
   `direccion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `administradores`
---
-
-INSERT INTO `administradores` (`userid`, `numero_admin`, `nombre_completo`, `telefono`, `telefono_emergencia`, `direccion`) VALUES
-(10, 'ADM001', 'Administrador General', '3120000000', '3120000001', 'Colima, México');
 
 -- --------------------------------------------------------
 
@@ -303,10 +296,10 @@ INSERT INTO `opciones_predefinidas` (`id_opcion_predefinida`, `nombre_opcion`, `
 CREATE TABLE `pedidos` (
   `id_pedido` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
-  `fecha_pedido` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sucursal` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `total` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `estado` enum('Completado','En preparación','Cancelado') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'En preparación'
+  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
+  `sucursal` varchar(100) NOT NULL,
+  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `estado` enum('Completado','En preparación','Cancelado') NOT NULL DEFAULT 'En preparación'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -318,8 +311,8 @@ CREATE TABLE `pedidos` (
 CREATE TABLE `pedido_items` (
   `id_item` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
-  `producto_nombre` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `cantidad` int(11) NOT NULL DEFAULT '1'
+  `producto_nombre` varchar(150) NOT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -662,23 +655,21 @@ CREATE TABLE `usuarios` (
   `role` int(11) DEFAULT 1,
   `status` tinyint(1) DEFAULT 1,
   `archived` tinyint(1) DEFAULT 0,
-  `apellido` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `apellido` varchar(100) DEFAULT NULL,
+  `telefono` varchar(30) DEFAULT NULL,
   `fecha_nac` date DEFAULT NULL,
-  `zona_horaria` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `zona_horaria` varchar(100) DEFAULT NULL,
+  `Password_Token` varchar(255) DEFAULT NULL,
+  `Password_Token_Exp` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`) VALUES
-(0, NULL, 'Koby_Tao', 'karolsinsel@gmail.com', '$2y$10$/z8GdsgLHd5twe4l9Cohtu94cxpPz1HEJVzQ317iJZoF..w0IkuCO', 4, 1, 0),
-(2, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0),
-(4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
-(8, NULL, 'cajero', 'cajero@gmail.com', '$2y$10$P100IYAw.svkWdQQBJTb7ug3pmplcd/q0lZ68fuAafQgw4SmmHX5e', 1, 1, 0),
-(9, '../../Images/Profiles/9_68fba03670427.png', 'vc', 'vc@gmail.com', '$2y$10$QeQ4zKTvgs3fXhBg2aOpPOFADLMBnZQXNcXviq5iQTMK24uFBTV06', 2, 1, 0),
-(10, '../../Images/Captura de pantalla 2024-10-16 185653.png', 'Noisi', 'admin@tienda.com', '$2y$10$qgADfKAr.FHY6miNXvvybO7wi8mdjGeDkf2dmnYdaY0DThD5XAEKm', 4, 1, 0);
+INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`, `apellido`, `telefono`, `fecha_nac`, `zona_horaria`, `Password_Token`, `Password_Token_Exp`) VALUES
+(4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$GXzaKrJjkhEjeTOiVEnLruqZgltUtHBjigImFrhUoZYpvyGOnzayy', 2, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL),
+(17, NULL, 'mparra12', 'mparra8@ucol.mx', '$2y$10$VLyk4esMBH4GAVnwWE..Me/hjYxmy55lykf6BWEZutbFGHuE0pM.i', 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -741,6 +732,20 @@ ALTER TABLE `opciones_categoria`
 --
 ALTER TABLE `opciones_predefinidas`
   ADD PRIMARY KEY (`id_opcion_predefinida`);
+
+--
+-- Indices de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`id_pedido`),
+  ADD KEY `fk_pedidos_usuario` (`userid`);
+
+--
+-- Indices de la tabla `pedido_items`
+--
+ALTER TABLE `pedido_items`
+  ADD PRIMARY KEY (`id_item`),
+  ADD KEY `fk_items_pedido` (`id_pedido`);
 
 --
 -- Indices de la tabla `productos`
@@ -810,7 +815,8 @@ ALTER TABLE `tamanos`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`userid`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `Password_Token` (`Password_Token`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -853,36 +859,22 @@ ALTER TABLE `opciones_predefinidas`
   MODIFY `id_opcion_predefinida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
--- Indices de la tabla `pedidos`
+-- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `fk_pedidos_usuario` (`userid`);
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Indices de la tabla `pedido_items`
+-- AUTO_INCREMENT de la tabla `pedido_items`
 --
 ALTER TABLE `pedido_items`
-  ADD PRIMARY KEY (`id_item`),
-  ADD KEY `fk_items_pedido` (`id_pedido`);  
+  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
   MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
-
---
--- AUTO_INCREMENT de la tabla `pedidos`
---  
-ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;  
-
---
--- AUTO_INCREMENT de la tabla `pedidos`
---
-ALTER TABLE `pedido_items`
-  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_listbox`
@@ -930,7 +922,7 @@ ALTER TABLE `tamanos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Restricciones para tablas volcadas
@@ -962,23 +954,23 @@ ALTER TABLE `opciones_categoria`
   ADD CONSTRAINT `opciones_categoria_ibfk_2` FOREIGN KEY (`id_opcion_predefinida`) REFERENCES `opciones_predefinidas` (`id_opcion_predefinida`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `producto_categorias`
---
-ALTER TABLE `producto_categorias`
-  ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
-  ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
-
---
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
   ADD CONSTRAINT `fk_pedidos_usuario` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pedidos_items`
+-- Filtros para la tabla `pedido_items`
 --
 ALTER TABLE `pedido_items`
   ADD CONSTRAINT `fk_items_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id_pedido`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `producto_categorias`
+--
+ALTER TABLE `producto_categorias`
+  ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
+  ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `producto_listbox`
