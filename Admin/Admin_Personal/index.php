@@ -169,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
       <button class="close-btn" onclick="closeModal('updateModal')">×</button>
       <h2 data-translate="Modificar usuario">Modificar usuario</h2>
       <form action="UpdateUser.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" id="id" name="id">
+        <input type="hidden" id="userid" name="userid" value=<?php echo $row['userid'];?>>
         <label data-translate="Nombre de usuario">Nombre de usuario</label>
         <input type="text" id="username" name="username">
         <label data-translate="email">email</label>
@@ -193,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
     }
     function openUpdateModal(button) {
       document.getElementById('updateModal').style.display = 'block';
-      document.getElementById('id').value = button.dataset.id;
+      document.getElementById('userid').value = button.dataset.id;
       document.getElementById('username').value = button.dataset.username;
       document.getElementById('role').value = button.dataset.role;
     }

@@ -35,7 +35,7 @@ if ($_POST["password"] === $_POST["passwordConfirm"]) {
             $up = $conn->prepare("UPDATE usuarios SET Password_Token = NULL, Password_Token_Exp = NULL, password = ? WHERE Password_Token = ?");
             $up->bind_param("ss", $p, $t);
             $up->execute();
-
+                
             header("Location: RecoverPassword.php?s=success");
             exit;
 

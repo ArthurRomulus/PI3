@@ -73,64 +73,65 @@
 
 </div>
 
+</div>
+</div>
+
 <script>
-// ============ DATOS DE PRODUCTOS DESDE PHP ============
-const productos = <?php
-  $productos = $conn->query("SELECT * FROM productos");
-  $lista = [];
-  while ($p = $productos->fetch_assoc()) {
-    $lista[] = $p;
-  }
-  echo json_encode($lista);
-?>;
+// Mostrar el rango de fechas si seleccionan "personalizado"
+const filtroPeriodo = document.getElementById("filtro-periodo");
+const rangoDiv = document.getElementById("rango-personalizado");
 
-// ============ EVENTOS ============
-document.getElementById("filtro-categoria").addEventListener("change", actualizarGrafica);
-document.getElementById("filtro-tipo").addEventListener("change", actualizarGrafica);
-
-document.getElementById("filtro-periodo").addEventListener("change", function() {
-  const rango = document.getElementById("rango-personalizado");
-  rango.style.display = this.value === "personalizado" ? "flex" : "none";
+filtroPeriodo.addEventListener("change", () => {
+  rangoDiv.style.display = filtroPeriodo.value === "personalizado" ? "flex" : "none";
 });
 
-// ============ FUNCIÓN PRINCIPAL ============
-function actualizarGrafica() {
+// Llamar a la función cuando cambian los filtros
+const filtros = document.querySelectorAll("#filtro-periodo, #filtro-categoria, #filtro-tipo, #fecha-inicio, #fecha-fin");
+filtros.forEach(f => f.addEventListener("change", cargarDatos));
+
+async function cargarDatos() {
+  const periodo = document.getElementById("filtro-periodo").value;
   const categoria = document.getElementById("filtro-categoria").value;
   const tipo = document.getElementById("filtro-tipo").value;
-  const contenedor = document.getElementById("grafica");
-  contenedor.innerHTML = "";
+  const inicio = document.getElementById("fecha-inicio").value;
+  const fin = document.getElementById("fecha-fin").value;
 
-  let filtrados = productos;
-  if (categoria !== "todo") {
-    filtrados = productos.filter(p => p.categoria == categoria);
-  }
-
-  // Totales
-  let totalVentas = 0;
-  let totalProductos = 0;
-
-  filtrados.forEach(prod => {
-    const valor = tipo === "ventas" ? parseFloat(prod.precio) : 1;
-    totalVentas += parseFloat(prod.precio);
-    totalProductos++;
-
-    const barra = document.createElement("div");
-    barra.classList.add("barra");
-    barra.style.height = `${valor * 3}px`;
-    barra.title = `${prod.namep} - $${prod.precio}`;
-    barra.innerHTML = `<span>${prod.namep}</span>`;
-    contenedor.appendChild(barra);
+  const response = await fetch("estadisticas_datos.php", {
+    method: "POST",
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: `periodo=${periodo}&categoria=${categoria}&tipo=${tipo}&inicio=${inicio}&fin=${fin}`
   });
 
-  document.getElementById("total-ventas").textContent = "$" + totalVentas.toFixed(2);
-  document.getElementById("total-productos").textContent = totalProductos;
+  const data = await response.json();
+  renderGrafica(data);
 }
 
-// Inicializa
-actualizarGrafica();
+function renderGrafica(data) {
+  const grafica = document.getElementById("grafica");
+  grafica.innerHTML = "";
+
+  if (!data.barras || data.barras.length === 0) {
+    grafica.innerHTML = "<p style='text-align:center;width:100%'>No hay datos disponibles</p>";
+    document.getElementById("total-ventas").textContent = "$0";
+    document.getElementById("total-productos").textContent = "0";
+    return;
+  }
+
+  const maxValor = Math.max(...data.barras.map(b => b.valor));
+  data.barras.forEach(b => {
+    const barra = document.createElement("div");
+    barra.className = "barra";
+    barra.style.height = (b.valor / maxValor * 350 + 20) + "px";
+    barra.innerHTML = `<span>${b.etiqueta}</span><div style="background:#4e79a7;color:white;border-radius:6px 6px 0 0;padding-top:5px;">${b.valor}</div>`;
+    grafica.appendChild(barra);
+  });
+
+  document.getElementById("total-ventas").textContent = "$" + data.totalVentas;
+  document.getElementById("total-productos").textContent = data.totalProductos;
+}
+
+cargarDatos(); // Carga inicial
 </script>
 
-</div>
-</div>
 </body>
 </html>
