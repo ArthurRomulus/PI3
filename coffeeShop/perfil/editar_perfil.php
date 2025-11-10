@@ -8,7 +8,7 @@ if (empty($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     header("Location: /PI3/General/login.php");
     exit;
 }
-
+$usuarioLogueado = isset($_SESSION['logueado']) && $_SESSION['logueado'] === true;
 // datos de sesión
 $userid    = $_SESSION['userid']        ?? null;
 $nombre    = $_SESSION['username']      ?? 'Usuario';
@@ -37,8 +37,12 @@ function getAvatarSrc($avatar, $nombre) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Ajustes de cuenta</title>
     <link rel="stylesheet" href="perfil_usuario.css" />
+    <link rel="stylesheet" href="../general.css" />
+
+    
   </head>
   <body>
+<?php include "../nav_bar.php"; ?>    
     <div class="shell">
       <div class="app">
 
@@ -113,7 +117,7 @@ function getAvatarSrc($avatar, $nombre) {
                 <circle cx="12" cy="7" r="4" />
                 <path d="M5.5 21a6.5 6.5 0 0 1 13 0" />
               </svg>
-              Perfil
+              <span data-translate="Perfil">Perfil</span>
             </a>
 
             <a class="active" href="editar_perfil.php">
@@ -121,14 +125,14 @@ function getAvatarSrc($avatar, $nombre) {
                 <circle cx="12" cy="12" r="10" />
                 <path d="M7 12h10M7 8h4M7 16h6" />
               </svg>
-              Editar perfil
+              <span data-translate="Editar perfil">Editar perfil</span>
             </a>
 
             <a href="cambiar_pass.php">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
               </svg>
-              Cambiar contraseña
+              <span data-translate="Cambiar contraseña">Cambiar contraseña</span>
             </a>
 
             <a href="historial_compras.php">
@@ -136,14 +140,14 @@ function getAvatarSrc($avatar, $nombre) {
                 <rect x="3" y="4" width="18" height="16" rx="2" />
                 <path d="M7 8h10M7 12h10M7 16h6" />
               </svg>
-              Historial de Compras
+              <span data-translate="Historial de Compras">Historial de Compras</span>
             </a>
           </nav>
 
           <div class="sidebar-bottom">
             <img
               class="sidebar-logo"
-              src="../../images/logocafe.png"
+              src="../../images/logo.png"
               alt="Logo Coffee-Shop"
             />
           </div>
@@ -151,11 +155,11 @@ function getAvatarSrc($avatar, $nombre) {
 
         <!-- Main -->
         <main class="main">
-          <h1>Información del Usuario</h1>
+          <h1 data-translate="Información del Usuario">Información del Usuario</h1>
           <div class="card">
 
             <div class="section">
-              <p class="muted">
+              <p class="muted" data-translate="Actualiza tu información básica de cuenta / Edita tu perfil">
                 Actualiza tu información básica de cuenta / Edita tu perfil
               </p>
             </div>
@@ -175,7 +179,7 @@ function getAvatarSrc($avatar, $nombre) {
                   value="<?php echo htmlspecialchars($userid); ?>">
 
                 <div class="col-12">
-                  <label for="email">(Email)</label>
+                  <label for="email" data-translate="(Correo electrónico)">(Correo electrónico)</label>
                   <div class="field">
                     <input
                       id="email"
@@ -189,7 +193,7 @@ function getAvatarSrc($avatar, $nombre) {
                 </div>
 
                 <div class="col-6">
-                  <label for="fname">Nombre</label>
+                  <label for="fname" data-translate="Nombre">Nombre</label>
                   <input
                     id="fname"
                     name="nombre"
@@ -200,7 +204,7 @@ function getAvatarSrc($avatar, $nombre) {
                 </div>
 
                 <div class="col-6">
-                  <label for="sname">Apellido</label>
+                  <label for="sname" data-translate="Apellido">Apellido</label>
                   <input
                     id="sname"
                     name="apellido"
@@ -210,7 +214,7 @@ function getAvatarSrc($avatar, $nombre) {
                 </div>
 
                 <div class="col-6">
-                  <label for="lname">Número</label>
+                  <label for="lname" data-translate="Número">Número</label>
                   <input
                     id="lname"
                     name="telefono"
@@ -220,7 +224,7 @@ function getAvatarSrc($avatar, $nombre) {
                 </div>
 
                 <div class="col-6">
-                  <label for="dob">Fecha de nacimiento</label>
+                  <label for="dob" data-translate="Fecha de nacimiento">Fecha de nacimiento</label>
                   <input
                     id="dob"
                     name="fecha_nac"
@@ -230,7 +234,7 @@ function getAvatarSrc($avatar, $nombre) {
                 </div>
 
                 <div class="col-12">
-                  <label for="tz">Zona horaria</label>
+                  <label for="tz" data-translate="Zona horaria">Zona horaria</label>
                   <div class="select-wrap">
                     <select id="tz" name="zona_horaria">
                       <option <?php echo ($zonaHorariaActual === '(UTC -06:00) Guadalajara, CDMX') ? 'selected' : ''; ?>>
@@ -251,14 +255,14 @@ function getAvatarSrc($avatar, $nombre) {
                       <path d="M6 9l6 6 6-6" />
                     </svg>
                   </div>
-                  <p class="tz-hint">
+                  <p class="tz-hint" data-translate="Selecciona tu zona horaria para mostrar correctamente horas y fechas.">
                     Selecciona tu zona horaria para mostrar correctamente horas y fechas.
                   </p>
                 </div>
 
                 <div class="col-12 actions">
-                  <button type="submit" class="btn">Guardar</button>
-                  <button type="button" class="btn secondary" onclick="window.location='perfil_usuario.php'">Cancelar</button>
+                  <button type="submit" class="btn" data-translate="Guardar">Guardar</button>
+                  <button type="button" class="btn secondary" onclick="window.location='perfil_usuario.php'" data-translate="Cancelar">Cancelar</button>
                 </div>
 
               </form>
@@ -268,5 +272,43 @@ function getAvatarSrc($avatar, $nombre) {
 
       </div>
     </div>
+    <?php include "../footer.php"; ?>
+    <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+    <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+    <aside
+      class="mini-cart"
+      id="miniCart"
+      aria-hidden="true"
+      aria-labelledby="mcTitle"
+      role="dialog"
+    >
+      <header class="mc-header">
+        <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
+        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+          ✕
+        </button>
+      </header>
+
+      <div class="mc-body">
+        <ul class="mc-list" id="mcList">
+          <!-- items por JS -->
+        </ul>
+        <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
+      </div>
+
+      <footer class="mc-footer">
+        <div class="mc-total">
+          <span data-translate="Total">Total</span>
+          <strong id="mcTotal">$0.00 MXN</strong>
+        </div>
+        <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
+      </footer>
+    </aside>
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+<script src="../../translate.js"></script>  
   </body>
 </html>

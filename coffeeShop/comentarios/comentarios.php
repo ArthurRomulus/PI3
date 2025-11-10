@@ -28,6 +28,7 @@ if ($usuarioLogueado) {
     <title>Blackwood Coffee - Comentarios</title>
     
     <link rel="stylesheet" href="../Style.css" /> 
+    <link rel="stylesheet" href="../inicio/Style.css" />
     <link rel="stylesheet" href="comentarios.css" />
     <link rel="icon" href="/images/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -56,7 +57,7 @@ if ($usuarioLogueado) {
             </div>
 
             <div class="form-grupo-grande">
-                <textarea id="comentario" name="comentario" rows="5" placeholder="Escribe aquí tu comentario..." required></textarea>
+                <textarea id="comentario" name="comentario" rows="5" data-translate-placeholder="Escribe aquí tu comentario..." placeholder="Escribe aquí tu comentario..." required></textarea>
             </div>
 
             <div class="form-fila-media">
@@ -132,8 +133,44 @@ if ($usuarioLogueado) {
       </main> 
 <?php include "../footer.php"; ?>
 
-    <script src="comentarios.js" defer></script>
-    <script src="../../translate.js"></script>
+     <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+<div class="mc-overlay" id="mcOverlay" hidden></div>
 
+<aside
+  class="mini-cart"
+  id="miniCart"
+  aria-hidden="true"
+  aria-labelledby="mcTitle"
+  role="dialog"
+>
+  <header class="mc-header">
+    <h3 id="mcTitle">Tu carrito</h3>
+    <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+      ✕
+    </button>
+  </header>
+
+  <div class="mc-body">
+    <ul class="mc-list" id="mcList">
+      <!-- items por JS -->
+    </ul>
+    <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
+  </div>
+
+  <footer class="mc-footer">
+    <div class="mc-total">
+      <span>Total</span>
+      <strong id="mcTotal">$0.00 MXN</strong>
+    </div>
+    <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
+  </footer>
+</aside>
+
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+<script src="comentarios.js" defer></script>
+<script src="../../translate.js"></script>
   </body>
 </html>

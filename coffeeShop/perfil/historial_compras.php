@@ -20,6 +20,8 @@ if (!$userid) {
     exit;
 }
 
+$usuarioLogueado = isset($_SESSION['logueado']) && $_SESSION['logueado'] === true;
+
 // 3. Conexión BD
 require_once "../../conexion.php";
 
@@ -163,8 +165,10 @@ function badgeClass($estado) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Historial de Compras — Coffee Shop</title>
     <link rel="stylesheet" href="historial_compras.css" />
+    <link rel="stylesheet" href="../general.css" />
   </head>
   <body>
+    <?php include "../nav_bar.php"; ?> 
     <div class="shell">
       <div class="app">
 
@@ -192,7 +196,7 @@ function badgeClass($estado) {
                 <circle cx="12" cy="7" r="4" />
                 <path d="M5.5 21a6.5 6.5 0 0 1 13 0" />
               </svg>
-              Perfil
+              <spand data-translate="Perfil">Perfil</span>
             </a>
 
             <a href="editar_perfil.php">
@@ -200,7 +204,7 @@ function badgeClass($estado) {
                 <circle cx="12" cy="12" r="10" />
                 <path d="M7 12h10M7 8h4M7 16h6" />
               </svg>
-              Editar perfil
+              <spand data-translate="Editar perfil">Editar perfil</span>
             </a>
 
             <a href="cambiar_pass.php">
@@ -209,7 +213,7 @@ function badgeClass($estado) {
                   d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"
                 />
               </svg>
-              Cambiar contraseña
+              <spand data-translate="Cambiar contraseña">Cambiar contraseña</span>
             </a>
 
             <a class="active" href="historial_compras.php">
@@ -217,14 +221,14 @@ function badgeClass($estado) {
                 <rect x="3" y="4" width="18" height="16" rx="2" />
                 <path d="M7 8h10M7 12h10M7 16h6" />
               </svg>
-              Historial de Compras
+              <spand data-translate="Historial de Compras">Historial de Compras</span>
             </a>
           </nav>
 
           <div class="sidebar-bottom">
             <img
               class="sidebar-logo"
-              src="../../images/logocafe.png"
+              src="../../images/logo.png"
               alt="Coffee Shop"
             />
           </div>
@@ -234,8 +238,9 @@ function badgeClass($estado) {
         <main class="main">
           <div class="panel">
             <div class="inner">
-              <h1>Historial de Compras</h1>
-              <p class="hello">
+              <h1 data-translate="Historial de Compras">Historial de Compras</h1>
+              <p class="hello" data-translate="Consulta tus pedidos, filtra por fecha o estado y descarga tus
+                recibos.">
                 Consulta tus pedidos, filtra por fecha o estado y descarga tus
                 recibos.
               </p>
@@ -244,15 +249,15 @@ function badgeClass($estado) {
               <div class="kpi-row">
                 <div class="kpi">
                   <b><?php echo htmlspecialchars($ordenesMes); ?></b>
-                  <span>Órdenes este mes</span>
+                  <span data-translate="Órdenes este mes">Órdenes este mes</span>
                 </div>
                 <div class="kpi">
                   <b>$<?php echo number_format($gastoMes, 2); ?></b>
-                  <span>Gasto total</span>
+                  <span data-translate="Gasto total">Gasto total</span>
                 </div>
                 <div class="kpi">
                   <b><?php echo number_format($puntosTotales, 0); ?></b>
-                  <span>Puntos acumulados</span>
+                  <span data-translate="Puntos acumulados">Puntos acumulados</span>
                 </div>
               </div>
 
@@ -261,8 +266,8 @@ function badgeClass($estado) {
                 <div class="body">
                   <form class="filters-grid" action="#" method="get">
                     <div class="field">
-                      <label for="q">Buscar</label>
-                      <input
+                      <label for="q"><span data-translate="Buscar">Buscar</span></label>
+                      <input data-translate-placeholder="Bebida, folio, sucursal..."
                         id="q"
                         name="q"
                         type="text"
@@ -270,25 +275,25 @@ function badgeClass($estado) {
                       />
                     </div>
                     <div class="field">
-                      <label for="from">Desde</label>
+                      <label for="from" data-translate="Desde">Desde</label>
                       <input id="from" name="from" type="date" />
                     </div>
                     <div class="field">
-                      <label for="to">Hasta</label>
+                      <label for="to" data-translate="Hasta">Hasta</label>
                       <input id="to" name="to" type="date" />
                     </div>
                     <div class="field">
-                      <label for="status">Estado</label>
+                      <label for="status" data-translate="Estado">Estado</label>
                       <select id="status" name="status">
-                        <option value="">Todos</option>
-                        <option>Completado</option>
-                        <option>En preparación</option>
-                        <option>Cancelado</option>
+                        <option value="" data-translate="Todos">Todos</option>
+                        <option data-translate="Completado">Completado</option>
+                        <option data-translate="En preparación">En preparación</option>
+                        <option data-translate="Cancelado">Cancelado</option>
                       </select>
                     </div>
                     <div class="actions">
-                      <button type="submit" class="btn">Filtrar</button>
-                      <a class="btn secondary" href="historial_compras.php">Limpiar</a>
+                      <button type="submit" class="btn" data-translate="Filtrar">Filtrar</button>
+                      <a class="btn secondary" href="historial_compras.php" data-translate="Limpiar">Limpiar</a>
                     </div>
                   </form>
                 </div>
@@ -301,18 +306,18 @@ function badgeClass($estado) {
                     <table class="orders">
                       <thead>
                         <tr>
-                          <th>Folio</th>
-                          <th>Fecha</th>
-                          <th>Artículos</th>
-                          <th>Sucursal</th>
-                          <th>Total</th>
-                          <th>Estado</th>
+                          <th data-translate="Folio">Folio</th>
+                          <th data-translate="Fecha">Fecha</th>
+                          <th data-translate="Artículos">Artículos</th>
+                          <th data-translate="Sucursal">Sucursal</th>
+                          <th data-translate="Total">Total</th>
+                          <th data-translate="Estado">Estado</th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php if (empty($pedidos)): ?>
                           <tr>
-                            <td colspan="6" style="text-align:center; padding:20px; opacity:.7;">
+                            <td colspan="6" style="text-align:center; padding:20px; opacity:.7;" data-translate="Aún no tienes pedidos registrados">
                               Aún no tienes pedidos registrados.
                             </td>
                           </tr>
@@ -350,5 +355,43 @@ function badgeClass($estado) {
         </main>
       </div>
     </div>
+    <?php include "../footer.php"; ?>
+    <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+    <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+    <aside
+      class="mini-cart"
+      id="miniCart"
+      aria-hidden="true"
+      aria-labelledby="mcTitle"
+      role="dialog"
+    >
+      <header class="mc-header">
+        <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
+        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+          ✕
+        </button>
+      </header>
+
+      <div class="mc-body">
+        <ul class="mc-list" id="mcList">
+          <!-- items por JS -->
+        </ul>
+        <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
+      </div>
+
+      <footer class="mc-footer">
+        <div class="mc-total">
+          <span data-translate="Total">Total</span>
+          <strong id="mcTotal">$0.00 MXN</strong>
+        </div>
+        <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
+      </footer>
+    </aside>
+<script>
+  window.CART_API_URL = '../catalogo/cart_api.php';
+</script>
+<script src="../catalogo/app.js"></script>
+<script src="../../translate.js"></script>  
   </body>
 </html>

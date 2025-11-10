@@ -89,3 +89,132 @@
       </span>
       <span class="cs-line"></span>
     </div>
+
+    <style>
+      /*FOOOOTTTEEERRR*/
+/* ===================== FOOTER (CSS) ===================== */
+:root{
+  --coffee:#531607;
+  --bg-a:#d6b6a1;
+  --bg-b:#f1e4db;
+  --card:#f4ebe6;
+  --ink:#3d2e27;
+  --muted:#7b645b;
+  --stroke:#e5d6cb;
+  --shadow:0 14px 30px rgba(0,0,0,.12);
+  --radius:22px;
+}
+
+.cs-footer{
+  background-color: #DCC0B9;/*color pqara el foooter*/
+  padding:24px 16px 18px;
+  color:var(--ink);
+}
+.cs-footer__wrap{
+  width: 98%;
+  background: rgba(255,255,255,.22);
+  border-radius:28px;
+  padding:3px 18px 8px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+/* Marca a la izquierda */
+.cs-brand{
+  display:flex; align-items:center; gap:14px;
+  margin:60px 0 -190px 0;
+}
+.cs-brand__logo{
+  width:200px; height:auto; object-fit:contain;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,.18));
+}
+
+/* Grid de tarjetas */
+.cs-cards{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap:18px;
+  margin-left: 200px;
+}
+
+.cs-card{
+  background: var(--card);
+  border-radius: var(--radius);
+  padding:18px 18px 16px;
+  box-shadow: var(--shadow);
+  position:relative;
+}
+.cs-card h3{
+  margin:0 0 12px;
+  font-size:1.05rem;
+  color:var(--ink);
+  font-weight:800;
+}
+
+/* Items de lista */
+.cs-list, .cs-links{
+  list-style:none; margin:0; padding:0; display:grid; gap:10px;
+}
+.cs-list li, .cs-links li{ display:flex; align-items:center; gap:10px; }
+.cs-ico{
+  width:22px; height:22px; color:var(--coffee); display:inline-flex;
+}
+.cs-ico svg{ width:100%; height:100%; }
+
+.cs-links a{
+  color:var(--ink); text-decoration:none; font-weight:700;
+}
+.cs-links a:hover{ text-decoration:underline; }
+.chev{ color:var(--coffee); margin-right:6px; font-weight:900; }
+
+/* Redes y horarios */
+.cs-social{ display:flex; gap:10px; margin-bottom:10px; }
+.circle{
+  width:42px; height:42px; border-radius:50%;
+  background:#f0e4db; color:var(--coffee);
+  display:grid; place-items:center; text-decoration:none;
+  box-shadow: inset 0 0 0 2px var(--stroke);
+}
+.circle svg{ width:22px; height:22px; }
+
+.cs-hours h4{ margin:0 0 6px; color:var(--ink); font-weight:800; }
+.cs-hours p{ margin:0; color:var(--muted); font-weight:700; }
+
+/* Newsletter */
+.cs-news{ display:grid; gap:10px; }
+.cs-news input{
+  height:38px; border-radius:12px;
+  border:2px solid var(--stroke);
+  background:#000000; padding:0 12px; color:var(--ink);
+}
+.cs-btn{
+  height:42px; border:none; border-radius:14px;
+  background:var(--coffee); color:#fff; font-weight:800; cursor:pointer;
+  box-shadow:0 8px 16px rgba(0,0,0,.16);
+}
+.cs-pay{
+  display:flex; align-items:center; gap:10px; margin-top:8px; color:var(--muted); font-weight:800;
+}
+.cs-pay .bean{ width:26px; height:26px; color:var(--coffee); display:inline-flex; }
+.cs-pay .bean svg{ width:100%; height:100%; }
+
+/* Línea inferior con grano al centro */
+.cs-bottom{
+  display:flex; align-items:center; gap:12px; margin:18px 6px 8px;
+}
+.cs-line{ flex:1; height:3px; background:#47312920; border-radius:999px; }
+.cs-bean{ width:24px; height:24px; color:var(--coffee); display:inline-flex; }
+.cs-bean svg{ width:100%; height:100%; }
+
+/* Legal */
+.cs-legal{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; padding:4px 6px 10px;
+}
+.cs-copy{ margin:0; color:#3d2e27; font-weight:700; }
+.cs-legal__links{ display:flex; align-items:center; gap:12px; }
+.cs-legal__links a{ color:#3d2e27; text-decoration:none; font-weight:700; }
+.cs-legal__links a:hover{ text-decoration:underline; }
+.sep{ color:#886e63; }
+
+</style>
+  </div>
