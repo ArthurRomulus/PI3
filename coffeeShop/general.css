@@ -811,3 +811,245 @@ body.dark-mode .ts-price,
 body.dark-mode .ts-cart {
     background: #707070;
 }
+
+/* === MODO OSCURO: PERFIL === */
+
+body.dark-mode .app {
+  background-color: #2a2a2a;
+  border-color: #555;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, .5);
+}
+
+body.dark-mode .sidebar {
+  background-color: #1f1f1f;
+  border-right: 1px solid #555;
+}
+
+body.dark-mode .sidebar::after {
+  background: #555;
+}
+
+body.dark-mode .brand .avatar {
+  border-color: #444;
+  outline-color: #888;
+}
+
+body.dark-mode .cam-badge::before {
+  background: #3a3a3a;
+  border-color: #777;
+}
+body.dark-mode .cam-badge:hover::before {
+  background: #555;
+}
+body.dark-mode .cam-badge svg {
+  color: #ddd;
+}
+
+/* texto de bienvenida y nombre */
+body.dark-mode h1,
+body.dark-mode .main h1,
+body.dark-mode .main h2,
+body.dark-mode .main h3,
+body.dark-mode .muted {
+  color: #f5f5f5;
+}
+
+/* panel principal */
+body.dark-mode .card {
+  background-color: #2a2a2a;
+  border-color: #555;
+  color: #eee;
+}
+
+/* secciones internas */
+body.dark-mode .section {
+  background-color: #2a2a2a;
+  border-top: 1px solid #555;
+  color: #ddd;
+}
+
+/* campos de formulario */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"],
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #3a3a3a;
+  border: 1px solid #666;
+  color: #f0f0f0;
+}
+
+body.dark-mode label {
+  color: #e0e0e0;
+}
+
+/* navegación lateral */
+body.dark-mode .nav a {
+  color: #e0e0e0;
+  border-color: transparent;
+}
+body.dark-mode .nav a:hover {
+  background-color: #333;
+  border-color: #777;
+}
+body.dark-mode .nav a.active {
+  background-color: #505050 !important;
+  border-color: #aaa !important;
+  color: #fff !important;
+}
+body.dark-mode .nav svg {
+  color: #ddd;
+}
+body.dark-mode .nav a.active svg {
+  color: #fff;
+}
+
+/* logo inferior */
+body.dark-mode .sidebar-logo {
+  opacity: .9;
+  filter: invert(1);
+}
+
+body.dark-mode .nav a svg,
+body.dark-mode .nav a.active svg,
+body.dark-mode .profile-mini .name,
+body.dark-mode .sidebar .nav a {
+  color: #fff !important;
+}
+
+/* === PERFIL: Variables y overrides para modo oscuro === */
+/* Estas reglas hacen que los estilos de `perfil.css` funcionen bien bajo .dark-mode
+   sin copiar todo el archivo; se aprovechan de las variables definidas en :root */
+body.dark-mode {
+  /* variables adaptadas para la paleta oscura */
+  --bg: #1a1a1a;
+  --panel: #2a2a2a;
+  --ink: #f0f0f0;
+  --ink-soft: #bdbdbd;
+  --primary: #c9a790;
+  --border: #555;
+  --coffee: #c9a790; /* acento claro para botones y highlights */
+  --beige: #2a2220;  /* usado como fondo alternativo en perfil */
+  --input: #3a3a3a;
+  --ring: 0 0 0 3px rgba(201,167,144,0.12);
+  --shadow: 0 20px 40px rgba(0,0,0,.5);
+}
+
+/* Contenedores principales */
+body.dark-mode .shell{ background: var(--bg); }
+body.dark-mode .app{ background: var(--panel); border-color: var(--border); box-shadow: var(--shadow); }
+
+/* Sidebar */
+body.dark-mode .sidebar{ background-color: var(--beige); }
+body.dark-mode .sidebar::after{ background: var(--border); }
+body.dark-mode .brand .avatar{ border-color: #444; outline-color: #888; }
+
+/* Cam badge */
+body.dark-mode .cam-badge::before{ background: #3a3a3a; border-color: #777; }
+body.dark-mode .cam-badge:hover::before{ background: #555; }
+body.dark-mode .cam-badge svg{ color: #ddd; }
+
+/* Sidebar bottom logo */
+body.dark-mode .sidebar-logo{ opacity: .9; filter: invert(1); }
+
+/* Nav (sidebar) */
+body.dark-mode .nav a{ color: var(--ink-soft); border-color: transparent; }
+body.dark-mode .nav a:hover{ background-color: #333; border-color: #777; }
+body.dark-mode .nav a.active{ background-color: #505050 !important; border-color: #aaa !important; color: #fff !important; }
+body.dark-mode .nav svg{ color: #ddd; }
+
+/* Main / panel */
+body.dark-mode .main{ background-color: var(--beige); }
+body.dark-mode h1, body.dark-mode .main h1, body.dark-mode .main h2, body.dark-mode .main h3, body.dark-mode .muted{ color: var(--ink); }
+body.dark-mode .panel{ background-color: var(--panel); border-color: var(--border); color: var(--ink); }
+
+/* Cards and content */
+body.dark-mode .card{ background-color: var(--panel); border-color: var(--border); color: var(--ink); }
+body.dark-mode .section{ background-color: var(--panel); border-top: 1px solid var(--border); }
+
+/* Profile mini and data list */
+body.dark-mode .profile-mini .name{ color: var(--ink); }
+body.dark-mode .profile-mini .meta{ color: var(--ink-soft); }
+body.dark-mode .data dt{ color: var(--ink); }
+body.dark-mode .data dd{ color: var(--ink); }
+
+/* Forms */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="date"],
+body.dark-mode select,
+body.dark-mode textarea{
+  background-color: var(--input);
+  border: 1px solid var(--border);
+  color: var(--ink);
+}
+body.dark-mode label{ color: var(--ink-soft); }
+
+/* Buttons */
+body.dark-mode .btn{ background: var(--coffee); color: #252525; box-shadow:none; }
+body.dark-mode .btn.secondary{ background: transparent; color: var(--ink); border-color: var(--border); }
+
+/* Mini-cart (profile uses same components) */
+body.dark-mode .mc-overlay{ background: rgba(0,0,0,0.6); }
+body.dark-mode .mini-cart{ background: #252525; color: #eee; border-left:1px solid #444; }
+
+/* Misc tweaks */
+body.dark-mode .muted{ color: var(--ink-soft); }
+body.dark-mode .dot{ background: #2ecc71; }
+
+/* ===== PERFIL: Botones integrados con la paleta de modo oscuro ===== */
+/* Botones de acción (Editar perfil, Ver historial): fondo neutro oscuro, texto claro */
+body.dark-mode .content-grid .actions,
+body.dark-mode .panel .actions {
+  gap: 10px;
+  align-items: center;
+}
+
+body.dark-mode .content-grid .actions .btn,
+body.dark-mode .panel .actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--input);    /* gris oscuro coherente con inputs */
+  color: var(--ink);          /* texto claro */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+body.dark-mode .content-grid .actions .btn:hover,
+body.dark-mode .panel .actions .btn:hover {
+  transform: translateY(-2px);
+  background: #505050; /* ligero aclarado al pasar */
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55);
+}
+
+/* Logout: estilo más sobrio que el rojo brillante; outline con acento al pasar */
+body.dark-mode .content-grid .actions a[href$="/General/logout.php"],
+body.dark-mode .panel .actions a[href$="/General/logout.php"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink) !important;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+body.dark-mode .content-grid .actions a[href$="/General/logout.php"]:hover,
+body.dark-mode .panel .actions a[href$="/General/logout.php"]:hover {
+  background: rgba(201,167,144,0.08); /* sutil acento beige al pasar */
+  border-color: rgba(201,167,144,0.18);
+}
+
+/* Responsive: mantener altura y distribución uniforme */
+@media (max-width: 980px){
+  body.dark-mode .content-grid .actions,
+  body.dark-mode .panel .actions{ grid-auto-flow: row; }
+}
+
+

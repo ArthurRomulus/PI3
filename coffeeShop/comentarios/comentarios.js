@@ -44,7 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalResenas = stats.total || 0;
         if (promedioNumEl) promedioNumEl.textContent = promedio;
         if (promedioEstrellasEl) promedioEstrellasEl.innerHTML = crearEstrellas(stats.promedio);
-        if (promedioTotalEl) promedioTotalEl.textContent = `(${totalResenas} reseñas)`;
+        if (promedioTotalEl) {
+            const countSpan = promedioTotalEl.querySelector('#total-reviews-count');
+            const labelSpan = promedioTotalEl.querySelector('[data-translate="reseñas"]');
+            if (countSpan) countSpan.textContent = totalResenas;
+            if (labelSpan && typeof applyTranslation === 'function') {
+                const lang = localStorage.getItem('lang') || 'es';
+                applyTranslation(lang); // vuelve a traducir "reseñas"
+            }
+        }
         if (reviewScorePillEl) reviewScorePillEl.textContent = promedio;
         if (desgloseBarrasEl) {
             desgloseBarrasEl.innerHTML = '';
@@ -131,9 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <footer class="card__footer">
             <button class="act act-like" data-id="${com.idr}">
               <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1 4.22 2.44C11.09 5 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              <span class="like-count">${likesCount}</span> Me gusta
+              <span class="like-count">${likesCount}</span> <span data-translate="Me gusta">Me gusta</span>
             </button>
-            <button class="act act-reply" data-id="${com.idr}">
+            <button class="act act-reply" data-id="${com.idr}" data-translate="Responder">
               <svg viewBox="0 0 24 24"><path d="M21 6h-2v9H7v2a1 1 0 0 0 1.7.7L12.4 15H21a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zM17 11V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v12l4-4h10a1 1 0 0 0 1-1z"/></svg>
               Responder
             </button>
@@ -171,12 +179,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     comentarios.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                     listaComentariosEl.innerHTML = comentarios.map(com => renderizarComentario(com, false)).join('');
                 } else {
-                    listaComentariosEl.innerHTML = '<p>¡Sé el primero en dejar un comentario!</p>';
+                    listaComentariosEl.innerHTML = '<p data-translate="¡Sé el primero en dejar un comentario!">¡Sé el primero en dejar un comentario!</p>';
+                }
+                // 👇 Fuerza la traducción después de renderizar comentarios dinámicos
+                if (typeof applyTranslation === 'function') {
+                    const lang = localStorage.getItem('lang') || 'es';
+                    applyTranslation(lang);
                 }
             }
         } catch (error) {
             console.error('Error al cargar datos:', error);
-            if(listaComentariosEl) listaComentariosEl.innerHTML = '<p>Error al cargar comentarios.</p>';
+            if(listaComentariosEl) listaComentariosEl.innerHTML = '<p data-translate="Error al cargar comentarios.">Error al cargar comentarios.</p>';
         }
     }
 
@@ -194,14 +207,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si no existe, lo creamos
             const formHTML = `
                 <form class="reply-form" data-parent-id="${idResena}">
-                  <textarea name="comentario" placeholder="Escribe tu respuesta..." required></textarea>
+                  <textarea name="comentario" data-translate-placeholder="Escribe tu respuesta..." placeholder="Escribe tu respuesta..." required></textarea>
                   <div class="reply-form-actions">
-                    <button type="button" class="btn-cancelar-reply">Cancelar</button>
-                    <button type="submit" class="btn-enviar-reply">Responder</button>
+                    <button type="button" class="btn-cancelar-reply" data-translate="Cancelar">Cancelar</button>
+                    <button type="submit" class="btn-enviar-reply" data-translate="Responder">Responder</button>
                   </div>
                 </form>
             `;
             container.innerHTML = formHTML;
+            //Fuerza la traducción cuando se crea el formulario dinámicamente
+            if (typeof applyTranslation === 'function') {
+                const lang = localStorage.getItem('lang') || 'es';
+                applyTranslation(lang);
+            }
         }
     }
 

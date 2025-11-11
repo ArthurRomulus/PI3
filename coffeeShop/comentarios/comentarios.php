@@ -27,39 +27,26 @@ if ($usuarioLogueado) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blackwood Coffee - Comentarios</title>
     
-    <link rel="stylesheet" href="Style.css" /> 
+    <link rel="stylesheet" href="../Style.css" /> 
+    <link rel="stylesheet" href="../inicio/Style.css" />
     <link rel="stylesheet" href="comentarios.css" />
-    <link rel="icon" href="/images/logocafe.png" />
-    <link href="../general.css" rel="stylesheet"/>
+    <link rel="icon" href="/images/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../general.css" />
   </head>
   
   <body>
+    <script src="../../theme-toggle.js" defer></script>
     <?php include "../nav_bar.php"; ?>
-
-    <header class="site-header">
-      <div class="header-container">
-        <div class="header-logo">
-          <a href="index.php">
-            <img src="../images/logo.png" alt="Blackwood Coffee logo" />
-          </a>
-          <span>Blackwood Coffee</span>
-        </div>
-        <div class="header-actions">
-          <a href="../General/login.php" class="icon-btn" aria-label="Cuenta">👤</a>
-        </div>
-      </div>
-    </header>
-
     <main class="panel-comentarios">
       
       <section class="panel" id="panel-formulario">
-        <h2>¡Déjanos tu opinión!</h2>
+        <h2 data-translate="¡Déjanos tu opinión!">¡Déjanos tu opinión!</h2>
         
-        <form id="form-comentario" class="form-comentario-nuevo" data-username="<?php echo htmlspecialchars($nombre_usuario_logueado); ?>" enctype="multipart/form-data">
+        <form id="form-comentario" class="form-comentario-nuevo" data-username="<?php echo htmlspecialchars($username); ?>" enctype="multipart/form-data">
             
             <div class="form-grupo-rating-central">
-                <label>Calificación de nuestros servicios:</label>
+                <label data-translate="Calificación de nuestros servicios:">Calificación de nuestros servicios:</label>
                 <div class="rating-estrellas">
                     <input type="radio" id="estrella5" name="calificacion" value="5" required><label for="estrella5" title="5 estrellas">★</label>
                     <input type="radio" id="estrella4" name="calificacion" value="4"><label for="estrella4" title="4 estrellas">★</label>
@@ -70,35 +57,35 @@ if ($usuarioLogueado) {
             </div>
 
             <div class="form-grupo-grande">
-                <textarea id="comentario" name="comentario" rows="5" placeholder="Escribe aquí tu comentario..." required></textarea>
+                <textarea id="comentario" name="comentario" rows="5" data-translate-placeholder="Escribe aquí tu comentario..." placeholder="Escribe aquí tu comentario..." required></textarea>
             </div>
 
             <div class="form-fila-media">
                 <div class="form-grupo-upload">
                     <label for="imagen" class="btn-upload">
-                        <i class="fas fa-camera"></i> Subir Foto
+                        <i class="fas fa-camera"></i>  <span data-translate="Subir Foto"> Subir Foto</span>
                     </label>
                     <input type="file" id="imagen" name="imagen" accept="image/png, image/jpeg">
-                    <span id="file-name" class="file-name-display">Ningún archivo</span>
+                    <span id="file-name" class="file-name-display" data-translate="Ningún archivo">Ningún archivo</span>
                 </div>
 
                 <div class="form-grupo-tags">
-                    <label for="etiquetas" class="label-listbox">Selecciona etiquetas:</label>
+                    <label for="etiquetas" class="label-listbox" data-translate="Selecciona etiquetas:">Selecciona etiquetas:</label>
                     <select id="etiquetas" name="etiquetas[]" multiple>
-                        <option value="café">Café</option>
-                        <option value="postre">Postre</option>
-                        <option value="comida">Comida</option>
-                        <option value="servicio">Servicio</option>
-                        <option value="ambiente">Ambiente</option>
-                        <option value="bueno">Bueno</option>
-                        <option value="malo">Malo</option>
+                        <option value="café" data-translate="Café">Café</option>
+                        <option value="postre" data-translate="Postre">Postre</option>
+                        <option value="comida" data-translate="Comida">Comida</option>
+                        <option value="servicio" data-translate="Servicio">Servicio</option>
+                        <option value="ambiente" data-translate="Ambiente">Ambiente</option>
+                        <option value="bueno" data-translate="Bueno">Bueno</option>
+                        <option value="malo" data-translate="Malo">Malo</option>
                     </select>
                 </div>
                 </div>
 
             <div class="form-fila-botones">
-                <button type="reset" class="btn-cancelar">Borrar</button>
-                <button type="submit" class="btn-enviar">Subir</button>
+                <button type="reset" class="btn-cancelar" data-translate="Borrar">Borrar</button>
+                <button type="submit" class="btn-enviar" data-translate="Subir">Subir</button>
             </div>
             
             <p id="form-mensaje"></p> 
@@ -108,7 +95,9 @@ if ($usuarioLogueado) {
               <div class="resena-promedio">
                   <div class="promedio-numero" id="promedio-numero-display">0.0</div>
                   <div class="promedio-estrellas" id="promedio-estrellas-display"></div>
-                  <div class="promedio-total" id="promedio-total-display">(0 reseñas)</div>
+                  <div class="promedio-total" id="promedio-total-display">
+                  (<span id="total-reviews-count">0</span> <span data-translate="reseñas">reseñas</span>)
+                </div>
               </div>
               <div class="resena-desglose" id="desglose-barras-container"></div>
             </div>
@@ -119,594 +108,69 @@ if ($usuarioLogueado) {
       <section class="reviews" aria-labelledby="reviews-title">
         <div class="reviews__wrap">
           <header class="reviews__header">
-            <h2 id="reviews-title">Comentarios</h2>
+            <h2 id="reviews-title" data-translate="Comentarios">Comentarios</h2>
             <div class="reviews__controls">
               <div class="pill-group">
-                <button class="pill pill--ghost">Más recientes</button>
-                <button class="pill pill--ghost">Con foto</button>
+                <button class="pill pill--ghost" data-translate="Más recientes">Más recientes</button>
+                <button class="pill pill--ghost"data-translate="Con foto">Con foto</button>
               </div>
             </div>
           </header>
 
           <div class="reviews__subhead">
             <span class="score-pill" id="review-score-pill">0.0</span> <div class="select-pill" role="listbox" aria-label="Clasificación">
-              <span>Clasificación</span>
+              <span data-translate="Clasificación">Clasificación</span>
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z" /></svg>
             </div>
           </div>
 
           <div class="reviews__grid" id="reviews-grid-container">
-            <p>Cargando comentarios...</p>
+            <p data-translate="Cargando comentarios...">Cargando comentarios...</p>
           </div>
           
         </div>
       </section>
-      </main> <footer class="cs-footer" aria-labelledby="footer-title">
-      <h2 id="footer-title" class="sr-only">Información del sitio</h2>
-
-      <div class="cs-footer__wrap">
-        <aside class="cs-brand">
-          <img class="cs-brand__logo" src="../images/logo.png" alt="Blackwood Coffee logo" />
-        </aside>
-
-        <div class="cs-cards">
-          <section class="cs-card">
-            <h3>News & updates</h3>
-            <form class="cs-news" action="#" method="post">
-              <label class="sr-only" for="newsletter">Correo electrónico</label>
-              <input id="newsletter" type="email" placeholder="correo electrónico" required>
-              <button type="submit" class="cs-btn">Suscribir</button>
-            </form>
-          </section>
-          
-          <section class="cs-card">
-            <h3>Contáctanos</h3>
-            <ul class="cs-list">
-              <li>
-                <span class="cs-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5Z" fill="currentColor"/></svg></span>
-                <a href="mailto:coffee_shop@gmail.com">coffee_shop@gmail.com</a>
-              </li>
-              <li>
-                <span class="cs-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.6-.36 12.3 12.3 0 0 0 3.8.6 1.5 1.5 0 0 1 1.5 1.5V20a1.5 1.5 0 0 1-1.5 1.5A18.5 18.5 0 0 1 3 7.5 1.5 1.5 0 0 1 4.5 6H7a1.5 1.5 0 0 1 1.5 1.5c0 1.3.2 2.6.6 3.8a1.5 1.5 0 0 1-.36 1.6Z" fill="currentColor"/></svg></span>
-                <a href="tel:+523141495067">+52 314 149 5067</a>
-              </li>
-              <li>
-                <span class="cs-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z" fill="currentColor"/></svg></span>
-                <span>Manzanillo, Col. • Campus Naranjo</span>
-              </li>
-            </ul>
-          </section>
-
-
-
-          <section class="cs-card">
-            <h3>Síguenos</h3>
-            <div class="cs-social">
-              <a href="https://facebook.com" aria-label="Facebook" class="circle">
-                <svg viewBox="0 0 24 24"><path d="M13 22v-9h3l1-4h-4V7a1 1 0 0 1 1-1h3V2h-3a5 5 0 0 0-5 5v2H6v4h3v9h4Z" fill="currentColor"/></svg>
-              </a>
-              <a href="https://instagram.com" aria-label="Instagram" class="circle">
-                <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm6.5-.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z" fill="currentColor"/></svg>
-              </a>
-            </div>
-            <div class="cs-hours">
-              <h4>Horarios</h4>
-              <p>Lun–Vier: 9:00–21:00</p>
-              <p>Sab–Dom: 10:00–20:00</p>
-            </div>
-          </section>
-        </div>
-
-        <div class="cs-bottom">
-          <span class="cs-line"></span>
-          <span class="cs-bean" aria-hidden="true">
-            <img src="../images/logo.png" alt="Blackwood Coffee logo" style="width:150px; height:32px; object-fit:contain;" />
-          </span>
-          <span class="cs-line"></span>
-        </div>
-
-  
-    </footer>
-
-    <script src="comentarios.js" defer></script>
-
-    <!-- Estrellas + contador -->
-    <div class="fila-top">
-      <div class="estrellas" id="estrellas" aria-label="Calificación">
-        <span class="star" data-val="1">☆</span>
-        <span class="star" data-val="2">☆</span>
-        <span class="star" data-val="3">☆</span>
-        <span class="star" data-val="4">☆</span>
-        <span class="star" data-val="5">☆</span>
-      </div>
-      <div class="contador"><span id="score">0</span>/5</div>
-    </div>
-
-    <!-- Caja de comentario -->
-    <div class="caja-comentario">
-      <textarea id="comentario" placeholder="Escribe un comentario..."></textarea>
-      <img class="ico-bean" src="../../images/iconcofe.png" alt="bean coffe" aria-hidden="true" />
-      <span class="ico-emoji" aria-hidden="true">☺</span>
-    </div>
-
-    <!-- Subir foto + Etiquetas + acciones -->
-    <div class="fila-subida">
-      <!-- 1) Subir Foto -->
-      <label class="subir-foto" for="fileInput">
-        <span class="ico-cam">
-          <svg viewBox="0 0 24 24" width="38" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 8h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/>
-            <path d="M9 8l1.5-2h3L15 8"/>
-            <circle cx="12" cy="13" r="3.5"/>
-          </svg>
-        </span>
-        <span>Subir Foto</span>
-      </label>
-      <input id="fileInput" type="file" accept="image/*" hidden />
-
-      <!-- 2) Botón Etiquetas -->
-      <button type="button" class="btn-etiquetas" id="toggleTags">🏷 Etiquetas</button>
-
-      <!-- 3) Acciones -->
-      <div class="acciones">
-        <button type="button" class="btn btn-outline" id="btnBorrar">Borrar</button>
-        <button type="button" class="btn btn-solid" id="btnSubir">Subir</button>
-      </div>
-
-      <!-- Panel de etiquetas (oculto por defecto) -->
-      <div class="tags-panel" id="tagsPanel" aria-label="Etiquetas disponibles">
-        <div class="tags-grid" id="tagsGrid">
-          <!-- 50 chips -->
-          <span class="tag-chip">#Coffee</span>
-          <span class="tag-chip">#CaféDeAltura</span>
-          <span class="tag-chip">#Espresso</span>
-          <span class="tag-chip">#Americano</span>
-          <span class="tag-chip">#Capuchino</span>
-          <span class="tag-chip">#Latte</span>
-          <span class="tag-chip">#Mocha</span>
-          <span class="tag-chip">#Macchiato</span>
-          <span class="tag-chip">#FlatWhite</span>
-          <span class="tag-chip">#CaféDeOlla</span>
-          <span class="tag-chip">#ColdBrew</span>
-          <span class="tag-chip">#Frappe</span>
-          <span class="tag-chip">#Affogato</span>
-          <span class="tag-chip">#V60</span>
-          <span class="tag-chip">#Chemex</span>
-          <span class="tag-chip">#PrensaFrancesa</span>
-          <span class="tag-chip">#Descafeinado</span>
-          <span class="tag-chip">#LecheEntera</span>
-          <span class="tag-chip">#LecheAvena</span>
-          <span class="tag-chip">#LecheAlmendra</span>
-          <span class="tag-chip">#SinAzúcar</span>
-          <span class="tag-chip">#ConCanela</span>
-          <span class="tag-chip">#Caramelo</span>
-          <span class="tag-chip">#Vainilla</span>
-          <span class="tag-chip">#Chocolate</span>
-          <span class="tag-chip">#Matcha</span>
-          <span class="tag-chip">#Chai</span>
-          <span class="tag-chip">#PanDulce</span>
-          <span class="tag-chip">#Galletas</span>
-          <span class="tag-chip">#Croissant</span>
-          <span class="tag-chip">#Bagel</span>
-          <span class="tag-chip">#Sandwich</span>
-          <span class="tag-chip">#Desayuno</span>
-          <span class="tag-chip">#Snack</span>
-          <span class="tag-chip">#TakeAway</span>
-          <span class="tag-chip">#Delivery</span>
-          <span class="tag-chip">#BuenServicio</span>
-          <span class="tag-chip">#Rápido</span>
-          <span class="tag-chip">#Amable</span>
-          <span class="tag-chip">#Ambiente</span>
-          <span class="tag-chip">#Relax</span>
-          <span class="tag-chip">#WorkFriendly</span>
-          <span class="tag-chip">#WiFi</span>
-          <span class="tag-chip">#PetFriendly</span>
-          <span class="tag-chip">#MúsicaSuave</span>
-          <span class="tag-chip">#Limpio</span>
-          <span class="tag-chip">#Recomendado</span>
-          <span class="tag-chip">#PrecioJusto</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- JS mínimo -->
-<script>
-  // estrellas
-  const stars = document.querySelectorAll('.star');
-  const scoreEl = document.getElementById('score');
-  stars.forEach(s=>{
-    s.addEventListener('click', ()=>{
-      const val = +s.dataset.val;
-      stars.forEach(it=>it.textContent = (+it.dataset.val <= val) ? '★' : '☆');
-      scoreEl.textContent = val;
-    });
-  });
-
-  // abrir/cerrar panel de etiquetas
-  const toggleBtn = document.getElementById('toggleTags');
-  const panel = document.getElementById('tagsPanel');
-  toggleBtn.addEventListener('click', ()=> panel.classList.toggle('open'));
-
-  // seleccionar chips
-  document.getElementById('tagsGrid').addEventListener('click', (e)=>{
-    const chip = e.target.closest('.tag-chip');
-    if(!chip) return;
-    chip.classList.toggle('is-active');
-  });
-
-  // borrar: limpia comentario, estrellas, chips y oculta panel
-  document.getElementById('btnBorrar').addEventListener('click', ()=>{
-    document.getElementById('comentario').value = '';
-    stars.forEach(it=>it.textContent='☆');
-    scoreEl.textContent = '0';
-    document.querySelectorAll('.tag-chip.is-active').forEach(c=>c.classList.remove('is-active'));
-    panel.classList.remove('open');
-  });
-</script>
-
-    <!-- ============ RATING / OPINIONES ============ -->
-    <section class="rating" aria-labelledby="rating-title">
-      <div class="rating__wrap">
-        <!-- Columna izquierda: promedio -->
-        <div class="rating__summary">
-          <h2 id="rating-title" class="sr-only">Opiniones de clientes</h2>
-
-          <div class="rating__score">4.7</div>
-          <!-- estrellas del promedio (0–5 con decimales) -->
-          <div
-            class="stars stars--avg"
-            style="--value: 4.1"
-            aria-label="4.7 de 5"
-          ></div>
-
-          <p class="rating__count"><strong>405 opiniones</strong></p>
-
-          <!-- imagen decorativa -->
-          <img
-            class="rating__bag"
-            src="../../images/sacodecafe.png"
-            alt=""
-            aria-hidden="true"
-          />
-        </div>
-
-        <!-- Columna derecha: desglose por estrellas -->
-        <div
-          class="rating__breakdown"
-          role="list"
-          aria-label="Desglose por estrellas"
-        >
-          <!-- Ajusta --p (0–100%) según tus datos -->
-          <div class="row" role="listitem" aria-label="5 estrellas">
-            <div class="stars" style="--value: 5" aria-hidden="true"></div>
-            <div class="bar" aria-hidden="true">
-              <span style="--p: 92%"></span>
-            </div>
-          </div>
-          <div class="row" role="listitem" aria-label="4 estrellas">
-            <div class="stars" style="--value: 4"></div>
-            <div class="bar"><span style="--p: 78%"></span></div>
-          </div>
-          <div class="row" role="listitem" aria-label="3 estrellas">
-            <div class="stars" style="--value: 3"></div>
-            <div class="bar"><span style="--p: 56%"></span></div>
-          </div>
-          <div class="row" role="listitem" aria-label="2 estrellas">
-            <div class="stars" style="--value: 2"></div>
-            <div class="bar"><span style="--p: 32%"></span></div>
-          </div>
-          <div class="row" role="listitem" aria-label="1 estrella">
-            <div class="stars" style="--value: 1"></div>
-            <div class="bar"><span style="--p: 18%"></span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ OPINIONES DE LOS CLIENTES ============ -->
-    <!-- ======= COMENTARIOS (HTML) ======= -->
-    <section class="reviews" aria-labelledby="reviews-title">
-      <div class="reviews__wrap">
-        <!-- Encabezado -->
-        <header class="reviews__header">
-          <h2 id="reviews-title">Comentarios</h2>
-
-          <div class="reviews__controls">
-            <div class="pill-group">
-              <button class="pill pill--ghost">Más recientes</button>
-              <button class="pill pill--ghost">Con foto</button>
-            </div>
-          </div>
-        </header>
-
-        <!-- Sub-controles -->
-        <div class="reviews__subhead">
-          <span class="score-pill"> 4.7 </span>
-
-          <div class="select-pill" role="listbox" aria-label="Clasificación">
-            <span>Clasificación</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M7 10l5 5 5-5z" />
-            </svg>
-          </div>
-        </div>
-
-        <!-- Grid de tarjetas -->
-        <div class="reviews__grid">
-          <!-- ===== Card 1 ===== -->
-          <article class="card">
-            <header class="card__head">
-              <img
-                class="avatar"
-                src="../../images/icon-avatar.webp"
-                alt="Ángel Gudiño"
-              />
-              <div class="meta">
-                <div class="name">Ángel Gudiño</div>
-                <div class="time">2 semanas ago</div>
-              </div>
-              <div class="stars" aria-label="5 estrellas">
-                <!-- 5 estrellas -->
-                  <path
-                    d="M12 2.2l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.8 6.2 20.2l1.1-6.5L2.6 9.1l6.5-1L12 2.2z"
-                  />
-                </svg>
-              </div>
-            </header>
-
-            <p class="card__text">
-              Para pasar un rato agradable en familia o en trabajos etc:3
-            </p>
-
-            <figure class="card__media">
-              <img
-                src="../../images/opinion2.jfif"
-                alt="Mesa con bebidas y postres"
-              />
-            </figure>
-
-            <div class="chips">
-              <span class="chip">#Coffee</span>
-              <span class="chip">Relaxing</span>
-            </div>
-
-            <footer class="card__footer">
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1 4.22 2.44C11.09 5 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                  />
-                </svg>
-                Me gusta
-              </button>
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M21 6h-2v9H7v2a1 1 0 0 0 1.7.7L12.4 15H21a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zM17 11V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v12l4-4h10a1 1 0 0 0 1-1z"
-                  />
-                </svg>
-                Responder
-              </button>
-              <button class="act">Rep</button>
-            </footer>
-          </article>
-
-          <!-- ===== Card 2 ===== -->
-          <article class="card">
-            <header class="card__head">
-              <img
-                class="avatar"
-                src="../../images/icon-avatar2.jpg"
-                alt="Manuel Andrade"
-              />
-              <div class="meta">
-                <div class="name">Faraon Love Shady</div>
-                <div class="time">2 weeks ago</div>
-              </div>
-              <div class="stars" aria-label="5 estrellas">
-                  <path
-                    d="M12 2.2l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.8 6.2 20.2l1.1-6.5L2.6 9.1l6.5-1L12 2.2z"
-                  />
-                </svg>
-              </div>
-            </header>
-
-            <p class="card__text">
-              Instrucciones muy limpias amable y muy atentos con el cliente
-            </p>
-
-            <figure class="card__media">
-              <img src="../../images/opinion3.jpg" alt="Barista preparando café" />
-            </figure>
-
-            <div class="chips">
-              <span class="chip">#Friendly</span>
-              <span class="chip">Great Service</span>
-            </div>
-
-            <footer class="card__footer">
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1 4.22 2.44C11.09 5 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                  />
-                </svg>
-                Me gusta
-              </button>
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M21 6h-2v9H7v2a1 1 0 0 0 1.7.7L12.4 15H21a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zM17 11V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v12l4-4h10a1 1 0 0 0 1-1z"
-                  />
-                </svg>
-                Responder
-              </button>
-              <button class="act">Rep</button>
-            </footer>
-          </article>
-
-          <!-- ===== Card 3 (igual a 1) ===== -->
-          <article class="card">
-            <header class="card__head">
-              <img
-                class="avatar"
-                src="../../images/icon-avatar3.webp"
-                alt="Ángel Gudiño"
-              />
-              <div class="meta">
-                <div class="name">Ángel Gudiño</div>
-                <div class="time">4 semanas ago</div>
-              </div>
-              <div class="stars" aria-label="5 estrellas">
-                  <path
-                    d="M12 2.2l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.8 6.2 20.2l1.1-6.5L2.6 9.1l6.5-1L12 2.2z"
-                  />
-                </svg>
-              </div>
-            </header>
-
-            <p class="card__text">
-              Para pasar un rato agradable en familia o en trabajos etc:3
-            </p>
-
-            <figure class="card__media">
-              <img
-                src="../../images/varistacoffee.jpeg"
-                alt="Tazas con arte latte"
-              />
-            </figure>
-
-            <div class="chips">
-              <span class="chip">#Coffee</span>
-              <span class="chip">Relaxing</span>
-            </div>
-
-            <footer class="card__footer">
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1 4.22 2.44C11.09 5 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                  />
-                </svg>
-                Me gusta
-              </button>
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M21 6h-2v9H7v2a1 1 0 0 0 1.7.7L12.4 15H21a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zM17 11V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v12l4-4h10a1 1 0 0 0 1-1z"
-                  />
-                </svg>
-                Responder
-              </button>
-              <button class="act">Rep</button>
-            </footer>
-          </article>
-
-          <!-- ===== Card 4 (igual a 2) ===== -->
-          <article class="card">
-            <header class="card__head">
-              <img
-                class="avatar"
-                src="../../images/avatar-icon4.jpg"
-                alt="Manuel Andrade"
-              />
-              <div class="meta">
-                <div class="name">Manuel Andrade</div>
-                <div class="time">4 weeks ago</div>
-              </div>
-              <div class="stars" aria-label="5 estrellas">
-                  <path
-                    d="M12 2.2l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.8 6.2 20.2l1.1-6.5L2.6 9.1l6.5-1L12 2.2z"
-                  />
-                </svg>
-              </div>
-            </header>
-
-            <p class="card__text">
-              Instrucciones muy limpias amable y muy atentos con el cliente
-            </p>
-
-            <figure class="card__media">
-              <img src="../../images/negroscofee.jpeg" alt="Cliente en cafetería" />
-            </figure>
-
-            <div class="chips">
-              <span class="chip">#Friendly</span>
-              <span class="chip">Great Service</span>
-            </div>
-
-            <footer class="card__footer">
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1 4.22 2.44C11.09 5 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                  />
-                </svg>
-                Me gusta
-              </button>
-              <button class="act">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M21 6h-2v9H7v2a1 1 0 0 0 1.7.7L12.4 15H21a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zM17 11V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v12l4-4h10a1 1 0 0 0 1-1z"
-                  />
-                </svg>
-                Responder
-              </button>
-              <button class="act">Rep</button>
-            </footer>
-          </article>
-        </div>
-      </div>
-    </section>
-    <!-- ================== SEPARADOR CAFÉ ================== -->
-<div class="coffee-separator">
-  <span class="line"></span>
-  <img src="../../images/tazaicon.png" alt="Icono café" class="coffee-icon" />
-  <span class="line"></span>
-</div>
-
+      </main> 
 <?php include "../footer.php"; ?>
 
      <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
-    <div class="mc-overlay" id="mcOverlay" hidden></div>
+<div class="mc-overlay" id="mcOverlay" hidden></div>
 
-    <aside
-      class="mini-cart"
-      id="miniCart"
-      aria-hidden="true"
-      aria-labelledby="mcTitle"
-      role="dialog"
-    >
-      <header class="mc-header">
-        <h3 id="mcTitle">Tu carrito</h3>
-        <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
-          ✕
-        </button>
-      </header>
+<aside
+  class="mini-cart"
+  id="miniCart"
+  aria-hidden="true"
+  aria-labelledby="mcTitle"
+  role="dialog"
+>
+  <header class="mc-header">
+    <h3 id="mcTitle">Tu carrito</h3>
+    <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+      ✕
+    </button>
+  </header>
 
-      <div class="mc-body">
-        <ul class="mc-list" id="mcList">
-          <!-- items por JS -->
-        </ul>
-        <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
-      </div>
+  <div class="mc-body">
+    <ul class="mc-list" id="mcList">
+      <!-- items por JS -->
+    </ul>
+    <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
+  </div>
 
-      <footer class="mc-footer">
-        <div class="mc-total">
-          <span>Total</span>
-          <strong id="mcTotal">$0.00 MXN</strong>
-        </div>
-        <a href="../catalogo/carrito.php" class="mc-btn">Ir a pagar</a>
-      </footer>
-    </aside>
+  <footer class="mc-footer">
+    <div class="mc-total">
+      <span>Total</span>
+      <strong id="mcTotal">$0.00 MXN</strong>
+    </div>
+    <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
+  </footer>
+</aside>
 
-    <script>
+<script>
   window.CART_API_URL = '../catalogo/cart_api.php';
 </script>
 <script src="../catalogo/app.js"></script>
-
-      <script src="../catalogo/app.js"></script>
+<script src="comentarios.js" defer></script>
+<script src="../../translate.js"></script>
   </body>
 </html>

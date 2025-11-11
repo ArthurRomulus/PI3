@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>BlackWood Coffe - Productos</title>
   <link rel="stylesheet" href="productos.css">
-</head>
+  <link rel="stylesheet" href="../Carrito/carrito.css"> </head>
 <body>
 <div class="container">
   
@@ -14,7 +14,7 @@
     <div class="main-scroll">
       <header class="header">
         <h1>Blackwood Coffee</h1>
-        <div class="date"> <!--aqui muestra la fecha --></div>
+        <div class="date"> </div>
       </header>
       <section class="filters">
         <input class="search" type="search" placeholder="Buscar..." />
@@ -34,28 +34,18 @@
     </div>
   </main>
 
-  <aside class="cart">
-    <div class="order-pill"><div class="order-title">Número de Pedido</div><div class="order-number">901</div></div>
-    <div class="cart-content"></div>
-    <div class="cart-bottom">
-      <div class="summary">
-        <div class="row"><span>Sub Total:</span> <span class="summary-subtotal">$0.00</span></div>
-        <div class="row"><span>IVA:</span> <span class="summary-iva">$0.00</span></div>
-        <div class="row total"><span>Total:</span> <span class="summary-total">$0.00</span></div>
-      </div>
-      <button class="pay">PAGAR</button>
-    </div>
-  </aside>
-</div>
+  <div id="carrito-placeholder"></div> </div>
 
 <script src="../barraNav.js"></script>
-<script>
+<script src="../Carrito/carrito.js"></script> <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Carga de la barra de navegación
+    // Carga la barra de navegación
     const currentPage = window.location.pathname.split("/").pop();
     if (typeof cargarBarraNav === 'function') {
         cargarBarraNav(currentPage);
     }
+    
+    // NOTA: El carrito se inicializa automáticamente desde carrito.js
 
     // --- ACTUALIZAR LA FECHA EN TIEMPO REAL ---
     const dateElement = document.querySelector('.date');
@@ -70,15 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
     }
 
-    // --- VARIABLES Y FUNCIONES DEL CARRITO ---
-    const cartList = [];
-    const cartContent = document.querySelector('.cart-content');
-    const summarySubtotal = document.querySelector('.summary-subtotal');
-    const summaryIVA = document.querySelector('.summary-iva');
-    const summaryTotal = document.querySelector('.summary-total');
-    const IVA_RATE = 0.16;
-
-    // --- LÓGICA DE PRODUCTOS ---
+    // --- LÓGICA DE PRODUCTOS (REDUCIDA) ---
     const contenedorProductos = document.querySelector('.products');
     const filterContainer = document.querySelector('.cats');
     const scrollContainer = document.querySelector('.main-scroll');
@@ -89,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
         
         if (producto.modificadores && producto.modificadores.length > 0) {
-            // CASO 1: El producto SÍ tiene modificadores
             producto.modificadores.forEach(grupo => {
                 html += `<div class="option-select">
                            <select class="modifier-select" data-id-grupo="${grupo.id}">
@@ -105,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `</select></div>`;
             });
             
-            // Si solo tiene 1 modificador, añadimos uno falso para mantener la estética
             if (producto.modificadores.length === 1) {
                  html += `<div class="option-select">
                             <select class="modifier-select" disabled>
@@ -113,10 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </select>
                           </div>`;
             }
-
         } else {
-            // CASO 2: El producto NO tiene modificadores (Muffin, Croissant)
-            // Genera dos listbox bloqueados
             html = `<div class="option-select">
                         <select class="modifier-select" disabled>
                           <option>Sin opciones</option>
@@ -128,17 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         </select>
                       </div>`;
         }
-        
         return html;
     }
 
-    // --- (ACTUALIZADO) Función para mostrar productos en la página ---
+    // --- Función para mostrar productos en la página ---
     function renderProducts(productsToRender, allData) {
         if (!contenedorProductos) return;
         contenedorProductos.innerHTML = '';
         
         productsToRender.forEach(producto => {
-            const { tamanos } = allData; // Ya no necesitamos 'modificadores' globales
+            const { tamanos } = allData; 
 
             let tagHtml = ''; 
             if (producto.categorias_nombres && producto.categorias_nombres.includes('Bebidas calientes')) {
@@ -153,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 isFoodItem = producto.categorias_nombres.some(cat => foodCategories.includes(cat));
             }
             
-            // --- ¡CAMBIOS AQUÍ! ---
             const modificadoresHtml = generarModificadoresHtml(producto);
             const tamanosHtml = generarTamanosHtml(tamanos, producto.tamano_defecto, isFoodItem);
             
@@ -166,9 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="card-image"><img src="${producto.ruta_imagen}" alt="${producto.namep}"></div>
                     <div class="card-badge">${producto.namep}</div>
                     <div class="card-options">
-                        
                         ${modificadoresHtml} 
-                        
                         <div class="option-row quantity-selector">
                             <button class="quantity-btn minus">-</button><span class="quantity-value">1</span><button class="quantity-btn plus">+</button>
                         </div>
@@ -193,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 allProducts = data.productos;
-                renderProducts(allProducts, data); // Dibuja los productos
+                renderProducts(allProducts, data); 
 
                 // --- FILTROS DE CATEGORÍAS ---
                 if (filterContainer) {
@@ -222,19 +195,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 return p.categorias_nombres.some(catName => normalizeText(catName) === filterType);
                             });
                         }
-                        
                         renderProducts(filteredProducts, data);
                     });
                 }
 
-                // --- CÓDIGO DE HIGHLIGHT (Sin cambios) ---
+                // --- CÓDIGO DE HIGHLIGHT ---
                 const urlParams = new URLSearchParams(window.location.search);
                 const productId = urlParams.get('id');
 
                 if (productId) {
                     setTimeout(() => { 
                         const targetCard = document.querySelector(`.product-card-new[data-id="${productId}"]`);
-
                         if (targetCard && scrollContainer) {
                             let hasAnimated = false; 
                             const doAnimate = () => {
@@ -255,15 +226,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // --- (ACTUALIZADO) MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
+    // --- MANEJADORES DE EVENTOS PARA LAS TARJETAS ---
     if (contenedorProductos) {
-        // Evento para botones y clics dentro de la tarjeta
         contenedorProductos.addEventListener('click', (event) => {
             const target = event.target;
             const card = target.closest('.product-card-new');
             if (!card) return;
 
-            // Cantidad (Sin cambios)
             if (target.matches('.quantity-btn')) {
                 const quantitySpan = card.querySelector('.quantity-value');
                 let quantity = parseInt(quantitySpan.textContent);
@@ -273,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateCardPrice(card);
             }
 
-            // Tamaños (Sin cambios)
             if (target.closest('.size-btn')) {
                 const sizeButton = target.closest('.size-btn');
                 card.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
@@ -281,21 +249,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateCardPrice(card);
             }
 
-            // Añadir al Carrito (Lógica actualizada)
+            // --- (ACTUALIZADO) AÑADIR AL CARRITO ---
             if (target.matches('.add-to-cart-btn')) {
                 
                 let allOptionsSelected = true;
                 let optionsDesc = [];
                 let optionsPrice = 0;
 
-                // Valida los listbox dinámicos
                 const modifiers = card.querySelectorAll('.modifier-select:not(:disabled)');
                 modifiers.forEach(select => {
                     if (select.selectedIndex === 0) {
                         allOptionsSelected = false;
                     }
                     const selectedOption = select.options[select.selectedIndex];
-                    optionsDesc.push(selectedOption.text.split(' (')[0]); // Solo el nombre
+                    optionsDesc.push(selectedOption.text.split(' (')[0]);
                     optionsPrice += parseFloat(selectedOption.dataset.precioExtra || 0);
                 });
 
@@ -322,25 +289,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     price: unitPrice,
                     qty: quantity,
                     size: sizeName,
-                    desc: optionsDesc.join(', '), // Descripción dinámica
+                    desc: optionsDesc.join(', '), 
                     imgSrc: card.querySelector('.card-image img').src,
-                    // Clave única para agrupar en carrito
                     cartKey: `${card.dataset.name}|${sizeName}|${optionsDesc.join(',')}` 
                 };
-
-                const existingProduct = cartList.find(item => item.cartKey === productData.cartKey);
                 
-                if (existingProduct) {
-                    existingProduct.qty += productData.qty;
+                // ¡Llama a la API global del carrito!
+                if (window.CarritoAPI && typeof window.CarritoAPI.agregar === 'function') {
+                    window.CarritoAPI.agregar(productData);
                 } else {
-                    cartList.push(productData);
+                    alert("Error: El carrito no está cargado.");
                 }
-                renderCart();
             }
         });
         
-        // Evento para actualizar precio al cambiar listbox o tamaño
-        // (Ahora escucha 'change' en toda la sección de productos)
         contenedorProductos.addEventListener('change', (event) => {
             const target = event.target;
             if (target.matches('.modifier-select') || target.matches('.size-btn')) {
@@ -350,74 +312,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- (ACTUALIZADO) MANEJADOR DE EVENTOS PARA EL CARRITO ---
-    if (cartContent) {
-        cartContent.addEventListener('click', e => {
-            if (e.target.classList.contains('qty-btn-cart')) {
-                const idx = parseInt(e.target.dataset.idx);
-                const action = e.target.dataset.action;
+    // --- FUNCIONES AUXILIARES DE LA TARJETA ---
 
-                if (action === 'plus') {
-                    cartList[idx].qty += 1;
-                } else if (action === 'minus') {
-                    cartList[idx].qty -= 1;
-                    if (cartList[idx].qty <= 0) {
-                        cartList.splice(idx, 1);
-                    }
-                }
-                renderCart(); 
-            }
-        });
-    }
-
-    // --- FUNCIONES COMPLETAS DEL CARRITO Y AUXILIARES ---
-
-    // (ACTUALIZADA) renderCart
-    function renderCart() { 
-        if (!cartContent) return;
-        cartContent.innerHTML = '';
-        if (cartList.length === 0) {
-            cartContent.innerHTML = '<p class="empty-cart" style="text-align:center; font-size:12px; color:var(--muted);">El carrito está vacío</p>';
-        } else {
-            cartList.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'cart-item';
-                
-                // Usa la descripción dinámica
-                let optionsDesc = `${item.size}, ${item.desc}`;
-
-                div.innerHTML = `
-                    <div class="cart-thumb"><img src="${item.imgSrc}" alt="${item.name}"></div>
-                    <div class="cart-info">
-                        <div class="cart-title">${item.name}</div>
-                        <div class="cart-desc">${optionsDesc}</div>
-                        <div class="cart-price">$${(item.price * item.qty).toFixed(2)}</div> 
-                    </div>
-                    <div class="cart-qty">
-                        <button class="qty-btn-cart" data-idx="${idx}" data-action="minus">-</button>
-                        <div class="qty-num">${item.qty.toString().padStart(2, '0')}</div>
-                        <button class="qty-btn-cart" data-idx="${idx}" data-action="plus">+</button>
-                    </div>`;
-                cartContent.appendChild(div);
-            });
-        }
-        updateSummary();
-    }
-
-    function updateSummary() { 
-        const subtotal = cartList.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        const iva = subtotal * IVA_RATE;
-        const total = subtotal + iva;
-        if (summarySubtotal) summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
-        if (summaryIVA) summaryIVA.textContent = `$${iva.toFixed(2)}`;
-        if (summaryTotal) summaryTotal.textContent = `$${(total).toFixed(2)}`;
-    }
-
-    // (ACTUALIZADA) updateCardPrice
     function updateCardPrice(card) {
         const basePrice = parseFloat(card.dataset.basePrice);
         
-        // Suma de precios de modificadores
         let modifiersPrice = 0;
         const modifiers = card.querySelectorAll('.modifier-select:not(:disabled)');
         modifiers.forEach(select => {
@@ -426,24 +325,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Precio de tamaño
         const sizeButton = card.querySelector('.size-btn.active');
         const sizeIncrease = sizeButton ? parseFloat(sizeButton.dataset.precioAumento) : 0;
-        
-        // Cantidad
         const quantity = parseInt(card.querySelector('.quantity-value').textContent);
-        
-        // Cálculo final
         const unitPrice = basePrice + sizeIncrease + modifiersPrice;
         const finalPrice = unitPrice * quantity;
         
         card.querySelector('.card-price').textContent = `$${finalPrice.toFixed(2)}`;
     }
 
-    // (ELIMINADA) La vieja función generarOpcionesHtml
-    // function generarOpcionesHtml(opciones, placeholder) { ... }
-
-    // (SIN CAMBIOS) generarTamanosHtml
     function generarTamanosHtml(tamanos, tamanoDefecto, isFood = false) {
         const tamanoMap = {
             'Chico': {svg: '<svg viewBox="0 0 24 24"><path d="M4 10h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2v-10zm2-4h12v2H6V6z"/></svg>'},
@@ -469,9 +359,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return html;
     }
+    
+    // Las funciones del carrito (renderCart, updateSummary, etc.) se han movido a carrito.js
 
-    // Llamada inicial para mostrar el carrito vacío
-    renderCart();
 });
 </script>
 </body>

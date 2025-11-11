@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Control - Versión Final</title>
+  <title>Blackwood coffee - Panel de Control</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -162,7 +162,7 @@
         <header class="header">
             <h1 class="header-title">Blackwood Coffee</h1>
             <h2 class="panel-title">Panel de control</h2>
-            <div class="date">Martes, 24 de octubre de 2025</div>
+            <div class="date"></div>
         </header>
         <div class="dashboard">
             <div class="card"><div class="card-header">Ventas hoy 💲</div><div class="card-value">+28</div></div>
@@ -245,6 +245,20 @@
 </script>
 
 <script>
+
+    // --- ACTUALIZAR LA FECHA EN TIEMPO REAL ---
+    const dateElement = document.querySelector('.date');
+    if (dateElement) {
+        const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const fechaActual = new Date();
+        const diaSemana = dias[fechaActual.getDay()];
+        const diaMes = fechaActual.getDate();
+        const mes = meses[fechaActual.getMonth()];
+        const anio = fechaActual.getFullYear();
+        dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
+    }
+
     // Obtener los elementos del DOM
     const modal = document.getElementById("corteModal");
     const btnAbrir = document.getElementById("btnAbrirCorte");
