@@ -22,8 +22,6 @@ if ($periodo == "1semana") {
   $where .= " AND DATE(pedidos.fecha_pedido) BETWEEN '$inicio' AND '$fin'";
 }
 
-// Necesitamos saber cómo se relaciona pedido_items con productos.
-// Comprobamos las columnas de pedido_items para decidir la estrategia de JOIN
 $colsRes = $conn->query("SHOW COLUMNS FROM pedido_items");
 $cols = [];
 if ($colsRes) {

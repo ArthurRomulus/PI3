@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="estadisticas.css">
-<title>Estadísticas de Ventas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="estadisticas.css">
+  <link rel="stylesheet" href="../general.css">
+  <title>Estadísticas de Ventas</title>
 </head>
 <body>
 
-<div>
   <?php include "../Admin_nav_bar.php"; ?> 
   <div class="content" style="margin-left: 220px; padding: 20px; flex: 1;">
+
+          <div class="topbar">
+                      <h2 style="color: white;">Blackwood Coffee</h2>
+                      
+            <?php include '../date.php'; ?>
+
+
+        </div>
+
     <?php include "../AdminProfileSesion.php"; ?>
 
     <div class="contenedor-estadisticas">
 
-      <h2>📊 Estadísticas de Ventas</h2>
+    <h2>Estadisticas</h2>
 
+      <!-- 🔹 Filtros -->
       <div class="filtros">
         <div class="filtro">
           <label for="filtro-periodo">Periodo:</label>
@@ -58,18 +68,23 @@
         </div>
       </div>
 
-      <div class="grafica-barras" id="grafica"></div>
+      <!-- 📊 Contenedor de gráfica -->
+      <div class="grafica-container">
+        <div class="grafica-ejes">
+          <div class="eje-y" id="eje-y"></div>
+          <div class="grafica-barras" id="grafica"></div>
+        </div>
+        <div id="leyenda"></div>
+      </div>
 
-      <!-- 📘 Leyenda de productos -->
-      <div id="leyenda" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
-
+      <!-- 🔸 Resumen -->
       <div class="resumen">
         <div>
-          <h3>Total ventas</h3>
+          <h5>Total ventas</h5>
           <p id="total-ventas">$0</p>
         </div>
         <div>
-          <h3>Total productos</h3>
+          <h5>Total productos</h5>
           <p id="total-productos">0</p>
         </div>
       </div>
@@ -82,7 +97,6 @@
 // 📅 Mostrar el rango de fechas si seleccionan "personalizado"
 const filtroPeriodo = document.getElementById("filtro-periodo");
 const rangoDiv = document.getElementById("rango-personalizado");
-
 filtroPeriodo.addEventListener("change", () => {
   rangoDiv.style.display = filtroPeriodo.value === "personalizado" ? "flex" : "none";
 });
@@ -109,12 +123,14 @@ async function cargarDatos() {
   renderGrafica(data);
 }
 
-// 🎨 Renderizar gráfica con colores únicos
+// 🎨 Renderizar gráfica con eje Y y colores únicos
 function renderGrafica(data) {
   const grafica = document.getElementById("grafica");
+  const ejeY = document.getElementById("eje-y");
   const leyenda = document.getElementById("leyenda");
   grafica.innerHTML = "";
   leyenda.innerHTML = "";
+  ejeY.innerHTML = "";
 
   if (!data.barras || data.barras.length === 0) {
     grafica.innerHTML = "<p style='text-align:center;width:100%'>No hay datos disponibles</p>";
@@ -123,14 +139,27 @@ function renderGrafica(data) {
     return;
   }
 
+  // 🔢 Escala del eje Y (redondeada al múltiplo más cercano de 10)
+  const maxValor = Math.max(...data.barras.map(b => b.valor));
+  const maxEscala = Math.ceil(maxValor / 10) * 10;
+
+  // ✅ Mostrar exactamente 10 números en el eje Y
+  const numMarcas = 10;
+  for (let i = numMarcas; i >= 0; i--) {
+    const valor = Math.round((maxEscala / numMarcas) * i);
+    const marca = document.createElement("div");
+    marca.className = "marca";
+    marca.textContent = valor;
+    ejeY.appendChild(marca);
+  }
+
   // --- 🎨 Generador de colores únicos ---
   const generarColor = () => {
     const hue = Math.floor(Math.random() * 360);
-    const saturation = 60 + Math.random() * 20; // 60–80%
-    const lightness = 45 + Math.random() * 10; // 45–55%
+    const saturation = 65 + Math.random() * 15;
+    const lightness = 45 + Math.random() * 10;
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   };
-
   const coloresUsados = new Set();
   const obtenerColorUnico = () => {
     let color;
@@ -142,36 +171,17 @@ function renderGrafica(data) {
   };
 
   // --- 📈 Dibujar barras ---
-  const maxValor = Math.max(...data.barras.map(b => b.valor));
   data.barras.forEach(b => {
     const color = obtenerColorUnico();
-
     const barra = document.createElement("div");
     barra.className = "barra";
-    barra.style.height = (b.valor / maxValor * 350 + 20) + "px";
-    barra.innerHTML = `
-      <span>${b.etiqueta}</span>
-      <div style="
-        background:${color};
-        color:white;
-        border-radius:6px 6px 0 0;
-        padding-top:5px;">
-        ${b.valor}
-      </div>`;
+    const altura = (b.valor / maxEscala) * 350;
+    barra.innerHTML = `<div style="height:${altura}px;background:${color};"></div>`;
     grafica.appendChild(barra);
 
     // 🏷️ Leyenda
     const itemLeyenda = document.createElement("div");
-    itemLeyenda.style.display = "flex";
-    itemLeyenda.style.alignItems = "center";
-    itemLeyenda.innerHTML = `
-      <div style="
-        width:15px;
-        height:15px;
-        background:${color};
-        margin-right:5px;
-        border-radius:3px;">
-      </div> ${b.etiqueta}`;
+    itemLeyenda.innerHTML = `<div class="color" style="background:${color}"></div>${b.etiqueta} ($${b.valor})`;
     leyenda.appendChild(itemLeyenda);
   });
 

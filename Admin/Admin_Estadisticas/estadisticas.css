@@ -1,116 +1,236 @@
+/* Tipografía y fondo general */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  font-family: 'Poppins', Arial, sans-serif;
+  background: linear-gradient(180deg, #e9ecef 0%, #e6e9ee 100%);
   margin: 0;
   padding: 0;
-}
-
-.contenedor-estadisticas {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
-
-h2 {
-  text-align: center;
   color: #333;
 }
 
+/* Contenedor principal */
+.contenedor-estadisticas {
+  max-width: 1100px;
+  margin: 32px;
+  padding: 28px 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(22, 28, 37, 0.08);
+  border: 1px solid rgba(20,20,20,0.03);
+}
+
+/* Título *
+
+/* Filtros: caja suave */
 .filtros {
   display: flex;
   flex-wrap: wrap;
+  gap: 18px;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 26px;
+  padding: 14px;
+  background: linear-gradient(180deg, #fbfdff, #f7f9fb);
+  border-radius: 12px;
+  border: 1px solid #eef2f6;
 }
 
+/* Cada filtro */
 .filtro {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: 6px;
+  min-width: 150px;
 }
 
 .filtro label {
-  font-weight: bold;
-  margin-bottom: 6px;
+  font-weight: 600;
+  color: #505050;
+  font-size: 0.95rem;
 }
 
+/* Inputs/selects más claros */
 .filtro select,
-.filtro input {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
+.filtro input[type="date"] {
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid #d5dbe3;
+  background: #fff;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 6px rgba(16, 24, 40, 0.03);
+  transition: transform .08s ease, box-shadow .12s ease, border-color .12s ease;
 }
 
+.filtro select:focus,
+.filtro input[type="date"]:focus {
+  outline: none;
+  border-color: #6b8cff;
+  box-shadow: 0 6px 18px rgba(107,140,255,0.12);
+  transform: translateY(-1px);
+}
+
+/* Contenedor de gráfica y ejes */
+.grafica-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.grafica-ejes {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  gap: 12px;
+}
+
+/* Eje Y: números bien espaciados */
+.eje-y {
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 420px;
+  padding-right: 8px;
+  box-sizing: border-box;
+  color: #6b6b6b;
+  font-size: 13px;
+}
+
+/* Marcas del eje Y */
+.eje-y .marca {
+  text-align: right;
+  padding-right: 6px;
+  opacity: 0.95;
+}
+
+/* Área de barras: fondo con profundidad */
 .grafica-barras {
   display: flex;
   align-items: flex-end;
-  gap: 25px;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  padding: 20px;
-  background: linear-gradient(180deg, #f0f0f0, #ddd);
-  border-radius: 10px;
+  gap: 24px;
+  padding: 22px;
+  background: linear-gradient(180deg, #f7f8fb 0%, #efeff3 100%);
+  border-radius: 12px;
   min-height: 420px;
   max-height: 420px;
   overflow-x: auto;
   overflow-y: hidden;
-  white-space: nowrap;
+  flex: 1;
+  box-shadow: inset 0 2px 10px rgba(10,10,10,0.02);
 }
 
 /* Scroll bonito */
 .grafica-barras::-webkit-scrollbar {
   height: 10px;
 }
+.grafica-barras::-webkit-scrollbar-track {
+  background: transparent;
+}
 .grafica-barras::-webkit-scrollbar-thumb {
-  background: #888;
+  background: rgba(90, 90, 90, 0.18);
   border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 .grafica-barras::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgba(90, 90, 90, 0.28);
 }
 
+/* Barra individual */
 .barra {
-  width: 60px;
-  background: #4e79a7;
-  border-radius: 6px 6px 0 0;
-  text-align: center;
-  color: #fff;
+  flex: 1;
+  max-width: 90px; /* antes era fijo en 64px */
+  min-width: 40px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: center;
+  transition: transform 0.18s ease, filter 0.18s ease;
 }
 
-.barra span {
-  margin-top: 10px;
+
+/* inner DIV que tu JS inserta (mantenemos inline styles de altura/color) */
+.barra > div {
+  width: 100%;
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: 0 6px 14px rgba(16,24,40,0.08);
+  transition: transform 0.18s ease, box-shadow 0.2s ease;
+}
+
+/* Zoom al pasar el ratón */
+.barra:hover {
+  transform: translateY(-6px) scale(1.04);
+}
+.barra:hover > div {
+  box-shadow: 0 10px 24px rgba(16,24,40,0.12);
+}
+
+/* Leyenda */
+#leyenda {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 14px;
   color: #333;
-  font-weight: bold;
+  width: 100%;
+  padding: 8px 6px;
 }
 
+#leyenda div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.6);
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(16,24,40,0.03);
+}
+
+#leyenda .color {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* Resumen inferior */
 .resumen {
   display: flex;
   justify-content: space-around;
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 30px;
+  gap: 20px;
+  background: linear-gradient(180deg,#fbfdff,#f7f9fb);
+  padding: 18px;
+  border-radius: 12px;
+  margin-top: 28px;
+  border: 1px solid #eef2f6;
 }
 
 .resumen div {
   text-align: center;
+  min-width: 160px;
 }
 
 .resumen h3 {
-  margin-bottom: 5px;
-  color: #333;
+  margin-bottom: 6px;
+  color: #444;
+  font-weight: 600;
+  font-size: 0.98rem;
 }
 
 .resumen p {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #4e79a7;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f6feb;
+  margin: 0;
+}
+
+/* Responsive: apila controles en pantallas pequeñas */
+@media (max-width: 880px) {
+  .filtros { flex-direction: column; align-items: stretch; }
+  .eje-y { display: none; } /* para pantallas móviles, ocultar eje Y y dejar solo barras */
+  .grafica-barras { padding: 14px; min-height: 300px; max-height: 300px; }
+  .resumen { flex-direction: column; gap: 10px; }
 }
