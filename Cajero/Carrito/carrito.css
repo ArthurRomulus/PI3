@@ -1,0 +1,207 @@
+/* ========== CART / PEDIDO ========== */
+.cart{
+  padding:12px 6px 12px 6px;
+  background: var(--page-bg);
+  border-radius: 14px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 180px;
+  position: relative;
+  z-index: 2;
+}
+
+.order-pill{
+  background: var(--search-bg);
+  padding:8px 4px;
+  border-radius:14px;
+  text-align:center;
+  margin-bottom:8px;
+  box-shadow: var(--shadow);
+  flex-shrink: 0; 
+}
+.order-title{
+  font-weight:700;
+  color:var(--text-dark);
+  font-size:13px;
+}
+.order-number{
+  font-size:17px;
+  margin-top:4px;
+  font-weight:800;
+  color:var(--text-dark);
+}
+
+.cart-content{
+  margin-top:0;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  flex-grow: 1;
+  flex-basis: 0;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.empty-cart {
+  text-align:center; 
+  font-size:12px; 
+  color:var(--muted);
+  padding-top: 20px;
+}
+
+.cart-item{
+  display:flex;
+  gap:6px;
+  /* --- ¡CAMBIO CLAVE 1! --- */
+  align-items: flex-start; /* De 'center' a 'flex-start' para estabilizar */
+  background: var(--card-bg);
+  padding:6px;
+  border-radius:8px;
+  box-shadow: var(--shadow);
+  flex-shrink: 0; 
+}
+.cart-thumb{
+  width:32px;
+  height:32px;
+  border-radius:6px;
+  overflow:hidden;
+  background: #e9bb7b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cart-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.cart-info {
+  flex: 1;
+  min-width: 0; /* Permite que el texto se rompa */
+}
+.cart-title{ font-weight:700; font-size:11px; margin-bottom:2px; }
+.cart-desc {
+  color: var(--muted);
+  margin-bottom: 2px;
+  font-size: 10px;
+  line-height: 1.2;
+  /* Reglas para forzar el salto de línea */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.cart-price{ font-weight:700; font-size: 11px; }
+
+/* --- (MODIFICADO) .cart-qty --- */
+.cart-qty{
+  display:flex;
+  flex-direction: column; /* Apila los controles y el enlace */
+  align-items: flex-end; /* Alinea todo a la derecha */
+  gap: 2px;
+  flex-shrink: 0; 
+  /* --- ¡CAMBIO CLAVE 2! --- */
+  min-width: 50px; /* Evita que el scrollbar aplaste este contenedor */
+}
+
+/* --- (NUEVO) Contenedor para los botones +/- --- */
+.cart-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.qty-btn-cart{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:2px 5px;
+  border-radius:5px;
+  cursor:pointer;
+  font-weight:700;
+  font-size: 12px;
+  transition: background .15s;
+}
+.qty-btn-cart:hover{
+  background: #a86d2a;
+}
+.qty-num{
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 14px;
+  text-align: center;
+}
+
+.cart-bottom {
+  flex-shrink: 0; 
+  margin-top: 10px; 
+}
+
+/* --- (MODIFICADO) .cart-item-delete --- */
+.cart-item-delete {
+    font-size: 10px;
+    color: var(--muted);
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.cart-item-delete:hover {
+    color: #e54d4d;
+}
+
+.cart-clear-all {
+    font-size: 12px;
+    font-weight: 600;
+    color: #a5836a;
+    text-decoration: underline;
+    cursor: pointer;
+    text-align: center;
+    display: block; 
+    margin-top: 10px;
+}
+.cart-clear-all:hover {
+    color: #a5836a;
+}
+
+.summary{
+  margin-top:4px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  padding:4px 2px;
+  background: var(--search-bg);
+  border-radius: 8px;
+  font-size: 11px;
+}
+.summary .row{
+  display:flex;
+  justify-content:space-between;
+  color:var(--text-dark);
+}
+.summary .total{
+  font-weight:800;
+  font-size:13px;
+  margin-top:2px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pay{
+  margin-top: 10px; /* Ajustado */
+  width:100%;
+  background:var(--accent);
+  color:white;
+  font-weight:800;
+  padding:8px 0;
+  border:none;
+  border-radius:12px;
+  box-shadow: var(--shadow);
+  cursor:pointer;
+  font-size:13px;
+  transition: background .2s ease;
+}
+.pay:hover{
+  background: #a86d2a;
+}
