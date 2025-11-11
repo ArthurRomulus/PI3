@@ -4,7 +4,10 @@ include "../../conexion.php";
 $userid   = $_POST['userid'] ?? null;
 $username = $_POST['username'] ?? null;
 $password = $_POST['password'] ?? null;
-$role     = $_POST['role'] ?? null; // <── Nuevo campo
+
+echo $userid ."<br>";
+echo $username."<br>";
+echo $password."<br>";
 
 include "../AdminProfileSesion.php";
 
@@ -54,6 +57,7 @@ try {
     $stmt = $conn->prepare($query);
     $stmt->execute($params);
     echo "✅ Usuario actualizado correctamente.";
+    header("location: index.php");
 } catch (Exception $e) {
     echo "❌ Error al actualizar: " . $e->getMessage();
 }

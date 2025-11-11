@@ -17,18 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 2. Preparar la consulta para evitar inyección SQL
     //    >> IMPORTANTE: ahora pedimos también apellido, telefono, fecha_nac, zona_horaria
-    $sql = "SELECT 
-                userid,
-                email,
-                password,
-                username,
-                role,
-                profilescreen,
-                apellido,
-                telefono,
-                fecha_nac,
-                zona_horaria
-            FROM usuarios 
+    $sql = "SELECT * FROM usuarios 
             WHERE email = ?";
 
     $stmt = $conn->prepare($sql);
@@ -59,7 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['username']       = $user['username'];
                 $_SESSION['role']           = $user['role'];
                 $_SESSION['profilescreen']  = $user['profilescreen'];
-
                 // NUEVOS CAMPOS → también a la sesión
                 $_SESSION['apellido']       = $user['apellido'] ?? '';
                 $_SESSION['telefono']       = $user['telefono'] ?? '';
@@ -147,6 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <button type="submit">Iniciar Sesión</button>
         </form>
 
+        <a href="AskEmail.php" class="toggle-btn">Olvide la contraseña</a>
         <a href="registro.php" class="toggle-btn">¿No tienes cuenta? Regístrate</a>
       </div>
     </div>
