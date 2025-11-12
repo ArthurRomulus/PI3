@@ -13,8 +13,6 @@ Hay 3 roles paginas principales que están dividas según su rol. <br>
 ⦁	Sobre nosotros: El usuario puede ver información sobre la pagina, desarrolladores, la tienda y ubicación.<br>
 ⦁	Perfil: el usuario puede cambiar su foto de perfil email, contraseña, teléfono, fecha de nacimiento, zona horaria y cerrar sesión, y ver su historial de compras.<br>
 
-<img width="1895" height="901" alt="image" src="https://github.com/user-attachments/assets/275e4887-9592-4156-bf2c-1d10a6128eeb" />
-
 <h3>Cajero.</h3>
 
 ⦁	Inicio: Muestra información sobre bebidas cafes, promociones, etc.<br>
