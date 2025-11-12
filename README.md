@@ -24,4 +24,19 @@ Hay 3 roles paginas principales que están dividas según su rol. <br>
 ⦁	Admin: el cajero puede acceder rápido a admin si una cuenta que esta dada de alta como administrador.<br>
 ⦁	Perfil: El cajero puede cerrar sesión desde esta pagina, cambiar su nombre, correo electrónico, teléfono, teléfono de emergencias, dirección donde vive, numero de emplad y foto de perfil.<br>
 
+<h3>Admininstrador:</h3>
+<br>Inicio: El administrador tiene una vista por encima sobre el personal y las estadísticas</br>
+
+<br>Productos: El administrador puede crear productos añadiéndole le nombre, imagen, precio, opciones que verá el usuario y stock del producto, además de poder editar cada una de las características de los productos y eliminarlos</br>
+
+<br>Promociones: El administrador puede crear promociones con el nombre de la promoción, imagen alusiva a la promoción, fechas de inicio y fin de la promoción y valor del descuento, además de poder editar las promociones ya creadas</br>
+
+<br>Estadísticas: El administrador puede ver las estadísticas en periodos de tiempo de un mes, una semana, todo y personalizado, ahí verá las estadísticas de los productos comprados, se puede filtrar por conteo de productos y por ventas</br>
+
+<br>Comentarios: El administrador puede visualizar todos los comentarios que se hacen desde el apartado de comentarios en usuarios, puede ver si es un comentario o si es una respuesta a algún otro comentario, y además de visualizar los comentarios puede eliminarlos si tienen algún lenguaje inapropiado</br> 
+
+<br>Personal: El administrador tiene un control del personal existente con los usuarios del personal además de poder eliminarlos si es el caso en que ya no trabajen con nosotros</br>
+
+<br>perfil: El administrador puede visualizar su información de perfil y su foto de perfil además de poder editar su información y foto de perfil</br>
+
 
