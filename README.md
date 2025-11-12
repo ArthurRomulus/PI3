@@ -37,6 +37,6 @@ Hay 3 roles paginas principales que están dividas según su rol. <br>
 
 <br>Personal: El administrador tiene un control del personal existente con los usuarios del personal además de poder eliminarlos si es el caso en que ya no trabajen con nosotros</br>
 
-<br>perfil: El administrador puede visualizar su información de perfil y su foto de perfil además de poder editar su información y foto de perfil</br>
+<br>Perfil: El administrador puede visualizar su información de perfil y su foto de perfil además de poder editar su información y foto de perfil</br>
 
 
