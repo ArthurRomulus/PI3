@@ -7,23 +7,23 @@ Hay 3 roles paginas principales que están dividas según su rol. <br>
 
 <h3>Usuario.</h3>
 
-⦁	Inicio: El usuario ve la información principal de la pagina. <br>
-⦁	Catalogo: El usuario puede ir al catalogo y comprar productos<br>
-⦁	Comentario: El usuario puede comentar, y dar una calificion de 0 a 5 estrellas algún producto, o servicio. Y ver lo que comentan y opinan los demás.<br>
-⦁	Sobre nosotros: El usuario puede ver información sobre la pagina, desarrolladores, la tienda y ubicación.<br>
-⦁	Perfil: el usuario puede cambiar su foto de perfil email, contraseña, teléfono, fecha de nacimiento, zona horaria y cerrar sesión, y ver su historial de compras.<br>
+<br>Inicio: El usuario ve la información principal de la pagina. <br>
+<br>Catalogo: El usuario puede ir al catalogo y comprar productos<br>
+<br>Comentario: El usuario puede comentar, y dar una calificion de 0 a 5 estrellas algún producto, o servicio. Y ver lo que comentan y opinan los demás.<br>
+<br>Sobre nosotros: El usuario puede ver información sobre la pagina, desarrolladores, la tienda y ubicación.<br>
+<br>Perfil: el usuario puede cambiar su foto de perfil email, contraseña, teléfono, fecha de nacimiento, zona horaria y cerrar sesión, y ver su historial de compras.<br>
 
 <img width="1914" height="906" alt="image" src="https://github.com/user-attachments/assets/31c623a2-1587-40de-a283-c13e92b35923" />
 
 
 <h3>Cajero.</h3>
 
-⦁	Inicio: Muestra información sobre bebidas cafes, promociones, etc.<br>
-⦁	Productos: Muestra todos los productos el cajero puede seleccionar el tipo de leche, tamaño, añadirlos al carrito, elegir cantidad, y poner una descripción de una petición extra. Filtrar por categoría y buscar el nombre. Si esta fuera de stock, el producto desaparecerá.<br>
-⦁	Promociones: Buscar la propcion por nombre, filtrar porcategoría, si la promoción esta expirada, o no es vlaida, desparecerá.<br>
-⦁	Control: Es un corte de caja donde se ven los pedidos, el estatus, el id del pedido, y hora, y el stock de los productos.<br>
-⦁	Admin: el cajero puede acceder rápido a admin si una cuenta que esta dada de alta como administrador.<br>
-⦁	Perfil: El cajero puede cerrar sesión desde esta pagina, cambiar su nombre, correo electrónico, teléfono, teléfono de emergencias, dirección donde vive, numero de emplad y foto de perfil.<br>
+<br>Inicio: Muestra información sobre bebidas cafes, promociones, etc.<br>
+<br>Productos: Muestra todos los productos el cajero puede seleccionar el tipo de leche, tamaño, añadirlos al carrito, elegir cantidad, y poner una descripción de una petición extra. Filtrar por categoría y buscar el nombre. Si esta fuera de stock, el producto desaparecerá.<br>
+<br>Promociones: Buscar la propcion por nombre, filtrar porcategoría, si la promoción esta expirada, o no es vlaida, desparecerá.<br>
+<br>Control: Es un corte de caja donde se ven los pedidos, el estatus, el id del pedido, y hora, y el stock de los productos.<br>
+<br>Admin: el cajero puede acceder rápido a admin si una cuenta que esta dada de alta como administrador.<br>
+<br>Perfil: El cajero puede cerrar sesión desde esta pagina, cambiar su nombre, correo electrónico, teléfono, teléfono de emergencias, dirección donde vive, numero de emplad y foto de perfil.<br>
 
 <h3>Admininstrador:</h3>
 <br>Inicio: El administrador tiene una vista por encima sobre el personal y las estadísticas</br>
