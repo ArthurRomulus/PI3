@@ -34,6 +34,9 @@ include "../../conexion.php";
   </form>
   <div class="button-group">
     <a href="index.php"><button data-translate="Todo">Todo</button></a>
+    <button id="openListboxModal" class="add-listbox-btn">
+      <i class="fas fa-list"></i> <span data-translate="Agregar Listbox">Agregar Listbox</span>
+    </button>
     <?php
     $categoria_query = "SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC";
     $categoria_result = $conn->query($categoria_query);
@@ -47,6 +50,14 @@ include "../../conexion.php";
         }
     }
     ?>
+     <!-- 🔹 Botón para agregar nueva categoría -->
+    <button 
+        class="btn btn-success" 
+        style="margin-left:10px;" 
+        onclick="mostrarFormularioCategoria()"
+    >
+     <i class="fas fa-plus"></i>Nueva categoría
+    </button>
   </div>
 
 
@@ -140,7 +151,7 @@ include "../../conexion.php";
                 data-categorias_ids="<?php echo implode(',', $cat_ids); ?>"
                 data-listbox="<?php echo $data_listbox; ?>"
                 data-sabor="<?php echo $row['sabor']; ?>" 
-                data-status="<?php echo $row['STOCK']; ?>" 
+                data-stock="<?php echo $row['STOCK']; ?>" 
                 data-imagen="<?php echo $row['ruta_imagen']; ?>"
                 data-descripcion="<?php echo htmlspecialchars($row['descripcion'], ENT_QUOTES); ?>"
                 >
@@ -153,6 +164,7 @@ include "../../conexion.php";
                     <?php echo htmlspecialchars(implode(', ', $cat_actuales)); ?>
                 </span>
                 <span class="product-price">$<?php echo number_format($row['precio'], 2); ?></span>
+                <span class="product-stock">Stock: <?php echo htmlspecialchars($row['STOCK']); ?></span>
                 <span class="product-sabor" data-translate="<?php echo $sabor_texto; ?>">
                     <?php echo $sabor_texto; ?>
                 </span>
@@ -187,6 +199,8 @@ include "../../conexion.php";
       <input type="file" name="imagen" accept="image/*">
       <input type="number" name="precio" id="precioBase" placeholder="Precio base"
        data-translate-placeholder="Precio base" required>
+      <input type="number" name="stock" placeholder="Stock disponible"
+        data-translate-placeholder="Stock" min="0" required>
       <span data-translate="Precio final:">Precio final: $<span id="precioFinal">0.00</span></span>
 
       <select id="categoriaSelect" name="categoria[]" multiple required></select>
@@ -217,6 +231,8 @@ include "../../conexion.php";
       <textarea id="editDescripcion" name="descripcion" rows="3"></textarea>
       <input type="file" id="editImage" name="imagen" accept="image/*">
       <input type="number" id="editPrice" name="precio" required>
+      <label for="editStock" data-translate="Stock disponible">Stock disponible</label>
+      <input type="number" id="editStock" name="stock" min="0" required>
       <span data-translate="Precio final:">Precio final: $<span id="editPrecioFinal">0.00</span></span>
 
       <select id="editCategoria" name="categoria[]" multiple required></select>
@@ -235,6 +251,54 @@ include "../../conexion.php";
     </form>
   </div>
 </div>
+
+<!-- Modal Agregar Listbox -->
+<div id="listboxModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 data-translate="Agregar listbox">Agregar Listbox</h2>
+
+    <form action="Guardar_listbox.php" method="POST">
+      <input type="text" name="nombre_listbox" placeholder="Nombre del listbox" required>
+      
+      <h4 data-translate="Opciones">Opciones</h4>
+      <div id="opcionesContainer">
+        <div class="opcion-item">
+          <input type="text" name="opciones_valor[]" placeholder="Valor (ej. Latte)" required>
+          <input type="number" step="0.01" name="opciones_precio[]" placeholder="Precio adicional" required>
+          <button type="button" class="remove-opcion">🗑</button>
+        </div>
+      </div>
+      <button type="button" id="addOpcion">Agregar opción</button>
+      <br><br>
+      <button type="submit">Guardar Listbox</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para agregar categoría -->
+<div id="modalCategoria" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
+    <div style="background:#ccc; padding:20px; border-radius:10px; width:300px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
+        <h4>Nueva categoría</h4>
+        <form method="POST" action="agregar_categoria.php">
+            <input type="text" name="nombrecategoria" placeholder="Nombre de la categoría" 
+                   class="form-control" required
+                   style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px;">
+            <button type="submit" class="btn btn-primary" 
+                    style="background-color:#aaa; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">
+                Guardar
+            </button>
+            <button type="button" class="btn btn-secondary" 
+                    onclick="cerrarModalCategoria()" 
+                    style="background-color:#aaa; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; margin-left:5px;">
+                Cancelar
+            </button>
+        </form>
+    </div>
+</div>
+
 
 <script>
 const openModalBtn = document.getElementById('openModal');
@@ -403,6 +467,10 @@ document.querySelectorAll('.product-card .edit').forEach(btn => {
         document.getElementById('editName').value = card.dataset.nombre;
         document.getElementById('editDescripcion').value = card.dataset.descripcion;
         document.getElementById('editPrice').value = card.dataset.precio;
+        if (card.dataset.stock !== undefined) {
+        document.getElementById('editStock').value = card.dataset.stock;
+    }
+
         // Categorías seleccionadas
         const cat_ids = card.dataset.categorias_ids ? card.dataset.categorias_ids.split(',') : [];
         cargarCategorias('#editCategoria', cat_ids);
@@ -425,6 +493,50 @@ document.querySelectorAll('.product-card .delete').forEach(btn => {
         }
     };
 });
+
+// --- Modal Agregar Listbox ---
+const openListboxModalBtn = document.getElementById('openListboxModal');
+const listboxModal = document.getElementById('listboxModal');
+const addOpcionBtn = document.getElementById('addOpcion');
+const opcionesContainer = document.getElementById('opcionesContainer');
+
+// Abrir modal
+openListboxModalBtn.onclick = () => {
+  listboxModal.style.display = 'flex';
+};
+
+// Cerrar modal
+listboxModal.querySelector('.close').onclick = () => {
+  listboxModal.style.display = 'none';
+};
+window.onclick = e => { if(e.target === listboxModal) listboxModal.style.display = 'none'; };
+
+// Agregar más opciones
+addOpcionBtn.onclick = () => {
+  const div = document.createElement('div');
+  div.classList.add('opcion-item');
+  div.innerHTML = `
+    <input type="text" name="opciones_valor[]" placeholder="Valor (ej. Vainilla)" required>
+    <input type="number" step="0.01" name="opciones_precio[]" placeholder="Precio adicional" required>
+    <button type="button" class="remove-opcion">🗑</button>
+  `;
+  opcionesContainer.appendChild(div);
+};
+
+// Eliminar opción
+opcionesContainer.addEventListener('click', e => {
+  if (e.target.classList.contains('remove-opcion')) {
+    e.target.parentElement.remove();
+  }
+});
+
+// --- Modal Agregar Categoría ---
+function mostrarFormularioCategoria() {
+    document.getElementById('modalCategoria').style.display = 'flex';
+}
+function cerrarModalCategoria() {
+    document.getElementById('modalCategoria').style.display = 'none';
+}
 </script>
 <script src="../../translate.js"></script>
 </body>
