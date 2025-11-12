@@ -13,6 +13,7 @@ Hay 3 roles paginas principales que están dividas según su rol.
 ⦁	Sobre nosotros: El usuario puede ver información sobre la pagina, desarrolladores, la tienda y ubicación.
 ⦁	Perfil: el usuario puede cambiar su foto de perfil email, contraseña, teléfono, fecha de nacimiento, zona horaria y cerrar sesión, y ver su historial de compras.
 
+<img width="1895" height="901" alt="image" src="https://github.com/user-attachments/assets/275e4887-9592-4156-bf2c-1d10a6128eeb" />
 
 <h3>Cajero.</h3>
 
@@ -23,5 +24,4 @@ Hay 3 roles paginas principales que están dividas según su rol.
 ⦁	Admin: el cajero puede acceder rápido a admin si una cuenta que esta dada de alta como administrador.
 ⦁	Perfil: El cajero puede cerrar sesión desde esta pagina, cambiar su nombre, correo electrónico, teléfono, teléfono de emergencias, dirección donde vive, numero de emplad y foto de perfil.
 
-<img width="1895" height="901" alt="image" src="https://github.com/user-attachments/assets/275e4887-9592-4156-bf2c-1d10a6128eeb" />
 
