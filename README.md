@@ -2,7 +2,6 @@
 
 Este proyecto consiste en una pagina dirigida a una cafetería ficticia llamada blackwood coffee shop. El usuario puede comprar productos de comida como café, frapes, capuchino, pan, etc. 
 Todo lo lee Apartir de una base de datos. <br>
-
 Hay 3 roles paginas principales que están dividas según su rol. <br>
 
 <h3>Usuario.</h3>
@@ -25,6 +24,9 @@ Hay 3 roles paginas principales que están dividas según su rol. <br>
 <br>Admin: el cajero puede acceder rápido a admin si una cuenta que esta dada de alta como administrador.<br>
 <br>Perfil: El cajero puede cerrar sesión desde esta pagina, cambiar su nombre, correo electrónico, teléfono, teléfono de emergencias, dirección donde vive, numero de emplad y foto de perfil.<br>
 
+<img width="1847" height="915" alt="image" src="https://github.com/user-attachments/assets/04a885a0-4b8e-46c0-b508-4b7ba067ede9" />
+
+
 <h3>Admininstrador:</h3>
 <br>Inicio: El administrador tiene una vista por encima sobre el personal y las estadísticas</br>
 
@@ -39,6 +41,14 @@ Hay 3 roles paginas principales que están dividas según su rol. <br>
 <br>Personal: El administrador tiene un control del personal existente con los usuarios del personal además de poder eliminarlos si es el caso en que ya no trabajen con nosotros</br>
 
 <br>Perfil: El administrador puede visualizar su información de perfil y su foto de perfil además de poder editar su información y foto de perfil</br>
+
+<img width="1894" height="910" alt="image" src="https://github.com/user-attachments/assets/46e41050-df86-484c-a12e-ff5780a6a3e0" />
+
+<br> El usuario puede iniciar sesion, registrarse con una cuenta de email. En su cuenta, se guardara email, contraseña, foto de perfil, y historial de pedidos<br>
+
+<img width="1876" height="911" alt="image" src="https://github.com/user-attachments/assets/811c229e-2082-4fdf-bd7e-d4bf1a9e18e8" />
+
+
 
 <h3 align="left"> 🚀 Tecnologías utilizadas</h3>
 <div align="left">
