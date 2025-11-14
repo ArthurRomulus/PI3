@@ -35,7 +35,7 @@ include "../../conexion.php";
   <div class="button-group">
     <a href="index.php"><button data-translate="Todo">Todo</button></a>
     <button id="openListboxModal" class="add-listbox-btn">
-      <i class="fas fa-list"></i> <span data-translate="Agregar Listbox">Agregar Listbox</span>
+      <i class="fas fa-list"></i> <span data-translate="Agregar lista de opciones">Agregar lista de opciones</span>
     </button>
     <?php
     $categoria_query = "SELECT nombrecategoria FROM categorias ORDER BY nombrecategoria ASC";
@@ -50,13 +50,13 @@ include "../../conexion.php";
         }
     }
     ?>
-     <!-- 🔹 Botón para agregar nueva categoría -->
+     <!--  Botón para agregar nueva categoría -->
     <button 
         class="btn btn-success" 
         style="margin-left:10px;" 
         onclick="mostrarFormularioCategoria()"
     >
-     <i class="fas fa-plus"></i>Nueva categoría
+     <i class="fas fa-plus"></i>  <span data-translate="Nueva categoría">Nueva categoría</span>
     </button>
   </div>
 
@@ -256,43 +256,38 @@ include "../../conexion.php";
 <div id="listboxModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <h2 data-translate="Agregar listbox">Agregar Listbox</h2>
-
+    <h2 data-translate="Agregar lista de opciones">Agregar lista de opciones</h2>
     <form action="Guardar_listbox.php" method="POST">
-      <input type="text" name="nombre_listbox" placeholder="Nombre del listbox" required>
+      <input type="text" name="nombre_listbox" placeholder="Nombre de la lista de opciones" data-translate-placeholder ="Nombre de la lista de opciones" required>
       
       <h4 data-translate="Opciones">Opciones</h4>
       <div id="opcionesContainer">
         <div class="opcion-item">
-          <input type="text" name="opciones_valor[]" placeholder="Valor (ej. Latte)" required>
-          <input type="number" step="0.01" name="opciones_precio[]" placeholder="Precio adicional" required>
+          <input type="text" name="opciones_valor[]" placeholder="Valor (ej. Latte)" data-translate-placeholder ="Valor (ej. Latte)" required>
+          <input type="number" step="0.01" name="opciones_precio[]" placeholder="Precio adicional" data-translate-placeholder ="Precio adicional" required>
           <button type="button" class="remove-opcion">🗑</button>
         </div>
       </div>
-      <button type="button" id="addOpcion">Agregar opción</button>
+      <button type="button" id="addOpcion" data-translate="Agregar opción">Agregar opción</button>
       <br><br>
-      <button type="submit">Guardar Listbox</button>
+      <button data-translate="Guardar">Guardar</button>
     </form>
   </div>
 </div>
 
 <!-- Modal para agregar categoría -->
-<div id="modalCategoria" 
-     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
-    <div style="background:#ccc; padding:20px; border-radius:10px; width:300px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
-        <h4>Nueva categoría</h4>
+<div id="modalCategoria" class="modal">
+  <div class="modal-content">
+        <h4 data-translate="Nueva categoría">Nueva categoría</h4>
         <form method="POST" action="agregar_categoria.php">
             <input type="text" name="nombrecategoria" placeholder="Nombre de la categoría" 
-                   class="form-control" required
-                   style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px;">
-            <button type="submit" class="btn btn-primary" 
-                    style="background-color:#aaa; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">
+                   class="form-control" data-translate-placeholder="Nombre de la categoría" required>
+            <button type="submit" class="btn btn-primary" data-translate="Guardar">
                 Guardar
             </button>
             <button type="button" class="btn btn-secondary" 
                     onclick="cerrarModalCategoria()" 
-                    style="background-color:#aaa; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; margin-left:5px;">
+                    data-translate="Cancelar">
                 Cancelar
             </button>
         </form>
@@ -503,6 +498,11 @@ const opcionesContainer = document.getElementById('opcionesContainer');
 // Abrir modal
 openListboxModalBtn.onclick = () => {
   listboxModal.style.display = 'flex';
+  // 🔹 Forzar traducción al abrir el modal
+  if (typeof applyTranslation === "function") {
+    const lang = localStorage.getItem("lang") || "es";
+    applyTranslation(lang);
+  }
 };
 
 // Cerrar modal
@@ -516,12 +516,23 @@ addOpcionBtn.onclick = () => {
   const div = document.createElement('div');
   div.classList.add('opcion-item');
   div.innerHTML = `
-    <input type="text" name="opciones_valor[]" placeholder="Valor (ej. Vainilla)" required>
-    <input type="number" step="0.01" name="opciones_precio[]" placeholder="Precio adicional" required>
-    <button type="button" class="remove-opcion">🗑</button>
+    <input type="text" name="opciones_valor[]" 
+           placeholder="Valor (ej. Vainilla)" 
+           data-translate-placeholder="Valor (ej. Vainilla)" required>
+    <input type="number" step="0.01" name="opciones_precio[]" 
+           placeholder="Precio adicional" 
+           data-translate-placeholder="Precio adicional" required>
+    <button type="button" class="remove-opcion" data-translate="Eliminar opción">🗑</button>
   `;
   opcionesContainer.appendChild(div);
+
+  //  Forzar traducción en las nuevas opciones
+  if (typeof applyTranslation === "function") {
+    const lang = localStorage.getItem("lang") || "es";
+    applyTranslation(lang);
+  }
 };
+
 
 // Eliminar opción
 opcionesContainer.addEventListener('click', e => {

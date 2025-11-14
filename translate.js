@@ -70,12 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Aplica traducción o texto original
-    elements.forEach(el => {
-      if (lang === "es") el.textContent = el.dataset.translate;
-      else el.textContent = cached[el.dataset.translate] || el.dataset.translate;
-    });
-
-    // Aplica traducción o texto original
      elements.forEach(el => {
       if (lang === "es") {
         el.textContent = el.dataset.translate || el.textContent;
@@ -92,8 +86,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (el.dataset.translateValue)
           el.value = getTranslation(el.dataset.translateValue);
       }
+      if (el._noTranslateElems) {
+      el._noTranslateElems.forEach(nt => {
+        nt.innerText = nt.getAttribute("data-keep");
+      });
+    }
     });
   }
   window.applyTranslation = applyTranslation;
   window.currentLang = currentLang;
+  window.onload = () => applyTranslation(currentLang);
 });
