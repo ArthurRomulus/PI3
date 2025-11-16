@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-11-2025 a las 03:29:59
+-- Tiempo de generación: 12-11-2025 a las 01:30:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `administradores` (
 --
 
 INSERT INTO `administradores` (`userid`, `numero_admin`, `nombre_completo`, `telefono`, `telefono_emergencia`, `direccion`) VALUES
-(10, 'ADM001', 'Administrador General', '3120000000', '3120000001', 'Colima, México');
+(18, 'ADM001', 'Noisi', '3120000000', '3120000001', 'Colima, México');
 
 -- --------------------------------------------------------
 
@@ -147,35 +147,54 @@ CREATE TABLE `listbox_opciones` (
 --
 
 INSERT INTO `listbox_opciones` (`id`, `listbox_id`, `valor`, `precio`) VALUES
-(33, 1, 'Espresso', 15.00),
-(34, 1, 'Americano', 10.00),
-(35, 1, 'Capuchino', 20.00),
-(36, 2, 'Entera', 10.00),
-(37, 2, 'Deslactosada', 10.00),
-(38, 2, 'Avena', 5.00),
-(39, 3, 'Chocolate', 10.00),
-(40, 3, 'Caramelo', 15.00),
-(41, 4, 'Queso', 8.00),
-(42, 4, 'Salsa', 14.00),
-(43, 4, 'Vegetales', 20.00),
-(44, 3, 'Chocolate', 8.00),
-(45, 3, 'Caramelo', 12.00),
-(46, 5, 'Vainilla', 10.00),
-(47, 5, 'Fresa', 10.00),
-(48, 6, 'Chocolate', 15.00),
-(49, 6, 'Dulce de leche', 25.00),
-(50, 7, 'Azúcar glas', 15.00),
-(51, 7, 'Chocolate', 10.00),
-(52, 7, 'Fresa', 13.00),
-(53, 4, 'Nueces', 10.00),
-(54, 8, 'Frutilla', 9.00),
-(55, 8, 'Chocolate', 15.00),
-(56, 8, 'Vainilla', 12.00),
-(57, 3, 'Canela', 10.00),
-(58, 3, 'Nuez moscada', 10.00),
-(59, 5, 'Calabaza', 9.00),
-(60, 5, 'Miel', 12.00),
-(61, 5, 'Jengibre', 14.00);
+(62, 1, 'Café Americano', 18.00),
+(63, 1, 'Latte', 22.00),
+(64, 1, 'Capuchino', 25.00),
+(65, 1, 'Cold Brew', 28.00),
+(66, 1, 'Té verde', 15.00),
+(67, 1, 'Té chai', 18.00),
+(68, 1, 'Frappé de Oreo', 24.00),
+(69, 1, 'Chocolate caliente', 20.00),
+(70, 2, 'Leche entera', 0.00),
+(71, 2, 'Leche deslactosada', 2.00),
+(72, 2, 'Leche de avena', 3.00),
+(73, 2, 'Leche de soya', 3.00),
+(74, 2, 'Leche de almendra', 4.00),
+(75, 2, 'Sin leche', 0.00),
+(76, 3, 'Canela', 3.00),
+(77, 3, 'Crema batida', 5.00),
+(78, 3, 'Chispas de chocolate', 4.00),
+(79, 3, 'Caramelo', 4.00),
+(80, 3, 'Sirope de vainilla', 3.00),
+(81, 3, 'Trozos de galleta', 4.00),
+(82, 4, 'Aderezo César', 5.00),
+(83, 4, 'Aderezo Ranch', 5.00),
+(84, 4, 'Vinagreta balsámica', 6.00),
+(85, 4, 'Salsa BBQ', 6.00),
+(86, 4, 'Miel mostaza', 5.00),
+(87, 5, 'Vainilla', 4.00),
+(88, 5, 'Avellana', 4.00),
+(89, 5, 'Caramelo', 4.00),
+(90, 5, 'Chocolate', 4.00),
+(91, 5, 'Menta', 5.00),
+(92, 5, 'Pumpkin Spice', 5.00),
+(93, 6, 'Chocolate', 10.00),
+(94, 6, 'Queso crema', 12.00),
+(95, 6, 'Dulce de leche', 14.00),
+(96, 6, 'Frutos rojos', 15.00),
+(97, 6, 'Vainilla', 12.00),
+(98, 7, 'Azúcar glas', 5.00),
+(99, 7, 'Ganache de chocolate', 8.00),
+(100, 7, 'Crema batida', 6.00),
+(101, 7, 'Frutas frescas', 7.00),
+(102, 7, 'Crutones', 4.00),
+(103, 7, 'Nueces', 5.00),
+(104, 8, 'Fresa', 20.00),
+(105, 8, 'Vainilla', 20.00),
+(106, 8, 'Chocolate', 22.00),
+(107, 8, 'Caramelo salado', 23.00),
+(108, 8, 'Menta navideña', 24.00),
+(109, 8, 'Matcha', 25.00);
 
 -- --------------------------------------------------------
 
@@ -306,6 +325,7 @@ DROP TABLE IF EXISTS `pedidos`;
 CREATE TABLE `pedidos` (
   `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
   `userid` int(11) NOT NULL,
+
   `total` decimal(10,2) NOT NULL,
   `estado` varchar(50) NOT NULL DEFAULT 'Proceso',
   `metodo_pago` varchar(50) NOT NULL,
@@ -318,6 +338,11 @@ CREATE TABLE `pedidos` (
     FOREIGN KEY (`userid`) 
     REFERENCES `usuarios`(`userid`) 
     ON DELETE NO ACTION ON UPDATE NO ACTION
+
+  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
+  `sucursal` varchar(100) NOT NULL,
+  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `estado` enum('Completado','En preparación','Cancelado') NOT NULL DEFAULT 'En preparación'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `pedido_items` (
@@ -338,6 +363,9 @@ CREATE TABLE `pedido_items` (
     FOREIGN KEY (`id_producto`) 
     REFERENCES `productos`(`idp`) 
     ON DELETE NO ACTION ON UPDATE NO ACTION
+
+  `producto_nombre` varchar(150) NOT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- --------------------------------------------------------
 --fin pedidos y pedidos items
@@ -445,7 +473,9 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 (172, 'Ultimate', '../../Images/69054bb607e6a_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'muaa'),
 (174, 'yaaa', '../../Images/690556d84af04_Cafe latte.png', 33, NULL, 3, 1, 0, 0, 'afdd'),
 (175, 'Ulmua', '../../Images/6905626d4050e_Cafe lechero.png', 34, NULL, 2, 1, 0, 0, 'mmuaa'),
-(176, 'cafe gogo', '../../Images/69056e4377c4c_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'cafe con muaa');
+(176, 'cafe gogo', '../../Images/69056e4377c4c_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'cafe con muaa'),
+(177, 'Café del secso', '../../Images/69136b6426550_Frappé caramel.png', 55, NULL, 2, 1, 0, 10, 'Secsosoosos'),
+(178, 'Coca de', '../../Images/69136c1aec38d_Cafe mocca.png', 55, NULL, 2, 1, 0, 20, 'couk');
 
 -- --------------------------------------------------------
 
@@ -503,7 +533,10 @@ INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
 (175, 1),
 (175, 3),
 (176, 1),
-(176, 3);
+(176, 3),
+(177, 1),
+(177, 3),
+(178, 2);
 
 -- --------------------------------------------------------
 
@@ -535,7 +568,9 @@ INSERT INTO `producto_listbox` (`id`, `producto_id`, `listbox_id`) VALUES
 (13, 172, 1),
 (14, 172, 2),
 (21, 175, 1),
-(26, 176, 8);
+(26, 176, 8),
+(27, 177, 1),
+(28, 177, 2);
 
 -- --------------------------------------------------------
 
@@ -594,6 +629,19 @@ CREATE TABLE `resena` (
   `parent_id` int(11) DEFAULT NULL,
   `userid` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `resena`
+--
+
+INSERT INTO `resena` (`idr`, `nombre`, `comentario`, `calificacion`, `fecha`, `imagen_url`, `etiquetas`, `likes`, `parent_id`, `userid`) VALUES
+(4, 'NoisiUsuario', 'muamua', 4, '2025-11-11 15:50:37', NULL, NULL, 0, NULL, 19),
+(5, 'NoisiUsuario', 'isisi', NULL, '2025-11-11 15:51:32', NULL, NULL, 1, 4, 19),
+(8, 'NoisiUsuario', 'fdsdD', 4, '2025-11-11 16:07:37', NULL, NULL, 0, NULL, 19),
+(9, 'Noisi', 'adasd', 5, '2025-11-11 16:14:21', NULL, NULL, 0, NULL, 18),
+(10, 'Noisi', 'AAA', 1, '2025-11-11 16:14:38', NULL, NULL, 0, NULL, 18),
+(11, 'NoisiUsuario', 'adsad', 3, '2025-11-11 16:15:21', NULL, NULL, 0, NULL, 19),
+(12, 'NoisiUsuario', 'muaaaa', 4, '2025-11-11 16:18:54', NULL, NULL, 0, NULL, 19);
 
 -- --------------------------------------------------------
 
@@ -681,23 +729,22 @@ CREATE TABLE `usuarios` (
   `role` int(11) DEFAULT 1,
   `status` tinyint(1) DEFAULT 1,
   `archived` tinyint(1) DEFAULT 0,
-  `apellido` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `telefono` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `apellido` varchar(100) DEFAULT NULL,
+  `telefono` varchar(30) DEFAULT NULL,
   `fecha_nac` date DEFAULT NULL,
-  `zona_horaria` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `zona_horaria` varchar(100) DEFAULT NULL,
+  `Password_Token` varchar(255) DEFAULT NULL,
+  `Password_Token_Exp` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`) VALUES
-(0, NULL, 'Koby_Tao', 'karolsinsel@gmail.com', '$2y$10$/z8GdsgLHd5twe4l9Cohtu94cxpPz1HEJVzQ317iJZoF..w0IkuCO', 4, 1, 0),
-(2, '../../Images/DefaultProfile.png', 'mparra8@ucol.mx', 'mparra8@ucol.mx', '$2y$10$YDKyT8b3fa3CXImSQ77cKuEUKik2AiqR1ZguAjma.VQLmACkuLmr2', 4, 1, 0),
-(4, '../../Images/OIP.webp', 'mparra321', 'miguepg06@gmail.com', '$2y$10$1coSCtNYm3JNGGmq3rJ2iefFVqsz.oPy1zlw5wBDw2kUe5UfSgbb6', 2, 1, 0),
-(8, NULL, 'cajero', 'cajero@gmail.com', '$2y$10$P100IYAw.svkWdQQBJTb7ug3pmplcd/q0lZ68fuAafQgw4SmmHX5e', 1, 1, 0),
-(9, '../../Images/Profiles/9_68fba03670427.png', 'vc', 'vc@gmail.com', '$2y$10$QeQ4zKTvgs3fXhBg2aOpPOFADLMBnZQXNcXviq5iQTMK24uFBTV06', 2, 1, 0),
-(10, '../../Images/Captura de pantalla 2024-10-16 185653.png', 'Noisi', 'admin@tienda.com', '$2y$10$qgADfKAr.FHY6miNXvvybO7wi8mdjGeDkf2dmnYdaY0DThD5XAEKm', 4, 1, 0);
+INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`, `apellido`, `telefono`, `fecha_nac`, `zona_horaria`, `Password_Token`, `Password_Token_Exp`) VALUES
+(17, NULL, 'mparra12', 'mparra8@ucol.mx', '$2y$10$VLyk4esMBH4GAVnwWE..Me/hjYxmy55lykf6BWEZutbFGHuE0pM.i', 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL),
+(18, '../../Images/Captura de pantalla 2024-10-16 185653.png', 'Noisi', 'admin@tienda.com', '$2y$10$4LsEhgLYHmvd.43lhq3.yukRT79dAwrpCIMQ64LVggS5CmVm6ROCe', 4, 1, 0, '', '', '0000-00-00', '(UTC -06:00) Guadalajara, CDMX', NULL, NULL),
+(19, '../images/profiles/avatar_user_19.png', 'NoisiUsuario', 'noisi@gmail.com', '$2y$10$dNnooKM7L2SGvVAnKqFs3.dlrBv67f5129gIAERWMiMSNXLvvFYC.', 1, 1, 0, '', '', '0000-00-00', '(UTC -06:00) Guadalajara, CDMX', NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -760,6 +807,20 @@ ALTER TABLE `opciones_categoria`
 --
 ALTER TABLE `opciones_predefinidas`
   ADD PRIMARY KEY (`id_opcion_predefinida`);
+
+--
+-- Indices de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`id_pedido`),
+  ADD KEY `fk_pedidos_usuario` (`userid`);
+
+--
+-- Indices de la tabla `pedido_items`
+--
+ALTER TABLE `pedido_items`
+  ADD PRIMARY KEY (`id_item`),
+  ADD KEY `fk_items_pedido` (`id_pedido`);
 
 --
 -- Indices de la tabla `productos`
@@ -829,7 +890,8 @@ ALTER TABLE `tamanos`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`userid`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `Password_Token` (`Password_Token`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -857,7 +919,7 @@ ALTER TABLE `listboxes`
 -- AUTO_INCREMENT de la tabla `listbox_opciones`
 --
 ALTER TABLE `listbox_opciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT de la tabla `movimientos`
@@ -872,42 +934,28 @@ ALTER TABLE `opciones_predefinidas`
   MODIFY `id_opcion_predefinida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
--- Indices de la tabla `pedidos`
+-- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `fk_pedidos_usuario` (`userid`);
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Indices de la tabla `pedido_items`
---
-ALTER TABLE `pedido_items`
-  ADD PRIMARY KEY (`id_item`),
-  ADD KEY `fk_items_pedido` (`id_pedido`);  
-
---
--- AUTO_INCREMENT de la tabla `productos`
---
-ALTER TABLE `productos`
-  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
-
---
--- AUTO_INCREMENT de la tabla `pedidos`
---  
-ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;  
-
---
--- AUTO_INCREMENT de la tabla `pedidos`
+-- AUTO_INCREMENT de la tabla `pedido_items`
 --
 ALTER TABLE `pedido_items`
   MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT de la tabla `productos`
+--
+ALTER TABLE `productos`
+  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
+
+--
 -- AUTO_INCREMENT de la tabla `producto_listbox`
 --
 ALTER TABLE `producto_listbox`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_opciones`
@@ -925,7 +973,7 @@ ALTER TABLE `promocion`
 -- AUTO_INCREMENT de la tabla `resena`
 --
 ALTER TABLE `resena`
-  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -949,7 +997,7 @@ ALTER TABLE `tamanos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restricciones para tablas volcadas
@@ -981,23 +1029,23 @@ ALTER TABLE `opciones_categoria`
   ADD CONSTRAINT `opciones_categoria_ibfk_2` FOREIGN KEY (`id_opcion_predefinida`) REFERENCES `opciones_predefinidas` (`id_opcion_predefinida`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `producto_categorias`
---
-ALTER TABLE `producto_categorias`
-  ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
-  ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
-
---
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
   ADD CONSTRAINT `fk_pedidos_usuario` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pedidos_items`
+-- Filtros para la tabla `pedido_items`
 --
 ALTER TABLE `pedido_items`
   ADD CONSTRAINT `fk_items_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id_pedido`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `producto_categorias`
+--
+ALTER TABLE `producto_categorias`
+  ADD CONSTRAINT `producto_categorias_ibfk_1` FOREIGN KEY (`idp`) REFERENCES `productos` (`idp`) ON DELETE CASCADE,
+  ADD CONSTRAINT `producto_categorias_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `producto_listbox`

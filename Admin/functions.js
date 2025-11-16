@@ -13,7 +13,7 @@ function closeModal(id) {
   document.getElementById(id).style.display = "none";
 }
 
-document.getElementById("updateuser").addEventListener("click", async () => {
+document.getElementById("updateModal").addEventListener("click", async () => {
   const id = document.getElementById("userid").value;
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
@@ -33,7 +33,7 @@ document.getElementById("updateuser").addEventListener("click", async () => {
   if (image) formData.append("image", image);
 
   try {
-    const response = await fetch("UpdateUser.php", {
+    const response = await fetch("Admin_Estadisticas/UpdateUser.php", {
       method: "POST",
       body: formData
     });

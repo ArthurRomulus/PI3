@@ -28,6 +28,7 @@ if ($usuarioLogueado) {
     <link rel="stylesheet" href="../inicio/Style.css" />
     <link rel="stylesheet" href="acercade.css">
     <link rel="icon" href="../images/logotipocafes.png" />
+    <link href="../general.css" rel="stylesheet"/>
   </head>
   <body>
   <?php include "../nav_bar.php"; ?>
@@ -36,8 +37,11 @@ if ($usuarioLogueado) {
     <section class="about">
       <div class="about-wrap">
         <div class="about-text">
-          <h3>Acerca de<br />Nosotros</h3>
-          <p>
+          <h3 data-translate="Acerca de Nosotros">Acerca de<br />Nosotros</h3>
+          <p data-translate="Iniciamos con una pasión por el café y el deseo de compartir
+            momentos únicos. No solo servimos bebidas, también ofrecemos
+            experiencias: un espacio tranquilo, acogedor y lleno de sabor para
+            disfrutar a tu manera.">
             Iniciamos con una pasión por el café y el deseo de compartir
             momentos únicos. No solo servimos bebidas, también ofrecemos
             experiencias: un espacio tranquilo, acogedor y lleno de sabor para
@@ -47,15 +51,15 @@ if ($usuarioLogueado) {
           <div class="stats-row">
             <div class="stat-box">
               <span class="stat-number">1</span>
-              <span class="stat-label">Año</span>
+              <span class="stat-label" data-translate="Año">Año</span>
             </div>
             <div class="stat-box">
               <span class="stat-number">+40</span>
-              <span class="stat-label">Recetas</span>
+              <span class="stat-label" data-translate="Recetas">Recetas</span>
             </div>
             <div class="stat-box">
               <span class="stat-number">1</span>
-              <span class="stat-label">Sucursal</span>
+              <span class="stat-label" data-translate="Sucursal">Sucursal</span>
             </div>
           </div>
         </div>
@@ -71,8 +75,10 @@ if ($usuarioLogueado) {
         <div class="mv-card">
           <!-- Columna Misión -->
           <div class="mv-col">
-            <h3 class="mv-title">Misión</h3>
-            <p class="mv-text">
+            <h3 class="mv-title" data-translate="Misión">Misión</h3>
+            <p class="mv-text" data-translate="Ofrecer la mejor experiencia cafetera con productos de alta
+              calidad, atención genuina y un ambiente que invite a volver
+              siempre.">
               Ofrecer la mejor experiencia cafetera con productos de alta
               calidad, atención genuina y un ambiente que invite a volver
               siempre.
@@ -84,8 +90,9 @@ if ($usuarioLogueado) {
 
           <!-- Columna Visión -->
           <div class="mv-col">
-            <h3 class="mv-title">Visión</h3>
-            <p class="mv-text">
+            <h3 class="mv-title" data-translate="Visión">Visión</h3>
+            <p class="mv-text" data-translate="Convertirnos en un referente local en la cultura del café,
+              compartiendo nuestro conocimiento y pasión con cada cliente.">
               Convertirnos en un referente local en la cultura del café,
               compartiendo nuestro conocimiento y pasión con cada cliente.
             </p>
@@ -102,27 +109,27 @@ if ($usuarioLogueado) {
       <div class="features-box">
         <div class="feature-item">
           <img src="../../images/icon1.png" alt="Sustainability" />
-          <p>Sustainability</p>
+          <p data-translate="Sostenibilidad">Sostenibilidad</p>
         </div>
 
         <div class="feature-item">
           <img src="../../images/icon2.png" alt="No Plastics" />
-          <p>No Plastics</p>
+          <p data-translate="No plasticos">No Plasticos</p>
         </div>
 
         <div class="feature-item">
           <img src="../../images/icon3.png" alt="Aporta Local" />
-          <p>Aporta<br />Local</p>
+          <p data-translate="Aporta Local">Aporta<br />Local</p>
         </div>
 
         <div class="feature-item">
           <img src="../../images/icon4.png" alt="Local Apoyo" />
-          <p>Local<br />Apoyo</p>
+          <p data-translate="Apoyo local">Apoyo<br />Local</p>
         </div>
 
         <div class="feature-item">
           <img src="../../images/icon5.png" alt="Calidad de benas" />
-          <p>Calidad<br />de benas</p>
+          <p data-translate="Calidad de benas">Calidad<br />de benas</p>
         </div>
       </div>
     </section>
@@ -133,11 +140,13 @@ if ($usuarioLogueado) {
   <div class="cs-wrap">
 
     <!-- Frase superior -->
-    <p class="cs-intro">
-      Somos un grupo <strong>#CoffeeLovers</strong> y productores de
+    <p class="cs-intro" 
+      data-translate="Somos un grupo #CoffeeLovers y productores de Manzanillo, Tecomán, buscando nuevas formas de compartir nuestra pasión por el café.">
+      Somos un grupo <strong translate="no">#CoffeeLovers</strong> y productores de
       <strong>Manzanillo</strong>, Tecomán, buscando nuevas formas de compartir nuestra
-      <strong>pasión por el café</strong>.
+      <strong translate="no">pasión por el café</strong>.
     </p>
+
 
     <!-- Grid de 3 columnas -->
     <div class="cs-grid">
@@ -146,8 +155,10 @@ if ($usuarioLogueado) {
         <div class="cs-media">
           <img src="../../images/agricultor2.png" alt="Cosecha de café en Finca La Roca" loading="lazy">
         </div>
-        <h3 class="cs-title">FINCA LA ROCA (COATEPEC, VER)</h3>
-        <p class="cs-text">
+        <h3 class="cs-title" data-translate="FINCA LA ROCA (COATEPEC, VER)">FINCA LA ROCA (COATEPEC, VER)</h3>
+        <p class="cs-text" data-translate="Nuestro café se cultiva en Finca La Roca a 1,250 m s. n. m., con una
+          selección de granos de productores invitados que cuidan cada detalle para
+          que tu café reciba el respeto que se merece.">
           Nuestro café se cultiva en Finca La Roca a 1,250 m s. n. m., con una
           selección de granos de productores invitados que cuidan cada detalle para
           que tu café reciba el respeto que se merece.
@@ -159,8 +170,10 @@ if ($usuarioLogueado) {
         <div class="cs-media">
           <img src="../../images/agricultor.png" alt="Selección manual de granos de café" loading="lazy">
         </div>
-        <h3 class="cs-title">SELECCIÓN ESPECIAL</h3>
-        <p class="cs-text">
+        <h3 class="cs-title" data-translate="SELECCIÓN ESPECIAL">SELECCIÓN ESPECIAL</h3>
+        <p class="cs-text" data-translate="Una selección de granos cultivados con el cuidado de los cafés de altura
+          y la dedicación en el proceso de los granos de especialidad. Tostamos
+          cada semana para que recibas tu café siempre fresco.">
           Una selección de granos cultivados con el cuidado de los cafés de altura
           y la dedicación en el proceso de los granos de especialidad. Tostamos
           cada semana para que recibas tu café siempre fresco.
@@ -172,8 +185,10 @@ if ($usuarioLogueado) {
         <div class="cs-media">
           <img src="../../images/agricultor3.jpg" alt="Granos de café tostados con reconocimientos" loading="lazy">
         </div>
-        <h3 class="cs-title">CAFÉ DE ALTURA</h3>
-        <p class="cs-text">
+        <h3 class="cs-title"data-translate="CAFÉ DE ALTURA">CAFÉ DE ALTURA</h3>
+        <p class="cs-text" data-translate="Gracias al trabajo de nuestros productores, las fincas donde se cultiva
+          tu café han sido reconocidas en certámenes de relevancia como la
+          Cup of Excellence (México 2018 y 2019).">
           Gracias al trabajo de nuestros productores, las fincas donde se cultiva
           tu café han sido reconocidas en certámenes de relevancia como la
           <em>Cup of Excellence</em> (México 2018 y 2019).
@@ -194,18 +209,19 @@ if ($usuarioLogueado) {
   <div class="hero-wrap">
     <!-- Lado izquierdo: textos -->
     <div class="hero-copy">
-      <h1 class="hero-title">
+      <h1 class="hero-title" data-translate="Descubre el sabor y la experiencia">
         Descubre el sabor<br>
         y la experiencia
       </h1>
-      <p class="hero-sub">
+      <p class="hero-sub" data-translate="Sumérgete en el aroma, disfruta cada sorbo y vive la experiencia única que solo nuestra cafetería puede ofrecerte.
+        Cada rincón, cada taza… una historia que te inspira.">
         Sumérgete en el aroma, disfruta cada sorbo y vive la experiencia única que solo nuestra cafetería puede ofrecerte.
         Cada rincón, cada taza… una historia que te inspira.
       </p>
 
       <div class="hero-cta">
-        <a href="#visitanos" class="btn btn-primary">Visítanos</a>
-        <a href="#menu" class="btn btn-ghost">Conoce el menú</a>
+        <a href="#visitanos" class="btn btn-primary" data-translate="Visítanos">Visítanos</a>
+        <a href="#menu" class="btn btn-ghost" data-translate="Conoce el menú">Conoce el menú</a>
       </div>
     </div>
 
@@ -258,7 +274,7 @@ if ($usuarioLogueado) {
     <ul class="mc-list" id="mcList">
       <!-- items por JS -->
     </ul>
-    <div class="mc-empty" id="mcEmpty">Tu carrito está vacío.</div>
+    <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
   </div>
 
   <footer class="mc-footer">
@@ -266,7 +282,7 @@ if ($usuarioLogueado) {
       <span>Total</span>
       <strong id="mcTotal">$0.00 MXN</strong>
     </div>
-    <a href="../catalogo/carrito.php" class="mc-btn">Ir a pagar</a>
+    <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
   </footer>
 </aside>
 
@@ -275,8 +291,7 @@ if ($usuarioLogueado) {
   window.CART_API_URL = '../catalogo/cart_api.php';
 </script>
 <script src="../catalogo/app.js"></script>
-<!-- Scripts -->
-<script src="../catalogo/app.js"></script>
+<script src="../../translate.js"></script>
 </body>
 </html>
 

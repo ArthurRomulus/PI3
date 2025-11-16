@@ -23,6 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Las contraseñas no coinciden.";
     } 
     // b) Verificar que la contraseña tenga una longitud mínima
+    elseif (strlen($username) < 6 && strlen($username) < 150) {
+        $error_message = "El nombre de usuario debe de tener entre 6 y 150 caracteres.";
+
+    }
     elseif (strlen($password) < 6) {
         $error_message = "La contraseña debe tener al menos 6 caracteres.";
     } else {
@@ -152,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
-  <a href="../Usuario/index.php" target="_blank" class="logo-fijo">
+  <a href="../coffeeShop/Inicio/" class="logo-fijo">
     <img src="../images/logo.png" alt="Logo Blackwood Coffee">
   </a>
 </body>

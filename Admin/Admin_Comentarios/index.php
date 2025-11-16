@@ -61,7 +61,7 @@
                 if ($pfp_row = $pfp_result->fetch_assoc()) {
                     if (!empty($pfp_row['profilescreen'])) {
                         // La ruta sube 2 niveles (desde Admin/Comentarios/ hasta la raíz) y luego baja a images
-                        $avatar_src = '../../images/' . htmlspecialchars($pfp_row['profilescreen']); 
+                        $avatar_src = htmlspecialchars($pfp_row['profilescreen']); 
                     }
                     $nombre_usuario = htmlspecialchars($pfp_row['username']); // Usamos el nombre de la tabla usuarios
                 }
@@ -101,7 +101,7 @@
             // Botón eliminar (esto estaba bien, posts to delete_comentario.php)
             echo "<form method='POST' action='delete_comentario.php'>";
             echo "<input type='hidden' name='idr' value='" . htmlspecialchars($row['idr']) . "'>";
-            echo "<button class='deletebutton'>Eliminar</button>";
+            echo "<button class='deletebutton' data-translate='Eliminar'>Eliminar</button>";
             echo "</form>";
 
             echo "</div>"; // cierre contenido-comentario
@@ -110,7 +110,7 @@
         ?>
         </div>
     </div>
-    
+<script src="../../translate.js"></script>
 </body>
 </html>
 

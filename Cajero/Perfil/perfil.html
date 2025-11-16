@@ -15,7 +15,14 @@
         <div id="navbar-placeholder"></div>
         <main class="main-content">
 
-<button class="btn btn-logout" id="logout-btn">Cerrar Sesión</button>
+<div class="language-container">
+    <div class="lang-switch">
+        <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
+        <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
+    </div>
+    <button class="btn btn-logout" id="logout-btn" data-translate="Cerrar Sesión">Cerrar Sesión</button>
+</div>
+
 
             <div class="perfil-container">
 
@@ -31,7 +38,7 @@
                             <path d="M 25 55 H 175 L 170 40 H 30 Z" fill="#6F4E37"/>
                             <path d="M 35 40 H 165 C 165 20, 35 20, 35 40 Z" fill="#6F4E37"/>
                             <path d="M 40 180 H 160 L 162 100 H 38 Z" fill="#282828"/>
-                            <text x="100" y="80" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12" fill="#FFFFFF" class="profile-text">Imagen de perfil</text>
+                            <text x="100" y="80" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12" fill="#FFFFFF" class="profile-text" data-translate="Imagen de perfil">Imagen de perfil</text>
                             <circle cx="100" cy="140" r="55" fill="#FFFFFF"/>
                             <image id="profile-image" clip-path="url(#profile-clip)" height="100" width="100" x="50" y="90" href="" preserveAspectRatio="xMidYMid slice"/>
                             <circle id="icon-placeholder" cx="100" cy="140" r="50" fill="#E0E0E0"/>
@@ -42,7 +49,7 @@
                             </g>
                         </svg>
                     </div>
-                    <button class="btn btn-save" id="save-profile-btn">Guardar Cambios</button>
+                    <button class="btn btn-save" id="save-profile-btn" data-translate="Guardar Cambios">Guardar Cambios</button>
                 </div>
 
                 <div class="data-section">
@@ -73,36 +80,36 @@
                               <path d="M 215 45 L 215 60 M 235 45 L 235 60" stroke="#777" stroke-width="3"/>
                          </svg>
                          <div class="form-overlay">
-    <h2 class="title">DATOS PERSONALES</h2>
+    <h2 class="title" data-translate="DATOS PERSONALES">DATOS PERSONALES</h2>
     <form id="datosPersonalesForm">
         <div class="form-group">
-            <label for="nombre">Nombre:</label>
+            <label for="nombre" data-translate="Nombre:">Nombre:</label>
             <input type="text" id="nombre" name="nombre_completo">
         </div>
         <div class="form-group">
-            <label for="correo">Correo Electronico:</label>
+            <label for="correo" data-translate="Correo Electronico">Correo Electronico:</label>
             <input type="email" id="correo" name="email">
         </div>
         <div class="form-group">
-            <label for="telefono">Telefono:</label>
+            <label for="telefono" data-translate="Telefono">Telefono:</label>
             <input type="tel" id="telefono" name="telefono">
         </div>
         <div class="form-group">
-            <label for="emergencias">Telefono emergencias:</label>
+            <label for="emergencias" data-translate="Telefono emergencias">Telefono emergencias:</label>
             <input type="tel" id="emergencias" name="telefono_emergencia">
         </div>
         <div class="form-group">
-            <label for="direccion">Dirección vive:</label>
+            <label for="direccion" data-translate="Dirección vive:">Dirección vive:</label>
             <input type="text" id="direccion" name="direccion">
         </div>
         <div class="form-group">
-            <label for="empleado">Numero empleado:</label>
+            <label for="empleado" data-translate="Numero empleado:">Numero empleado:</label>
             <input type="text" id="empleado" name="numero_empleado" readonly>
         </div>
     </form>
 </div>
                     </div>
-                    <button class="btn btn-save" id="save-data-btn">Guardar Cambios</button>
+                    <button class="btn btn-save" id="save-data-btn" data-translate="Guardar Cambios">Guardar Cambios</button>
                 </div>
             </div>
         </main>
@@ -308,5 +315,6 @@ const logoutBtn = document.getElementById('logout-btn');
         loadEmployeeData();
     });
 </script>
+<script src="../../translate.js"></script>
 </body>
 </html>
