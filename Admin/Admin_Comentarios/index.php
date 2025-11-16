@@ -61,7 +61,7 @@
                 if ($pfp_row = $pfp_result->fetch_assoc()) {
                     if (!empty($pfp_row['profilescreen'])) {
                         // La ruta sube 2 niveles (desde Admin/Comentarios/ hasta la raíz) y luego baja a images
-                        $avatar_src = '../../images/' . htmlspecialchars($pfp_row['profilescreen']); 
+                        $avatar_src = htmlspecialchars($pfp_row['profilescreen']); 
                     }
                     $nombre_usuario = htmlspecialchars($pfp_row['username']); // Usamos el nombre de la tabla usuarios
                 }
