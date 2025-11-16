@@ -33,6 +33,51 @@
   color:var(--text-dark);
 }
 
+.order-number-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.order-search-icon {
+  font-size: 16px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.order-search-icon:hover {
+  color: var(--text-dark);
+}
+
+.cart-status-pill {
+  padding: 8px 4px;
+  border-radius: 14px;
+  text-align: center;
+  margin: -4px 0 8px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+  border: 2px solid rgba(0,0,0,0.1);
+}
+.cart-status-pill.status-proceso {
+  background-color: #28a745; 
+}
+.cart-status-pill.status-terminado {
+  background-color: #dc3545; 
+}
+.cart-status-pill.status-pagado {
+  background-color: #007bff; 
+}
+.cart-status-pill .status-label {
+  font-weight: 800;
+}
+.cart-status-pill .payment-label {
+  font-weight: 500;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+
 .cart-content{
   margin-top:0;
   display:flex;
@@ -54,8 +99,7 @@
 .cart-item{
   display:flex;
   gap:6px;
-  /* --- ¡CAMBIO CLAVE 1! --- */
-  align-items: flex-start; /* De 'center' a 'flex-start' para estabilizar */
+  align-items: flex-start;
   background: var(--card-bg);
   padding:6px;
   border-radius:8px;
@@ -80,7 +124,7 @@
 }
 .cart-info {
   flex: 1;
-  min-width: 0; /* Permite que el texto se rompa */
+  min-width: 0;
 }
 .cart-title{ font-weight:700; font-size:11px; margin-bottom:2px; }
 .cart-desc {
@@ -88,25 +132,21 @@
   margin-bottom: 2px;
   font-size: 10px;
   line-height: 1.2;
-  /* Reglas para forzar el salto de línea */
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 .cart-price{ font-weight:700; font-size: 11px; }
 
-/* --- (MODIFICADO) .cart-qty --- */
 .cart-qty{
   display:flex;
-  flex-direction: column; /* Apila los controles y el enlace */
-  align-items: flex-end; /* Alinea todo a la derecha */
+  flex-direction: column; 
+  align-items: flex-end; 
   gap: 2px;
   flex-shrink: 0; 
-  /* --- ¡CAMBIO CLAVE 2! --- */
-  min-width: 50px; /* Evita que el scrollbar aplaste este contenedor */
+  min-width: 50px;
 }
 
-/* --- (NUEVO) Contenedor para los botones +/- --- */
 .cart-qty-controls {
   display: flex;
   align-items: center;
@@ -139,7 +179,6 @@
   margin-top: 10px; 
 }
 
-/* --- (MODIFICADO) .cart-item-delete --- */
 .cart-item-delete {
     font-size: 10px;
     color: var(--muted);
@@ -154,7 +193,7 @@
 .cart-clear-all {
     font-size: 12px;
     font-weight: 600;
-    color: #a5836a;
+    color: var(--accent);
     text-decoration: underline;
     cursor: pointer;
     text-align: center;
@@ -162,7 +201,7 @@
     margin-top: 10px;
 }
 .cart-clear-all:hover {
-    color: #a5836a;
+    color: #e54d4d;
 }
 
 .summary{
@@ -188,8 +227,17 @@
   justify-content: space-between;
 }
 
+
+/* --- Lógica de botones de pago --- */
+.payment-container {
+  margin-top: 6px;
+}
+.payment-choice {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
 .pay{
-  margin-top: 10px; /* Ajustado */
   width:100%;
   background:var(--accent);
   color:white;
@@ -204,4 +252,150 @@
 }
 .pay:hover{
   background: #a86d2a;
+}
+.pay:disabled {
+  background-color: var(--muted);
+  cursor: not-allowed;
+}
+
+.pay-method {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background .2s ease;
+}
+.btn-efectivo {
+  background-color: var(--card-bg);
+  color: var(--text-dark);
+  border: 2px solid var(--accent);
+}
+.btn-efectivo:hover {
+  background-color: var(--search-bg);
+}
+.btn-tarjeta {
+  background-color: var(--text-dark);
+  color: var(--white);
+  border: 2px solid var(--text-dark);
+}
+.btn-tarjeta:hover {
+  background-color: #554438;
+}
+.cart-cancel-payment {
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 4px;
+}
+.cart-cancel-payment:hover {
+  color: var(--text-dark);
+}
+
+/* --- (¡¡CORRECCIÓN DE CSS!!) --- */
+/* Ahora solo oculta el botón "PAGAR" principal */
+.cart.payment-active .payment-container .pay {
+  display: none; 
+}
+
+.cart.payment-active .payment-choice {
+  display: flex; 
+}
+
+.cart.order-loaded .payment-container {
+  display: none;
+}
+.cart.order-loaded .cart-clear-all {
+  margin-top: 6px;
+}
+
+.cart.order-loaded .cart-qty {
+  display: none;
+}
+
+/* --- ESTILOS PARA EL MODAL DE PAGO CON TARJETA --- */
+#payment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+#payment-modal {
+  background-color: var(--card-bg);
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#payment-modal h3 {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 20px;
+  text-align: center;
+}
+#payment-modal p {
+  margin: -5px 0 0 0;
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+}
+
+#card-element {
+  background-color: var(--white);
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid var(--sidebar-bg);
+}
+
+#submit-payment-btn {
+  margin-top: 10px;
+}
+#submit-payment-btn:disabled {
+  background-color: var(--muted);
+  cursor: not-allowed;
+}
+
+#cancel-payment-modal-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+#cancel-payment-modal-btn:hover {
+  color: var(--text-dark);
+}
+
+#card-errors {
+  color: #dc3545;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: -5px;
+}
+
+#payment-modal-overlay.payment-modal-hidden {
+  display: none;
+  opacity: 0;
 }
