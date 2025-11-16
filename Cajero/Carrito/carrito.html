@@ -1,5 +1,15 @@
 <aside class="cart">
-    <div class="order-pill"><div class="order-title">Número de Pedido</div><div class="order-number">901</div></div>
+    <div class="order-pill">
+        <div class="order-title">Número de Pedido</div>
+        <div class="order-number-display">
+            <span class="order-number">901</span>
+            <i class="fas fa-search order-search-icon" title="Buscar Pedido"></i>
+        </div>
+    </div>
+    
+    <div class="cart-status-pill" style="display: none;">
+        </div>
+
     <div class="cart-content">
         </div>
     <div class="cart-bottom">
@@ -8,9 +18,31 @@
             <div class="row"><span>IVA:</span> <span class="summary-iva">$0.00</span></div>
             <div class="row total"><span>Total:</span> <span class="summary-total">$0.00</span></div>
         </div>
-
-        <button class="pay">PAGAR</button>
+        <div class="payment-container">
+            <button class="pay">PAGAR</button>
+            <div class="payment-choice">
+                <button class="pay-method btn-efectivo">Efectivo</button>
+                <button class="pay-method btn-tarjeta">Tarjeta</button>
+                <a href="#" class="cart-cancel-payment">Cancelar</a>
+            </div>
+        </div>
         <a href="#" class="cart-clear-all">Eliminar todo</a>
+    </div>
 
+    <div id="payment-modal-overlay" class="payment-modal-hidden">
+        <div id="payment-modal">
+            <h3>Pago con Tarjeta</h3>
+            <p>Ingresa los datos de la tarjeta.</p>
+            
+            <div id="card-element"></div>
+            
+            <button id="submit-payment-btn" class="pay">
+                Pagar <span id="payment-modal-total">$0.00</span>
+            </button>
+            
+            <button id="cancel-payment-modal-btn">Cancelar</button>
+            
+            <div id="card-errors" role="alert"></div>
+        </div>
     </div>
 </aside>
