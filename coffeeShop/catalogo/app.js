@@ -94,40 +94,47 @@
       const disponible = Number(p.STOCK ?? 0) > 0;
       const img = resolveImgPath(p.ruta_imagen);
 
-      const precioBase = Number(p.precio_base ?? p.precio ?? 0);
-      const extraSabor = Number(p?.sabor?.precio_extra ?? 0);
-      const extraTam = Number(p?.tamano?.precio_aumento ?? 0);
-      const precioTotal = Number(
-        p.precio_total ?? precioBase + extraSabor + extraTam
-      );
-      const precioTxt = precioTotal.toFixed(2);
+      const precioTotal = Number(p.precio_total ?? p.precio_base ?? 0).toFixed(2);
 
       return `
         <article class="ts-card"
           data-id="${sku}"
           data-name="${p.namep || ""}"
           data-price="${precioTotal}"
-          data-foto="${img}">
+          data-foto="${img}"
+          data-listboxes='${JSON.stringify(p.listboxes || [])}'>
+          
           <div class="ts-stage">
-            <img src="${img}" alt="${p.namep || ""}"
-                 loading="lazy" decoding="async"
-                 onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';">
-            <div class="ts-rate"><strong>4.6</strong> ★</div>
+            <img src="${img}" alt="${p.namep || ""}" onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';" />
           </div>
 
-          <h4 class="ts-name">
+          <h4 class="ts-name" data-translate="${p.namep || ""}">
             ${p.namep || ""}
             <small style="opacity:.7">• SKU ${sku || "—"}</small>
           </h4>
 
-          <p class="ts-desc">${p.descripcion || ""}</p>
+          <p class="ts-desc" data-translate="${p.descripcion || ""}">
+            ${p.descripcion || ""}
+          </p>
+
+          <!-- CATEGORÍAS -->
+          <p class="ts-categoria" data-translate="${ (p.categorias || []).map(c => c.nombre).join(', ') || 'Sin categoría' }">
+            ${ (p.categorias || []).map(c => c.nombre).join(', ') || 'Sin categoría' }
+          </p>
+
+          <!-- STOCK -->
+          <p class="ts-stock">
+            <strong data-translate="Stock">Stock:</strong> ${p.STOCK ?? 0}
+          </p>
 
           <div class="ts-info">
-            <span>${disponible ? "Disponible" : "Agotado"}</span>
-            <span class="ts-price">$${precioTxt} MXN</span>
+            <span data-translate="${disponible ? 'Disponible' : 'No disponible'}">
+              ${disponible ? 'Disponible' : 'No disponible'}
+            </span>
+            <span class="ts-price">$${precioTotal} MXN</span>
             <button class="ts-cart" ${disponible ? "" : "disabled"}>🛒</button>
           </div>
-        </article>
+      </article>
       `;
     }
 
@@ -161,6 +168,10 @@
 
         if (Array.isArray(data.items) && data.items.length) {
           grid.innerHTML = data.items.map(renderCard).join("");
+
+           if (window.currentLang && typeof applyTranslation === "function") {
+        applyTranslation(window.currentLang);
+    }
         } else {
           grid.innerHTML =
             prevHTML ||
@@ -168,6 +179,10 @@
             <p style="grid-column:1/-1; text-align:center; padding:16px;">
               No hay productos para esta categoría.
             </p>`;
+
+            if (window.currentLang && typeof applyTranslation === "function") {
+        applyTranslation(window.currentLang);
+    }
         }
       } catch (e) {
         console.error("[AJAX] Error en fetch:", e);
@@ -269,7 +284,9 @@
           }" alt="${p.nombre || ""}"
                onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';">
           <div>
-            <p class="mc-name">${p.nombre || "Producto"}</p>
+            <p class="mc-name" data-translate="${p.nombre || "Producto"}">
+              ${p.nombre || "Producto"}
+            </p>
             <div class="mc-meta">${fmt(p.precio)} c/u</div>
             <div class="mc-qty">
               <button type="button" class="qty-minus">−</button>
@@ -285,6 +302,10 @@
       `
         )
         .join("");
+        if (window.currentLang && typeof applyTranslation === "function") {
+        applyTranslation(window.currentLang);
+      }
+
 
       totalEl.textContent = fmt(d.total);
 
@@ -304,6 +325,59 @@
 
       await refreshBadge();
     }
+
+   // Evento del botón del modal (1 sola vez)
+document.getElementById("btnAgregarModal").addEventListener("click", async () => {
+  
+  // Obtiene el producto seleccionado global
+  const prod = window.__productoSeleccionado;
+  if (!prod) return;
+
+  // Leer listboxes
+  const selects = document.querySelectorAll("#modalOpcionesWrap select");
+
+  let extraNombre = selects.length
+    ? " (" + [...selects].map(s => s.value).join(", ") + ")"
+    : "";
+
+   // ---- LEER TAMAÑO ----
+  const tamañoSelect = document.getElementById("selectTamaño");
+  const tamaño = tamañoSelect ? tamañoSelect.value : "Normal";  
+
+  // Nombre final con tamaño incluido
+  const nombreFinal = `${prod.nombre}${extraNombre} - ${tamaño}`;
+
+  // Enviar al carrito
+  const res = await fetch(CART_API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "add",
+      id: prod.id,
+      qty: 1,
+      nombre: nombreFinal,
+      precio: prod.precio,
+      foto: prod.foto,
+      tamano: tamaño
+    })
+  }).then(r => r.json());
+
+  if (res.ok) {
+    document.getElementById("modalOpciones").style.display = "none";
+    await refreshBadge();
+    openCart();
+    await loadMiniCart();
+  } else {
+    alert("Error al agregar al carrito");
+  }
+});
+
+
+// Botón cerrar modal
+document.getElementById("btnCerrarModal").addEventListener("click", () => {
+  document.getElementById("modalOpciones").style.display = "none";
+});
+
 
     async function setQty(id, qty) {
       const r = await j(CART_API, {
@@ -325,45 +399,58 @@
       await setQty(id, cur + delta);
     }
 
-    // click "🛒" en tarjeta producto => agregar al carrito
-    document.addEventListener("click", async (e) => {
+    // click "🛒" en tarjeta producto => abrir modal de personalización
+    document.addEventListener("click", (e) => {
       const btn = e.target.closest(".ts-cart");
       if (!btn) return;
 
       const card = btn.closest(".ts-card");
       if (!card) return;
 
-      const id = card.dataset.id || "";
-      const nombre = card.dataset.name || "Producto";
-      const precio = parseFloat(card.dataset.price || "0") || 0;
-      const foto = card.dataset.foto || IMG_PLACEHOLDER;
+      // Guardamos info temporal del producto
+      const p = window.__productoSeleccionado = {
+        id: card.dataset.id,
+        nombre: card.dataset.name,
+        precio: parseFloat(card.dataset.price || 0),
+        foto: card.dataset.foto,
+        listboxes: card.dataset.listboxes ? JSON.parse(card.dataset.listboxes) : []
+      };
 
-      try {
-        const r = await fetch(CART_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "add",
-            id,
-            qty: 1,
-            nombre,
-            precio,
-            foto,
-          }),
-        }).then((x) => x.json());
+      // Reconstruir selects dinámicos
+      const opcionesWrap = document.getElementById("modalOpcionesWrap");
+      opcionesWrap.innerHTML = ""; // limpiar
 
-        if (r?.ok) {
-          await refreshBadge();
-          openCart();
-          await loadMiniCart();
-        } else {
-          alert(r?.error || "No se pudo añadir al carrito.");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Error de red al añadir al carrito.");
+      (p.listboxes || []).forEach(lb => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "modal-field";
+
+        wrapper.innerHTML = `
+          <label data-translate="${lb.nombre}">${lb.nombre}</label>
+          <select data-lbid="${lb.id}">
+            ${lb.opciones.map(opt => `
+              <option value="${opt.opcion}" data-opid="${opt.id}" data-translate="${opt.opcion}">
+                ${opt.opcion}
+              </option>
+            `).join("")}
+          </select>
+        `;
+
+        opcionesWrap.appendChild(wrapper);
+      });
+
+      // Mostrar modal
+      document.getElementById("modalProductoNombre").textContent =
+        "Personalizar " + p.nombre;
+
+      document.getElementById("modalOpciones").style.display = "flex";
+      console.log("Array de opciones del producto seleccionado:", p.listboxes);
+      // Llamamos a la traducción de los labels y opciones dinámicos
+      if (window.currentLang && typeof applyTranslation === "function") {
+          applyTranslation(window.currentLang);
       }
     });
+
+
 
     // inicial
     refreshBadge();

@@ -106,7 +106,7 @@ $categoria_result = $conn->query($categoria_query);
 
     <!-- Buscador -->
     <form method="GET" action="catalogo.php" style="margin-bottom:20px;">
-      <input type="text" name="buscar" placeholder="Buscar producto..." 
+      <input type="text" name="buscar" data-translate-placeholder="Buscar producto..." placeholder="Buscar producto..." 
              value="<?php echo htmlspecialchars($buscar); ?>"
              style="padding:8px; border:1px solid #ccc; border-radius:6px; width:60%;">
       <?php if($categoria): ?>
@@ -131,26 +131,49 @@ $categoria_result = $conn->query($categoria_query);
 
 
     <!-- GRID DE PRODUCTOS -->
-    <div class="hotdrinks__grid">
+    <div class="hotdrinks__grid" data-autoload="ajax" data-categoria="<?= htmlspecialchars($categoria) ?>">
+
       <?php if (count($productos) > 0): ?>
         <?php foreach ($productos as $producto): ?>
-          <article class="ts-card" data-id="<?= htmlspecialchars($producto['idp']) ?>">
-            <div class="ts-stage">
-              <img src="<?= htmlspecialchars($producto['ruta_imagen'] ?? '../../images/placeholder.png') ?>"
-                   alt="<?= htmlspecialchars($producto['namep']) ?>"
-                   onerror="this.onerror=null;this.src='../../images/placeholder.png';" />
-            </div>
-            <h4 class="ts-name" data-translate="<?= htmlspecialchars($producto['namep']) ?>">
-              <?= htmlspecialchars($producto['namep']) ?>
-            </h4>
-            <p class="ts-desc" data-translate="<?= htmlspecialchars($producto['descripcion'] ?? '') ?>">
-              <?= htmlspecialchars($producto['descripcion'] ?? '') ?>
-            </p>
-            <span data-translate="<?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>">
-              <?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>
-            </span>
+         <article class="ts-card"
+              data-id="<?= htmlspecialchars($producto['idp']) ?>"
+              data-name="<?= htmlspecialchars($producto['namep']) ?>"
+              data-price="<?= htmlspecialchars($producto['precio']) ?>"
+              data-foto="<?= htmlspecialchars($producto['ruta_imagen'] ?? '../../images/placeholder.png') ?>"
+          >
+
+              <div class="ts-stage">
+                <img src="<?= htmlspecialchars($producto['ruta_imagen'] ?? '../../images/placeholder.png') ?>"
+                    alt="<?= htmlspecialchars($producto['namep']) ?>"
+                    onerror="this.onerror=null;this.src='../../images/placeholder.png';" />
+              </div>
+
+              <h4 class="ts-name" data-translate="<?= htmlspecialchars($producto['namep'] ?? '', ENT_QUOTES) ?>">
+                <?= htmlspecialchars($producto['namep'] ?? '') ?>
+              </h4>
+
+              <p class="ts-desc" data-translate="<?= htmlspecialchars($producto['descripcion'] ?? '', ENT_QUOTES) ?>">
+                <?= htmlspecialchars($producto['descripcion'] ?? '') ?>
+              </p>
+
+
+              <span data-translate="<?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>">
+                <?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>
+              </span>
+
+              <!-- NUEVO: STOCK -->
+              <p class="ts-stock">
+                <strong>Stock:</strong> <?= htmlspecialchars($producto['STOCK']) ?>
+              </p>
+
+              <!-- NUEVO: PRECIO -->
+              <p class="ts-price">
+                <strong data-translate="Precio">Precio:</strong> $<?= number_format($producto['precio'], 2) ?> MXN
+              </p>
+
               <button class="ts-cart">🛒</button>
           </article>
+
         <?php endforeach; ?>
       <?php else: ?>
         <p style="grid-column:1/-1; text-align:center; opacity:.7; padding:16px;" data-translate="No hay productos en esta categoría.">
@@ -158,6 +181,30 @@ $categoria_result = $conn->query($categoria_query);
         </p>
       <?php endif; ?>
     </div>
+
+<!-- MODAL DE OPCIONES DINÁMICO -->
+<div class="modal-opciones" id="modalOpciones" style="display:none;">
+  <div class="modal-content">
+    
+    <h3 id="modalProductoNombre" data-translate="Personalizar producto">Personalizar producto</h3>
+
+    <!-- AQUÍ SE GENERAN LAS LISTBOXES DESDE LA BD -->
+    <div id="modalOpcionesWrap"></div>
+    <!-- SELECT DE TAMAÑO -->
+    <label style="font-weight:bold; margin-top:10px;" data-translate="Tamaño">Tamaño</label>
+    <select id="selectTamaño" style="width:100%; padding:8px; border-radius:6px; margin-top:5px;">
+        <option value="Chico" data-translate="Pequeño">Pequeño</option>
+        <option value="Mediano" data-translate="Mediano">Mediano</option>
+        <option value="Grande" data-translate="Grande">Grande</option>
+    </select>
+
+
+    <button id="btnAgregarModal" data-translate="Agregar al carrito">Agregar al carrito</button>
+    <button id="btnCerrarModal" data-translate="Cancelar">Cancelar</button>
+
+  </div>
+</div>
+
 
     <div class="hotdrinks__divider">
       <span class="line"></span>
@@ -200,6 +247,9 @@ $categoria_result = $conn->query($categoria_query);
         <a href="carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
       </footer>
     </aside>
+<script>
+  window.onload = () => applyTranslation(window.currentLang);
+</script>    
 </body>
 <script>
   window.CART_API_URL = '../catalogo/cart_api.php';

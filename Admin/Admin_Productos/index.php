@@ -165,9 +165,6 @@ include "../../conexion.php";
                 </span>
                 <span class="product-price">$<?php echo number_format($row['precio'], 2); ?></span>
                 <span class="product-stock">Stock: <?php echo htmlspecialchars($row['STOCK']); ?></span>
-                <span class="product-sabor" data-translate="<?php echo $sabor_texto; ?>">
-                    <?php echo $sabor_texto; ?>
-                </span>
                 <span class="product-descripcion" data-translate="<?php echo htmlspecialchars($row['descripcion']); ?>">
                     <?php echo htmlspecialchars($row['descripcion']); ?>
                 </span>
@@ -205,13 +202,6 @@ include "../../conexion.php";
 
       <select id="categoriaSelect" name="categoria[]" multiple required></select>
 
-      <select name="sabor" required>
-        <option value="" data-translate="Selecciona tamaño">Selecciona tamaño</option>
-        <option value="1" data-translate="Pequeño">Pequeño</option>
-        <option value="2" data-translate="Mediano">Mediano</option>
-        <option value="3" data-translate="Grande">Grande</option>
-      </select>
-
       <h3 data-translate="Opciones Personalizadas (Opcional)">Opciones Personalizadas (Opcional)</h3>
       <div id="listboxContainer" style="max-height:300px; overflow-y:auto;"></div>
 
@@ -236,13 +226,6 @@ include "../../conexion.php";
       <span data-translate="Precio final:">Precio final: $<span id="editPrecioFinal">0.00</span></span>
 
       <select id="editCategoria" name="categoria[]" multiple required></select>
-
-      <select id="editSabor" name="sabor" required>
-        <option value="" data-translate="Selecciona tamaño">Selecciona tamaño</option>
-        <option value="1" data-translate="Pequeño">Pequeño</option>
-        <option value="2" data-translate="Mediano">Mediano</option>
-        <option value="3" data-translate="Grande">Grande</option>
-      </select>
 
       <h3 data-translate="Opciones Personalizadas">Opciones Personalizadas</h3>
       <div id="editListboxContainer"></div>
@@ -314,12 +297,17 @@ window.onclick = e => { if(e.target.classList.contains('modal')) e.target.style.
 
 // --- Selección solo con click ---
 function enableFriendlyMultiSelect(select) {
-    select.addEventListener('mousedown', e => {
+    // Solo activar si el select es multiple
+    if (!select.hasAttribute('multiple')) return;
+
+    select.addEventListener('mousedown', function (e) {
         e.preventDefault();
-        e.target.selected = !e.target.selected;
+        let option = e.target;
+        option.selected = !option.selected;
         select.dispatchEvent(new Event('change'));
     });
 }
+
 
 // --- Cargar categorías ---
 function cargarCategorias(selectId, seleccionadas = []) {
@@ -469,9 +457,6 @@ document.querySelectorAll('.product-card .edit').forEach(btn => {
         // Categorías seleccionadas
         const cat_ids = card.dataset.categorias_ids ? card.dataset.categorias_ids.split(',') : [];
         cargarCategorias('#editCategoria', cat_ids);
-        // Asignar tamaño actual
-        const sabor = card.dataset.sabor; // 1,2 o 3
-        document.getElementById('editSabor').value = sabor;
 
         const listboxData = card.dataset.listbox ? JSON.parse(card.dataset.listbox) : {};
         cargarListboxes('#editListboxContainer', listboxData);
