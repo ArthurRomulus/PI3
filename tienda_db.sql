@@ -340,6 +340,8 @@ CREATE TABLE `pedido_items` (
     ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- --------------------------------------------------------
+--fin pedidos y pedidos items
+--
 
 --
 -- Estructura de tabla para la tabla `productos`
