@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descripcion = trim($_POST['descripcion'] ?? '');
     $precioBase = (float)$_POST['precio'];
     $categorias = $_POST['categoria'] ?? [];
-    $sabor = (int)$_POST['sabor'];
     $stock = isset($_POST['stock']) ? (int)$_POST['stock'] : 0;
 
     // --- Subida de imagen ---
@@ -22,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // --- Insertar producto principal ---
-    $sql = "INSERT INTO productos (namep, precio, sabor, ruta_imagen, descripcion, STOCK) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO productos (namep, precio, ruta_imagen, descripcion, STOCK) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sdsssi", $namep, $precioBase, $sabor, $imagen, $descripcion, $stock);
+    $stmt->bind_param("sdssi", $namep, $precioBase, $imagen, $descripcion, $stock);
 
     if ($stmt->execute()) {
         $id_producto = $stmt->insert_id;

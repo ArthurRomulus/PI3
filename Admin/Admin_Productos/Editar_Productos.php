@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $namep = trim($_POST['name']);
     $descripcion = trim($_POST['descripcion'] ?? '');
     $precioBase = (float)$_POST['precio'];
-    $sabor = (int)$_POST['sabor'];
     $categorias = $_POST['categoria'] ?? [];
     $stock = isset($_POST['stock']) ? (int)$_POST['stock'] : 0;
 
@@ -23,13 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- Actualizar tabla productos ---
     if ($imagen) {
-        $sql = "UPDATE productos SET namep=?, descripcion=?, precio=?, sabor=?, ruta_imagen=?, STOCK=? WHERE idp=?";
+        $sql = "UPDATE productos SET namep=?, descripcion=?, precio=?, ruta_imagen=?, STOCK=? WHERE idp=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdiii", $namep, $descripcion, $precioBase, $sabor, $imagen, $stock, $id);
+        $stmt->bind_param("ssdssi", $namep, $descripcion, $precioBase, $imagen, $stock, $id);
     } else {
-        $sql = "UPDATE productos SET namep=?, descripcion=?, precio=?, sabor=?, STOCK=? WHERE idp=?";
+        $sql = "UPDATE productos SET namep=?, descripcion=?, precio=?, STOCK=? WHERE idp=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdiii", $namep, $descripcion, $precioBase, $sabor, $stock, $id);
+        $stmt->bind_param("ssdii", $namep, $descripcion, $precioBase, $stock, $id);
     }
     $stmt->execute();
     $stmt->close();

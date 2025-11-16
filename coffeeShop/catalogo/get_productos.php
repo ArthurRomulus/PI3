@@ -1,10 +1,38 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // get_productos.php — con precio_total, sabores y tamanos
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
-require_once __DIR__ . '/db.php';
+include "../../conexion.php";
+$mysqli = $conn;
+
+// --- Obtener todas las categorías de productos ---
+$sql_categorias = "
+SELECT DISTINCT
+    CAST(c.id_categoria AS CHAR) AS categoria_id,
+    c.nombrecategoria AS nombrecategoria
+FROM categorias c
+LEFT JOIN producto_categorias pc ON pc.id_categoria = c.id_categoria
+LEFT JOIN productos p ON p.categoria = c.id_categoria
+ORDER BY nombrecategoria ASC
+";
+
+
+$result_cats = $mysqli->query($sql_categorias);
+$categorias = [];
+if ($result_cats) {
+    while ($row = $result_cats->fetch_assoc()) {
+        $categorias[] = [
+            'id'     => $row['categoria_id'],
+            'nombre' => $row['nombrecategoria']
+        ];
+    }
+}
+
 
 // Filtros y opciones
 $categoria = isset($_GET['categoria']) ? trim($_GET['categoria']) : '';
@@ -42,30 +70,39 @@ if ($tamanoOverrideId !== null) {
 
 // --- SQL base con JOINs ---
 $sql = "SELECT 
-          p.idp,
-          p.namep,
-          p.ruta_imagen,
-          p.precio,                 -- base
-          p.categoria,
-          c.nombrecategoria AS nombre_categoria,
-          p.sabor,                  -- default del producto
-          s.nombre_sabor    AS sabor_nombre,
-          s.precio_extra    AS sabor_precio_extra,
-          s.tipo_modificador AS sabor_tipo_modificador,
-          p.tamano_defecto,        -- default del producto
-          t.nombre_tamano   AS tamano_nombre,
-          t.precio_aumento  AS tamano_precio_aumento,
-          p.VENTAS,
-          p.STOCK,
-          p.descripcion
-        FROM productos p
-        LEFT JOIN categorias c 
-          ON (p.categoria = c.id_categoria OR p.categoria = c.nombrecategoria)
-        LEFT JOIN sabores s 
-          ON p.sabor = s.id_sabor
-        LEFT JOIN tamanos t
-          ON p.tamano_defecto = t.tamano_id
-        WHERE 1=1";
+  p.idp,
+  p.namep,
+  p.ruta_imagen,
+  p.precio,
+  p.categoria AS categoria_principal_id,
+  c.nombrecategoria AS categoria_principal_nombre,
+  GROUP_CONCAT(DISTINCT c2.nombrecategoria) AS categorias_secundarias,
+  p.sabor,
+  s.nombre_sabor AS sabor_nombre,
+  s.precio_extra AS sabor_precio_extra,
+  s.tipo_modificador AS sabor_tipo_modificador,
+  p.tamano_defecto,
+  t.nombre_tamano AS tamano_nombre,
+  t.precio_aumento AS tamano_precio_aumento,
+  p.VENTAS,
+  p.STOCK,
+  p.descripcion
+FROM productos p
+LEFT JOIN categorias c 
+       ON p.categoria = c.id_categoria
+LEFT JOIN producto_categorias pc 
+       ON p.idp = pc.idp
+LEFT JOIN categorias c2 
+       ON pc.id_categoria = c2.id_categoria
+LEFT JOIN sabores s 
+       ON p.sabor = s.id_sabor
+LEFT JOIN tamanos t 
+       ON p.tamano_defecto = t.tamano_id
+WHERE 1=1
+";
+
+
+
 
 $params = [];
 $types  = '';
@@ -137,9 +174,7 @@ if ($q !== '') {
 }
 
 // Orden y paginación
-$sql .= " ORDER BY p.namep ASC LIMIT ? OFFSET ?";
-$params[] = $limit;  $types .= 'i';
-$params[] = $offset; $types .= 'i';
+$sql .= " GROUP BY p.idp ORDER BY p.idp ASC";
 
 // --- Ejecutar COUNT ---
 $stmt_count = $mysqli->prepare($sql_count);
@@ -226,19 +261,82 @@ if ($rutaImg === '') {
 }
 
 
+// Obtener listboxes del producto
+$listboxes = [];
+$qLB = $mysqli->prepare("
+    SELECT lb.id AS id, lb.nombre AS nombre
+    FROM producto_listbox pl
+    INNER JOIN listboxes lb ON pl.listbox_id = lb.id
+    WHERE pl.producto_id = ?
+");
+$qLB->bind_param('i', $idp);
+$qLB->execute();
+$resLB = $qLB->get_result();
+
+while ($lb = $resLB->fetch_assoc()) {
+
+    // Obtener opciones del listbox
+    $qOps = $mysqli->prepare("
+        SELECT id, valor AS opcion, precio 
+        FROM listbox_opciones
+        WHERE listbox_id = ?
+        ORDER BY valor ASC
+    ");
+    $qOps->bind_param('i', $lb['id']);
+    $qOps->execute();
+    $resOps = $qOps->get_result();
+
+    $opciones = [];
+    while ($op = $resOps->fetch_assoc()) {
+        $opciones[] = [
+            'id'     => (int)$op['id'],
+            'opcion' => $op['opcion'],
+            'precio' => (float)$op['precio'],
+        ];
+    }
+
+    $listboxes[] = [
+        'id'       => (int)$lb['id'],
+        'nombre'   => $lb['nombre'],
+        'opciones' => $opciones
+    ];
+
+    $qOps->close();
+}
+$qLB->close();
+error_log("LISTBOXES DEL PRODUCTO $idp => " . json_encode($listboxes, JSON_UNESCAPED_UNICODE));
+
+// Categorías combinadas
+$categoriasProd = [];
+
+// Categoría principal
+if (!empty($row['categoria_principal_nombre'])) {
+    $categoriasProd[] = $row['categoria_principal_nombre'];
+}
+
+// Categorías secundarias (si existen)
+if (!empty($row['categorias_secundarias'])) {
+    $sec = explode(',', $row['categorias_secundarias']);
+    $categoriasProd = array_merge($categoriasProd, $sec);
+}
+
+// Eliminar duplicados y limpiar espacios
+$categoriasProd = array_unique(array_map('trim', $categoriasProd));
+
+
 $items[] = [
   'idp'               => $idp,
   'namep'             => $row['namep'],
   'ruta_imagen'       => $rutaImg,
   'precio_base'       => $precioBase,
-  'categoria'         => $row['categoria'],
-  'nombre_categoria'  => $row['nombre_categoria'] ?? 'Sin categoría',
+  'categorias' => array_map(fn($c) => ['nombre' => $c], $categoriasProd),
   'sabor'             => $saborUsed,   // objeto con id/nombre/precio_extra/tipo_modificador
   'tamano'            => $tamanoUsed,  // objeto con id/nombre/precio_aumento
   'precio_total'      => $precioTotal,
   'VENTAS'            => $ventas,
   'STOCK'             => $stock,
   'descripcion'       => $row['descripcion'],
+  'listboxes' => $listboxes ?? [], 
 ];
 
 }
@@ -249,5 +347,6 @@ echo json_encode([
   'page'  => $page,
   'limit' => $limit,
   'total' => $total,
-  'items' => $items
+  'items' => $items,
+  'categorias'  => $categorias
 ], JSON_UNESCAPED_UNICODE);

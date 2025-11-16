@@ -155,14 +155,6 @@ body {
     right: 5px;
 }
 
-.product-name {
-  display: block;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #1C1B1F;
-}
-
 .product-actions {
   display: flex;
   justify-content: center;
@@ -177,18 +169,31 @@ body {
   transition: all 0.3s ease;
 }
 
-.product-sabor {
-    display: block;
-    margin-top: 5px; /* opcional, un poco de espacio */
-    font-size: 1em; /* opcional, más pequeño que el precio */
-    color: #555; /* opcional, gris oscuro */
+
+
+.product-card span {
+    display: block;       /* Fuerza salto de línea */
+    margin-bottom: 4px;   /* Espacio entre cada línea */
 }
 
-.product-categoria {
-    display: block;
-    font-size: 1em;
-    color: #777; /* gris para diferenciar del nombre */
-    margin-bottom: 3px;
+/* Si quieres diferenciar estilo, puedes usar esto */
+.product-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.product-price {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.product-stock {
+    color: #000000;
+}
+
+.product-descripcion {
+    font-size: 0.9em;
+    color: #000000;
 }
 
 
