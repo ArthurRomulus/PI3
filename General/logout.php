@@ -21,6 +21,6 @@ if (ini_get("session.use_cookies")) {
 }
 
 // 🔹 Redirige al login principal (ruta absoluta)
-header("Location: /PI3/General/login.php");
+header("Location: /PI3/General/login.html");
 exit();
 ?>
