@@ -297,31 +297,48 @@ INSERT INTO `opciones_predefinidas` (`id_opcion_predefinida`, `nombre_opcion`, `
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pedidos`
+-- Estructura de tabla para la tabla `pedidos y pedidos items`
 --
+
+DROP TABLE IF EXISTS `pedido_items`;
+DROP TABLE IF EXISTS `pedidos`;
 
 CREATE TABLE `pedidos` (
-  `id_pedido` int(11) NOT NULL,
+  `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
   `userid` int(11) NOT NULL,
-  `fecha_pedido` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sucursal` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `total` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `estado` enum('Completado','En preparación','Cancelado') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'En preparación'
+  `total` decimal(10,2) NOT NULL,
+  `estado` varchar(50) NOT NULL DEFAULT 'Proceso',
+  `metodo_pago` varchar(50) NOT NULL,
+  `tipo_pedido` varchar(50) NOT NULL,
+  `id_pago_stripe` varchar(255) DEFAULT NULL,
+  `fecha_pedido` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_pedido`),
+  KEY `userid_idx` (`userid`),
+  CONSTRAINT `fk_pedido_usuario` 
+    FOREIGN KEY (`userid`) 
+    REFERENCES `usuarios`(`userid`) 
+    ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pedido_items`
---
 
 CREATE TABLE `pedido_items` (
-  `id_item` int(11) NOT NULL,
+  `id_pedido_item` int(11) NOT NULL AUTO_INCREMENT,
   `id_pedido` int(11) NOT NULL,
-  `producto_nombre` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `cantidad` int(11) NOT NULL DEFAULT '1'
+  `id_producto` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `precio_unitario` decimal(10,2) NOT NULL,
+  `modificadores_desc` text DEFAULT NULL,
+  PRIMARY KEY (`id_pedido_item`),
+  KEY `id_pedido_idx` (`id_pedido`),
+  KEY `id_producto_idx` (`id_producto`),
+  CONSTRAINT `fk_item_pedido` 
+    FOREIGN KEY (`id_pedido`) 
+    REFERENCES `pedidos`(`id_pedido`) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_item_producto` 
+    FOREIGN KEY (`id_producto`) 
+    REFERENCES `productos`(`idp`) 
+    ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 -- --------------------------------------------------------
 
 --
