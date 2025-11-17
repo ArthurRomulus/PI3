@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-11-2025 a las 01:30:11
+-- Tiempo de generación: 17-11-2025 a las 08:23:02
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -127,7 +127,9 @@ INSERT INTO `listboxes` (`id`, `nombre`) VALUES
 (5, 'Sabor adicional'),
 (6, 'Relleno'),
 (7, 'Cobertura'),
-(8, 'Sabor');
+(8, 'Sabor'),
+(9, 'Tipo de sexito'),
+(10, 'Tipo de muaa');
 
 -- --------------------------------------------------------
 
@@ -194,7 +196,11 @@ INSERT INTO `listbox_opciones` (`id`, `listbox_id`, `valor`, `precio`) VALUES
 (106, 8, 'Chocolate', 22.00),
 (107, 8, 'Caramelo salado', 23.00),
 (108, 8, 'Menta navideña', 24.00),
-(109, 8, 'Matcha', 25.00);
+(109, 8, 'Matcha', 25.00),
+(110, 9, 'sexito con mua ', 3.00),
+(111, 9, 'sexito sin mua', 5.00),
+(112, 10, 'con lengua', 5.00),
+(113, 10, 'sin lengua', 2.00);
 
 -- --------------------------------------------------------
 
@@ -316,60 +322,58 @@ INSERT INTO `opciones_predefinidas` (`id_opcion_predefinida`, `nombre_opcion`, `
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pedidos y pedidos items`
+-- Estructura de tabla para la tabla `pedidos`
 --
 
-DROP TABLE IF EXISTS `pedido_items`;
-DROP TABLE IF EXISTS `pedidos`;
-
 CREATE TABLE `pedidos` (
-  `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pedido` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
-
-  `total` decimal(10,2) NOT NULL,
-  `estado` varchar(50) NOT NULL DEFAULT 'Proceso',
+  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `estado` enum('Completado','En preparación','Cancelado') NOT NULL DEFAULT 'En preparación',
   `metodo_pago` varchar(50) NOT NULL,
   `tipo_pedido` varchar(50) NOT NULL,
   `id_pago_stripe` varchar(255) DEFAULT NULL,
   `fecha_pedido` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_pedido`),
-  KEY `userid_idx` (`userid`),
-  CONSTRAINT `fk_pedido_usuario` 
-    FOREIGN KEY (`userid`) 
-    REFERENCES `usuarios`(`userid`) 
-    ON DELETE NO ACTION ON UPDATE NO ACTION
-
-  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
-  `sucursal` varchar(100) NOT NULL,
-  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `estado` enum('Completado','En preparación','Cancelado') NOT NULL DEFAULT 'En preparación'
+  `sucursal` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`id_pedido`, `userid`, `total`, `estado`, `metodo_pago`, `tipo_pedido`, `id_pago_stripe`, `fecha_pedido`, `sucursal`) VALUES
+(1, 19, 139.20, '', 'Efectivo', 'En Local', NULL, '2025-11-17 05:30:01', NULL),
+(2, 19, 85.84, '', 'Tarjeta', 'En Local', 'ch_3SUL7h6xsnAsFl7H0W0gofY0', '2025-11-17 05:37:10', NULL),
+(3, 19, 70.76, '', 'Efectivo', 'En Local', NULL, '2025-11-17 05:37:58', NULL),
+(4, 19, 85.84, '', 'Tarjeta', 'En Local', 'ch_3SULBg6xsnAsFl7H1EXY6AKu', '2025-11-17 05:41:17', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedido_items`
+--
 
 CREATE TABLE `pedido_items` (
-  `id_pedido_item` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pedido_item` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 1,
   `precio_unitario` decimal(10,2) NOT NULL,
   `modificadores_desc` text DEFAULT NULL,
-  PRIMARY KEY (`id_pedido_item`),
-  KEY `id_pedido_idx` (`id_pedido`),
-  KEY `id_producto_idx` (`id_producto`),
-  CONSTRAINT `fk_item_pedido` 
-    FOREIGN KEY (`id_pedido`) 
-    REFERENCES `pedidos`(`id_pedido`) 
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_item_producto` 
-    FOREIGN KEY (`id_producto`) 
-    REFERENCES `productos`(`idp`) 
-    ON DELETE NO ACTION ON UPDATE NO ACTION
-
-  `producto_nombre` varchar(150) NOT NULL,
-  `cantidad` int(11) NOT NULL DEFAULT 1
+  `producto_nombre` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
--- --------------------------------------------------------
---fin pedidos y pedidos items
+
 --
+-- Volcado de datos para la tabla `pedido_items`
+--
+
+INSERT INTO `pedido_items` (`id_pedido_item`, `id_pedido`, `id_producto`, `cantidad`, `precio_unitario`, `modificadores_desc`, `producto_nombre`) VALUES
+(1, 1, 52, 2, 60.00, '250ML, Café Americano, Leche deslactosada', NULL),
+(2, 2, 53, 1, 74.00, '250ML, Latte, Leche deslactosada', NULL),
+(3, 3, 52, 1, 61.00, '250ML, Café Americano, Leche de avena', NULL),
+(4, 4, 53, 1, 74.00, '250ML, Latte, Leche deslactosada', NULL);
+
+-- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `productos`
@@ -393,45 +397,30 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `sabor`, `tamano_defecto`, `VENTAS`, `STOCK`, `descripcion`) VALUES
-(51, 'Americano', '../../Images/CafeAmer.png', 40, 'Bebidas frias', 1, 1, 1, 0, NULL),
-(52, 'Espresso', '../../Images/Espresso.png', 40, 'Bebidas calientes', 1, 1, 0, 1, NULL),
-(53, 'Macchiato', '../../Images/Macchi.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(54, 'Capucchino Entero', '../../Images/CafeCapu.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(55, 'Lechero (Entera)', '../../Images/Lechero.png', 42, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(57, 'Moka', '../../Images/Moka.png', 50, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(58, 'Matcha2', '../../Images/Matchalatte.png', 65, 'Cafés', 1, 1, 0, 0, NULL),
-(59, 'Capucchino Deslactos', '../../Images/CafeCapu.png', 55, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(60, 'Irlandés', '../../Images/Irlandes.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(61, 'Latte Entero', '../../Images/Latte.png', 45, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(62, 'Latter Deslactosado', '../../Images/Latte.png', 42, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(63, 'Latte Avena', '../../Images/Latte.png', 40, 'Bebidas calientes', 4, 1, 0, 0, NULL),
-(64, 'Latte Almendra', '../../Images/Latte.png', 45, 'Bebidas calientes', 5, 1, 0, 0, NULL),
-(65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(67, 'Doble', '../../Images/Espresso.png', 55, 'Bebidas calientes', 1, 1, 0, 0, NULL),
-(68, 'Chocolate caliente (Entero)', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 2, 1, 0, 0, NULL),
-(69, 'Chocolate caliente Deslactosad', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 3, 1, 0, 0, NULL),
-(80, 'Chocolate caliente Avena', '../../Images/ChocoCali.png', 30, 'Bebidas calientes', 4, 1, 0, 0, NULL),
-(81, 'Frappé clásico Entero', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(82, 'Frappé clásico Deslactosado', '../../Images/FrappeClasic.png', 60, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(83, 'Frappé moka Entero', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(84, 'Frappé moka Deslactosado', '../../Images/FrappMoka.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(85, 'Frappé caramel Entero', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(86, 'Frappé caramel Deslactosado', '../../Images/FrapCaramel.png', 65, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(87, 'Frappé cookies n cream Entero', '../../Images/FrappCnC.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(88, 'Frappé cookies n cream Deslactosado', '../../Images/FrappeClasic.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(89, 'Frappé matcha Entero', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(90, 'Frappé matcha Deslactosado', '../../Images/FrappMatcha.png', 80, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(91, 'Frappé espresso Entero', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 2, 1, 0, 0, NULL),
-(92, 'Frappé espresso Deslactosado', '../../Images/FrappEspresso.png', 75, 'Bebidas frias', 3, 1, 0, 0, NULL),
-(93, 'Iced tea Negro', '../../Images/IcedTeaBlack.png', 45, 'Bebidas frias', 7, 1, 0, 0, NULL),
-(94, 'Iced tea Limón', '../../Images/IcedTea.png', 45, 'Bebidas frias', 8, 1, 0, 0, NULL),
-(95, 'Limonada', '../../Images/Limonadas.png', 40, 'Bebidas frias', 1, 1, 0, 0, NULL),
-(96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 0, 0, NULL),
-(97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 0, NULL),
-(98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 0, NULL),
-(131, 'cafesittiitti', '../../Images/6902957bd3840_Cafe latte.png', 65, NULL, 2, 1, 0, 0, 'contiene mas café y café y cafeee'),
-(132, 'Café sion sion', '../../Images/690295b025e7d_Cafe lechero.png', 58, NULL, 2, 1, 0, 0, 'la pension sion sion'),
+(51, 'Americano', '../../Images/CafeAmer.png', 40, 'Bebidas frias', 1, 1, 1, 10, ''),
+(52, 'Espresso', '../../Images/691abf179a42e_Cafe expresso.png', 40, 'Bebidas calientes', 1, 1, 0, 10, ''),
+(53, 'Macchiato', '../../Images/Macchi.png', 50, 'Bebidas calientes', 1, 1, 0, 10, ''),
+(54, 'Capucchino Entero', '../../Images/CafeCapu.png', 45, 'Bebidas calientes', 2, 1, 0, 10, ''),
+(55, 'Lechero (Entera)', '../../Images/Lechero.png', 42, 'Bebidas calientes', 2, 1, 0, 10, ''),
+(57, 'Moka', '../../Images/Moka.png', 50, 'Bebidas calientes', 1, 1, 0, 10, ''),
+(58, 'Matcha2', '../../Images/Matchalatte.png', 65, 'Cafés', 1, 1, 0, 10, ''),
+(59, 'Capucchino', '../../Images/CafeCapu.png', 55, 'Bebidas calientes', 3, 1, 0, 10, ''),
+(60, 'Irlandés', '../../Images/Irlandes.png', 70, 'Bebidas calientes', 1, 1, 0, 10, ''),
+(61, 'Latte', '../../Images/691abf353fef5_Cafe latte.png', 45, 'Bebidas calientes', 2, 1, 0, 10, ''),
+(65, 'Carajillo', '../../Images/Carajillo.png', 70, 'Bebidas calientes', 1, 1, 0, 10, ''),
+(66, 'Matchalatte', '../../Images/Matchalatte.png', 60, 'Bebidas calientes', 1, 1, 0, 10, ''),
+(69, 'Chocolate caliente', '../../Images/691abf4a4799b_Chocolate caliente.png', 30, 'Bebidas calientes', 3, 1, 0, 10, ''),
+(81, 'Frappé', '../../Images/691abf5f3c53c_Frappé clasico.png', 60, 'Bebidas frias', 2, 1, 0, 10, ''),
+(83, 'Frappé moka', '../../Images/691abf71129cc_Frappé moka.png', 65, 'Bebidas frias', 2, 1, 0, 10, ''),
+(86, 'Frappé caramel', '../../Images/691abf8266d93_Frappé caramel.png', 65, 'Bebidas frias', 3, 1, 0, 10, ''),
+(87, 'Frappé cookies n cream', '../../Images/FrappCnC.png', 75, 'Bebidas frias', 2, 1, 0, 10, ''),
+(89, 'Frappé matcha', '../../Images/691abf96658bb_Frappé matcha.png', 80, 'Bebidas frias', 2, 1, 0, 10, ''),
+(91, 'Frappé espresso', '../../Images/691abfa9d80d9_Frappé espresso.png', 75, 'Bebidas frias', 2, 1, 0, 10, ''),
+(93, 'Iced tea Negro', '../../Images/IcedTeaBlack.png', 45, 'Bebidas frias', 7, 1, 0, 10, ''),
+(94, 'Iced tea Limón', '../../Images/IcedTea.png', 45, 'Bebidas frias', 8, 1, 0, 10, ''),
+(96, 'Té Manzanilla', '../../Images/Te.png', 35, 'Bebidas calientes', 6, 1, 0, 10, ''),
+(97, 'Té Negro', '../../Images/TeCali.png', 35, 'Bebidas calientes', 7, 1, 0, 10, ''),
+(98, 'Té Limón', '../../Images/Te.png', 35, 'Bebidas calientes', 8, 1, 0, 10, ''),
 (133, 'Panini de aguacate', '../../Images/panini_aguacate.png', 90, '4', 1, 1, 0, 20, '40% aguacate, 20% verduras, 20% pan, 20% queso'),
 (134, 'Panini caprese', '../../Images/panini_caprese.png', 90, '4', 1, 1, 0, 20, '40% jitomate, 30% mozzarella, 20% albahaca, 10% pan'),
 (135, 'Panini pavo y queso', '../../Images/panini_pavo_queso.png', 100, '4', 1, 1, 0, 20, '45% pavo, 25% queso, 20% pan, 10% mostaza'),
@@ -443,39 +432,14 @@ INSERT INTO `productos` (`idp`, `namep`, `ruta_imagen`, `precio`, `categoria`, `
 (141, 'Sándwich de queso', '../../Images/sandwich_queso.png', 100, '4', 1, 1, 0, 20, '50% queso, 25% pan, 15% mantequilla, 10% especias'),
 (142, 'Sándwich serrano', '../../Images/sandwich_serrano.png', 100, '4', 1, 1, 0, 20, '40% jamón serrano, 30% queso, 20% pan, 10% tomate'),
 (143, 'Sándwich de tocino', '../../Images/sandwich_tocino.png', 100, '4', 1, 1, 0, 20, '40% tocino, 30% queso, 20% pan, 10% jitomate'),
-(144, 'Bagel clásico', '../../Images/BagelClasic.png', 50, '7', 1, 1, 0, 20, '50% pan de bagel, 30% queso crema, 10% mantequilla, 10% miel'),
-(145, 'Bagel clásico', '../../Images/BagelClasic.png', 50, '7', 1, 1, 0, 20, '50% pan de bagel, 30% queso crema, 10% mantequilla, 10% miel'),
+(144, 'Bagel clásico', '../../Images/691ac1527bbe7_Bagel clasico.png', 50, '7', 1, 1, 0, 20, '50% pan de bagel, 30% queso crema, 10% mantequilla, 10% miel'),
 (146, 'Brownies', '../../Images/brownies.png', 50, '7', 1, 1, 0, 20, '40% chocolate, 30% mantequilla, 20% harina, 10% nuez'),
 (147, 'Pastel de chocolate', '../../Images/pastel.png', 60, '7', 1, 1, 0, 20, '45% chocolate, 25% harina, 20% crema, 10% azúcar'),
 (148, 'Galleta casera', '../../Images/galleta_casera.png', 30, '7', 1, 1, 0, 20, '40% harina, 30% mantequilla, 20% chispas, 10% azúcar'),
 (149, 'Ensalada Caprese', '../../Images/ensalada_caprese.png', 100, '11', 1, 1, 0, 20, '40% jitomate, 30% queso mozzarella, 20% albahaca, 10% aceite de oliva'),
 (150, 'Ensalada Griega', '../../Images/ensalada_griega.png', 100, '11', 1, 1, 0, 20, '35% pepino, 30% tomate, 25% queso feta, 10% aceitunas'),
 (151, 'Ensalada Rusa', '../../Images/ensalada_rusa.png', 100, '11', 1, 1, 0, 20, '40% papa, 30% zanahoria, 20% chícharos, 10% mayonesa'),
-(152, 'Ensalada Verde', '../../Images/ensalada_verde.png', 100, '11', 1, 1, 0, 20, '40% lechuga, 30% espinaca, 20% pepino, 10% aderezo'),
-(153, 'Ultimate', '../../Images/6903fc2091d32_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'Café con sexito'),
-(154, 'Ultimate goat', '../../Images/6903ffe535d93_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'Café con secsito'),
-(155, 'Café ultimate', '../../Images/69040164497bd_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'Contiene mmuaaaa'),
-(156, 'prueba', '../../Images/69040211b5150_Cafe capuchino.png', 12, NULL, 2, 1, 0, 0, 'a'),
-(157, 'prueba', '../../Images/690403481f046_Cafe capuchino.png', 12, NULL, 2, 1, 0, 0, 'a'),
-(158, 'prueba', '../../Images/6904053dc10c6_Cafe capuchino.png', 12, NULL, 2, 1, 0, 0, 'a'),
-(159, 'prueba', '../../Images/6904060acc89f_Cafe capuchino.png', 12, NULL, 2, 1, 0, 0, 'a'),
-(161, 'Cafesoso', '../../Images/6904075684573_Cafe lechero.png', 50, NULL, 1, 1, 0, 0, 'Cafe con gogo'),
-(162, 'Cafesoso', '../../Images/69040a1cbef0e_Cafe lechero.png', 50, NULL, 1, 1, 0, 0, 'Cafe con gogo'),
-(163, 'Cafesoso', '../../Images/69040a2581b44_Cafe lechero.png', 50, NULL, 1, 1, 0, 0, 'Cafe con gogo'),
-(164, 'Ultimate', '../../Images/69041086c44b2_Cafe lechero.png', 56, NULL, 2, 1, 0, 0, 'gogogo'),
-(165, 'Ultimate', '../../Images/690416cbdd80a_Cafe lechero.png', 56, NULL, 2, 1, 0, 0, 'gogogo'),
-(166, 'El ultimate', '../../Images/6904176eeecfe_Cafe lechero.png', 65, NULL, 2, 1, 0, 0, 'cafe con azucar'),
-(167, 'aaaa', '../../Images/69041a35e1642_Cafe lechero.png', 55, NULL, 2, 1, 0, 0, 'aaa'),
-(168, 'mmm', '../../Images/69041e37e643e_Cafe lechero.png', 55, NULL, 3, 1, 0, 0, 'AAA'),
-(169, 'ass', '../../Images/690420a439c58_Cafe lechero.png', 55, NULL, 1, 1, 0, 0, 'asas'),
-(170, 'ass', '../../Images/690422686629e_Cafe lechero.png', 55, NULL, 3, 1, 0, 0, 'asas'),
-(171, 'mumauam', '../../Images/690424ae6d1f2_Cafe lechero.png', 50, NULL, 1, 1, 0, 0, 'asdasd'),
-(172, 'Ultimate', '../../Images/69054bb607e6a_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'muaa'),
-(174, 'yaaa', '../../Images/690556d84af04_Cafe latte.png', 33, NULL, 3, 1, 0, 0, 'afdd'),
-(175, 'Ulmua', '../../Images/6905626d4050e_Cafe lechero.png', 34, NULL, 2, 1, 0, 0, 'mmuaa'),
-(176, 'cafe gogo', '../../Images/69056e4377c4c_Cafe lechero.png', 50, NULL, 2, 1, 0, 0, 'cafe con muaa'),
-(177, 'Café del secso', '../../Images/69136b6426550_Frappé caramel.png', 55, NULL, 2, 1, 0, 10, 'Secsosoosos'),
-(178, 'Coca de', '../../Images/69136c1aec38d_Cafe mocca.png', 55, NULL, 2, 1, 0, 20, 'couk');
+(152, 'Ensalada Verde', '../../Images/ensalada_verde.png', 100, '11', 1, 1, 0, 20, '40% lechuga, 30% espinaca, 20% pepino, 10% aderezo');
 
 -- --------------------------------------------------------
 
@@ -493,50 +457,63 @@ CREATE TABLE `producto_categorias` (
 --
 
 INSERT INTO `producto_categorias` (`idp`, `id_categoria`) VALUES
-(131, 3),
-(132, 4),
-(153, 3),
-(154, 1),
-(154, 3),
-(155, 1),
-(155, 3),
-(156, 1),
-(156, 3),
-(157, 1),
-(157, 3),
-(158, 1),
-(158, 3),
-(159, 1),
-(159, 3),
-(161, 1),
-(161, 3),
-(162, 1),
-(162, 3),
-(163, 1),
-(163, 3),
-(164, 1),
-(164, 3),
-(165, 1),
-(165, 3),
-(166, 7),
-(167, 1),
-(167, 3),
-(168, 1),
-(168, 3),
-(169, 1),
-(169, 3),
-(170, 2),
-(171, 1),
-(171, 3),
-(172, 3),
-(174, 1),
-(175, 1),
-(175, 3),
-(176, 1),
-(176, 3),
-(177, 1),
-(177, 3),
-(178, 2);
+(51, 1),
+(51, 3),
+(52, 1),
+(52, 3),
+(53, 1),
+(53, 3),
+(54, 3),
+(55, 3),
+(57, 3),
+(58, 10),
+(59, 1),
+(59, 3),
+(60, 3),
+(61, 3),
+(65, 1),
+(65, 3),
+(66, 10),
+(69, 1),
+(81, 2),
+(81, 3),
+(83, 2),
+(83, 3),
+(86, 2),
+(86, 3),
+(87, 2),
+(87, 3),
+(89, 10),
+(91, 2),
+(91, 3),
+(93, 2),
+(93, 10),
+(94, 10),
+(96, 1),
+(96, 10),
+(97, 1),
+(97, 10),
+(98, 1),
+(98, 10),
+(133, 4),
+(134, 4),
+(135, 4),
+(136, 4),
+(137, 4),
+(138, 4),
+(139, 4),
+(140, 4),
+(141, 4),
+(142, 4),
+(143, 4),
+(144, 6),
+(146, 7),
+(147, 7),
+(148, 7),
+(149, 11),
+(150, 11),
+(151, 11),
+(152, 11);
 
 -- --------------------------------------------------------
 
@@ -555,22 +532,31 @@ CREATE TABLE `producto_listbox` (
 --
 
 INSERT INTO `producto_listbox` (`id`, `producto_id`, `listbox_id`) VALUES
-(1, 165, 5),
-(2, 165, 6),
-(3, 166, 5),
-(4, 166, 6),
-(5, 167, 5),
-(6, 167, 6),
-(7, 168, 5),
-(8, 168, 6),
-(11, 171, 5),
-(12, 171, 6),
-(13, 172, 1),
-(14, 172, 2),
-(21, 175, 1),
-(26, 176, 8),
-(27, 177, 1),
-(28, 177, 2);
+(42, 51, 3),
+(50, 53, 1),
+(51, 53, 2),
+(52, 54, 1),
+(53, 54, 2),
+(54, 55, 1),
+(55, 55, 2),
+(56, 57, 1),
+(57, 57, 2),
+(58, 58, 8),
+(59, 59, 1),
+(60, 59, 2),
+(61, 60, 1),
+(62, 60, 2),
+(70, 65, 1),
+(71, 65, 2),
+(72, 66, 8),
+(81, 87, 1),
+(82, 87, 2),
+(87, 146, 3),
+(88, 147, 3),
+(89, 149, 4),
+(90, 150, 4),
+(91, 151, 4),
+(92, 152, 4);
 
 -- --------------------------------------------------------
 
@@ -813,14 +799,15 @@ ALTER TABLE `opciones_predefinidas`
 --
 ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `fk_pedidos_usuario` (`userid`);
+  ADD KEY `userid_idx` (`userid`);
 
 --
 -- Indices de la tabla `pedido_items`
 --
 ALTER TABLE `pedido_items`
-  ADD PRIMARY KEY (`id_item`),
-  ADD KEY `fk_items_pedido` (`id_pedido`);
+  ADD PRIMARY KEY (`id_pedido_item`),
+  ADD KEY `id_pedido_idx` (`id_pedido`),
+  ADD KEY `id_producto_idx` (`id_producto`);
 
 --
 -- Indices de la tabla `productos`
@@ -901,7 +888,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `cortes_caja`
@@ -913,13 +900,13 @@ ALTER TABLE `cortes_caja`
 -- AUTO_INCREMENT de la tabla `listboxes`
 --
 ALTER TABLE `listboxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `listbox_opciones`
 --
 ALTER TABLE `listbox_opciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT de la tabla `movimientos`
@@ -937,25 +924,25 @@ ALTER TABLE `opciones_predefinidas`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_items`
 --
 ALTER TABLE `pedido_items`
-  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pedido_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
+  MODIFY `idp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_listbox`
 --
 ALTER TABLE `producto_listbox`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_opciones`
@@ -1032,13 +1019,14 @@ ALTER TABLE `opciones_categoria`
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  ADD CONSTRAINT `fk_pedidos_usuario` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_pedido_usuario` FOREIGN KEY (`userid`) REFERENCES `usuarios` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `pedido_items`
 --
 ALTER TABLE `pedido_items`
-  ADD CONSTRAINT `fk_items_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id_pedido`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_item_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id_pedido`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_item_producto` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`idp`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `producto_categorias`
