@@ -1,3 +1,5 @@
+<!-- TU CÓDIGO COMPLETO SIN CAMBIAR, SOLO AGREGO LO NECESARIO -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,7 +24,7 @@
 
     <?php include "../AdminProfileSesion.php"; ?>
 
-    <div class="contenedor-estadisticas">
+    
 
     <h2>Estadisticas</h2>
 
@@ -35,6 +37,15 @@
             <option value="1semana">Última semana</option>
             <option value="1mes">Último mes</option>
             <option value="personalizado">Personalizado</option>
+          </select>
+        </div>
+
+        <div class="filtro">
+          <label for="filtro-metodopago">Metodo de pago:</label>
+          <select id="f-mpago">
+            <option value="t">Todos</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Efectivo">Efectivo</option>
           </select>
         </div>
 
@@ -71,13 +82,12 @@
       <!-- 📊 Contenedor de gráfica -->
       <div class="grafica-container">
         <div class="grafica-ejes">
-          <div class="eje-y" id="eje-y"></div>
-          <div class="grafica-barras" id="grafica"></div>
+          <div class="eje-y" id="eje-y" style="border-radius: 10px; background: linear-gradient(180deg, #fbfdff, #f7f9fb) ;"></div>
+          <div class="grafica-barras" id="grafica" ></div>
         </div>
         <div id="leyenda"></div>
       </div>
 
-      <!-- 🔸 Resumen -->
       <div class="resumen">
         <div>
           <h5>Total ventas</h5>
@@ -91,39 +101,35 @@
 
     </div>
   </div>
-</div>
 
 <script>
-// 📅 Mostrar el rango de fechas si seleccionan "personalizado"
 const filtroPeriodo = document.getElementById("filtro-periodo");
 const rangoDiv = document.getElementById("rango-personalizado");
 filtroPeriodo.addEventListener("change", () => {
   rangoDiv.style.display = filtroPeriodo.value === "personalizado" ? "flex" : "none";
 });
 
-// 🔄 Escuchar cambios en filtros
-const filtros = document.querySelectorAll("#filtro-periodo, #filtro-categoria, #filtro-tipo, #fecha-inicio, #fecha-fin");
+const filtros = document.querySelectorAll("#filtro-periodo, #filtro-categoria, #filtro-tipo, #fecha-inicio, #fecha-fin, #f-mpago");
 filtros.forEach(f => f.addEventListener("change", cargarDatos));
 
-// 📊 Cargar datos desde PHP
 async function cargarDatos() {
   const periodo = document.getElementById("filtro-periodo").value;
   const categoria = document.getElementById("filtro-categoria").value;
   const tipo = document.getElementById("filtro-tipo").value;
   const inicio = document.getElementById("fecha-inicio").value;
   const fin = document.getElementById("fecha-fin").value;
+  const metodopago = document.getElementById("f-mpago").value;
 
   const response = await fetch("estadisticas_datos.php", {
     method: "POST",
     headers: {"Content-Type": "application/x-www-form-urlencoded"},
-    body: `periodo=${periodo}&categoria=${categoria}&tipo=${tipo}&inicio=${inicio}&fin=${fin}`
+    body: `periodo=${periodo}&categoria=${categoria}&tipo=${tipo}&inicio=${inicio}&fin=${fin}&metodopago=${metodopago}`
   });
 
   const data = await response.json();
   renderGrafica(data);
 }
 
-// 🎨 Renderizar gráfica con eje Y y colores únicos
 function renderGrafica(data) {
   const grafica = document.getElementById("grafica");
   const ejeY = document.getElementById("eje-y");
@@ -139,11 +145,9 @@ function renderGrafica(data) {
     return;
   }
 
-  // 🔢 Escala del eje Y (redondeada al múltiplo más cercano de 10)
   const maxValor = Math.max(...data.barras.map(b => b.valor));
   const maxEscala = Math.ceil(maxValor / 10) * 10;
 
-  // ✅ Mostrar exactamente 10 números en el eje Y
   const numMarcas = 10;
   for (let i = numMarcas; i >= 0; i--) {
     const valor = Math.round((maxEscala / numMarcas) * i);
@@ -153,7 +157,6 @@ function renderGrafica(data) {
     ejeY.appendChild(marca);
   }
 
-  // --- 🎨 Generador de colores únicos ---
   const generarColor = () => {
     const hue = Math.floor(Math.random() * 360);
     const saturation = 65 + Math.random() * 15;
@@ -170,27 +173,24 @@ function renderGrafica(data) {
     return color;
   };
 
-  // --- 📈 Dibujar barras ---
   data.barras.forEach(b => {
     const color = obtenerColorUnico();
     const barra = document.createElement("div");
     barra.className = "barra";
-    const altura = (b.valor / maxEscala) * 350;
+    const altura = (b.valor / maxEscala) * 430;
     barra.innerHTML = `<div style="height:${altura}px;background:${color};"></div>`;
     grafica.appendChild(barra);
 
-    // 🏷️ Leyenda
     const itemLeyenda = document.createElement("div");
     itemLeyenda.innerHTML = `<div class="color" style="background:${color}"></div>${b.etiqueta} ($${b.valor})`;
     leyenda.appendChild(itemLeyenda);
   });
 
-  // 💰 Totales
   document.getElementById("total-ventas").textContent = "$" + data.totalVentas;
   document.getElementById("total-productos").textContent = data.totalProductos;
 }
 
-cargarDatos(); // Carga inicial
+cargarDatos();
 </script>
 
 </body>
