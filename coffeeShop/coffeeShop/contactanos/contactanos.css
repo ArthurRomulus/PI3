@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* ====== Paleta estilo coffee de tu página ====== */
+:root{
+  /* Fondo rosado del footer */
+  --bg-rose: #d7b0a9;
+
+  /* Marrones tarjeta/panel */
+  --coffee-900: #4a2e25;
+  --coffee-800: #3d241f;
+
+  /* Acentos durazno/caramelo */
+  --peach-400: #e3a193;
+  --peach-500: #cf7f6e;
+
+  /* Textos */
+  --cream: #faeadf;
+  --ink: #2b1b17;
+  --muted: #8f7068;
+
+  /* UI */
+  --ring: #e9cfc8;
+  --radius: 14px;
+  --shadow: 0 14px 32px rgba(74,46,37,.22);
+}
+
+/* ====== Base ====== */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;
+  background:var(--bg-rose);   /* <-- Igual que footer */
+  color:var(--ink);
+}
+
+/* ====== Sección ====== */
+.contacto-wrap{
+  padding:56px 16px 96px;
+}
+.contacto-container{
+  max-width:1080px;
+  margin:0 auto;
+}
+.contacto-title{
+  text-align:center;
+  margin:0 0 28px;
+  font-size:clamp(28px,4vw,44px);
+  letter-spacing:.5px;
+  color:var(--ink);
+}
+.contacto-title::after{
+  content:"";
+  display:block;
+  width:72px;
+  height:6px;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--peach-500),var(--peach-400));
+  margin:12px auto 0;
+}
+
+/* ====== Card principal ====== */
+.contacto-card{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  border-radius:calc(var(--radius) + 4px);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  backdrop-filter: blur(6px);
+  background: rgba(255,255,255,0.35); /* Transparente sobre el fondo rosado */
+}
+/* ====== Panel izquierdo (versión más clara tipo latte) ====== */
+.contacto-info{
+  background:#7b4a3a;  /* más claro que el anterior (#4a2e25) */
+  color:var(--cream);
+  padding:40px 32px;
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+  border-right:1px solid rgba(255,255,255,0.08);
+  transition:background .3s ease;
+}
+
+.info-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:26px; /* separa más los bloques */
+}
+
+.info-item{
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.info-item:last-child{
+  border-bottom:none;
+  padding-bottom:0;
+}
+
+.info-icon{
+  width:46px;
+  height:46px;
+  border-radius:12px;
+  flex:0 0 46px;
+  background:#5f372b; /* más suave que el original */
+  display:grid;
+  place-items:center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.info-icon svg{
+  width:22px;
+  height:22px;
+  fill:#f8d2c3; /* ícono ligeramente más claro */
+}
+
+.info-ttl{
+  margin:0 0 3px;
+  font-weight:700;
+  color:#fffaf5;
+}
+.info-txt{
+  margin:0;
+  color:#fae9e0; /* más claro y cálido */
+}
+
+
+/* ====== Redes sociales ====== */
+.social{margin-top:auto}
+.social-ttl{
+  margin:0 0 10px;
+  color:#ffece2;
+  font-weight:600;
+}
+.social-row{
+  display:flex;
+  gap:12px;
+}
+.social-btn{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:#2f1c18;
+  color:#ffece2;
+  text-decoration:none;
+  font-weight:700;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+  transition: transform .15s ease, opacity .2s ease, background .2s ease;
+}
+.social-btn:hover{
+  transform:translateY(-2px);
+  background:var(--peach-500);
+  color:#fff;
+}
+
+/* ====== Formulario ====== */
+.contacto-form{
+  padding:36px 32px 28px;
+  background:#fffdfc; /* tono claro, casi blanco rosado */
+}
+.form-ttl{
+  margin:0 0 18px;
+  font-size:clamp(18px,2.4vw,24px);
+  color:var(--coffee-900);
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px 16px;
+}
+.fld{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.fld-span2{grid-column:1/-1;}
+.lbl{
+  font-size:.86rem;
+  color:var(--muted);
+}
+
+input,textarea{
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  background:#fff7f4;
+  border:1px solid var(--ring);
+  outline:none;
+  font:inherit;
+  transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+input:focus,textarea:focus{
+  border-color:#7b4a3a;
+  box-shadow:0 0 0 4px rgba(207,127,110,.18);
+  background:#fff;
+}
+textarea{resize:vertical;min-height:140px}
+
+/* Botón */
+.btn-grad{
+  margin-top:10px;
+  border:0;
+  padding:12px 22px;
+  border-radius:999px;
+  cursor:pointer;
+  color:#2a120e;
+  font-weight:800;
+  letter-spacing:.2px;
+  background:linear-gradient(135deg,var(--peach-500),var(--peach-400));
+  box-shadow:0 10px 22px rgba(207,127,110,.35);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn-grad:hover{
+  transform:translateY(-1px);
+  box-shadow:0 12px 26px rgba(207,127,110,.4);
+}
+.btn-grad:active{
+  transform:translateY(0);
+  box-shadow:0 6px 14px rgba(207,127,110,.32);
+}
+
+/* ====== Responsive ====== */
+@media (max-width:900px){
+  .contacto-card{grid-template-columns:1fr;}
+  .contacto-info{padding:28px 22px;}
+  .contacto-form{padding:26px 22px;}
+}
+@media (max-width:520px){
+  .form-grid{grid-template-columns:1fr;}
+}
+
+/* ====== Overrides puntuales ====== */
+
+/* 1) Fondo EXACTO igual al footer */
+body,
+body.coffee {
+  background: #DCC0B9 !important;  /* fuerza el color del fondo */
+}
+
+/* 2) Cuadro más largo y amplio */
+.contacto-wrap{
+  padding: 72px 16px 140px;           /* más aire arriba/abajo */
+}
+.contacto-container{
+  max-width: 1200px;                  /* un poco más ancho */
+}
+.contacto-card{
+  grid-template-columns: 420px 1fr;   /* panel izq más ancho */
+  min-height: 560px;                  /* hace el cuadro más LARGO */
+  background: rgba(255,255,255,0.35); /* sutil sobre el fondo rosado */
+}
+.contacto-info{
+  padding: 40px 30px;                 /* más alto el panel */
+}
+.contacto-form{
+  padding: 40px 36px 32px;            /* más alto el lado del formulario */
+}
+
+/* 3) Más separación entre Email / Teléfono / Ubicación */
+.info-list{
+  gap: 28px;                          /* separación vertical mayor */
+}
+.info-item{
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,.10); /* línea divisora sutil */
+}
+.info-item:last-child{
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* (Opcional) separa el card del footer visible */
+.contacto-title{ margin-bottom: 32px; }
+
+/* ======= Color personalizado latte (#7b4a3a) ======= */
+
+/* Línea decorativa debajo del título */
+.contacto-title::after {
+  background: #7b4a3a !important;
+}
+
+/* Botón principal "Enviar Mensaje" */
+.btn-grad {
+  background: #7b4a3a !important;
+  color: #fffaf5 !important;
+  box-shadow: 0 8px 20px rgba(123, 74, 58, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.btn-grad:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 10px 26px rgba(123, 74, 58, 0.4);
+}
+
+.btn-grad:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(123, 74, 58, 0.3);
+}
+
+
