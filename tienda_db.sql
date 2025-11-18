@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
---
+-- 
 -- Estructura de tabla para la tabla `administradores`
 --
 
@@ -338,7 +338,6 @@ CREATE TABLE `pedidos` (
     FOREIGN KEY (`userid`) 
     REFERENCES `usuarios`(`userid`) 
     ON DELETE NO ACTION ON UPDATE NO ACTION
-
   `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
   `sucursal` varchar(100) NOT NULL,
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
@@ -656,21 +655,12 @@ CREATE TABLE `roles` (
   `status` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `roles`
---
-
 INSERT INTO `roles` (`id_rol`, `rolename`, `currentusers`, `status`) VALUES
 (1, 'defaultuser', 0, 1),
 (2, 'cajero', 0, 1),
 (3, 'Gerente', 0, 1),
 (4, 'Administrator', 0, 1);
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `sabores`
---
 
 CREATE TABLE `sabores` (
   `id_sabor` int(11) NOT NULL,
