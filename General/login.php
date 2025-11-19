@@ -104,6 +104,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       font-size: 0.9rem;
     }
   </style>
+  <style>
+    /* Page transition: fade in on load, fade out on navigation to registro/login */
+    body.page-transition { opacity: 0; transform: translateY(8px); transition: opacity 420ms ease, transform 420ms ease; }
+    body.page-transition.page-enter { opacity: 1; transform: none; }
+    body.page-transition.page-exit { opacity: 0; transform: translateY(-8px); }
+  </style>
+  <script>
+    // Animate when navigating between login and registro pages
+    document.addEventListener('DOMContentLoaded', function () {
+      // enable transitions
+      document.body.classList.add('page-transition');
+      // trigger enter
+      requestAnimationFrame(function () { document.body.classList.add('page-enter'); });
+
+      // Attach click handlers to links that target registro.php or login.php
+      document.querySelectorAll('a[href]').forEach(function(a){
+        var href = a.getAttribute('href');
+        if (!href) return;
+        // match links to registro.php or login.php (relative or absolute)
+        if (href.indexOf('registro.php') !== -1 || href.indexOf('login.php') !== -1) {
+          a.addEventListener('click', function(ev){
+            ev.preventDefault();
+            var url = a.href;
+            // start exit animation
+            document.body.classList.remove('page-enter');
+            document.body.classList.add('page-exit');
+            setTimeout(function(){ window.location.href = url; }, 420);
+          });
+        }
+      });
+    });
+    // If the page is shown from bfcache, ensure animation class state
+    window.addEventListener('pageshow', function(e){ if (e.persisted) { document.body.classList.add('page-enter'); } });
+    // Intercept form submit to animate exit before sending POST
+    (function(){
+      var loginForm = document.getElementById('loginForm');
+      if (loginForm) {
+        loginForm.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          // play exit animation
+          document.body.classList.remove('page-enter');
+          document.body.classList.add('page-exit');
+          // delay actual submit to allow animation
+          setTimeout(function(){ loginForm.submit(); }, 420);
+        });
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="cup-wrapper">
@@ -142,7 +190,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 
   <a href="../coffeeShop/inicio/index.php" class="logo-fijo">
-    <img src="../images/logo.png" alt="Logo Blackwood Coffee">
+    <img src="../images/home.png" alt="Logo Blackwood Coffee">
   </a>
 </body>
 </html>

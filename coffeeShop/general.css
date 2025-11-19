@@ -997,6 +997,21 @@ body.dark-mode .mini-cart{ background: #252525; color: #eee; border-left:1px sol
 body.dark-mode .muted{ color: var(--ink-soft); }
 body.dark-mode .dot{ background: #2ecc71; }
 
+/* === PERFIL: asegurar que textos dentro de tarjetas se vuelvan claros incluso
+   si el HTML incluye estilos inline (ej. el listado de "Actividad reciente") */
+body.dark-mode .card .body,
+body.dark-mode .card .body ul,
+body.dark-mode .card .body li,
+body.dark-mode .card .body p,
+body.dark-mode .card .body span {
+  color: var(--ink) !important;
+}
+
+/* Forzar color en enlaces y bullets dentro de panels */
+body.dark-mode .card .body a {
+  color: var(--primary) !important;
+}
+
 /* ===== PERFIL: Botones integrados con la paleta de modo oscuro ===== */
 /* Botones de acción (Editar perfil, Ver historial): fondo neutro oscuro, texto claro */
 body.dark-mode .content-grid .actions,

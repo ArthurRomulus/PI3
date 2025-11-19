@@ -26,36 +26,41 @@
 
         <main class="main-content">
             <header class="login-header">
-                <h2>Coffee Shop</h2>
+                <h2>Blackwood Coffee</h2>
                 <p id="current-date"></p>
                 <script>
                     document.getElementById('current-date').textContent = getCurrentDate();
                 </script>
             </header>
 
-            <div class="welcome-message">
-                <h1>¡Se le da la bienvenida!</h1>
-            </div>
+            <!-- Chalkboard-style login area -->
+            <section class="chalk-area" style="width:100%;display:flex;align-items:flex-start;justify-content:center;padding:12px 0;">
+                <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+                    .chalk-area .board-container{border:8px solid #5D4037;padding:20px;border-radius:4px;background-color:#333;box-shadow:0 0 15px rgba(0,0,0,0.5);text-align:center;width:360px; position: relative; bottom: 35px}
+                    .chalk-area h1{font-family:'Patrick Hand',cursive;font-size:2.2rem;margin:0 0 8px;border-bottom:2px solid rgba(255,255,255,0.3);padding-bottom:8px;transform:rotate(-2deg);color:#EEE}
+                    .chalk-area p{font-family:'Patrick Hand',cursive;color:#EEE;font-size:1.05rem;margin-bottom:18px}
+                    .chalk-area .chalk-input{background:transparent;border:none;border-bottom:2px solid white;color:white;font-family:'Patrick Hand',cursive;font-size:1.05rem;width:100%;margin-bottom:16px;padding:6px;outline:none}
+                    .chalk-area .chalk-input::placeholder{color:#AAA}
+                    .chalk-area .btn-chalk{border:2px solid white;background:transparent;color:white;font-family:'Patrick Hand',cursive;font-size:1.1rem;padding:8px 20px;cursor:pointer;border-radius:255px 15px 225px 15px/15px 225px 15px 255px;transition:all .18s}
+                    .chalk-area .btn-chalk:hover{background:white;color:#333}
+                    .chalk-area .help-link{display:block;margin-top:10px;color:#EEE;font-family:'Patrick Hand',cursive;text-decoration:none}
+                </style>
 
-            <div class="login-card">
-                <h2>¡Verifica que eres un admin! Inicia Sesión</h2>
-                <form>
-                    <div class="input-group">
-                        <input type="text" id="username" placeholder="Usuario" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="email" id="email" placeholder="Correo email" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="password" placeholder="Contraseña" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="confirm-password" placeholder="Confirmar contraseña" required>
-                    </div>
-                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña? Recupérala.</a>
-                    <button type="submit">Ingresar</button>
-                </form>
-            </div>
+                <div class="board-container" style="width:520px;margin-top:-18px;">
+                    <h1>Menú del Día</h1>
+                    <p>Ingreso de Administradores</p>
+
+                    <form action="#" method="post">
+                        <input class="chalk-input" type="text" id="username" name="username" placeholder="Usuario" required>
+                        <input class="chalk-input" type="email" id="email" name="email" placeholder="Correo electrónico" required>
+                        <input class="chalk-input" type="password" id="password" name="password" placeholder="Contraseña" required>
+                        <input class="chalk-input" type="password" id="confirm-password" name="confirm_password" placeholder="Confirmar contraseña" required>
+                        <a class="help-link" href="#">¿Olvidaste tu contraseña?</a>
+                        <button class="btn-chalk" type="submit">Ingresar</button>
+                    </form>
+                </div>
+            </section>
         </main>
     </div>
 

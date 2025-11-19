@@ -126,7 +126,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       padding: 15px; margin-bottom: 20px; text-align: center; border-radius: 5px;
     }
   </style>
+  <style>
+    /* Page transition: fade in on load, fade out on navigation to login/registro */
+    body.page-transition { opacity: 0; transform: translateY(8px); transition: opacity 420ms ease, transform 420ms ease; }
+    body.page-transition.page-enter { opacity: 1; transform: none; }
+    body.page-transition.page-exit { opacity: 0; transform: translateY(-8px); }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.classList.add('page-transition');
+      requestAnimationFrame(function () { document.body.classList.add('page-enter'); });
+      document.querySelectorAll('a[href]').forEach(function(a){
+        var href = a.getAttribute('href');
+        if(!href) return;
+        if (href.indexOf('login.php') !== -1 || href.indexOf('registro.php') !== -1) {
+          a.addEventListener('click', function(ev){
+            ev.preventDefault();
+            var url = a.href;
+            document.body.classList.remove('page-enter');
+            document.body.classList.add('page-exit');
+            setTimeout(function(){ window.location.href = url; }, 420);
+          });
+        }
+      });
+    });
+    window.addEventListener('pageshow', function(e){ if (e.persisted) { document.body.classList.add('page-enter'); } });
+  </script>
 </head>
+  <script>
+    // Intercept register form submit to animate exit before sending POST
+    (function(){
+      var regForm = document.getElementById('registerForm');
+      if (regForm) {
+        regForm.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          document.body.classList.remove('page-enter');
+          document.body.classList.add('page-exit');
+          setTimeout(function(){ regForm.submit(); }, 420);
+        });
+      }
+    })();
+  </script>
 <body>
 
   <div class="cup-wrapper">
@@ -157,7 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
   <a href="../coffeeShop/Inicio/" class="logo-fijo">
-    <img src="../images/logo.png" alt="Logo Blackwood Coffee">
+    <img src="../images/home.png" alt="Logo Blackwood Coffee">
   </a>
   <!-- Modal de Términos y Condiciones -->
 <div id="termsModal" class="modal">
