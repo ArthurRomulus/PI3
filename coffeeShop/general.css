@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ==== Modo oscuro ==== */
 
 /* --- Estilos para el Interruptor de Tema (Toggle) --- */
@@ -1109,3 +1110,1101 @@ body.dark-mode .modal-opciones button {
 body.dark-mode .modal-opciones button:hover {
   background-color: #707070; /*botones más claros al pasar el ratón */
 }
+=======
+/* ==== Modo oscuro ==== */
+
+/* --- Estilos para el Interruptor de Tema (Toggle) --- */
+
+/* Contenedor principal del interruptor */
+.theme-switch-container {
+  /* Esto lo alinea con los enlaces e iconos de la barra de navegación */
+  display: inline-block; 
+  vertical-align: middle; /* Clave para alinearlo verticalmente */
+  margin: 0; /* Añade espacio a los lados (entre "Acerca de" y el icono) */
+  
+  /* --- Estilos del interruptor (tamaño) --- */
+  width: 50px; 
+  height: 28px;
+  position: relative; /* Necesario para que funcione el label:before */
+}
+
+/* Oculta el checkbox real */
+.theme-toggle-checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Estilo de la "pista" del interruptor */
+.theme-toggle-label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc; /* Color de fondo (apagado) */
+  border-radius: 28px;
+  transition: .4s;
+}
+
+/* Estilo del "círculo" que se desliza */
+.theme-toggle-label:before {
+  position: absolute;
+  content: "";
+  height: 20px; /* Círculo interior */
+  width: 20px;  /* Círculo interior */
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+/* --- Estilo cuando está ACTIVO (modo oscuro) --- */
+.theme-toggle-checkbox:checked + .theme-toggle-label {
+  background-color: #4a4a4a; /* Color de fondo (encendido) */
+}
+
+.theme-toggle-checkbox:checked + .theme-toggle-label:before {
+  transform: translateX(22px); /* Mueve el círculo */
+}
+
+/* --- MODO OSCURO - PÁGINA DE INICIO (Index) --- */
+
+/* Fondo general del body para la página de inicio */
+body.dark-mode {
+  background-color: #1a1a1a;
+  color: #ccc;
+}
+
+/* Sección Hero "Sabor que inspira" (de style_index.css) */
+body.dark-mode .hero-sabor {
+  background-color: #2a2220; /* Marrón oscuro en lugar de #DCC0B9 */
+}
+
+body.dark-mode .hero-texto h2 {
+  color: #f0e4e1; /* Color claro en lugar de #531607 */
+}
+
+body.dark-mode .hero-texto p {
+  color: #d1c3bf; /* Color claro en lugar de #6b2f1d */
+}
+
+/* Líneas decorativas (de style_index.css y Style.css) */
+body.dark-mode .ts-title-line .cs-line,
+body.dark-mode .delivery-line {
+  background: #8c6a61; /* Marrón claro en lugar de #531607 */
+}
+
+/* Textos de la sección "Delivery" (de style_index.css) */
+body.dark-mode .delivery__desc {
+  color: #e0d5d2; /* en lugar de #4a332e */
+}
+
+body.dark-mode .delivery__small {
+  color: #b8a9a5; /* en lugar de #6a4b44 */
+}
+
+/* --- Mini Carrito (de Style.css e index.php) --- */
+
+body.dark-mode .mini-cart {
+  background-color: #252525;
+  border-left: 1px solid #444;
+  color: #eee;
+}
+
+body.dark-mode .mc-header {
+  border-bottom: 1px solid #444;
+}
+
+body.dark-mode .mc-header #mcTitle {
+  color: #fff;
+}
+
+body.dark-mode .mc-close {
+  color: #ccc;
+}
+body.dark-mode .mc-close:hover {
+  color: #fff;
+}
+
+/* Items dentro del carrito */
+body.dark-mode .mc-item {
+  background: #3a3a3a;
+  border: 1px solid #555;
+}
+
+body.dark-mode .mc-name,
+body.dark-mode .mc-price {
+  color: #f0f0f0;
+}
+
+body.dark-mode .mc-meta {
+  color: #b0b0b0;
+}
+
+/* Botones de cantidad +/- */
+body.dark-mode .mc-qty {
+  border: 1px solid #555;
+}
+
+body.dark-mode .mc-qty button {
+  background: #505050;
+  color: #eee;
+}
+body.dark-mode .mc-qty button:hover {
+  background: #606060;
+}
+
+/* Footer del carrito */
+body.dark-mode .mc-footer {
+  border-top: 1px solid #444;
+}
+
+body.dark-mode .mc-total span {
+  color: #fff; /* Para el texto "Total" y el precio */
+}
+
+/* Botones del footer del carrito (Asumiendo clases .btn-primary/.btn-secondary de index.php) */
+body.dark-mode .mc-footer .btn-primary {
+  background-color: #c9a790; /* Un color claro pero que resalte */
+  color: #252525;
+}
+
+body.dark-mode .mc-footer .btn-secondary {
+  background-color: #444;
+  color: #eee;
+  border: 1px solid #555;
+}
+body.dark-mode .mc-footer .btn-secondary:hover {
+  background-color: #555;
+}
+
+/* --- Footer Principal (de index.php) --- */
+body.dark-mode .site-footer {
+    background-color: #1a1a1a;
+    color: #b0b0b0;
+    border-top: 1px solid #333;
+}
+
+body.dark-mode .footer-logo a,
+body.dark-mode .footer-links a {
+    color: #e0e0e0;
+}
+
+body.dark-mode .footer-links a:hover {
+    color: #fff;
+}
+
+body.dark-mode .footer-bottom p {
+    color: #888;
+}
+
+body.dark-mode .footer-menu a {
+    color: #ffffff;
+}
+
+body.dark-mode .footer-logo {
+    color: #ffffff;
+}
+
+body.dark-mode .cs-bottom .cs-line {
+  background: #ffffff; /* Un marrón claro/visible */
+}
+
+/* --- MODO OSCURO: Resto de la Página (Index) --- */
+
+/* Contenedor de la sección "Delivery" (de style_index.css) */
+body.dark-mode .delivery__header {
+  background-color: #505050; /* Mismo marrón oscuro que el hero */
+  border: 3px solid #555;
+}
+
+/* Botón "Pedir ahora" (de style_index.css) */
+body.dark-mode .delivery__header .btn {
+  background-color: #c9a790; /* Marrón claro para resaltar */
+  color: #252525; /* Texto oscuro */
+}
+body.dark-mode .delivery__header .btn:hover {
+  background-color: #e0d5d2;
+}
+
+/* --- Sección "Más Vendidos" (de Style.css) --- */
+
+/* Tarjeta de producto */
+body.dark-mode .ts-card {
+  background: #3a3a3a;
+  border-color: #555;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Textos de la tarjeta */
+body.dark-mode .ts-name {
+  color: #f0f0f0;
+}
+body.dark-mode .ts-desc {
+  color: #b0b0b0;
+}
+body.dark-mode .ts-price {
+  color: #e0e0e0;
+}
+
+/* Botón "Añadir" de la tarjeta */
+body.dark-mode .ts-btn {
+  background: #505050;
+  color: #eee;
+}
+body.dark-mode .ts-btn:hover {
+  background: #c9a790; /* Mismo color que el botón "Pedir ahora" */
+  color: #252525;
+}
+
+/* --- MODO OSCURO: Sección Iconos de Servicio (Envíos, Granos, Pago) --- */
+
+/* 1. Cambia el color del texto a blanco */
+body.dark-mode .svc-icon span {
+  color: #f0f0f0; 
+}
+
+/* 2. Invierte los colores de los iconos PNG (de negro a blanco) */
+body.dark-mode .delivery-icon {
+  filter: invert(1);
+}
+
+/* 3. Reduce la opacidad de la imagen de granos del fondo para que no se pierda */
+body.dark-mode .svc__beans-img {
+  opacity: 0.3; /* Ajusta este valor (ej. 0.4) si es muy transparente */
+}
+
+body.dark-mode .ts-section {
+    background-color: #2a2220;
+}
+
+body.dark-mode .ts-title-text {
+  color: #ffffff;
+}
+
+body.dark-mode .ts-title-text {
+  color: #ffffff;
+}
+
+body.dark-mode .catalogo-btn a {
+  color: #ffffff;
+  border: 2px solid #ffffff
+}
+
+body.dark-mode .catalogo-btn img {
+  filter: invert(1);
+}
+
+body.dark-mode .svc__card {
+  background: #3a3a3a;
+  border-color: #555;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .svc__card h3 {
+  color: #f0f0f0;
+}
+
+body.dark-mode .svc__card p {
+  color: #b0b0b0;
+}
+
+body.dark-mode .svc__icon {
+    filter: invert(1);
+}
+
+body.dark-mode .promo{
+    color: #2a2220;
+}
+
+/* --- MODO OSCURO: Elementos Faltantes (Index) --- */
+
+/* 1. Iconos del Menú de Navegación (Usuario y Carrito) */
+/* (Invierte los iconos PNG de negro a blanco) */
+body.dark-mode .footer-bottom img {
+  filter: invert(1);
+}
+
+/* 2. Fondo de la sección "Más Vendidos" */
+body.dark-mode .ts-section {
+  background-color: #2a2220; /* Mismo marrón oscuro que el hero */
+}
+
+/* 3. Título "Más Vendidos" */
+body.dark-mode .ts-title-line h3 {
+  color: #f0e4e1; /* Color claro */
+}
+
+/* 4. Icono del grano de café en la línea inferior */
+body.dark-mode .cs-bean img {
+  filter: invert(1);
+}
+
+/* 5. Overlay del mini-carrito (la sombra de fondo) */
+body.dark-mode .mc-overlay {
+    background: rgba(0, 0, 0, 0.6); /* Fondo semitransparente más oscuro */
+}
+
+/* --- MODO OSCURO: Sección Promocional (Granos) --- */
+
+/* Fondo de la sección */
+body.dark-mode .promo {
+  background: #2a2220; /* Mismo marrón oscuro que el hero y "Más Vendidos" */
+}
+
+/* Título (GRANOS DE CAFÉ...) */
+body.dark-mode .promo-texto h2 {
+  color: #f0e4e1; /* Color claro */
+}
+
+/* Párrafo */
+body.dark-mode .promo-texto p {
+  color: #e0d5d2; /* Color claro */
+}
+
+/* Botón (Descubre los granos) */
+body.dark-mode .promo .btn-primary {
+  background-color: #c9a790; /* Botón claro */
+  color: #252525; /* Texto oscuro */
+}
+
+/* --- MODO OSCURO: Sección "Más Vendidos" (Tarjetas) --- */
+
+/* Fondo de toda la sección "Más Vendidos" */
+body.dark-mode .ts-section {
+  background-color: #2a2220; /* Mismo marrón oscuro que el hero */
+}
+
+/* Título "Más Vendidos" */
+body.dark-mode .ts-title-line h3 {
+  color: #f0e4e1; /* Color claro */
+}
+
+/* Tarjeta de producto */
+body.dark-mode .ts-card {
+  background: #3a3a3a;
+  border-color: #555;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Textos de la tarjeta (Nombre, Descripción y Precio) */
+body.dark-mode .ts-name,
+body.dark-mode .ts-desc,
+body.dark-mode .ts-price {
+  color: #f0f0f0; /* Color de texto claro */
+}
+
+/* Botón "Añadir" de la tarjeta */
+body.dark-mode .ts-btn {
+  background: #505050;
+  color: #eee;
+}
+body.dark-mode .ts-btn:hover {
+  background: #c9a790; /* Color claro al pasar el ratón */
+  color: #252525;
+}
+
+body.dark-mode .promo__desc {
+    color: #ffffff;
+}
+
+body.dark-mode .promo__title {
+
+    color: #ffffff;
+}
+
+body.dark-mode .promo__price{
+    color: #ffffff;
+}
+
+body.dark-mode .promo__cta .btn--dark {
+    background-color: #ffffff;
+    color: #2a2220;
+}
+
+body.dark-mode .promo__cta .btn--light {
+    background: transparent;
+    color: #ffffff;
+}
+
+body.dark-mode .promo__cta .btn{
+    border: 2px solid #ffffff;
+}
+
+body.dark-mode .our-products{
+    background-color: #2a2220;
+}
+
+body.dark-mode .op-title span{
+    color: #ffffff;
+}
+
+body.dark-mode .op-body{
+    background-color: #3a3a3a;
+}
+
+body.dark-mode .op-name{
+    color: #f0f0f0;
+}
+
+body.dark-mode .op-desc{
+    color: #b0b0b0;
+}
+
+body.dark-mode .op-cart-btn{
+    background: #505050;
+    color: #eee;
+}
+
+body.dark-mode .op-btn{
+    background: #7e736b;
+    color: #252525;
+}
+
+body.dark-mode .delivery{
+    background-color: #2a2220;
+}
+
+body.dark-mode .decor-line{
+    background: #ffffff;
+}
+
+body.dark-mode .decor-item img{
+    filter: invert(1);
+}
+
+body.dark-mode .ts-line {
+    border-color: #ffffff;
+}
+
+body.dark-mode .site-footer::after{
+    background: #ffffff;
+}
+
+body.dark-mode .delivery__card {
+    background: #3a3a3a;
+    border: 3px solid #555;
+}
+
+body.dark-mode .delivery__line{
+    background: #ffffff;
+}
+
+body.dark-mode .delivery__title{
+    color: #ffffff;
+}
+
+body.dark-mode .delivery__sticker,
+body.dark-mode .btn__icon{
+    filter: invert(1);
+}
+
+body.dark-mode .btn--dark{
+    background: #ffffff;
+    color: #2a2220;
+}
+
+body.dark-mode .cs-footer{
+    background-color: #1a1a1a;
+}
+
+body.dark-mode .cs-card {
+    background: #505050;
+}
+
+body.dark-mode .cs-card h3{
+    color: #ffffff;
+}
+
+body.dark-mode .cs-ico{
+  color: #ffffff;
+}
+
+body.dark-mode .cs-list,
+body.dark-mode .cs-links a {
+    color: #ffffff !important;
+}
+
+body.dark-mode .chev {
+    color: #ffffff;
+}
+
+body.dark-mode .cs-hours h4{
+    color: #ffffff;
+}
+
+body.dark-mode .cs-hours p{
+    color: #ffffff;
+}
+
+body.dark-mode .catalogo{
+    background-color: #2a2220;
+}
+
+body.dark-mode .catalogo h2 {
+    color: #ffffff;
+}
+
+body.dark-mode .item {
+    background: #3a3a3a;
+    border-color: #555;
+}
+
+body.dark-mode .item img {
+    filter: invert(1);
+}
+
+body.dark-mode .item span{
+    color: #f0f0f0;
+}
+
+body.dark-mode .hotdrinks{
+    background-color: #2a2220;
+}
+
+body.dark-mode .hotdrinks h2 {
+    color: #ffffff;
+}
+
+body.dark-mode .hot-item {
+    background: #3a3a3a;
+    border-color: #555;
+}
+
+body.dark-mode .catalogo__divider .line,
+body.dark-mode .hotdrinks__divider .line {
+    background: #ffffff;
+}
+
+body.dark-mode .catalogo__divider img,
+body.dark-mode .hotdrinks__divider img {
+    filter: invert(1);
+}
+
+body.dark-mode .hotdrinks__search input {
+    color: #ffffff;
+    background-color: #505050;
+}
+
+body.dark-mode #btn-filtrar{
+    background: #3a3a3a !important;
+    color: #ffffff;
+}
+
+body.dark-mode #btn-filtrar:hover{
+    background: #75716e !important;
+    color: #252525;
+}
+
+body.dark-mode .hotdrinks__search input::placeholder {
+    color: #f0f0f0;
+}
+
+body.dark-mode .panel-comentarios{
+    background-color: #1a1a1a;
+}
+
+body.dark-mode .panel{
+    background-color: #3a3a3a;
+    border: 4px solid #555;
+}
+
+body.dark-mode .panel h2{
+    color: #ffffff;
+    background-color: #3a3a3a;
+}
+
+body.dark-mode .rating-estrellas{
+    border: 2px solid #555;
+}
+
+body.dark-mode .form-grupo-rating-central label{
+    color: #ffffff;
+}
+
+body.dark-mode .form-grupo-grande textarea{
+    background-color: #505050;
+    color: #ffffff;
+    border: 2px solid #555;
+}
+
+body.dark-mode .form-grupo-tags select[multiple]{
+    background-color: #505050;
+    color: #ffffff;
+    border: 2px solid #555;
+}
+
+body.dark-mode .label-listbox{
+    color: #ffffff;
+}
+
+body.dark-mode .form-grupo-tags select[multiple] option{
+  background-color: #505050;
+  color: #ffffff;
+}
+
+body.dark-mode .form-grupo-upload{
+    background-color: #505050;
+    color: #ffffff;
+    border: 2px dashed #555;
+}
+
+body.dark-mode .file-name-display{
+    color: #ffffff;
+}
+
+body.dark-mode .form-grupo-upload .btn-upload{
+    background-color: #c9a790;
+    color: #252525;
+}
+
+body.dark-mode .form-grupo-upload .btn-upload{
+    background-color: #3a3a3a;
+    color: #ffffff;
+}
+
+body.dark-mode .form-grupo-upload .btn-upload:hover{
+    background-color: #555;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-cancelar{
+    color: #ffffff;
+    border: 2px solid #ebebeb;
+}
+
+body.dark-mode .btn-enviar{
+    background-color: #555;
+    color: #ffffff;
+}
+
+body.dark-mode .panel-resena-general{
+    background-color: #3a3a3a;
+        border: 4px solid #555;
+}
+
+body.dark-mode .resena-promedio{
+    border-right: 2px solid #555;
+}
+
+body.dark-mode .promedio-numero{
+    color: #ffffff;
+}
+
+body.dark-mode .promedio-total{
+    color: #ffffff;
+}
+
+body.dark-mode .coffee-separator::before, 
+body.dark-mode .coffee-separator::after{
+    background-color: #ffffff;
+}
+
+body.dark-mode .pill{
+    color: #ffffff;
+    border: 2px solid #555;
+}
+
+body.dark-mode .reviews__header h2{
+  color: #ffffff;
+}
+
+body.dark-mode .select-pill{
+    background-color: #3a3a3a;
+    border: 2px solid #555;
+    color: #ffffff;
+}
+
+body.dark-mode .score-pill{
+    background-color: #3a3a3a;
+    color: #ffffff;
+    border: 2px solid #555;
+}
+
+body.dark-mode .about{
+    background-color: #2a2220;
+}
+
+body.dark-mode .about-text h3,
+body.dark-mode .about-text p {
+    color: #ffffff;
+}
+
+body.dark-mode .stat-box {
+    color: #ffffff;
+    border: 2px solid #555;
+    background-color: #3a3a3a;
+}
+
+body.dark-mode .mision-vision {
+    background-color: #2a2220;
+}
+
+body.dark-mode .mv-card {
+    color: #ffffff;
+    background-color: #3a3a3a;
+    border: 2px solid #555;
+}
+
+body.dark-mode .mv-title,
+body.dark-mode .mv-text {
+    color: #ffffff;
+}
+
+body.dark-mode .mv-icon{
+    background-color: #505050;
+}
+
+body.dark-mode .mv-icon img{
+    filter: invert(1);
+}
+
+body.dark-mode .features{
+    background-color: #2a2220;
+}
+
+body.dark-mode .features-box {
+    background-color: #3a3a3a;
+    border: 2px solid #555;
+}
+
+body.dark-mode .feature-item img{
+    filter: invert(1);
+}
+
+body.dark-mode .feature-item p{
+    color: #ffffff;
+}
+
+body.dark-mode .coffee-stories{
+    background-color: #2a2220;
+}
+
+body.dark-mode .cs-intro{
+    color: #ffffff;
+    background-color: #3a3a3a;
+}
+
+body.dark-mode .cs-intro strong{
+    color: #b0b0b0;
+}
+
+body.dark-mode .cs-text {
+    color: #ffffff;
+}
+
+body.dark-mode .hero-copy{
+    background-color: #b0b0b0;
+}
+
+body.dark-mode .hero-title,
+body.dark-mode .hero-sub {
+    color: #ffffff;
+}
+
+body.dark-mode .btn-primary {
+    background: #505050;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-ghost {
+    background: #919191;
+    color: #ffffff;
+}
+
+body.dark-mode .mv-card::after {
+    background: #ffffff;
+}
+
+body.dark-mode .ts-stage,
+body.dark-mode .ts-price,
+body.dark-mode .ts-cart {
+    background: #707070;
+}
+
+/* === MODO OSCURO: PERFIL === */
+
+body.dark-mode .app {
+  background-color: #2a2a2a;
+  border-color: #555;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, .5);
+}
+
+body.dark-mode .sidebar {
+  background-color: #1f1f1f;
+  border-right: 1px solid #555;
+}
+
+body.dark-mode .sidebar::after {
+  background: #555;
+}
+
+body.dark-mode .brand .avatar {
+  border-color: #444;
+  outline-color: #888;
+}
+
+body.dark-mode .cam-badge::before {
+  background: #3a3a3a;
+  border-color: #777;
+}
+body.dark-mode .cam-badge:hover::before {
+  background: #555;
+}
+body.dark-mode .cam-badge svg {
+  color: #ddd;
+}
+
+/* texto de bienvenida y nombre */
+body.dark-mode h1,
+body.dark-mode .main h1,
+body.dark-mode .main h2,
+body.dark-mode .main h3,
+body.dark-mode .muted {
+  color: #f5f5f5;
+}
+
+/* panel principal */
+body.dark-mode .card {
+  background-color: #2a2a2a;
+  border-color: #555;
+  color: #eee;
+}
+
+/* secciones internas */
+body.dark-mode .section {
+  background-color: #2a2a2a;
+  border-top: 1px solid #555;
+  color: #ddd;
+}
+
+/* campos de formulario */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"],
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #3a3a3a;
+  border: 1px solid #666;
+  color: #f0f0f0;
+}
+
+body.dark-mode label {
+  color: #e0e0e0;
+}
+
+/* navegación lateral */
+body.dark-mode .nav a {
+  color: #e0e0e0;
+  border-color: transparent;
+}
+body.dark-mode .nav a:hover {
+  background-color: #333;
+  border-color: #777;
+}
+body.dark-mode .nav a.active {
+  background-color: #505050 !important;
+  border-color: #aaa !important;
+  color: #fff !important;
+}
+body.dark-mode .nav svg {
+  color: #ddd;
+}
+body.dark-mode .nav a.active svg {
+  color: #fff;
+}
+
+/* logo inferior */
+body.dark-mode .sidebar-logo {
+  opacity: .9;
+  filter: invert(1);
+}
+
+body.dark-mode .nav a svg,
+body.dark-mode .nav a.active svg,
+body.dark-mode .profile-mini .name,
+body.dark-mode .sidebar .nav a {
+  color: #fff !important;
+}
+
+/* === PERFIL: Variables y overrides para modo oscuro === */
+/* Estas reglas hacen que los estilos de `perfil.css` funcionen bien bajo .dark-mode
+   sin copiar todo el archivo; se aprovechan de las variables definidas en :root */
+body.dark-mode {
+  /* variables adaptadas para la paleta oscura */
+  --bg: #1a1a1a;
+  --panel: #2a2a2a;
+  --ink: #f0f0f0;
+  --ink-soft: #bdbdbd;
+  --primary: #c9a790;
+  --border: #555;
+  --coffee: #c9a790; /* acento claro para botones y highlights */
+  --beige: #2a2220;  /* usado como fondo alternativo en perfil */
+  --input: #3a3a3a;
+  --ring: 0 0 0 3px rgba(201,167,144,0.12);
+  --shadow: 0 20px 40px rgba(0,0,0,.5);
+}
+
+/* Contenedores principales */
+body.dark-mode .shell{ background: var(--bg); }
+body.dark-mode .app{ background: var(--panel); border-color: var(--border); box-shadow: var(--shadow); }
+
+/* Sidebar */
+body.dark-mode .sidebar{ background-color: var(--beige); }
+body.dark-mode .sidebar::after{ background: var(--border); }
+body.dark-mode .brand .avatar{ border-color: #444; outline-color: #888; }
+
+/* Cam badge */
+body.dark-mode .cam-badge::before{ background: #3a3a3a; border-color: #777; }
+body.dark-mode .cam-badge:hover::before{ background: #555; }
+body.dark-mode .cam-badge svg{ color: #ddd; }
+
+/* Sidebar bottom logo */
+body.dark-mode .sidebar-logo{ opacity: .9; filter: invert(1); }
+
+/* Nav (sidebar) */
+body.dark-mode .nav a{ color: var(--ink-soft); border-color: transparent; }
+body.dark-mode .nav a:hover{ background-color: #333; border-color: #777; }
+body.dark-mode .nav a.active{ background-color: #505050 !important; border-color: #aaa !important; color: #fff !important; }
+body.dark-mode .nav svg{ color: #ddd; }
+
+/* Main / panel */
+body.dark-mode .main{ background-color: var(--beige); }
+body.dark-mode h1, body.dark-mode .main h1, body.dark-mode .main h2, body.dark-mode .main h3, body.dark-mode .muted{ color: var(--ink); }
+body.dark-mode .panel{ background-color: var(--panel); border-color: var(--border); color: var(--ink); }
+
+/* Cards and content */
+body.dark-mode .card{ background-color: var(--panel); border-color: var(--border); color: var(--ink); }
+body.dark-mode .section{ background-color: var(--panel); border-top: 1px solid var(--border); }
+
+/* Profile mini and data list */
+body.dark-mode .profile-mini .name{ color: var(--ink); }
+body.dark-mode .profile-mini .meta{ color: var(--ink-soft); }
+body.dark-mode .data dt{ color: var(--ink); }
+body.dark-mode .data dd{ color: var(--ink); }
+
+/* Forms */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="date"],
+body.dark-mode select,
+body.dark-mode textarea{
+  background-color: var(--input);
+  border: 1px solid var(--border);
+  color: var(--ink);
+}
+body.dark-mode label{ color: var(--ink-soft); }
+
+/* Buttons */
+body.dark-mode .btn{ background: var(--coffee); color: #252525; box-shadow:none; }
+body.dark-mode .btn.secondary{ background: transparent; color: var(--ink); border-color: var(--border); }
+
+/* Mini-cart (profile uses same components) */
+body.dark-mode .mc-overlay{ background: rgba(0,0,0,0.6); }
+body.dark-mode .mini-cart{ background: #252525; color: #eee; border-left:1px solid #444; }
+
+/* Misc tweaks */
+body.dark-mode .muted{ color: var(--ink-soft); }
+body.dark-mode .dot{ background: #2ecc71; }
+
+/* ===== PERFIL: Botones integrados con la paleta de modo oscuro ===== */
+/* Botones de acción (Editar perfil, Ver historial): fondo neutro oscuro, texto claro */
+body.dark-mode .content-grid .actions,
+body.dark-mode .panel .actions {
+  gap: 10px;
+  align-items: center;
+}
+
+body.dark-mode .content-grid .actions .btn,
+body.dark-mode .panel .actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--input);    /* gris oscuro coherente con inputs */
+  color: var(--ink);          /* texto claro */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+body.dark-mode .content-grid .actions .btn:hover,
+body.dark-mode .panel .actions .btn:hover {
+  transform: translateY(-2px);
+  background: #505050; /* ligero aclarado al pasar */
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55);
+}
+
+/* Logout: estilo más sobrio que el rojo brillante; outline con acento al pasar */
+body.dark-mode .content-grid .actions a[href$="/General/logout.php"],
+body.dark-mode .panel .actions a[href$="/General/logout.php"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink) !important;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+body.dark-mode .content-grid .actions a[href$="/General/logout.php"]:hover,
+body.dark-mode .panel .actions a[href$="/General/logout.php"]:hover {
+  background: rgba(201,167,144,0.08); /* sutil acento beige al pasar */
+  border-color: rgba(201,167,144,0.18);
+}
+
+/* Responsive: mantener altura y distribución uniforme */
+@media (max-width: 980px){
+  body.dark-mode .content-grid .actions,
+  body.dark-mode .panel .actions{ grid-auto-flow: row; }
+}
+
+
+.modal-opciones {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.modal-content {
+  background: #f1c7b8;
+  width: 350px;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.modal-content button {
+  padding: 8px 12px;
+  border: none;
+  background: #7a4b34;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+/* Modo oscuro */
+body.dark-mode .modal-opciones .modal-content {
+  background-color: #1f1f1f; /* fondo oscuro */
+  color: #e5e5e5;           /* texto claro */
+}
+
+body.dark-mode .modal-opciones button {
+  background-color: #505050; /*botones oscuros */
+}
+
+body.dark-mode .modal-opciones button:hover {
+  background-color: #707070; /*botones más claros al pasar el ratón */
+}
+>>>>>>> f42beed7cb8b0630eca691a3e755601bed6484ca
