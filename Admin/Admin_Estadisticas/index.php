@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="estadisticas.css">
   <link rel="stylesheet" href="../general.css">
+  
   <title>Estadísticas de Ventas</title>
 </head>
 <body>
@@ -26,55 +27,55 @@
 
     
 
-    <h2>Estadisticas</h2>
+    <h2 data-translate="Estadísticas">Estadisticas</h2>
 
       <!-- 🔹 Filtros -->
       <div class="filtros">
         <div class="filtro">
-          <label for="filtro-periodo">Periodo:</label>
+          <label for="filtro-periodo" data-translate="Periodo:">Periodo:</label>
           <select id="filtro-periodo">
-            <option value="todo">Todo</option>
-            <option value="1semana">Última semana</option>
-            <option value="1mes">Último mes</option>
-            <option value="personalizado">Personalizado</option>
+            <option value="todo" data-translate="Todo">Todo</option>
+            <option value="1semana" data-translate="Última semana">Última semana</option>
+            <option value="1mes" data-translate="Último mes">Último mes</option>
+            <option value="personalizado" data-translate="Personalizado">Personalizado</option>
           </select>
         </div>
 
         <div class="filtro">
-          <label for="filtro-metodopago">Metodo de pago:</label>
+          <label for="filtro-metodopago" data-translate="Método de pago:">Metodo de pago:</label>
           <select id="f-mpago">
-            <option value="t">Todos</option>
-            <option value="Tarjeta">Tarjeta</option>
-            <option value="Efectivo">Efectivo</option>
+            <option value="t" data-translate="Todos">Todos</option>
+            <option value="Tarjeta" data-translate="Tarjeta">Tarjeta</option>
+            <option value="Efectivo" data-translate="Efectivo">Efectivo</option>
           </select>
         </div>
 
         <div class="filtro">
-          <label for="filtro-categoria">Categoría:</label>
+          <label for="filtro-categoria" data-translate="Categoría:">Categoría:</label>
           <select id="filtro-categoria">
-            <option value="todo">Todas</option>
+            <option value="todo" data-translate="Todas">Todas</option>
             <?php 
               include "../../conexion.php";
               $categorias = $conn->query("SELECT * FROM categorias");
               while ($cat = $categorias->fetch_assoc()){
-                echo "<option value='{$cat['id_categoria']}'>{$cat['nombrecategoria']}</option>";
+                echo "<option value='{$cat['id_categoria']}' data-translate='{$cat['nombrecategoria']}'>{$cat['nombrecategoria']}</option>";
               }
             ?>
           </select>
         </div>
 
         <div class="filtro" id="rango-personalizado" style="display: none;">
-          <label>Desde:</label>
+          <label data-translate="Desde:">Desde:</label>
           <input type="date" id="fecha-inicio">
-          <label>Hasta:</label>
+          <label data-translate="Hasta:">Hasta:</label>
           <input type="date" id="fecha-fin">
         </div>
 
         <div class="filtro">
-          <label for="filtro-tipo">Tipo de estadística:</label>
+          <label for="filtro-tipo" data-translate="Tipo de estadística:">Tipo de estadística:</label>
           <select id="filtro-tipo">
-            <option value="ventas">Ventas ($)</option>
-            <option value="conteo">Conteo de productos</option>
+            <option value="ventas" data-translate="Ventas ($)">Ventas ($)</option>
+            <option value="conteo" data-translate="Conteo de productos">Conteo de productos</option>
           </select>
         </div>
       </div>
@@ -90,11 +91,11 @@
 
       <div class="resumen">
         <div>
-          <h5>Total ventas</h5>
+          <h5 data-translate="Total de ventas">Total ventas</h5>
           <p id="total-ventas">$0</p>
         </div>
         <div>
-          <h5>Total productos</h5>
+          <h5 data-translate="Total de productos">Total productos</h5>
           <p id="total-productos">0</p>
         </div>
       </div>
@@ -192,6 +193,6 @@ function renderGrafica(data) {
 
 cargarDatos();
 </script>
-
+<script src="../../translate.js"></script>
 </body>
 </html>
