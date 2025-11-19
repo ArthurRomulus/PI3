@@ -115,13 +115,7 @@
   position: relative;
 }
 
-.ts-grid {
-  display: grid;
-  margin-top: 230px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  justify-items: center;
-}
+
 
 /* Tarjeta */
 .ts-card {
@@ -132,7 +126,6 @@
   box-shadow: 0 10px 26px rgba(201, 45, 45, 0.2);
   overflow: visible;
   color: #ffffff;
-  width: 300px;
   text-align: center;
 }
 
@@ -595,7 +588,7 @@
   /* Paleta estilo café (puedes ajustarla a la tuya) */
   --bg: #F2E1D0;          /* beige de fondo */
   --ink: #531607;         /* café oscuro */
-  --muted: #79523D;       /* texto secundario */
+  --muted: #531607;       /* texto secundario */
   --card: #F7E7D7;        /* fondo suave de tarjeta */
   --btn: #DCC0B9;         /* botón claro */
   --btn-hover: #cfae9f;   /* hover botón */
@@ -607,7 +600,7 @@
 .our-products{
   background: var(--bg);
   padding: clamp(48px, 8vw, 96px) 20px;
-  color: var(--ink);
+  color: #531607;
   margin-top: 150px;
 }
 
@@ -623,7 +616,7 @@
   font-size: clamp(28px, 3.2vw, 44px);
   letter-spacing: .5px;
   margin: 0 0 36px;
-  color: var(--ink);
+  color: #531607;
 }
 
 .op-title span{
@@ -640,47 +633,19 @@
   transform: translateX(-50%);
   width: 470px;
   height: 2px;
-  background: var(--ink);
-  opacity: .4;
+  background: #531607;
+  opacity: 1;
   border-radius: 2px;
 }
 
 
 
-/* ================= Fondo detrás de cada bolsa ================= */
-.op-media {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  padding: 18px;
-}
-
-.op-media img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
-/* Imagen de fondo (decorativa detrás de la bolsa) */
-.op-media .op-bg {
-  position: absolute;
-  inset: 0; /* ocupa todo el contenedor */
-  width: 50%;
-  height: 60%;
-  object-fit: cover;   /* ajusta para llenar sin deformar */
-  opacity: 0.25;       /* 🔸 baja la opacidad aquí */
-  filter: blur(1px) contrast(1.1); /* leve difuminado y contraste */
-  transform: scale(1.5); /* 🔸 agranda ligeramente el fondo */
-  z-index: 0;
-}
 
 /* Imagen principal (bolsa de café) */
 .op-media img:not(.op-bg) {
   position: relative;
   z-index: 1;
-  width: 65%;     /* 🔸 ajusta el tamaño de la bolsa */
+  width: 50%;     /* 🔸 ajusta el tamaño de la bolsa */
   transition: transform 0.3s ease;
 }
 
@@ -716,12 +681,7 @@
   display: block;
   margin-bottom: 70px;
 
-  filter:
-    drop-shadow(0 22px 36px rgba(83,22,7,.32))
-    drop-shadow(0 8px 14px rgba(0,0,0,.18))
-    drop-shadow(0 3px 8px rgba(255,255,255,.20));
 
-  transition: transform .25s ease, filter .25s ease;
 }
 
 .op-media img {
@@ -734,7 +694,7 @@
 
 
 .op-body{
-  background: var(--card);
+  background: #f7e7d7;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -784,20 +744,18 @@
 
 
 .op-cart-btn {
-  background: var(--ink);
-  color: var(--bg);
-  border: none;
-  border-radius: 8px;
+  display: inline-block;
+  background: var(--btn);
+  color: var(--ink);
+  text-decoration: none;
   font-weight: 600;
   padding: 10px 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: "Georgia", "Times New Roman", serif;
-  transition: background .25s ease, transform .2s ease, box-shadow .25s ease;
-  box-shadow: 0 4px 10px rgba(83,22,7,.15);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+  box-shadow: 0 4px 10px rgba(83,22,7,.08);
 }
+
 
 .op-cart-btn:hover {
   background: #7b3f00; /* tono café más claro */
@@ -964,6 +922,281 @@
 .delivery__map iframe{
   width:100%; height:100%; border:0; display:block;
 }
+
+/* Contenedor full-width */
+.cta-decor{
+  position: relative;
+  width: 160vw;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;                /* distancia entre los 3 íconos */
+  margin: 60px 0;
+}
+
+/* Íconos */
+.cta-decor img{
+  width:50px;
+  height:auto;
+  object-fit:contain;
+  position:relative;
+  z-index:2;                 /* encima de la línea */
+}
+
+/* Responsive en móvil */
+@media (max-width:600px){
+  .cta-decor{
+    gap:70px;                /* más juntos */
+  }
+  .cta-decor img{
+    width:28px;
+  }
+}
+
+
+/* ====== GRID de más vendidos ====== */
+
+#topSellingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+/* ====== CARD estilo Espresso ====== */
+
+.mv2-card {
+  position: relative;
+  background: var(--coffee-900, #4a2e25);
+  border-radius: 32px;
+  padding: 5.3rem 1.7rem 1.8rem;
+  color: #faeadf;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  overflow: visible;
+}
+
+/* Panel durazno pequeño */
+.mv2-peach {
+  position: absolute;
+  top: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 65%;
+  height: 90px;
+  background: var(--peach-400, #e3a193);
+  border-radius: 24px;
+  z-index: 0;
+}
+
+/* Imagen del producto */
+.mv2-img-wrap {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 160px;
+  z-index: 2;
+}
+
+.mv2-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Cuerpo */
+.mv2-body {
+  position: relative;
+  z-index: 3;
+}
+
+/* Título */
+.mv2-title {
+  margin-top: 3.2rem;
+  margin-bottom: 0.3rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* Línea 2 (100% espresso corto) */
+.mv2-sub {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* Categorías */
+.mv2-cat {
+  margin: 0.5rem 0 0.3rem;
+  font-size: 0.85rem;
+}
+
+/* Stock */
+.mv2-stock {
+  margin: 0.2rem 0 1rem;
+  font-size: 0.85rem;
+}
+
+.mv2-stock span {
+  font-weight: 700;
+}
+
+/* Footer: precio + carrito */
+.mv2-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+/* Pastilla de precio */
+.mv2-price-pill {
+  background: #f8c5ac;
+  color: #2b1b17;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Botón carrito */
+.mv2-cart-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: #f8d9c6;
+  cursor: pointer;
+  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+/* Sección Más vendidos */
+.ts-section {
+  padding: 60px 20px 80px;
+  background-color: #DCC0B9;
+}
+
+/* GRID centrado y con ancho máximo */
+#topSellingGrid {
+  max-width: 900px;                  /* limita el ancho */
+  margin: 2rem auto 0;               /* centra el grid */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+/* ====== CARD estilo Espresso ====== */
+
+.mv2-card {
+  position: relative;
+  background: #4a2e25;
+  border-radius: 32px;
+  padding: 5.3rem 1.7rem 1.8rem;
+  color: #faeadf;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  overflow: visible;
+}
+
+/* Panel durazno pequeño */
+.mv2-peach {
+  position: absolute;
+  top: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 65%;
+  height: 90px;
+  background: #e3a193;
+  border-radius: 24px;
+  z-index: 0;
+}
+
+/* Imagen */
+.mv2-img-wrap {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 160px;
+  z-index: 2;
+}
+
+.mv2-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Cuerpo */
+.mv2-body { position: relative; z-index: 3; }
+
+.mv2-title {
+  margin-top: 3.2rem;
+  margin-bottom: 0.3rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.mv2-sub {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.mv2-cat {
+  margin: 0.5rem 0 0.3rem;
+  font-size: 0.85rem;
+}
+
+.mv2-stock {
+  margin: 0.2rem 0 1rem;
+  font-size: 0.85rem;
+}
+.mv2-stock span { font-weight: 700; }
+
+/* Footer */
+.mv2-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.mv2-price-pill {
+  background: #f8c5ac;
+  color: #2b1b17;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.mv2-cart-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: #f8d9c6;
+  cursor: pointer;
+  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
 
 /* Responsive */
 @media (max-width: 980px){

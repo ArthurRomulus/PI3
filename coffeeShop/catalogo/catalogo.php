@@ -66,7 +66,6 @@ $categoria_result = $conn->query($categoria_query);
 
   <link rel="stylesheet" href="../inicio/Style.css" />
   <link rel="stylesheet" href="catalogo.css" />
-  <link rel="icon" href="../../images/logotipocafes.png" />
   <link href="../general.css" rel="stylesheet"/>
 
 </head>

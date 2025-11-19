@@ -329,7 +329,10 @@ $items[] = [
   'namep'             => $row['namep'],
   'ruta_imagen'       => $rutaImg,
   'precio_base'       => $precioBase,
-  'categorias' => array_map(fn($c) => ['nombre' => $c], $categoriasProd),
+  'categorias' => array_map(function($c){
+   return ['nombre' => $c];
+}, $categoriasProd),
+
   'sabor'             => $saborUsed,   // objeto con id/nombre/precio_extra/tipo_modificador
   'tamano'            => $tamanoUsed,  // objeto con id/nombre/precio_aumento
   'precio_total'      => $precioTotal,

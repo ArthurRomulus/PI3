@@ -19,11 +19,11 @@ function fail($msg = 'Error', $code = 400) {
 /** Normaliza la ruta de imagen a ../../images/ salvo que sea URL absoluta */
 function resolve_img($raw) {
   $s = trim((string)($raw ?? ''));
-  if ($s === '') return '../../images/placeholder.png';
+  if ($s === '') return '../../Images/placeholder.png';
   if (preg_match('~^https?://~i', $s)) return $s;
-  if (strpos($s, '../../images/') === 0) return $s;
+  if (strpos($s, '../../Images/') === 0) return $s;
   // cuelga el archivo directamente de ../../images/
-  return '../../images/' . ltrim($s, '/');
+  return '../../Images/' . ltrim($s, '/');
 }
 
 /** Calcula nombre, foto y precio_total desde DB, con overrides opcionales */

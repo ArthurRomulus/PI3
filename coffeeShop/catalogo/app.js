@@ -11,7 +11,7 @@
   const IMG_PLACEHOLDER = IMG_BASE + "placeholder.png";
 
   // Ruta base para el API del carrito.
-  // Cada página puede definir window.CART_API_URL antes de cargar este script.
+  // Cada página puede definir window.CART_API_URL antes de  este script.
   // Ejemplo en catalogo.php:
   //   window.CART_API_URL = 'cart_api.php';
   // Ejemplo en comentarios.php:
@@ -32,10 +32,21 @@
       .replace(/^(\.\.\/)+/, "")
       .replace(/^assest\//i, "")
       .replace(/^assets?\//i, "")
-      .replace(/^images?\//i, "");
+      .replace(/^Images?\//i, "");
 
     return encodeURI(IMG_BASE + s);
   }
+
+  // Utilidad para escapar caracteres peligrosos en texto
+function escapeHtml(text = "") {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 
   // ============================
   // 1) Filtro desplegable de categorías (catálogo)
@@ -191,24 +202,26 @@
 
     cargarCategoria(categoriaAttr);
   }
+// ============================================
+// 3) Mini-carrito Drawer + Modal opciones
+// ============================================
+(function () {
 
-  // ============================
-  // 3) Mini-carrito Drawer (catálogo + comentarios + donde lo pongas)
-  // ============================
   function initMiniCart() {
     // soporta tus dos variantes de IDs/clases según las páginas
-    const openBtn = $("#open-cart") || $("#navCartBtn");
-    const overlay = $("#mc-overlay") || $("#mcOverlay");
-    const drawer = $("#mini-cart") || $("#miniCart");
-    const closeBtn = $("#mc-close") || $("#mcClose");
-    const list = $("#mc-list") || $("#mcList");
+    const openBtn  = $("#open-cart") || $("#navCartBtn");
+    const overlay  = $("#mc-overlay") || $("#mcOverlay");
+    const drawer   = $("#mini-cart")  || $("#miniCart");
+    const closeBtn = $("#mc-close")   || $("#mcClose");
+    const list     = $("#mc-list")    || $("#mcList");
     const emptyMsg =
       (list ? list.querySelector(".mc__empty") : null) || $("#mcEmpty");
-    const totalEl = $("#mc-total") || $("#mcTotal");
-    const badge = $("#nav-cart-count") || $("#open-cart span");
+    const totalEl  = $("#mc-total")   || $("#mcTotal");
 
-    // si la página no tiene mini-cart HTML, no hacemos nada
-    if (!overlay || !drawer || !list || !totalEl) return;
+    // ⛔ Si esta página NO tiene el HTML del mini-carrito, salimos
+    if (!overlay || !drawer || !list || !totalEl) {
+      return;
+    }
 
     const fmt = (n) =>
       Number(n || 0).toLocaleString("es-MX", {
@@ -235,27 +248,26 @@
       overlay.hidden = true;
     }
 
-    overlay.addEventListener("click", closeCart);
-    closeBtn?.addEventListener("click", closeCart);
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeCart();
-    });
-
-    openBtn?.addEventListener("click", (e) => {
-      e.preventDefault();
-      openCart();
-      loadMiniCart();
-    });
-
+    // ====== REFRESH BADGE (contador del carrito en el header) ======
     async function refreshBadge() {
+      const badge =
+        document.querySelector("#nav-cart-count") ||
+        document.querySelector("#open-cart span");
+
+      if (!badge) return;
+
       try {
-        const d = await j(CART_API + "?action=count");
-        if (d.ok && badge) badge.textContent = d.count ?? 0;
-      } catch {
-        // ignore
+        const r = await fetch(CART_API + "?action=count");
+        const d = await r.json();
+        if (d.ok && typeof d.count !== "undefined") {
+          badge.textContent = d.count;
+        }
+      } catch (err) {
+        console.error("Error al refrescar badge del carrito:", err);
       }
     }
 
+    // ====== Cargar contenido del mini-carrito ======
     async function loadMiniCart() {
       const d = await j(CART_API + "?action=list");
       if (!d.ok) {
@@ -302,10 +314,10 @@
       `
         )
         .join("");
-        if (window.currentLang && typeof applyTranslation === "function") {
+
+      if (window.currentLang && typeof applyTranslation === "function") {
         applyTranslation(window.currentLang);
       }
-
 
       totalEl.textContent = fmt(d.total);
 
@@ -326,59 +338,7 @@
       await refreshBadge();
     }
 
-   // Evento del botón del modal (1 sola vez)
-document.getElementById("btnAgregarModal").addEventListener("click", async () => {
-  
-  // Obtiene el producto seleccionado global
-  const prod = window.__productoSeleccionado;
-  if (!prod) return;
-
-  // Leer listboxes
-  const selects = document.querySelectorAll("#modalOpcionesWrap select");
-
-  let extraNombre = selects.length
-    ? " (" + [...selects].map(s => s.value).join(", ") + ")"
-    : "";
-
-   // ---- LEER TAMAÑO ----
-  const tamañoSelect = document.getElementById("selectTamaño");
-  const tamaño = tamañoSelect ? tamañoSelect.value : "Normal";  
-
-  // Nombre final con tamaño incluido
-  const nombreFinal = `${prod.nombre}${extraNombre} - ${tamaño}`;
-
-  // Enviar al carrito
-  const res = await fetch(CART_API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "add",
-      id: prod.id,
-      qty: 1,
-      nombre: nombreFinal,
-      precio: prod.precio,
-      foto: prod.foto,
-      tamano: tamaño
-    })
-  }).then(r => r.json());
-
-  if (res.ok) {
-    document.getElementById("modalOpciones").style.display = "none";
-    await refreshBadge();
-    openCart();
-    await loadMiniCart();
-  } else {
-    alert("Error al agregar al carrito");
-  }
-});
-
-
-// Botón cerrar modal
-document.getElementById("btnCerrarModal").addEventListener("click", () => {
-  document.getElementById("modalOpciones").style.display = "none";
-});
-
-
+    // ====== Helpers de cantidad ======
     async function setQty(id, qty) {
       const r = await j(CART_API, {
         method: "POST",
@@ -399,7 +359,75 @@ document.getElementById("btnCerrarModal").addEventListener("click", () => {
       await setQty(id, cur + delta);
     }
 
-    // click "🛒" en tarjeta producto => abrir modal de personalización
+    // ====== Eventos del drawer ======
+    overlay.addEventListener("click", closeCart);
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeCart);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeCart();
+    });
+
+    if (openBtn) {
+      openBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openCart();
+        loadMiniCart();
+      });
+    }
+
+    // ====== MODAL de personalización ======
+    const btnAgregarModal = document.getElementById("btnAgregarModal");
+    if (btnAgregarModal) {
+      btnAgregarModal.addEventListener("click", async () => {
+        const prod = window.__productoSeleccionado;
+        if (!prod) return;
+
+        const selects = document.querySelectorAll("#modalOpcionesWrap select");
+
+        let extraNombre = selects.length
+          ? " (" + [...selects].map((s) => s.value).join(", ") + ")"
+          : "";
+
+        const tamañoSelect = document.getElementById("selectTamaño");
+        const tamaño = tamañoSelect ? tamañoSelect.value : "Normal";
+
+        const nombreFinal = `${prod.nombre}${extraNombre} - ${tamaño}`;
+
+        const res = await fetch(CART_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "add",
+            id: prod.id,
+            qty: 1,
+            nombre: nombreFinal,
+            precio: prod.precio,
+            foto: prod.foto,
+            tamano: tamaño,
+          }),
+        }).then((r) => r.json());
+
+        if (res.ok) {
+          document.getElementById("modalOpciones").style.display = "none";
+          await refreshBadge();
+          openCart();
+          await loadMiniCart();
+        } else {
+          alert("Error al agregar al carrito");
+        }
+      });
+    }
+
+    const btnCerrarModal = document.getElementById("btnCerrarModal");
+    if (btnCerrarModal) {
+      btnCerrarModal.addEventListener("click", () => {
+        document.getElementById("modalOpciones").style.display = "none";
+      });
+    }
+
+    // click "🛒" en tarjeta producto => abrir modal
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".ts-cart");
       if (!btn) return;
@@ -407,64 +435,148 @@ document.getElementById("btnCerrarModal").addEventListener("click", () => {
       const card = btn.closest(".ts-card");
       if (!card) return;
 
-      // Guardamos info temporal del producto
-      const p = window.__productoSeleccionado = {
+      const p = (window.__productoSeleccionado = {
         id: card.dataset.id,
         nombre: card.dataset.name,
         precio: parseFloat(card.dataset.price || 0),
         foto: card.dataset.foto,
-        listboxes: card.dataset.listboxes ? JSON.parse(card.dataset.listboxes) : []
-      };
+        listboxes: card.dataset.listboxes
+          ? JSON.parse(card.dataset.listboxes)
+          : [],
+      });
 
-      // Reconstruir selects dinámicos
       const opcionesWrap = document.getElementById("modalOpcionesWrap");
-      opcionesWrap.innerHTML = ""; // limpiar
+      opcionesWrap.innerHTML = "";
 
-      (p.listboxes || []).forEach(lb => {
+      (p.listboxes || []).forEach((lb) => {
         const wrapper = document.createElement("div");
         wrapper.className = "modal-field";
 
         wrapper.innerHTML = `
           <label data-translate="${lb.nombre}">${lb.nombre}</label>
           <select data-lbid="${lb.id}">
-            ${lb.opciones.map(opt => `
+            ${lb.opciones
+              .map(
+                (opt) => `
               <option value="${opt.opcion}" data-opid="${opt.id}" data-translate="${opt.opcion}">
                 ${opt.opcion}
               </option>
-            `).join("")}
+            `
+              )
+              .join("")}
           </select>
         `;
 
         opcionesWrap.appendChild(wrapper);
       });
 
-      // Mostrar modal
       document.getElementById("modalProductoNombre").textContent =
         "Personalizar " + p.nombre;
 
       document.getElementById("modalOpciones").style.display = "flex";
       console.log("Array de opciones del producto seleccionado:", p.listboxes);
-      // Llamamos a la traducción de los labels y opciones dinámicos
+
       if (window.currentLang && typeof applyTranslation === "function") {
-          applyTranslation(window.currentLang);
+        applyTranslation(window.currentLang);
       }
     });
 
-
-
-    // inicial
+    // llamada inicial
     refreshBadge();
   }
 
-  // ============================
-  // 4) Boot
-  // ============================
+function cargarTopVendidos() {
+  const grid = document.getElementById("topSellingGrid");
+  if (!grid) return;
+
+  fetch("get_top_selling.php")
+    .then((res) => res.json())
+    .then((json) => {
+      console.log("JSON top vendidos:", json);
+
+      if (!json.success) {
+        console.error("Error en la API de más vendidos:", json.error);
+        grid.innerHTML =
+          '<p style="color:#fff; font-size:14px;">No se pudieron cargar los productos.</p>';
+        return;
+      }
+
+      grid.innerHTML = "";
+
+      json.data.forEach((prod) => {
+        // Campos que vienen del PHP
+        let imgSrc       = prod.imagen || prod.ruta_imagen || "";
+        const nombre     = prod.nombre || prod.namep || "";
+        const descLinea2 = prod.descripcion_corta || prod.descripcion || "";
+        const categorias = prod.categorias || prod.categoria || "";
+        const stock      = prod.STOCK || prod.stock || 0;
+        const precio     = Number(prod.precio || 0);
+        const idp        = prod.id || prod.idp || "";
+
+        if (!imgSrc) {
+          imgSrc = "../../Images/placeholder.png";
+        }
+
+        const card = document.createElement("article");
+        card.className = "mv2-card";
+
+        card.innerHTML = `
+          <div class="mv2-peach"></div>
+
+          <div class="mv2-img-wrap">
+            <img src="${imgSrc}" alt="${escapeHtml(nombre)}">
+          </div>
+
+          <div class="mv2-body">
+            <h3 class="mv2-title">${escapeHtml(nombre)}</h3>
+
+            <p class="mv2-sub">
+              ${descLinea2 ? escapeHtml(descLinea2) : ""}
+            </p>
+
+            <p class="mv2-cat">
+              ${categorias ? escapeHtml(categorias) : ""}
+            </p>
+
+            <p class="mv2-stock">
+              <span>Stock:</span> ${stock}
+            </p>
+
+            <div class="mv2-footer">
+              <div class="mv2-price-pill">
+                Precio $${precio.toFixed(2)} MXN
+              </div>
+              <button class="mv2-cart-btn" data-idp="${idp}">
+                🛒
+              </button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    })
+    .catch((err) => {
+      console.error("Error fetch más vendidos:", err);
+    });
+}
+
+
+
+
+
+
+  // ============================================
+  // 5) Boot
+  // ============================================
   function boot() {
-    initFiltro();        // solo actúa si existe el menú de filtro
-    initProductosAJAX(); // solo actúa si existe la grid de productos
-    initMiniCart();      // actúa si existe el mini-carrito
+    initFiltro?.();          // si existen
+    initProductosAJAX?.();
+    initMiniCart();
+    cargarTopVendidos();
   }
 
   if (document.readyState !== "loading") boot();
   else document.addEventListener("DOMContentLoaded", boot);
-})();
+
+})()})();
