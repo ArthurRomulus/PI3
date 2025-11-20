@@ -17,11 +17,10 @@
       <a href="/PI3/coffeeShop/catalogo/catalogo.php" data-translate="Catálogo">Catálogo</a>
       <a href="/PI3/coffeeShop/comentarios/comentarios.php" data-translate="Comentarios">Comentarios</a>
       <a href="/PI3/coffeeShop/acercade/acercade.php" data-translate="Acerca de ">Acerca de</a>
-      <a href="/PI3/coffeeShop/contactanos/contactanos.php" data-translate="Contactanos">Contactanos</a>
     </nav>
 
     <!-- ACCIONES (switch + login + carrito + banderas) -->
-    <div class="footer-actions header-card">
+    <div class="footer-actions">
 
       <!-- SWITCH MODO CLARO/OSCURO -->
       <div class="theme-switch-container">
@@ -45,15 +44,20 @@
        alt="icono usuario"
        class="login-img">
 
-  <span class="login-text">Login</span>
+  <span class="login-text" data-translate="Perfil">Perfil</span>
 </a>
 
 
-      <!-- CARRITO -->
-      <a href="#" id="open-cart" class="icon-btn cart-btn" aria-label="Carrito" title="Carrito">
-  <span class="cart-icon">🛒</span>
-  <span class="cart-text">Carrito</span>
-</a>
+    <a href="#" id="open-cart" class="icon-btn cart-btn" aria-label="Carrito" title="Carrito">
+      <div class="cart-icon-wrapper">
+        <span class="cart-icon">🛒</span>
+        <span id="nav-cart-count" class="cart-badge">0</span>
+      </div>
+      <span class="cart-text" data-translate="Carrito">Carrito</span>
+    </a>
+
+
+
 
       <!-- IDIOMA -->
       <div class="lang-switch lang-btn header-card">
@@ -64,7 +68,7 @@
         <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
     </div>
 
-    <span class="lang-text">Idioma</span>
+    <span class="lang-text" data-translate="Idioma">Idioma</span>
 </div>
 
 
@@ -77,8 +81,7 @@
 
 <style>
 
-  .login-text,
-.cart-text,
+.login-text,
 .lang-text {
   font-size: 12px;
   font-weight: 600;
@@ -90,6 +93,18 @@
   padding: 2px 10px;
   border-radius: 999px;
   box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+
+/* El carrito NO usa pastilla y NO debe bajarse */
+/* Texto debajo */
+.cart-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b2a25;
+  margin-top: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
 }
 
   
@@ -109,6 +124,30 @@
   gap: 10px;
 }
 
+
+/* Contenedor icono + contador */
+.cart-icon-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Burbuja contador */
+.cart-badge {
+  background: red;
+  color: black;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+
+
+
 /* Texto debajo */
 .lang-text {
   font-size: 12px;
@@ -118,17 +157,15 @@
   margin-top: 8px;
 }
 
-  /* Botón vertical del carrito */
+/* Carrito igual que login */
 .cart-btn {
   display: flex;
   flex-direction: column;   /* icono arriba, texto abajo */
   align-items: center;
-  gap: 11px;
+  gap: 4px;
   text-decoration: none;
-  margin-top:19px;
+  margin-top: 15px;         /* misma altura que login */
 }
-
-
 
 
 
@@ -179,9 +216,11 @@
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
+  justify-content: space-between; /* 💥 ESTO ARREGLA TODO */
   align-items: center;
   gap: 40px;
 }
+
 
 /* ====== LOGO (IZQUIERDA) ====== */
 .footer-logo {
@@ -190,7 +229,6 @@
   gap: 10px;
   color: #531607;
   font-weight: 700;
-  margin-left: -240px; /* mueve solo el logo hacia la izquierda */
 }
 
 
@@ -231,7 +269,7 @@
   display: flex;
   align-items: center;
   gap: 16px;           /* espacio entre switch, login, carrito, flags */
-    margin-right: -150px; 
+  
 }
 
 /* Botones ícono */
@@ -245,6 +283,12 @@
 
 .icon-btn:hover {
   color: #8a4b2c;
+}
+/* Icono de carrito */
+.cart-icon {
+  font-size: 32px;
+  line-height: 1;
+  margin-top: 10px;         /* igual que login-img */
 }
 
 /* ====== SWITCH TEMA ====== */
@@ -353,4 +397,130 @@
   opacity: 1;
   box-shadow: 0 0 6px rgba(133, 73, 5, 0.8);
 }
+
+/* ========================= RESPONSIVE ========================= */
+
+/* 1024px – tablets horizontales */
+@media (max-width: 1024px) {
+  .footer-container {
+    gap: 20px;
+    padding: 0 10px;
+  }
+
+  .footer-menu a {
+    font-size: 16px;
+  }
+
+  .footer-logo {
+    margin-left: 0;
+  }
+
+  .footer-actions {
+    margin-right: 0;
+    gap: 10px;
+  }
+}
+
+/* 768px – tablets verticales y pantallas medianas */
+@media (max-width: 768px) {
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 25px;
+  }
+
+  .footer-menu {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 25px;
+  }
+
+  .lang-btn,
+  .login-btn,
+  .cart-btn {
+    margin: 0;
+  }
+}
+
+/* 480px – celulares */
+@media (max-width: 480px) {
+
+  .footer-logo img {
+    width: 70px;
+  }
+
+  .footer-logo span {
+    font-size: 12px;
+  }
+
+  .footer-menu a {
+    font-size: 14px;
+  }
+
+  .footer-actions {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .login-img {
+    width: 28px;
+  }
+
+  .cart-icon {
+    font-size: 26px;
+  }
+
+  .lang-flag {
+    width: 24px;
+  }
+}
+
 </style>
+
+<!-- === OVERLAY & DRAWER MINI-CARRITO === -->
+  <div class="mc-overlay" id="mcOverlay" hidden></div>
+
+  <aside
+    class="mini-cart"
+    id="miniCart"
+    aria-hidden="true"
+    aria-labelledby="mcTitle"
+    role="dialog">
+    <header class="mc-header">
+      <h3 id="mcTitle" data-translate="Tu carrito">Tu carrito</h3>
+      <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
+        ✕
+      </button>
+    </header>
+
+    <div class="mc-body">
+      <ul class="mc-list" id="mcList">
+        <!-- items por JS -->
+      </ul>
+      <div
+        class="mc-empty"
+        id="mcEmpty"
+        data-translate="Tu carrito está vacío.">
+        Tu carrito está vacío.
+      </div>
+    </div>
+
+    <footer class="mc-footer">
+      <div class="mc-total">
+        <span>Total</span>
+        <strong id="mcTotal">$0.00 MXN</strong>
+      </div>
+      <a
+        href="../catalogo/carrito.php"
+        class="mc-btn"
+        data-translate="Ir a pagar">
+        Ir a pagar
+      </a>
+    </footer>
+  </aside>
