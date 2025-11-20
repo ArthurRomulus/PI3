@@ -254,6 +254,8 @@ include "../../conexion.php";
       <button type="button" id="addOpcion" data-translate="Agregar opción">Agregar opción</button>
       <br><br>
       <button data-translate="Guardar">Guardar</button>
+      <h2 data-translate="Editar listas existentes">Editar listas existentes</h2>
+      <div id="editarListboxesContainer" style="max-height:300px; overflow-y:auto; border-top:1px solid #ccc; padding-top:10px;"></div>
     </form>
   </div>
 </div>
@@ -483,6 +485,8 @@ const opcionesContainer = document.getElementById('opcionesContainer');
 // Abrir modal
 openListboxModalBtn.onclick = () => {
   listboxModal.style.display = 'flex';
+
+  cargarListboxesExistentes();
   // 🔹 Forzar traducción al abrir el modal
   if (typeof applyTranslation === "function") {
     const lang = localStorage.getItem("lang") || "es";
@@ -533,6 +537,97 @@ function mostrarFormularioCategoria() {
 function cerrarModalCategoria() {
     document.getElementById('modalCategoria').style.display = 'none';
 }
+function cargarListboxesExistentes() {
+  const container = document.getElementById('editarListboxesContainer');
+  container.innerHTML = '';
+
+  fetch('get_todas_opciones.php')
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(listbox => {
+        const div = document.createElement('div');
+        div.style.border = "1px solid #aaa";
+        div.style.padding = "5px";
+        div.style.marginBottom = "5px";
+
+        const label = document.createElement('label');
+        label.textContent = listbox.listbox_nombre;
+        label.style.fontWeight = "bold";
+        div.appendChild(label);
+
+        // Contenedor de opciones editables
+        const opcionesDiv = document.createElement('div');
+        opcionesDiv.classList.add('opciones-edit-container');
+
+        listbox.opciones.forEach(op => {
+          const opDiv = document.createElement('div');
+          opDiv.classList.add('opcion-item');
+          opDiv.innerHTML = `
+            <input type="text" value="${op.valor}" data-opcion-id="${op.opcion_id}" class="opcion-valor" required>
+            <input type="number" step="0.01" value="${op.precio}" class="opcion-precio" required>
+            <button type="button" class="remove-opcion">🗑</button>
+          `;
+          opcionesDiv.appendChild(opDiv);
+        });
+
+        // Botón para agregar nuevas opciones a este listbox
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.textContent = 'Agregar opción';
+        addBtn.onclick = () => {
+          const newOpDiv = document.createElement('div');
+          newOpDiv.classList.add('opcion-item');
+          newOpDiv.innerHTML = `
+            <input type="text" class="opcion-valor" placeholder="Valor (ej. Latte)" required>
+            <input type="number" step="0.01" class="opcion-precio" placeholder="Precio adicional" required>
+            <button type="button" class="remove-opcion">🗑</button>
+          `;
+          opcionesDiv.appendChild(newOpDiv);
+        };
+
+        div.appendChild(opcionesDiv);
+        div.appendChild(addBtn);
+
+        // Botón para guardar cambios
+        const btnGuardar = document.createElement('button');
+        btnGuardar.type = 'button';
+        btnGuardar.textContent = 'Guardar cambios';
+        btnGuardar.onclick = () => {
+          const opciones = [];
+          opcionesDiv.querySelectorAll('.opcion-item').forEach(opDiv => {
+            opciones.push({
+              opcion_id: opDiv.querySelector('.opcion-valor').dataset.opcionId || null,
+              valor: opDiv.querySelector('.opcion-valor').value,
+              precio: parseFloat(opDiv.querySelector('.opcion-precio').value) || 0
+            });
+          });
+
+          fetch('Editar_listbox.php', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+              listbox_id: listbox.listbox_id,
+              opciones
+            })
+          }).then(r=>r.json()).then(res=>{
+            if(res.success) alert('Listbox actualizado');
+          });
+        };
+
+        div.appendChild(btnGuardar);
+        container.appendChild(div);
+      });
+
+      // Eliminar opción
+      container.addEventListener('click', e => {
+        if(e.target.classList.contains('remove-opcion')) {
+          e.target.parentElement.remove();
+        }
+      });
+    });
+}
+
+
 </script>
 <script src="../../translate.js"></script>
 </body>

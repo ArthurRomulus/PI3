@@ -192,6 +192,38 @@ function renderGrafica(data) {
 }
 
 cargarDatos();
+// Guardar filtros cada vez que cambian
+filtros.forEach(f => f.addEventListener("change", () => {
+    const filtroData = {
+        periodo: document.getElementById("filtro-periodo").value,
+        categoria: document.getElementById("filtro-categoria").value,
+        tipo: document.getElementById("filtro-tipo").value,
+        inicio: document.getElementById("fecha-inicio").value,
+        fin: document.getElementById("fecha-fin").value,
+        metodopago: document.getElementById("f-mpago").value
+    };
+    sessionStorage.setItem("estadisticasFiltros", JSON.stringify(filtroData));
+    cargarDatos();
+}));
+
+// Al cargar la página, aplicar filtros guardados si existen
+window.addEventListener("load", () => {
+    const filtrosGuardados = JSON.parse(sessionStorage.getItem("estadisticasFiltros"));
+    if(filtrosGuardados){
+        document.getElementById("filtro-periodo").value = filtrosGuardados.periodo;
+        document.getElementById("filtro-categoria").value = filtrosGuardados.categoria;
+        document.getElementById("filtro-tipo").value = filtrosGuardados.tipo;
+        document.getElementById("fecha-inicio").value = filtrosGuardados.inicio;
+        document.getElementById("fecha-fin").value = filtrosGuardados.fin;
+        document.getElementById("f-mpago").value = filtrosGuardados.metodopago;
+
+        // Mostrar el rango personalizado si corresponde
+        rangoDiv.style.display = filtrosGuardados.periodo === "personalizado" ? "flex" : "none";
+
+        cargarDatos();
+    }
+});
+
 </script>
 <script src="../../translate.js"></script>
 </body>
