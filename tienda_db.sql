@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-11-2025 a las 03:13:18
+-- Tiempo de generación: 17-11-2025 a las 08:23:02
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -730,7 +730,7 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`userid`, `profilescreen`, `username`, `email`, `password`, `role`, `status`, `archived`, `apellido`, `telefono`, `fecha_nac`, `zona_horaria`, `Password_Token`, `Password_Token_Exp`) VALUES
 (17, NULL, 'mparra12', 'mparra8@ucol.mx', '$2y$10$VLyk4esMBH4GAVnwWE..Me/hjYxmy55lykf6BWEZutbFGHuE0pM.i', 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL),
 (18, '../../Images/Captura de pantalla 2024-10-16 185653.png', 'Noisi', 'admin@tienda.com', '$2y$10$4LsEhgLYHmvd.43lhq3.yukRT79dAwrpCIMQ64LVggS5CmVm6ROCe', 4, 1, 0, '', '', '0000-00-00', '(UTC -06:00) Guadalajara, CDMX', NULL, NULL),
-(19, '../images/profiles/avatar_user_19.png', 'NoisiUsuario', 'noisi@gmail.com', '$2y$10$dNnooKM7L2SGvVAnKqFs3.dlrBv67f5129gIAERWMiMSNXLvvFYC.', 2, 1, 0, '', '', '0000-00-00', '(UTC -06:00) Guadalajara, CDMX', NULL, NULL);
+(19, '../images/profiles/avatar_user_19.png', 'NoisiUsuario', 'noisi@gmail.com', '$2y$10$dNnooKM7L2SGvVAnKqFs3.dlrBv67f5129gIAERWMiMSNXLvvFYC.', 1, 1, 0, '', '', '0000-00-00', '(UTC -06:00) Guadalajara, CDMX', NULL, NULL);
 
 --
 -- Índices para tablas volcadas
