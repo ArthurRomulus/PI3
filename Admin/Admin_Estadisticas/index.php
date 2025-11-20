@@ -83,7 +83,7 @@
       <!-- 📊 Contenedor de gráfica -->
       <div class="grafica-container">
         <div class="grafica-ejes">
-          <div class="eje-y" id="eje-y" style="border-radius: 10px; background: linear-gradient(180deg, #fbfdff, #f7f9fb) ;"></div>
+          <div class="eje-y" id="eje-y"></div>
           <div class="grafica-barras" id="grafica" ></div>
         </div>
         <div id="leyenda"></div>
