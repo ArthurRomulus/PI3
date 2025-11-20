@@ -30,7 +30,10 @@
               2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2
               0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5Z" fill="currentColor"/></svg>
             </span>
-            <a href="mailto:coffee_shop@gmail.com">coffee_shop@gmail.com</a>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=coffeeshopPIE3@gmail.com" target="_blank">
+  coffeeshopPIE3@gmail.com.
+</a>
+
           </li>
           <li>
             <span class="cs-ico" aria-hidden="true">

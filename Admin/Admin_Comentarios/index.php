@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../general.css">
     <link rel="stylesheet" href="comentario.css">
 
-    <script src="../../theme-toggle.js" defer></script>
+    
 
     <style>
         .estrellas-mostradas-admin {

@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
   <link rel="stylesheet" href="personal.css">
   <link rel="stylesheet" href="usuariocrud.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="../../theme-toggle.js" defer></script>
+  
 
 </head>
 <body>

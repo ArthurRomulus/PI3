@@ -6,7 +6,7 @@
   <title>Panel de Control</title>
   <link rel="stylesheet" href="../Admin_nav_bar.css">
   <link rel="stylesheet" href="../general.css">
-  <script src="../../theme-toggle.js" defer></script>
+  
   <style>
     /* Estilos para el .content (Panel de Control)
        Apila todo verticalmente y quita la altura fija.
