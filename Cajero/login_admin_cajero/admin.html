@@ -48,16 +48,13 @@
                 </style>
 
                 <div class="board-container" style="width:520px;margin-top:-18px;">
-                    <h1>Menú del Día</h1>
-                    <p>Ingreso de Administradores</p>
+                    <h1 data-translate="Menú del Día">Menú del Día</h1>
+                    <p data-translate="Ingreso de Administradores">Ingreso de Administradores</p>
 
-                    <form action="#" method="post">
-                        <input class="chalk-input" type="text" id="username" name="username" placeholder="Usuario" required>
-                        <input class="chalk-input" type="email" id="email" name="email" placeholder="Correo electrónico" required>
-                        <input class="chalk-input" type="password" id="password" name="password" placeholder="Contraseña" required>
-                        <input class="chalk-input" type="password" id="confirm-password" name="confirm_password" placeholder="Confirmar contraseña" required>
-                        <a class="help-link" href="#">¿Olvidaste tu contraseña?</a>
-                        <button class="btn-chalk" type="submit">Ingresar</button>
+                    <form action="login_admin.php" method="post">
+                        <input class="chalk-input" type="email" name="email" data-translate-placeholder="Correo electrónico" placeholder="Correo electrónico" required>
+                        <input class="chalk-input" type="password" name="password" data-translate-placeholder="Contraseña" placeholder="Contraseña" required>
+                        <button class="btn-chalk" type="submit" data-translate="Ingresar">Ingresar</button>
                     </form>
                 </div>
             </section>

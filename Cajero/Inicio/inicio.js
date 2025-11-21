@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         card.innerHTML = `
             <div class="product-img">
-                <img src="${imgUrl}" alt="${product.nombre}">
+                <img src="${imgUrl}" alt="${product.nombre}" data-translate="${product.nombre}">
             </div>
             <div class="product-tag">
-                <h3 class="product-title">${product.nombre}</h3>
-                <p class="product-sub">${product.descripcion || ''}</p>
+                <h3 class="product-title" data-translate="${product.nombre}">${product.nombre}</h3>
+                <p class="product-sub" data-translate="${product.descripcion || ''}">${product.descripcion || ''}</p>
                 <div class="product-footer">
                     <div class="price">$${precioNumerico}</div>
                 </div>
@@ -90,6 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
         productsToRender.forEach(product => {
             container.append(createProductCard(product));
         });
+         // 🔹 Llamar a traducción después de añadir los elementos al DOM
+        if (window.currentLang) {
+            window.applyTranslation(window.currentLang);
+        }
     }
 
     async function loadCarousels() {
