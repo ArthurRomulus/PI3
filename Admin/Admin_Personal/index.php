@@ -1,6 +1,6 @@
 <?php
 include "../../conexion.php"; // conexión a la base de datos
-
+$userid = null;
 // === INSERCIÓN DE NUEVO USUARIO ===
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   if ( isset($_POST["new_user"])) {
@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $telefono = $_POST["telefono"];
       $telefonoEmergencia = $_POST["telefono_emergencia"];
       $direccion = $_POST["direccion"];
+      
 
       // Imagen de perfil opcional
       $profilePath = null;
@@ -21,8 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           move_uploaded_file($_FILES["image"]["tmp_name"], $profilePath);
       }
 
+
+
       // Insertar en tabla usuarios
       $stmt = $conn->prepare("INSERT INTO usuarios (username, password, email, role, profilescreen) VALUES (?, ?, ?, ?, ?)");
+
+      if ($profilePath == null){
+        $profilePath = "../../Images/Profiles/DefaultProfile.png";
+      }
       $stmt->bind_param("sssss", $username, $password, $email, $role, $profilePath);
       $stmt->execute();
       $userid = $conn->insert_id;
@@ -100,6 +107,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
     <div class="layout" id="graphic">
       <?php 
+
+      $row = null;
         $result = $conn->query("SELECT * FROM usuarios");
         while ($row = $result->fetch_assoc()) {
           echo '<div class="empleado" id="empleado_' . htmlspecialchars($row['userid']) . '">';
@@ -171,7 +180,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <button class="close-btn" onclick="closeModal('updateModal')">x</button>
       <h2 data-translate="Modificar usuario">Modificar usuario</h2>
       <form action="UpdateUser.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" id="userid" name="userid" value=<?php echo htmlspecialchars($row['userid']);?>>
+        <input type="hidden" id="userid" name="userid">
         <label data-translate="Nombre de usuario">Nombre de usuario</label>
         <input type="text" id="username" name="username">
         <label data-translate="email">email</label>
