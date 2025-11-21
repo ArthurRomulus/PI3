@@ -9,11 +9,15 @@
 
 <div class="top-bar">
   <div class="admin-profile">
-    <?php if ($_SESSION != null){
-    echo "<img src='". htmlspecialchars($_SESSION['profilescreen']) .">";} ?>'
+   
+     <img src='<?php echo htmlspecialchars($_SESSION['profilescreen']); ?>'>
+  
     <span class="admin-name"><?php if ($_SESSION != null){
        echo $_SESSION['username']; 
        } ?></span>
+
+       <script src="../../theme-toggle.js" defer></script>
+
 
     <div class="theme-switch-wrapper">
         <label class="theme-switch" for="theme-toggle">
@@ -22,7 +26,7 @@
         </label>
     </div>
 
-<script src="../../theme-toggle.js" defer></script>
+
 <div class="lang-switch">
     <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
     <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">

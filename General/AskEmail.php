@@ -50,6 +50,9 @@
         if (isset($_GET["s"])){
           if ($_GET["s"] == "success"){
             echo "<p style='color: green;'>Revisa tu correo electronico y entra al link que te enviamos.</p>";
+          } else if ($_GET["s"]  == "failed") {
+            echo "<p style='color: red ;'>Error al mandar el correo.</p>";
+
           }
         }
 

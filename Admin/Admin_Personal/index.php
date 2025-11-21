@@ -2,49 +2,53 @@
 include "../../conexion.php"; // conexión a la base de datos
 
 // === INSERCIÓN DE NUEVO USUARIO ===
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
-    $username = $_POST["username"];
-    $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
-    $email = $_POST["email"];
-    $role = $_POST["role"];
-    $telefono = $_POST["telefono"];
-    $telefonoEmergencia = $_POST["telefono_emergencia"];
-    $direccion = $_POST["direccion"];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  if ( isset($_POST["new_user"])) {
+      $username = $_POST["username"];
+      $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
+      $email = $_POST["email"];
+      $role = $_POST["role"];
+      $telefono = $_POST["telefono"];
+      $telefonoEmergencia = $_POST["telefono_emergencia"];
+      $direccion = $_POST["direccion"];
 
-    // Imagen de perfil opcional
-    $profilePath = null;
-    if (!empty($_FILES["image"]["name"])) {
-        $uploadDir = "../../uploads/";
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-        $profilePath = $uploadDir . basename($_FILES["image"]["name"]);
-        move_uploaded_file($_FILES["image"]["tmp_name"], $profilePath);
+      // Imagen de perfil opcional
+      $profilePath = null;
+      if (!empty($_FILES["image"]["name"])) {
+          $uploadDir = "../../uploads/";
+          if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+          $profilePath = $uploadDir . basename($_FILES["image"]["name"]);
+          move_uploaded_file($_FILES["image"]["tmp_name"], $profilePath);
+      }
+
+      // Insertar en tabla usuarios
+      $stmt = $conn->prepare("INSERT INTO usuarios (username, password, email, role, profilescreen) VALUES (?, ?, ?, ?, ?)");
+      $stmt->bind_param("sssss", $username, $password, $email, $role, $profilePath);
+      $stmt->execute();
+      $userid = $conn->insert_id;
+
+      // Si es cajero (id_rol = 2), insertarlo en empleados_cajeros
+      if ($role == 2) {
+          $numeroEmpleado = "CJ-" . str_pad($userid, 4, "0", STR_PAD_LEFT);
+          $stmt2 = $conn->prepare("INSERT INTO empleados_cajeros (userid, numero_empleado, nombre_completo, telefono, telefono_emergencia, direccion) VALUES (?, ?, ?, ?, ?, ?)");
+          $stmt2->bind_param("isssss", $userid, $numeroEmpleado, $username, $telefono, $telefonoEmergencia, $direccion);
+          $stmt2->execute();
+      }
+
+        if ($role == 4) {
+          $numeroAdmin = "CJ-" . str_pad($userid, 4, "0", STR_PAD_LEFT);
+          $stmt2 = $conn->prepare("INSERT INTO administradores (userid, numero_admin, nombre_completo, telefono, telefono_emergencia, direccion) VALUES (?, ?, ?, ?, ?, ?)");
+          $stmt2->bind_param("isssss", $userid, $numeroAdmin, $username, $telefono, $telefonoEmergencia, $direccion);
+          $stmt2->execute();
+      }
+
+      echo "<script>alert('Usuario registrado correctamente');</script>";
+          header("location: ../Admin_Personal");
+
+      exit;
+    } else if (1) {
+      echo 12;
     }
-
-    // Insertar en tabla usuarios
-    $stmt = $conn->prepare("INSERT INTO usuarios (username, password, email, role, profilescreen) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $username, $password, $email, $role, $profilePath);
-    $stmt->execute();
-    $userid = $conn->insert_id;
-
-    // Si es cajero (id_rol = 2), insertarlo en empleados_cajeros
-    if ($role == 2) {
-        $numeroEmpleado = "CJ-" . str_pad($userid, 4, "0", STR_PAD_LEFT);
-        $stmt2 = $conn->prepare("INSERT INTO empleados_cajeros (userid, numero_empleado, nombre_completo, telefono, telefono_emergencia, direccion) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt2->bind_param("isssss", $userid, $numeroEmpleado, $username, $telefono, $telefonoEmergencia, $direccion);
-        $stmt2->execute();
-    }
-
-      if ($role == 4) {
-        $numeroAdmin = "CJ-" . str_pad($userid, 4, "0", STR_PAD_LEFT);
-        $stmt2 = $conn->prepare("INSERT INTO administradores (userid, numero_admin, nombre_completo, telefono, telefono_emergencia, direccion) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt2->bind_param("isssss", $userid, $numeroAdmin, $username, $telefono, $telefonoEmergencia, $direccion);
-        $stmt2->execute();
-    }
-
-    echo "<script>alert('Usuario registrado correctamente');</script>";
-        header("location: /PI3/Admin/Admin_Personal/");
-
-    exit;
 }
 ?>
 
@@ -162,14 +166,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["new_user"])) {
     </div>
   </div>
 
-  <!-- MODAL MODIFICAR -->
-
   <div class="GeneralModal" id="updateModal" style="display:none;">
     <div class="modal-content">
-      <button class="close-btn" onclick="closeModal('updateModal')">×</button>
+      <button class="close-btn" onclick="closeModal('updateModal')">x</button>
       <h2 data-translate="Modificar usuario">Modificar usuario</h2>
       <form action="UpdateUser.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" id="userid" name="userid" value=<?php echo $row['userid'];?>>
+        <input type="hidden" id="userid" name="userid" value=<?php echo htmlspecialchars($row['userid']);?>>
         <label data-translate="Nombre de usuario">Nombre de usuario</label>
         <input type="text" id="username" name="username">
         <label data-translate="email">email</label>

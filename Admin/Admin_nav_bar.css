@@ -64,11 +64,7 @@
   font-weight: 600;
 }
 
-.nav-item:hover {
-  background-color: #bfbfbf;
-  border-radius: 15px;
-}
-
+.nav-item:hover { background-color: #bfbfbf; border-radius: 15px; }
 .nav-item.active {
   background-color: #a6a6a6;
   border-radius: 15px;
