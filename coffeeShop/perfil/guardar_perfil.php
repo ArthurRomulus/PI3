@@ -35,7 +35,7 @@ if (
     // Carpeta física destino en el servidor
     // Estamos dentro de /Perfil/
     // ../images/profiles/ = /coffeeShop/images/profiles/
-    $carpetaDestinoFS = __DIR__ . "../../Images/profiles/";
+     $carpetaDestinoFS = realpath(__DIR__ . "/../../") . "/images/Profiles/";
 
     if (!is_dir($carpetaDestinoFS)) {
         mkdir($carpetaDestinoFS, 0777, true);
@@ -54,7 +54,7 @@ if (
     if (move_uploaded_file($tmpName, $rutaFS)) {
         // Esta ruta es la que el navegador usará en <img src="">
         // Desde /Perfil/ hacia /images/profiles es: ../images/profiles/...
-        $nuevaRutaAvatar = "../images/profiles/" . $fileNameFinal;
+         $nuevaRutaAvatar = "../../images/Profiles/" . $fileNameFinal;
     }
 }
 

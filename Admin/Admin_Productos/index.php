@@ -22,6 +22,7 @@ include "../../conexion.php";
   </div>
 
   <h1>Blackwood Coffee</h1>
+  <?php include '../date.php'; ?>
   <h3 data-translate="Categorías">Categorías</h3>
   <form method="GET" action="index.php">
       <input type="search" name="buscar" placeholder="Buscar..." data-translate-placeholder="Buscar..."

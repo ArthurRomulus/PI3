@@ -159,6 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 </article>`;
             contenedorProductos.insertAdjacentHTML('beforeend', tarjetaHTML);
         });
+        // 🔹 Llamar a traducción después de añadir los elementos al DOM
+        if (window.currentLang) {
+            window.applyTranslation(window.currentLang);
+        }
     }
 
     // --- CARGA INICIAL DE PRODUCTOS DESDE API ---

@@ -5,8 +5,12 @@
   <title>Blackwood Coffee - Inicio</title>
   <link rel="stylesheet" href="inicio.css">
   
+  <link rel="stylesheet" href="../Carrito/carrito.css">
+
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="container">
@@ -21,53 +25,41 @@
     
     <div id="vertical-carousel">
       <section id="carousel-promociones" class="carousel-section">
-        <h2>Promociones</h2>
+        <h2 data-translate="Promociones">Promociones</h2>
         <div class="carousel-track">
           </div>
       </section>
 
       <section id="carousel-bebidas" class="carousel-section">
-        <h2>Bebidas y Cafés</h2>
+        <h2 data-translate="Bebidas y Cafés">Bebidas y Cafés</h2>
         <div class="carousel-track">
           </div>
       </section>
 
       <section id="carousel-comidas" class="carousel-section">
-        <h2>Comida y Postres</h2>
+        <h2 data-translate="Comida y Postres">Comida y Postres</h2>
         <div class="carousel-track">
           </div>
       </section>
     </div>
   </main>
 
-  <aside class="cart">
-    <div class="order-pill">
-      <div class="order-title">Número de Pedido</div>
-      <div class="order-number">901</div>
-    </div>
-    <div class="cart-content">
-      </div>
-    <div class="cart-bottom">
-      <div class="summary">
-        <div class="row"><span>Sub Total:</span> <span class="summary-subtotal">$0.00</span></div>
-        <div class="row"><span>IVA:</span> <span class="summary-iva">$0.00</span></div>
-        <div class="row total"><span>Total:</span> <span class="summary-total">$0.00</span></div>
-      </div>
-      <button class="pay">PAGAR</button>
-    </div>
-  </aside>
+  <div id="carrito-placeholder" style="height: 100%; overflow: hidden;"></div>
 
-
+</div>
 
 <script src="../barraNav.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="../Carrito/carrito.js"></script>
+
 <script src="inicio.js"></script>
 
 <script>
-
   // --- ACTUALIZAR LA FECHA EN TIEMPO REAL ---
     const dateElement = document.querySelector('.date');
     if (dateElement) {
@@ -83,7 +75,7 @@
 
   document.addEventListener("DOMContentLoaded", function() {
     const currentPage = window.location.pathname.split("/").pop();
-    cargarBarraNav(currentPage); 
+    if(typeof cargarBarraNav === 'function') cargarBarraNav(currentPage);
   });
 </script>
 <script src="../../translate.js"></script>

@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-
 :root {
     --sidebar-bg: #d6a05c;
     --accent: #c68644;
@@ -13,22 +12,24 @@
     --shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: var(--sidebar-bg);
+    color: var(--text-dark);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
 }
 
+/* ========== LAYOUT GRID (AJUSTADO A 180PX) ========== */
 .container {
     display: grid;
-    grid-template-columns: 90px 1fr;
+    /* Nav (90px) | Contenido (Flexible) | Carrito (180px FIJOS) */
+    grid-template-columns: 90px 1fr 180px; 
     height: 100vh;
+    width: 100%;
     gap: 16px;
     padding: 16px;
     min-width: 900px;
@@ -40,240 +41,98 @@ body {
     border-radius: 18px;
     padding: 18px 24px;
     overflow-y: auto;
+    height: 100%;
+    box-shadow: var(--shadow);
 }
 
-header {
-    margin-bottom: 2rem;
-}
+/* ========== ESTILOS GENERALES (Sin cambios) ========== */
+header { margin-bottom: 2rem; }
+.header-3-col { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: 18px; padding: 0 24px; color: var(--white); }
+.header-3-col .brand { font-size: 26px; font-weight: 700; letter-spacing: 1px; justify-self: start; color: var(--white); }
+.header-3-col h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; justify-self: center; margin: 0; color: var(--white); }
+.header-3-col .date { font-weight: 500; font-size: 13px; justify-self: end; color: var(--white); }
 
-/* ========== HEADER Y FILTROS (Estilo de Productos) ========== */
-/* ========== HEADER 3-COLUMNAS (NUEVO) ========== */
-.header-3-col {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr; /* Izquierda, Centro (auto), Derecha */
-  align-items: center;
-  margin-bottom: 18px;
-  padding: 0 24px;
-  color: var(--white); /* Texto blanco */
-}
-
-.header-3-col .brand {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  justify-self: start; /* Alinea a la izquierda */
-  color: var(--white);
-}
-
-.header-3-col h1 {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  justify-self: center; /* Alinea al centro */
-  margin: 0; 
-  color: var(--white);
-}
-
-.header-3-col .date {
-  font-weight: 500;
-  font-size: 13px;
-  justify-self: end; /* Alinea a la derecha */
-  color: var(--white);
-}
-
-/* ========== FILTROS (Estilo de Productos) ========== */
-.filters{
-  margin-bottom:18px;
-  padding: 0 24px;
-  position: relative;
-}
-.search{
-  width:100%;
-  padding:12px 44px 12px 18px;
-  border-radius:28px;
-  border:none;
-  background:var(--search-bg);
-  font-size:15px;
-  color:var(--text-dark);
-  outline: none;
-  box-shadow: var(--shadow);
-  position: relative;
-}
-.search::placeholder{
-  color: #bfa77a;
-  font-size: 15px;
-}
-.filters::after{
-  content: '';
-  position: absolute;
-  right: 38px;
-  top: 12px;
-  width: 22px;
-  height: 22px;
-  background: url('data:image/svg+xml;utf8,<svg fill="gray" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z" stroke="gray" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat center/contain;
-  pointer-events: none;
-}
-.cats{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.cat-btn{
-  padding:8px 16px;
-  border-radius:20px;
-  border:none;
-  font-weight:700;
-  background: var(--card-bg);
-  cursor:pointer;
-  box-shadow: var(--shadow);
-  font-size: 14px;
-  color: var(--text-dark);
-  transition: background .15s, color .15s;
-}
-.cat-btn:hover{transform: translateY(-2px)}
-.cat-btn.active{
-  background:var(--accent);
-  color:var(--white);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
+.filters { margin-bottom:18px; padding: 0 24px; position: relative; }
+.search { width:100%; padding:12px 44px 12px 18px; border-radius:28px; border:none; background:var(--search-bg); font-size:15px; color:var(--text-dark); outline: none; box-shadow: var(--shadow); position: relative; }
+.search::placeholder{ color: #bfa77a; font-size: 15px; }
+.filters::after{ content: ''; position: absolute; right: 38px; top: 12px; width: 22px; height: 22px; background: url('data:image/svg+xml;utf8,<svg fill="gray" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z" stroke="gray" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat center/contain; pointer-events: none; }
+.cats { margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
+.cat-btn { padding:8px 16px; border-radius:20px; border:none; font-weight:700; background: var(--card-bg); cursor:pointer; box-shadow: var(--shadow); font-size: 14px; color: var(--text-dark); transition: background .15s, color .15s; }
+.cat-btn:hover { transform: translateY(-2px) }
+.cat-btn.active { background:var(--accent); color:var(--white); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
 
 .promotions-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.8rem;
-    justify-content: center;
-    justify-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
     padding-right: 0.25rem;
     margin: 0 auto 1rem;
     width: 100%;
-    max-width: 1100px;
 }
 
 .promo-card {
     background-color: #f5d6a0;
     border-radius: 12px;
-    padding: 0.6rem;
+    padding: 0.8rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 210px;
+    justify-content: flex-start;
+    min-height: 240px;
     width: 100%;
-    max-width: 220px;
+    position: relative;
+    transition: transform 0.2s;
+    box-shadow: var(--shadow);
 }
+.promo-card:hover { transform: scale(1.02); z-index: 5; }
 
-.promo-card h2 {
-    font-size: 1.05rem;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.3;
-}
-
-.promo-card h3 {
-    font-size: 1rem;
-    margin: 0 0 0.5rem 0;
-}
-
-.promo-card p {
-    font-size: 0.95rem;
-    margin: 0;
-    color: var(--muted);
-}
+.promo-card h3 { font-size: 1rem; margin: 0 0 0.5rem 0; font-weight: 700; }
+.promo-card p { font-size: 0.85rem; margin: 0 0 10px 0; color: var(--muted); flex-grow: 1; }
 
 .promo-img {
     width: 100%;
+    height: 120px;
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 0.75rem;
-    height: 140px;
 }
 
-.large-card {
-    /* No special styling - large-card not used when showing uniform grid */
-    background-color: #f5d6a0;
-    color: var(--text-dark);
-    border-radius: 12px;
-    padding: 1rem;
+.main-content::-webkit-scrollbar { width: 8px; }
+.main-content::-webkit-scrollbar-track { background: #EFEBE5; border-radius: 10px; }
+.main-content::-webkit-scrollbar-thumb { background-color: var(--muted); border-radius: 10px; border: 2px solid #EFEBE5; }
+.main-content::-webkit-scrollbar-thumb:hover { background-color: var(--text-dark); }
+
+.promo-highlight { position: relative; z-index: 10; animation: jump-highlight 0.6s ease-out; }
+@keyframes jump-highlight {
+    0% { transform: scale(1) translateY(0); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    40% { transform: scale(1.1) translateY(-8px); box-shadow: 0 12px 30px rgba(198, 134, 68, 0.7); }
+    100% { transform: scale(1) translateY(0); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 }
 
-.small-card img {
-    height: 70px;
-    width: auto;
-    align-self: flex-end;
+/* ========== FIX CARRITO (CORRECCIÓN DE ANCHO) ========== */
+
+#carrito-placeholder {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    /* No ponemos border-radius aquí, dejamos que el .cart interno lo maneje o se lo forzamos abajo */
 }
 
-.main-content::-webkit-scrollbar {
-    width: 8px;
-
+#carrito-placeholder .cart {
+    /* Eliminamos el width: 100% forzado para que use su max-width original de 180px */
+    margin: 0 !important; 
+    height: 100% !important;
+    box-shadow: var(--shadow);
+    background: var(--page-bg);
+    border-radius: 18px;
 }
 
-.main-content::-webkit-scrollbar-track {
-    background: #EFEBE5;
-    border-radius: 10px;
-
-}
-
-.main-content::-webkit-scrollbar-thumb {
-    background-color: var(--light-brown);
-    border-radius: 10px;
-    border: 2px solid #EFEBE5;
-
-}
-
-.main-content::-webkit-scrollbar-thumb:hover {
-    background-color: var(--main-brown);
-
-}
-
-/* Desktop: keep portrait (taller-than-wide) cards but allow more columns */
-@media (min-width: 900px) {
-    .promotions-grid {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 1rem;
+/* RESPONSIVIDAD */
+@media (max-width: 1100px) {
+    .container {
+        /* Si la pantalla es chica, colapsamos a 2 columnas y ocultamos carrito */
+        grid-template-columns: 90px 1fr; 
     }
-
-    .promo-card {
-        flex-direction: column;
-        align-items: stretch;
-        min-height: 270px;
-        max-width: 220px;
-        gap: 0.5rem;
+    #carrito-placeholder {
+        display: none;
     }
-
-    .promo-img {
-        width: 100%;
-        height: 150px;
-        border-radius: 10px;
-        margin-bottom: 0.5rem;
-        object-fit: cover;
-    }
-
-    .promo-card h3 { font-size: 1rem; }
 }
-
-/* ========== inicio Animacion busqueda carruseles ========== */
-/* --- ESTILOS PARA EL HIGHLIGHT (VERSIÓN "POP") --- */
-
-.promo-highlight {
-  position: relative;
-  z-index: 10;
-  /* CAMBIO: Animación más rápida */
-  animation: jump-highlight 0.6s ease-out; /* <-- DEBE LLAMARSE 'jump-highlight' como en tu CSS */
-}
-
-@keyframes jump-highlight { /* <-- DEBE LLAMARSE 'jump-highlight' como en tu CSS */
-  0% {
-    transform: scale(1) translateY(0);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-  40% {
-    /* El "salto": crece 10% y sube 8px */
-    transform: scale(1.1) translateY(-8px);
-    box-shadow: 0 12px 30px rgba(198, 134, 68, 0.7);
-  }
-  100% {
-    /* Vuelve a su lugar */
-    transform: scale(1) translateY(0);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-}
-/* ========== Fin animacion busqueda carruseles ========== */
