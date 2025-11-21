@@ -87,7 +87,7 @@ $conn->close();
         <div class="profile-info">
             <h2 data-translate="Información del Usuario">Información del Usuario</h2>
             <p><strong><span data-translate="Nombre">Nombre</span>:</strong> <?= htmlspecialchars($display_name); ?></p>
-            <p><strong><span data-translate="Correo">Correo</span>:</strong> <?= htmlspecialchars($user_email); ?></p>
+            <p><strong><span data-translate="Correo electrónico">Correo electrónico</span>:</strong> <?= htmlspecialchars($user_email); ?></p>
             <p><strong><span data-translate="Teléfono">Teléfono</span>:</strong> <?= htmlspecialchars($user_phone); ?></p>
             <p><strong><span data-translate="Teléfono de emergencia">Teléfono de emergencia</span>:</strong> <?= htmlspecialchars($user_emergency); ?></p>
             <p><strong><span data-translate="Dirección">Dirección</span>:</strong> <?= htmlspecialchars($user_address); ?></p>
