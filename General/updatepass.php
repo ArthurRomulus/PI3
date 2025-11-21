@@ -27,7 +27,6 @@ if ($_POST["password"] === $_POST["passwordConfirm"]) {
             exit;
         }
 
-        // Generar el nuevo hash
         $p = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
         if ($ct < $a["Password_Token_Exp"]) {

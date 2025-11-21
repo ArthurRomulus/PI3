@@ -71,9 +71,9 @@ if ($email) {
         // Contenido
         $enl = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/RecoverPassword.php?token=$nT";
         $mail->isHTML(true);
-        $mail->Subject = 'Prueba desde localhost';
-        $mail->Body    = "<h1>Correo de recuperacion de contraseña</h1> Este es un correo de recuperacion de contraseña. Si no fuiste tu aprieta aqui. <br> Este es tu token, no se lo muestres a nadie.
-        <br> <p><a href='$enl'>$enl</a></p> <br> <button>Cancelar recuperacion</button>";
+        $mail->Subject = 'Reset password.';
+        $mail->Body    = "<h1>Correo de recuperacion de contraseña</h1> Este es un correo de recuperacion de contraseña. Si no fuiste tu, ignora el mensaje. <br> Este es tu token, no se lo muestres a nadie.
+        <br> <p><a href='$enl'><button>Reiniciar contraseña</button></a></p> <br>";
         $mail->AltBody = 'Este es el texto plano del mensaje.';
 
         $mail->send();
@@ -81,7 +81,8 @@ if ($email) {
 
 
     } catch (Exception $e) {
-        echo "❌ Error al enviar el correo: {$mail->ErrorInfo}";
+          header("location: AskEmail.php?s=failed");
+
     }
   }
 }
