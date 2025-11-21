@@ -10,7 +10,7 @@
 <div class="top-bar">
   <div class="admin-profile">
     <?php if ($_SESSION != null){
-    echo "<img src='". htmlspecialchars($_SESSION['profilescreen']) .">";} ?>'
+    echo "<img src='". htmlspecialchars($_SESSION['profilescreen']) ."'>";} ?>
     <span class="admin-name"><?php if ($_SESSION != null){
        echo $_SESSION['username']; 
        } ?></span>
