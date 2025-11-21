@@ -25,8 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Crear contenido
         const title = document.createElement('h3');
         title.textContent = p.nombrePromo || 'Promoción';
+        title.setAttribute('data-translate', p.nombrePromo || 'Promoción');
         const desc = document.createElement('p');
         desc.textContent = p.condiciones || '';
+        desc.setAttribute('data-translate', p.condiciones || '');
         
         if (p.imagen_url) {
             const img = document.createElement('img');
@@ -50,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         promoList.forEach(p => {
             grid.appendChild(createCard(p));
         });
+        // 🔹 Llamar a traducción después de añadir los elementos al DOM
+        if (window.currentLang) {
+            window.applyTranslation(window.currentLang);
+        }
     }
 
     function applyFilters() {
