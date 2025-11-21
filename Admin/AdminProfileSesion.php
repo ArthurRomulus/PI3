@@ -8,18 +8,13 @@ session_start();
 
 $ur = $_SERVER["REQUEST_URI"];
 
-// Ocultar top-bar cuando estamos en Admin_perfil (insensible a mayúsculas)
 if (stripos($ur, "admin_perfil") !== false) {
     echo "<div class='top-bar' style='display: none;'>";
 } else {
     echo "<div class='top-bar'>";
 }
 
-// OJO: este archivo ya no debe manejar subida de imágenes.
-// La imagen se actualiza en editar_perfil.php y allí se modifica la sesión.
-
 ?>
-
 <div class="admin-profile">
 
     <img src='<?php echo htmlspecialchars($_SESSION['profilescreen']); ?>'>
@@ -84,5 +79,5 @@ if (stripos($ur, "admin_perfil") !== false) {
         <button type="submit" class="logoutButton" data-translate="Cerrar sesión">Cerrar sesión</button>
     </form>
 
-</div> <!-- cierre de admin-profile -->
-</div> <!-- cierre de top-bar -->
+</div> 
+</div>
