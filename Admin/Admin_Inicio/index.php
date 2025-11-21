@@ -12,25 +12,34 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    .text {
-      font-size: 40px;
-      line-height: 1.3;
-      color: white;
-      margin-top: 20px;
-      margin-bottom: 30px;
-      text-align: center;
+.text {
+  font-size: 24px;      /* Antes 40px */
+  line-height: 1.4;
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  opacity: 0.85;        /* Más suave visualmente */
+  font-weight: 400;     /* Menos pesado */
+}
+
+    /* === CONTENEDOR DE ESTADÍSTICAS IZQ + TARJETAS DERECHA === */
+    .stats-container {
+      display: flex;
+      gap: 25px;
+      width: 95%;
+      margin: 0 auto;
+      margin-top: 40px;
     }
 
+    /* === CAJA IZQUIERDA (GRÁFICA) === */
     .stats-box {
-      margin: 30px auto;
       padding: 25px;
       background: rgba(255,255,255,0.08);
       backdrop-filter: blur(8px);
       border-radius: 20px;
-      width: 90%;
-      max-width: 750px;
+      width: 65%;
       color: white;
-      text-align: center;
       box-shadow: 0 0 20px rgba(0,0,0,0.25);
     }
 
@@ -38,21 +47,44 @@
       margin-bottom: 15px;
       font-size: 28px;
       font-weight: 600;
+      text-align: center;
     }
 
-    .stats-box canvas {
-        margin-top: 20px;
-        max-width: 100%;
+    /* === TARJETAS DERECHA === */
+    .side-cards {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      padding: 20px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border-radius: 18px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 500;
+      box-shadow: 0 0 15px rgba(0,0,0,0.25);
+    }
+
+    .card span {
+      display: block;
+      font-size: 35px;
+      margin-top: 8px;
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
 
 <?php
-// --- ESTADÍSTICAS DE PRODUCTOS (BARRAS) ---
 include "../../conexion.php";
 
-// Obtener cantidades vendidas por producto con nombre real
+/* ============================
+   ESTADÍSTICA – PRODUCTOS
+============================ */
 $query = $conn->query("
     SELECT 
         pedido_items.id_producto,
@@ -70,6 +102,30 @@ while ($row = $query->fetch_assoc()) {
     $productos[] = $row['nombre_producto'];
     $vendidos[] = $row['total_vendido'];
 }
+
+
+/* ============================
+   TARJETAS – CONSULTAS
+   (Tú las ajustas si tus tablas usan otros nombres)
+============================ */
+
+/* Total usuarios */
+/* ============================
+   TARJETAS – CONSULTAS CORREGIDAS
+============================ */
+
+/* Total usuarios */
+$totalUsuarios = $conn->query("SELECT COUNT(*) AS total FROM usuarios")->fetch_assoc()['total'];
+
+/* Total productos */
+$totalProductos = $conn->query("SELECT COUNT(*) AS total FROM productos")->fetch_assoc()['total'];
+
+/* Total admins (tabla admins) */
+$admins = $conn->query("SELECT COUNT(*) AS total FROM administradores")->fetch_assoc()['total'];
+
+/* Total cajeros (tabla cajeros) */
+$cajeros = $conn->query("SELECT COUNT(*) AS total FROM empleados_cajeros")->fetch_assoc()['total'];
+
 ?>
 
 <?php include "../Admin_nav_bar.php"; ?>
@@ -82,11 +138,40 @@ while ($row = $query->fetch_assoc()) {
     <p>¿Retomamos desde donde lo dejamos?</p>
   </div>
 
-  <div class="stats-box">
+  <!-- CONTENEDOR COMPLETO -->
+  <div class="stats-container">
+
+    <!-- IZQUIERDA (Gráfica) -->
+    <div class="stats-box">
       <h2>Ventas por Producto</h2>
       <canvas id="chartProductos"></canvas>
+    </div>
+
+    <!-- DERECHA (Tarjetas) -->
+    <div class="side-cards">
+      <div class="card">
+        Usuarios Totales
+        <span><?php echo $totalUsuarios; ?></span>
+      </div>
+
+      <div class="card">
+        Productos Totales
+        <span><?php echo $totalProductos; ?></span>
+      </div>
+
+<div class="card">
+      Administradores
+      <span><?php echo $admins; ?></span>
   </div>
 
+  <div class="card">
+      Cajeros
+      <span><?php echo $cajeros; ?></span>
+  </div>
+
+    </div>
+
+  </div>
 </div>
 
 <script>
