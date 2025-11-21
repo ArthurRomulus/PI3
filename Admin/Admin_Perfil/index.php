@@ -1,12 +1,33 @@
-<?php
-session_start();
 
-if (!isset($_SESSION['userid'])) {
-    header("Location: ../../General/login.php"); 
-    exit();
-}
 
-include '../../conexion.php';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil de Admin</title>
+<link rel="stylesheet" href="../Admin_nav_bar.css">
+
+<link rel="stylesheet" href="Admin_perfil.css">
+<link rel="stylesheet" href="../general.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="../../theme-toggle.js" defer></script>
+</head>
+<body>
+<?php include '../Admin_nav_bar.php';?>
+
+<div class="content">
+
+    <?php include '../AdminProfileSesion.php';
+    
+        if (!isset($_SESSION['userid'])) {
+            header("Location: ../../General/login.php"); 
+            exit();
+        }
+
+        include '../../conexion.php';
 
 $user_id = $_SESSION['userid'];
 $user_data = null;
@@ -42,28 +63,12 @@ $user_phone = $user_data['telefono'] ?? 'No especificado';
 $user_emergency = $user_data['telefono_emergencia'] ?? 'No especificado';
 $user_address = $user_data['direccion'] ?? 'No especificada';
 
+
+
 $conn->close();
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Perfil de Admin</title>
-<link rel="stylesheet" href="../Admin_nav_bar.css">
+    ?>
 
-<link rel="stylesheet" href="Admin_perfil.css">
-<link rel="stylesheet" href="../general.css">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<script src="../../theme-toggle.js" defer></script>
-</head>
-<body>
-<?php include '../Admin_nav_bar.php'; ?>
-
-<div class="content">
     <div class="profile-theme-lang-container">
         <div class="lang-switch">
             <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
