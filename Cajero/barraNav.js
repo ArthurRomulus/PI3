@@ -2,18 +2,54 @@
 function cargarBarraNav() {
     const barraNavHTML = `
         <style>
-            /* ========== VARIABLES ========== */
-            :root {
-              --sidebar-bg: #d6a05c;
-              --accent: #c68644;
-              --page-bg: #e9bb7b;
-              --card-bg: #f6e9db;
-              --search-bg: #f3e6c1;
-              --text-dark: #332a23;
-              --muted: #6a584a;
-              --white: #fff;
-              --shadow: 0 2px 8px rgba(0,0,0,0.07);
-            }
+/* ========== VARIABLES ========== */
+:root {
+  --sidebar-bg: #d6a05c;
+  --accent: #c68644;
+  --page-bg: #e9bb7b;
+  --card-bg: #f6e9db;
+  --search-bg: #f3e6c1;
+  --text-dark: #332a23;
+  --muted: #6a584a;
+  --white: #fff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+  .language-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-right: 20px;
+  margin-top: 10px;
+}
+
+.lang-switch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+
+.lang-flag {
+  width: 50px;
+  height: 30px;
+  cursor: pointer;
+  opacity: 0.7;
+  border-radius: 3px;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.lang-flag:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.lang-flag.active {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(133, 73, 5, 0.8);
+}
 
             .sidebar {
                 background: var(--sidebar-bg); color: var(--white);
@@ -71,21 +107,21 @@ function cargarBarraNav() {
                     <span class="icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                     </span>
-                    <span class="nav-text">Inicio</span>
+                    <span class="nav-text" data-translate="Inicio">Inicio</span>
                 </a>
 
                 <a href="../Productos/productos.html" class="nav-link">
                     <span class="icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
                     </span>
-                    <span class="nav-text">Productos</span>
+                    <span class="nav-text" data-translate="Productos">Productos</span>
                 </a>
 
                 <a href="../Promocion/promociones.html" class="nav-link">
                     <span class="icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                     </span>
-                    <span class="nav-text">Promociones</span>
+                    <span class="nav-text" data-translate="Promociones">Promociones</span>
                 </a>
 
                 <a href="../ControlCaja/controlcaja.html" class="nav-link">
@@ -97,7 +133,7 @@ function cargarBarraNav() {
                             <line x1="6" y1="18" x2="18" y2="18"></line>
                         </svg>
                     </span>
-                    <span class="nav-text">Control</span>
+                    <span class="nav-text" data-translate="Control">Control</span>
                 </a>
 
                 <a href="../login_admin_cajero/admin.html" class="nav-link">
@@ -107,15 +143,19 @@ function cargarBarraNav() {
                             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                         </svg>
                     </span>
-                    <span class="nav-text">Admin</span>
+                    <span class="nav-text" data-translate="Admin">Admin</span>
                 </a>
 
                 <a href="../Perfil/perfil.html" class="nav-link">
                     <span class="icon">
                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     </span>
-                    <span class="nav-text">Perfil</span>
+                    <span class="nav-text" data-translate="Perfil">Perfil</span>
                 </a>
+                <div class="lang-switch">
+                    <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
+                    <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
+                </div>
             </nav>
         </aside>
     `;

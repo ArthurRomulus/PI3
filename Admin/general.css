@@ -164,10 +164,20 @@ input:checked + .slider:before {
 }
 
   /* --- ESTILOS DEL MODO OSCURO --- */
-body.dark-mode {
-    background-color: #1a1a1a;
+/* Aplicar fondo oscuro tanto a html como a body y forzarlo con !important */
+html.dark-mode,
+body.dark-mode{
+    background: linear-gradient(180deg,#2c2c2c 0%, #121416 100%) !important;
+    background-color: #0f1113 !important;
+    color: #ddd !important;
+    min-height: 100vh !important;
+    -webkit-font-smoothing: antialiased !important;
 }
 
+/* también asegurar que el html reciba el mismo fondo si el script añade la clase al html */
+html.dark-mode body{
+    background: transparent !important;
+}
 /* Contenido general */
 body.dark-mode .content {
     background-color: #252525;
@@ -675,4 +685,87 @@ body.dark-mode #openEditModal {
 body.dark-mode #openEditModal:hover {
   background-color: #666; /* Un gris un poco más claro al pasar el ratón */
   color: #fff;
+}
+
+/* ==========================
+     Dark-mode: Estadísticas
+     Reglas específicas trasladadas desde `estadisticas.css`
+     ========================== */
+/* Fondo y color base para páginas de estadísticas */
+
+body.dark-mode{
+    background-color: #2C2C2C !important;
+}
+
+body.dark-mode body{
+    background-color: #2C2C2C !important;
+}
+
+body.dark-mode .contenedor-estadisticas,
+body.dark-mode .content {
+    background: #0f1214;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+body.dark-mode .filtros {
+    background: linear-gradient(180deg,#131516,#0f1214);
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+body.dark-mode .filtro label {
+    color: #e6e6e6;
+}
+
+body.dark-mode .filtro select,
+body.dark-mode .filtro input[type="date"] {
+    background: #16181a;
+    color: #e6e6e6;
+    border: 1px solid #26292b;
+    box-shadow: none;
+}
+
+body.dark-mode .grafica-barras {
+    background: linear-gradient(180deg,#141619,#0f1113);
+    box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
+}
+
+body.dark-mode .grafica-barras p {
+    color: #ddd;
+}
+
+body.dark-mode .eje-y {
+    color: #bdbdbd;
+    background: linear-gradient(180deg,#232426,#121213) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+body.dark-mode #leyenda div {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.02);
+    color: #ddd;
+}
+
+body.dark-mode #leyenda {
+    color: #ddd;
+}
+
+body.dark-mode .resumen {
+    background: linear-gradient(180deg,#131516,#0f1113);
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+body.dark-mode .resumen h5,
+body.dark-mode .resumen p {
+    color: #e6e6e6;
+}
+
+/* Scrollbar ajustes para modo oscuro (dentro de grafica-barras) */
+body.dark-mode .grafica-barras::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.06);
+}
+
+/* Sombra más profunda para barras en modo oscuro */
+body.dark-mode .barra > div {
+    box-shadow: 0 6px 14px rgba(0,0,0,0.6);
 }

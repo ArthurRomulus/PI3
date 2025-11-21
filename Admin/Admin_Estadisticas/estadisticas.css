@@ -3,7 +3,7 @@
 
 body {
   font-family: 'Poppins', Arial, sans-serif;
-  background: linear-gradient(180deg, #e9ecef 0%, #e6e9ee 100%);
+  background: linear-gradient(180deg, #D7D7D7 0%, #e6e9ee 100%);
   margin: 0;
   padding: 0;
   color: #333;
@@ -90,11 +90,14 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 420px;
+  height: 464px;
   padding-right: 8px;
   box-sizing: border-box;
   color: #6b6b6b;
   font-size: 13px;
+  /* fondo por defecto (claro) moved from inline */
+  background: linear-gradient(180deg, #fbfdff, #f7f9fb);
+  border-radius: 10px;
 }
 
 /* Marcas del eje Y */
@@ -102,6 +105,7 @@ body {
   text-align: right;
   padding-right: 6px;
   opacity: 0.95;
+  margin-top: 10px;
 }
 
 /* Área de barras: fondo con profundidad */

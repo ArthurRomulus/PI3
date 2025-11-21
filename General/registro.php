@@ -126,7 +126,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       padding: 15px; margin-bottom: 20px; text-align: center; border-radius: 5px;
     }
   </style>
+  <style>
+    /* Page transition: fade in on load, fade out on navigation to login/registro */
+    body.page-transition { opacity: 0; transform: translateY(8px); transition: opacity 420ms ease, transform 420ms ease; }
+    body.page-transition.page-enter { opacity: 1; transform: none; }
+    body.page-transition.page-exit { opacity: 0; transform: translateY(-8px); }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.classList.add('page-transition');
+      requestAnimationFrame(function () { document.body.classList.add('page-enter'); });
+      document.querySelectorAll('a[href]').forEach(function(a){
+        var href = a.getAttribute('href');
+        if(!href) return;
+        if (href.indexOf('login.php') !== -1 || href.indexOf('registro.php') !== -1) {
+          a.addEventListener('click', function(ev){
+            ev.preventDefault();
+            var url = a.href;
+            document.body.classList.remove('page-enter');
+            document.body.classList.add('page-exit');
+            setTimeout(function(){ window.location.href = url; }, 420);
+          });
+        }
+      });
+    });
+    window.addEventListener('pageshow', function(e){ if (e.persisted) { document.body.classList.add('page-enter'); } });
+  </script>
 </head>
+  <script>
+    // Intercept register form submit to animate exit before sending POST
+    (function(){
+      var regForm = document.getElementById('registerForm');
+      if (regForm) {
+        regForm.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          document.body.classList.remove('page-enter');
+          document.body.classList.add('page-exit');
+          setTimeout(function(){ regForm.submit(); }, 420);
+        });
+      }
+    })();
+  </script>
 <body>
 
   <div class="cup-wrapper">
@@ -149,7 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <button type="submit">Registrar</button>
           <div class="terms-container">
             <input type="checkbox" name="terms" required>
-            <span>Acepto los <a href="#" style="color:#f0a474; text-decoration:underline;">términos y condiciones</a></span>
+            <span>Acepto los <a href="#" id="openModal" style="color:#f0a474; text-decoration:underline;">términos y condiciones</a></span>
           </div>
         </form>
         <a href="login.php" class="toggle-btn">¿Ya tienes cuenta? Inicia sesión</a>
@@ -157,7 +197,116 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
   <a href="../coffeeShop/Inicio/" class="logo-fijo">
-    <img src="../images/logo.png" alt="Logo Blackwood Coffee">
+    <img src="../images/home.png" alt="Logo Blackwood Coffee">
   </a>
+  <!-- Modal de Términos y Condiciones -->
+<div id="termsModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div class="modal-body">
+      <h2>Términos y Condiciones</h2>
+      <p>
+        <h3>AVISO DE PRIVACIDAD INTEGRAL</h3>
+  <p><strong>Blackwood Coffee</strong><br>
+  Fecha de actualización: <strong>22 de octubre de 2025</strong></p>
+
+  <h3>I. IDENTIDAD Y DOMICILIO DEL RESPONSABLE</h3>
+  <p>
+  Blackwood Coffee, con domicilio en Universidad de Colima, Campus El Naranjo, Facultad de Ingeniería Electromecánica, es responsable del tratamiento y protección de los datos personales que se recaben, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).
+  </p>
+
+  <h3>II. DATOS PERSONALES OBJETO DE TRATAMIENTO</h3>
+  <p>Los datos personales recabados son:</p>
+  <ul>
+  <li>Identificación y contacto: nombre, correo electrónico, teléfono y usuario.</li>
+  <li>Datos fiscales: RFC (solo si solicita factura).</li>
+  <li>Datos administrativos del sistema interno.</li>
+  </ul>
+  <p>No se solicitan datos sensibles.</p>
+
+  <h3>III. FINALIDADES DEL TRATAMIENTO</h3>
+  <p><strong>Primarias (obligatorias):</strong></p>
+  <ul>
+  <li>Gestionar pedidos y compras.</li>
+  <li>Emitir comprobantes fiscales.</li>
+  <li>Identificar al usuario.</li>
+  <li>Gestionar pagos y operaciones comerciales.</li>
+  <li>Administración interna.</li>
+  </ul>
+
+  <p><strong>Secundarias (opcionales):</strong></p>
+  <ul>
+  <li>Promociones y descuentos.</li>
+  <li>Encuestas y análisis estadísticos.</li>
+  <li>Uso de contenido visual en eventos.</li>
+  </ul>
+  <p>Puede negar el uso secundario enviando correo a: <strong>privacidad@blackwoodcoffee.mx</strong></p>
+
+  <h3>IV. FUNDAMENTO LEGAL</h3>
+  <p>Artículos aplicables de LFPDPPP y su Reglamento.</p>
+
+  <h3>V. TRANSFERENCIA DE DATOS PERSONALES</h3>
+  <p>Únicamente a:</p>
+  <ul>
+  <li>Autoridades fiscales y administrativas.</li>
+  <li>Proveedores de servicios tecnológicos y administrativos.</li>
+  </ul>
+  <p>No habrá transferencias adicionales sin autorización.</p>
+
+  <h3>VI. DERECHOS ARCO</h3>
+  <p>Puede solicitar acceso, rectificación, cancelación u oposición mediante correo: <strong>privacidad@blackwoodcoffee.mx</strong></p>
+
+  <h3>VII. REVOCACIÓN DEL CONSENTIMIENTO</h3>
+  <p>Puede revocar su consentimiento enviando solicitud vía correo.</p>
+
+  <h3>VIII. LIMITACIÓN DE USO O DIVULGACIÓN</h3>
+  <p>Puede solicitarlo por correo indicando nombre y medio a excluir.</p>
+
+  <h3>IX. MEDIDAS DE SEGURIDAD</h3>
+  <p>Blackwood Coffee aplica medidas técnicas, administrativas y físicas para proteger sus datos.</p>
+
+  <h3>X. USO DE COOKIES</h3>
+  <p>Este sitio utiliza cookies para mejorar la experiencia del usuario. Puede desactivarlas en su navegador.</p>
+
+  <h3>XI. CAMBIOS AL AVISO DE PRIVACIDAD</h3>
+  <p>El documento podrá actualizarse y se notificará mediante medios oficiales.</p>
+
+  <h3>XII. CONSENTIMIENTO</h3>
+  <p>Al utilizar nuestro servicio, usted reconoce que ha leído y aceptado este aviso de privacidad.</p>
+
+  <p><strong>Última actualización:</strong> 22 de octubre de 2025</p>
+
+  <hr>
+
+  <p><strong>Por favor, lea cuidadosamente antes de registrar su cuenta.</strong></p>
+      </p> 
+    </div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById("termsModal");
+  const openModal = document.getElementById("openModal");
+  const closeModal = document.querySelector(".close");
+
+  // Abrir modal
+  openModal.addEventListener("click", function(e){
+    e.preventDefault();
+    modal.style.display = "block";
+  });
+
+  // Cerrar Modal
+  closeModal.addEventListener("click", function(){
+    modal.style.display = "none";
+  });
+
+  // Cerrar si se hace clic afuera
+  window.addEventListener("click", function(e){
+    if(e.target == modal){
+      modal.style.display = "none";
+    }
+  });
+</script>
+
 </body>
 </html>

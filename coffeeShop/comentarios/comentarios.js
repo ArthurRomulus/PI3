@@ -87,8 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. HTML de la imagen (solo para comentarios padres)
         let imagenHTML = '';
         if (!isReply && com.imagen_url && com.imagen_url.trim() !== '') {
-            imagenHTML = `<figure class="card__media"><img src="${com.imagen_url}" alt="Foto del comentario" loading="lazy" /></figure>`;
+            imagenHTML = `
+                <figure class="card__media">
+                    <img src="../../${com.imagen_url}" alt="Foto del comentario" loading="lazy" />
+                </figure>`;
         }
+
+
 
         // 3. HTML de las etiquetas/chips (solo para comentarios padres)
         let chipHTML = '';

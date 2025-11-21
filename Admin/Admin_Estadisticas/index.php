@@ -1,3 +1,5 @@
+<!-- TU CÓDIGO COMPLETO SIN CAMBIAR, SOLO AGREGO LO NECESARIO -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="estadisticas.css">
   <link rel="stylesheet" href="../general.css">
+  
   <title>Estadísticas de Ventas</title>
 </head>
 <body>
@@ -22,48 +25,57 @@
 
     <?php include "../AdminProfileSesion.php"; ?>
 
-    <div class="contenedor-estadisticas">
+    
 
-    <h2>Estadisticas</h2>
+    <h2 data-translate="Estadísticas">Estadisticas</h2>
 
       <!-- 🔹 Filtros -->
       <div class="filtros">
         <div class="filtro">
-          <label for="filtro-periodo">Periodo:</label>
+          <label for="filtro-periodo" data-translate="Periodo:">Periodo:</label>
           <select id="filtro-periodo">
-            <option value="todo">Todo</option>
-            <option value="1semana">Última semana</option>
-            <option value="1mes">Último mes</option>
-            <option value="personalizado">Personalizado</option>
+            <option value="todo" data-translate="Todo">Todo</option>
+            <option value="1semana" data-translate="Última semana">Última semana</option>
+            <option value="1mes" data-translate="Último mes">Último mes</option>
+            <option value="personalizado" data-translate="Personalizado">Personalizado</option>
           </select>
         </div>
 
         <div class="filtro">
-          <label for="filtro-categoria">Categoría:</label>
+          <label for="filtro-metodopago" data-translate="Método de pago:">Metodo de pago:</label>
+          <select id="f-mpago">
+            <option value="t" data-translate="Todos">Todos</option>
+            <option value="Tarjeta" data-translate="Tarjeta">Tarjeta</option>
+            <option value="Efectivo" data-translate="Efectivo">Efectivo</option>
+          </select>
+        </div>
+
+        <div class="filtro">
+          <label for="filtro-categoria" data-translate="Categoría:">Categoría:</label>
           <select id="filtro-categoria">
-            <option value="todo">Todas</option>
+            <option value="todo" data-translate="Todas">Todas</option>
             <?php 
               include "../../conexion.php";
               $categorias = $conn->query("SELECT * FROM categorias");
               while ($cat = $categorias->fetch_assoc()){
-                echo "<option value='{$cat['id_categoria']}'>{$cat['nombrecategoria']}</option>";
+                echo "<option value='{$cat['id_categoria']}' data-translate='{$cat['nombrecategoria']}'>{$cat['nombrecategoria']}</option>";
               }
             ?>
           </select>
         </div>
 
         <div class="filtro" id="rango-personalizado" style="display: none;">
-          <label>Desde:</label>
+          <label data-translate="Desde:">Desde:</label>
           <input type="date" id="fecha-inicio">
-          <label>Hasta:</label>
+          <label data-translate="Hasta:">Hasta:</label>
           <input type="date" id="fecha-fin">
         </div>
 
         <div class="filtro">
-          <label for="filtro-tipo">Tipo de estadística:</label>
+          <label for="filtro-tipo" data-translate="Tipo de estadística:">Tipo de estadística:</label>
           <select id="filtro-tipo">
-            <option value="ventas">Ventas ($)</option>
-            <option value="conteo">Conteo de productos</option>
+            <option value="ventas" data-translate="Ventas ($)">Ventas ($)</option>
+            <option value="conteo" data-translate="Conteo de productos">Conteo de productos</option>
           </select>
         </div>
       </div>
@@ -72,58 +84,53 @@
       <div class="grafica-container">
         <div class="grafica-ejes">
           <div class="eje-y" id="eje-y"></div>
-          <div class="grafica-barras" id="grafica"></div>
+          <div class="grafica-barras" id="grafica" ></div>
         </div>
         <div id="leyenda"></div>
       </div>
 
-      <!-- 🔸 Resumen -->
       <div class="resumen">
         <div>
-          <h5>Total ventas</h5>
+          <h5 data-translate="Total de ventas">Total ventas</h5>
           <p id="total-ventas">$0</p>
         </div>
         <div>
-          <h5>Total productos</h5>
+          <h5 data-translate="Total de productos">Total productos</h5>
           <p id="total-productos">0</p>
         </div>
       </div>
 
     </div>
   </div>
-</div>
 
 <script>
-// 📅 Mostrar el rango de fechas si seleccionan "personalizado"
 const filtroPeriodo = document.getElementById("filtro-periodo");
 const rangoDiv = document.getElementById("rango-personalizado");
 filtroPeriodo.addEventListener("change", () => {
   rangoDiv.style.display = filtroPeriodo.value === "personalizado" ? "flex" : "none";
 });
 
-// 🔄 Escuchar cambios en filtros
-const filtros = document.querySelectorAll("#filtro-periodo, #filtro-categoria, #filtro-tipo, #fecha-inicio, #fecha-fin");
+const filtros = document.querySelectorAll("#filtro-periodo, #filtro-categoria, #filtro-tipo, #fecha-inicio, #fecha-fin, #f-mpago");
 filtros.forEach(f => f.addEventListener("change", cargarDatos));
 
-// 📊 Cargar datos desde PHP
 async function cargarDatos() {
   const periodo = document.getElementById("filtro-periodo").value;
   const categoria = document.getElementById("filtro-categoria").value;
   const tipo = document.getElementById("filtro-tipo").value;
   const inicio = document.getElementById("fecha-inicio").value;
   const fin = document.getElementById("fecha-fin").value;
+  const metodopago = document.getElementById("f-mpago").value;
 
   const response = await fetch("estadisticas_datos.php", {
     method: "POST",
     headers: {"Content-Type": "application/x-www-form-urlencoded"},
-    body: `periodo=${periodo}&categoria=${categoria}&tipo=${tipo}&inicio=${inicio}&fin=${fin}`
+    body: `periodo=${periodo}&categoria=${categoria}&tipo=${tipo}&inicio=${inicio}&fin=${fin}&metodopago=${metodopago}`
   });
 
   const data = await response.json();
   renderGrafica(data);
 }
 
-// 🎨 Renderizar gráfica con eje Y y colores únicos
 function renderGrafica(data) {
   const grafica = document.getElementById("grafica");
   const ejeY = document.getElementById("eje-y");
@@ -139,11 +146,9 @@ function renderGrafica(data) {
     return;
   }
 
-  // 🔢 Escala del eje Y (redondeada al múltiplo más cercano de 10)
   const maxValor = Math.max(...data.barras.map(b => b.valor));
   const maxEscala = Math.ceil(maxValor / 10) * 10;
 
-  // ✅ Mostrar exactamente 10 números en el eje Y
   const numMarcas = 10;
   for (let i = numMarcas; i >= 0; i--) {
     const valor = Math.round((maxEscala / numMarcas) * i);
@@ -153,7 +158,6 @@ function renderGrafica(data) {
     ejeY.appendChild(marca);
   }
 
-  // --- 🎨 Generador de colores únicos ---
   const generarColor = () => {
     const hue = Math.floor(Math.random() * 360);
     const saturation = 65 + Math.random() * 15;
@@ -170,28 +174,57 @@ function renderGrafica(data) {
     return color;
   };
 
-  // --- 📈 Dibujar barras ---
   data.barras.forEach(b => {
     const color = obtenerColorUnico();
     const barra = document.createElement("div");
     barra.className = "barra";
-    const altura = (b.valor / maxEscala) * 350;
+    const altura = (b.valor / maxEscala) * 430;
     barra.innerHTML = `<div style="height:${altura}px;background:${color};"></div>`;
     grafica.appendChild(barra);
 
-    // 🏷️ Leyenda
     const itemLeyenda = document.createElement("div");
     itemLeyenda.innerHTML = `<div class="color" style="background:${color}"></div>${b.etiqueta} ($${b.valor})`;
     leyenda.appendChild(itemLeyenda);
   });
 
-  // 💰 Totales
   document.getElementById("total-ventas").textContent = "$" + data.totalVentas;
   document.getElementById("total-productos").textContent = data.totalProductos;
 }
 
-cargarDatos(); // Carga inicial
-</script>
+cargarDatos();
+// Guardar filtros cada vez que cambian
+filtros.forEach(f => f.addEventListener("change", () => {
+    const filtroData = {
+        periodo: document.getElementById("filtro-periodo").value,
+        categoria: document.getElementById("filtro-categoria").value,
+        tipo: document.getElementById("filtro-tipo").value,
+        inicio: document.getElementById("fecha-inicio").value,
+        fin: document.getElementById("fecha-fin").value,
+        metodopago: document.getElementById("f-mpago").value
+    };
+    sessionStorage.setItem("estadisticasFiltros", JSON.stringify(filtroData));
+    cargarDatos();
+}));
 
+// Al cargar la página, aplicar filtros guardados si existen
+window.addEventListener("load", () => {
+    const filtrosGuardados = JSON.parse(sessionStorage.getItem("estadisticasFiltros"));
+    if(filtrosGuardados){
+        document.getElementById("filtro-periodo").value = filtrosGuardados.periodo;
+        document.getElementById("filtro-categoria").value = filtrosGuardados.categoria;
+        document.getElementById("filtro-tipo").value = filtrosGuardados.tipo;
+        document.getElementById("fecha-inicio").value = filtrosGuardados.inicio;
+        document.getElementById("fecha-fin").value = filtrosGuardados.fin;
+        document.getElementById("f-mpago").value = filtrosGuardados.metodopago;
+
+        // Mostrar el rango personalizado si corresponde
+        rangoDiv.style.display = filtrosGuardados.periodo === "personalizado" ? "flex" : "none";
+
+        cargarDatos();
+    }
+});
+
+</script>
+<script src="../../translate.js"></script>
 </body>
 </html>

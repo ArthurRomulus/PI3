@@ -21,15 +21,15 @@
         <div class="date"> </div>
       </header>
       <section class="filters">
-        <input class="search" type="search" placeholder="Buscar..." />
+        <input class="search" type="search" data-translate-placeholder="Buscar producto..." placeholder="Buscar producto..." />
         <div class="cats">
-          <button class="cat-btn active">Todos</button>
-          <button class="cat-btn">Frappes</button>
-          <button class="cat-btn">Tés</button>
-            <button class="cat-btn">Cafés</button>
-          <button class="cat-btn">Comida</button>
-          <button class="cat-btn">Postres</button>
-          <button class="cat-btn">Panes</button>
+          <button class="cat-btn active" data-translate="Todos">Todos</button>
+          <button class="cat-btn" data-translate="Frappés">Frappés</button>
+          <button class="cat-btn" data-translate="Tés">Tés</button>
+            <button class="cat-btn" data-translate="Cafés">Cafés</button>
+          <button class="cat-btn" data-translate="Comida">Comida</button>
+          <button class="cat-btn" data-translate="Postres">Postres</button>
+          <button class="cat-btn" data-translate="Panes">Panes</button>
         </div>
       </section>
       
@@ -78,14 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
             producto.modificadores.forEach(grupo => {
                 html += `<div class="option-select">
                            <select class="modifier-select" data-id-grupo="${grupo.id}">
-                             <option value="0" data-precio-extra="0" selected disabled>${grupo.nombre}</option>`;
+                             <option value="0" data-precio-extra="0" selected disabled data-translate="${grupo.nombre}">${grupo.nombre}</option>`;
                 
                 grupo.opciones.forEach(opcion => {
-                    const precioTexto = opcion.precio > 0 ? ` (+$${parseFloat(opcion.precio).toFixed(2)})` : '';
-                    html += `<option value="${opcion.id}" data-precio-extra="${opcion.precio}">
-                               ${opcion.valor}${precioTexto}
-                             </option>`;
-                });
+    const precioTexto = opcion.precio > 0 ? ` (+$${parseFloat(opcion.precio).toFixed(2)})` : '';
+    html += `<option value="${opcion.id}" data-precio-extra="${opcion.precio}">
+    <span data-translate="${opcion.valor}">${opcion.valor}</span>
+    <span data-keep=" ${precioTexto}">${precioTexto}</span>
+</option>`;
+
+});
+
                 
                 html += `</select></div>`;
             });
@@ -93,19 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (producto.modificadores.length === 1) {
                  html += `<div class="option-select">
                             <select class="modifier-select" disabled>
-                              <option>Sin opciones</option>
+                              <option data-translate="Sin opciones">Sin opciones</option>
                             </select>
                           </div>`;
             }
         } else {
             html = `<div class="option-select">
                         <select class="modifier-select" disabled>
-                          <option>Sin opciones</option>
+                          <option data-translate="Sin opciones">Sin opciones</option>
                         </select>
                       </div>
                       <div class="option-select">
                         <select class="modifier-select" disabled>
-                          <option>Sin opciones</option>
+                          <option data-translate="Sin opciones">Sin opciones</option>
                         </select>
                       </div>`;
         }
@@ -122,9 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let tagHtml = ''; 
             if (producto.categorias_nombres && producto.categorias_nombres.includes('Bebidas calientes')) {
-                tagHtml = '<span class="card-tag tag-caliente">CALIENTE</span>';
+                tagHtml = '<span class="card-tag tag-caliente" data-translate="CALIENTE">CALIENTE</span>';
             } else if (producto.categorias_nombres && producto.categorias_nombres.includes('Bebidas frias')) {
-                tagHtml = '<span class="card-tag tag-frio">FRÍO</span>';
+                tagHtml = '<span class="card-tag tag-frio" data-translate="FRÍO">FRÍO</span>';
             }
             
             const foodCategories = ['Comida', 'Postres', 'Panes'];
@@ -143,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="card-price">$${parseFloat(producto.precio).toFixed(2)}</span>
                     </div>
                     <div class="card-image"><img src="${producto.ruta_imagen}" alt="${producto.namep}"></div>
-                    <div class="card-badge">${producto.namep}</div>
+                    <div class="card-badge" data-translate="${producto.namep}">${producto.namep}</div>
                     <div class="card-options">
                         ${modificadoresHtml} 
                         <div class="option-row quantity-selector">
@@ -151,8 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="option-row size-selector">${tamanosHtml}</div>
                     </div>
-                    <textarea class="extra-requests-input" placeholder="Peticiones extras..."></textarea>
-                    <button class="add-to-cart-btn">Añadir a Carrito</button>
+                    <textarea class="extra-requests-input"  data-translate-placeholder="Peticiones extras..." placeholder="Peticiones extras..."></textarea>
+                    <button class="add-to-cart-btn" data-translate="Añadir a Carrito">Añadir a Carrito</button>
                 </article>`;
             contenedorProductos.insertAdjacentHTML('beforeend', tarjetaHTML);
         });
@@ -369,5 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 </script>
+<script src="../../translate.js"></script>
 </body>
 </html>

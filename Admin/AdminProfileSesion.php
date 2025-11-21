@@ -1,5 +1,7 @@
 <?php
     session_start();
+
+  
 ?>
 
   <link rel="stylesheet" href="../AdminProfileSesion.css">
@@ -7,8 +9,11 @@
 
 <div class="top-bar">
   <div class="admin-profile">
-    <img src='<?php echo htmlspecialchars($_SESSION['profilescreen']);?>' alt='Perfil Admin'>
-    <span class="admin-name"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+    <?php if ($_SESSION != null){
+    echo "<img src='". htmlspecialchars($_SESSION['profilescreen']) .">";} ?>'
+    <span class="admin-name"><?php if ($_SESSION != null){
+       echo $_SESSION['username']; 
+       } ?></span>
 
     <div class="theme-switch-wrapper">
         <label class="theme-switch" for="theme-toggle">
@@ -16,6 +21,8 @@
             <div class="slider round"></div>
         </label>
     </div>
+
+<script src="../../theme-toggle.js" defer></script>
 <div class="lang-switch">
     <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
     <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">

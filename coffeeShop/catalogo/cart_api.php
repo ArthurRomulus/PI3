@@ -19,11 +19,11 @@ function fail($msg = 'Error', $code = 400) {
 /** Normaliza la ruta de imagen a ../../images/ salvo que sea URL absoluta */
 function resolve_img($raw) {
   $s = trim((string)($raw ?? ''));
-  if ($s === '') return '../../images/placeholder.png';
+  if ($s === '') return '../../Images/placeholder.png';
   if (preg_match('~^https?://~i', $s)) return $s;
-  if (strpos($s, '../../images/') === 0) return $s;
+  if (strpos($s, '../../Images/') === 0) return $s;
   // cuelga el archivo directamente de ../../images/
-  return '../../images/' . ltrim($s, '/');
+  return '../../Images/' . ltrim($s, '/');
 }
 
 /** Calcula nombre, foto y precio_total desde DB, con overrides opcionales */
@@ -164,49 +164,45 @@ switch ($action) {
   }
 
   case 'add': {
-    // Espera: id (obligatorio). Si no llegan nombre/precio, se consultan y se calcula precio_total.
     $id       = isset($_POST['id']) ? (string)$_POST['id'] : null;
     $qty      = isset($_POST['qty']) ? max(1, (int)$_POST['qty']) : 1;
     $nombre   = isset($_POST['nombre']) ? trim((string)$_POST['nombre']) : '';
-    $precio   = isset($_POST['precio']) ? (float)$_POST['precio'] : 0.0; // app.js manda precio_total
+    $precio   = isset($_POST['precio']) ? (float)$_POST['precio'] : 0.0;
     $foto     = isset($_POST['foto']) ? (string)$_POST['foto'] : null;
 
-    // Overrides opcionales (por si luego los usas desde el front)
-    $saborId  = isset($_POST['sabor_id']) && ctype_digit((string)$_POST['sabor_id']) ? (int)$_POST['sabor_id'] : null;
-    $tamanoId = isset($_POST['tamano_id']) && ctype_digit((string)$_POST['tamano_id']) ? (int)$_POST['tamano_id'] : null;
+    // Recibir tamaño enviado desde el front (string)
+    $tamanoFront = isset($_POST['tamano']) ? trim($_POST['tamano']) : null;
 
     if (!$id) fail('ID faltante');
 
-    // Si falta precio o es inválido, calcular desde DB con overrides
-    $sabor = null; $tamano = null;
+    // Si falta información base, la obtenemos desde DB
     if ($precio <= 0 || $nombre === '' || $foto === null) {
-      $info   = fetch_product_info($id, $saborId, $tamanoId);
+      $info   = fetch_product_info($id, null, null);
       $precio = $precio > 0 ? $precio : (float)$info['precio_total'];
       $nombre = $nombre !== '' ? $nombre : $info['nombre'];
       $foto   = $foto !== null ? $foto : $info['foto'];
-      $sabor  = $info['sabor'];
-      $tamano = $info['tamano'];
+      $tamano = $tamanoFront ?: ($info['tamano']['nombre'] ?? 'Chico');
     } else {
-      // Normaliza imagen y deja sabor/tamano nulos si no vienen
-      $foto = resolve_img($foto);
+      $foto   = resolve_img($foto);
+      $tamano = $tamanoFront ?: 'Chico';
     }
 
     if (!isset($_SESSION['cart'][$id])) {
       $_SESSION['cart'][$id] = [
         'id'     => $id,
         'nombre' => $nombre ?: 'Producto',
-        'precio' => $precio, // unitario (total con extras)
+        'precio' => $precio,
         'qty'    => 0,
         'foto'   => $foto,
-        'sabor'  => $sabor,
-        'tamano' => $tamano,
+        'tamano' => $tamano
       ];
     }
-    $_SESSION['cart'][$id]['qty'] += $qty;
 
+    $_SESSION['cart'][$id]['qty'] += $qty;
     ok(['message'=>'Añadido','id'=>$id]);
     break;
-  }
+}
+
 
   case 'update': {
     $id  = isset($_POST['id']) ? (string)$_POST['id'] : null;
