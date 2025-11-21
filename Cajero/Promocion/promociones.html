@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blackwood Coffee - Promociones</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <link rel="stylesheet" href="../Carrito/carrito.css">
 </head>
 <body>
   <div class="container">
@@ -35,43 +36,35 @@
       <section class="promotions-grid" aria-label="Productos">
         </section>
     </main>
+
+    <div id="carrito-placeholder"></div>
   </div>
 
   <script src="../barraNav.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const currentPage = window.location.pathname.split("/").pop();
-      cargarBarraNav(currentPage);
-    });
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Carga la barra de navegación
-      const currentPage = window.location.pathname.split("/").pop();
-      cargarBarraNav(currentPage);
+  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="../Carrito/carrito.js"></script>
 
-      // --- CÓDIGO DE LA FECHA AÑADIDO (de productos.html) ---
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const currentPage = window.location.pathname.split("/").pop();
+      if(typeof cargarBarraNav === 'function') cargarBarraNav(currentPage);
+
       const dateElement = document.querySelector('.date');
       if (dateElement) {
-          // Arrays para los nombres en español
           const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
           const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-          
           const fechaActual = new Date();
-          
-          // Formateamos la fecha al estilo "Jueves, 5 de octubre de 2025"
           const diaSemana = dias[fechaActual.getDay()];
           const diaMes = fechaActual.getDate();
           const mes = meses[fechaActual.getMonth()];
           const anio = fechaActual.getFullYear();
-          
           dateElement.textContent = `${diaSemana}, ${diaMes} de ${mes} de ${anio}`;
       }
-      // --- FIN DEL CÓDIGO DE LA FECHA ---
-
     });
   </script>
-  <script src="script.js"></script>
-  
 </body>
 </html>
