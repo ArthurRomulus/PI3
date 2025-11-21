@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Pizarra</title>
+<style>
+    /* Fuente estilo escritura a mano 'Patrick Hand' */
+    @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+    body {
+        margin: 0;
+        height: 100vh;
+        /* Color pizarra */
+        background-color: #2B2B2B; 
+        font-family: 'Patrick Hand', cursive;
+        color: #EEE;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .board-container {
+        border: 8px solid #5D4037; /* Marco de madera */
+        padding: 40px;
+        border-radius: 4px;
+        background-color: #333; /* Ligeramente más claro que el fondo */
+        box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        text-align: center;
+        width: 300px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-top: 0;
+        border-bottom: 2px solid rgba(255,255,255,0.3); /* Línea de tiza */
+        padding-bottom: 10px;
+        transform: rotate(-2deg); /* Un poco inclinado para realismo */
+    }
+
+    .chalk-input {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid white;
+        color: white;
+        font-family: 'Patrick Hand', cursive;
+        font-size: 1.2rem;
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 5px;
+        outline: none;
+    }
+
+    .chalk-input::placeholder { color: #AAA; }
+
+    .btn-chalk {
+        border: 2px solid white;
+        background: transparent;
+        color: white;
+        font-family: 'Patrick Hand', cursive;
+        font-size: 1.5rem;
+        padding: 5px 20px;
+        cursor: pointer;
+        border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; /* Bordes irregulares estilo dibujo */
+        transition: all 0.2s;
+    }
+
+    .btn-chalk:hover {
+        background: white;
+        color: #333;
+    }
+</style>
+</head>
+<body>
+
+<div class="board-container">
+    <h1>Menú del Día</h1>
+    <p style="font-size: 1.2rem; margin-bottom: 30px;">Ingreso de Socios</p>
+
+    <input type="text" class="chalk-input" placeholder="¿Quién eres?">
+    <input type="password" class="chalk-input" placeholder="Tu clave secreta">
+
+    <button class="btn-chalk">¡Café!</button>
+</div>
+
+</body>
+</html>

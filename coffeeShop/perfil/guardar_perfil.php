@@ -35,7 +35,7 @@ if (
     // Carpeta física destino en el servidor
     // Estamos dentro de /Perfil/
     // ../images/profiles/ = /coffeeShop/images/profiles/
-    $carpetaDestinoFS = __DIR__ . "/../images/profiles/";
+    $carpetaDestinoFS = __DIR__ . "../../Images/profiles/";
 
     if (!is_dir($carpetaDestinoFS)) {
         mkdir($carpetaDestinoFS, 0777, true);

@@ -19,13 +19,13 @@ if (!$userid || !$username) {
 
 $imagePath = null;
 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = "../../Images/"; // ✅ Agregar barra al final
+    $uploadDir = "../../Images/Profiles"; // ✅ Agregar barra al final
     $imageName = basename($_FILES['image']['name']);
     $imagePath = $uploadDir . $imageName;
 
     if (move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
         // Ruta que guardarás en la base de datos (relativa a tu proyecto)
-        $imagePath = "../../Images/" . $imageName;
+        $imagePath = "../../Images/Profiles" . $imageName;
     } else {
         echo "❌ Error al mover la imagen.";
     }

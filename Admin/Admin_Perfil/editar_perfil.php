@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Subida de imagen
     if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
-        $targetDir = "../../Images/";
+        $targetDir = "../../Images/Profiles";
         $targetFile = $targetDir . basename($_FILES['profile_pic']['name']);
         move_uploaded_file($_FILES['profile_pic']['tmp_name'], $targetFile);
 

@@ -36,8 +36,8 @@ if ($usuarioLogueado) {
   </head>
   
   <body>
-    <script src="../../theme-toggle.js" defer></script>
-    <?php include "../nav_bar.php"; ?>
+    
+<?php include "../nav_bar.php"; ?>
     <main class="panel-comentarios">
       
       <section class="panel" id="panel-formulario">
@@ -90,7 +90,9 @@ if ($usuarioLogueado) {
             
             <p id="form-mensaje"></p> 
             
-          </form> </section> <section class="panel-resena-general">
+          </form>
+         </section>
+        <section class="panel-resena-general">
           <div class="resena-container">
               <div class="resena-promedio">
                   <div class="promedio-numero" id="promedio-numero-display">0.0</div>
@@ -133,44 +135,11 @@ if ($usuarioLogueado) {
       </main> 
 <?php include "../footer.php"; ?>
 
-     <!-- === OVERLAY & DRAWER MINI-CARRITO === -->
-<div class="mc-overlay" id="mcOverlay" hidden></div>
-
-<aside
-  class="mini-cart"
-  id="miniCart"
-  aria-hidden="true"
-  aria-labelledby="mcTitle"
-  role="dialog"
->
-  <header class="mc-header">
-    <h3 id="mcTitle">Tu carrito</h3>
-    <button class="mc-close" id="mcClose" aria-label="Cerrar carrito">
-      ✕
-    </button>
-  </header>
-
-  <div class="mc-body">
-    <ul class="mc-list" id="mcList">
-      <!-- items por JS -->
-    </ul>
-    <div class="mc-empty" id="mcEmpty" data-translate="Tu carrito está vacío.">Tu carrito está vacío.</div>
-  </div>
-
-  <footer class="mc-footer">
-    <div class="mc-total">
-      <span>Total</span>
-      <strong id="mcTotal">$0.00 MXN</strong>
-    </div>
-    <a href="../catalogo/carrito.php" class="mc-btn" data-translate="Ir a pagar">Ir a pagar</a>
-  </footer>
-</aside>
-
 <script>
   window.CART_API_URL = '../catalogo/cart_api.php';
 </script>
 <script src="../catalogo/app.js"></script>
 <script src="comentarios.js" defer></script>
 <script src="../../translate.js"></script>
-  </body>
+</body>
 </html>
