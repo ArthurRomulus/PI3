@@ -24,6 +24,7 @@ include "../../conexion.php";
         </div>
 
         <h1>Blackwood Coffee</h1>
+        <?php include '../date.php'; ?>
 
         <!-- Botón Agregar Promoción -->
         <!-- Título del listado -->
