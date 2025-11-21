@@ -1,42 +1,33 @@
 /*
   CARRITO MODULAR DE BLACKWOOD COFFEE
-  (Versión final con Stripe, corrección de sintaxis, caché Y RUTAS)
+  (Con Validación de Stock, SweetAlert2 en Todo y Rutas Corregidas)
 */
 (function() {
-    // --- 1. VARIABLES GLOBALES DEL MÓDULO ---
+    // --- 1. VARIABLES GLOBALES ---
     let cartList = [];
-    const IVA_RATE = 0.16;
     let totalGeneral = 0;
     let isOrderLoaded = false; 
+    const IVA_RATE = 0.16;
+    
+    // MAPA DE INVENTARIO: { id_producto: cantidad_stock }
+    let inventarioGlobal = {}; 
 
     // --- Variables de Stripe ---
     const stripePublicKey = 'pk_test_51SSiVI6xsnAsFl7HGfd0lPd7bm5TLSTDuZS4MdGMHLkIXFz2O0SfJMe1V7SgzObmSWdXN0PinoRnCKfVuGrFYSgi003W0zORcA';
-    let stripe;
-    let cardElement;
-    let paymentModalOverlay;
-    let paymentModalTotalEl;
-    let submitPaymentBtn;
-    let cancelPaymentModalBtn;
-    let cardErrorsEl;
+    let stripe, cardElement, paymentModalOverlay, paymentModalTotalEl, submitPaymentBtn, cancelPaymentModalBtn, cardErrorsEl;
     
-    // Selectores
-    let cartElement, cartContent, summarySubtotal, summaryIVA, summaryTotal;
-    let payButton, orderNumberEl, clearCartButton, searchIcon, statusPill;
-    let paymentChoiceDiv, payEfectivoButton, payTarjetaButton, cancelPayButton;
+    // Selectores UI
+    let cartElement, cartContent, summarySubtotal, summaryIVA, summaryTotal, payButton, orderNumberEl, clearCartButton, searchIcon, statusPill;
+    let payEfectivoButton, payTarjetaButton, cancelPayButton;
 
-    // --- 2. LÓGICA DE LOCALSTORAGE ---
+    // --- 2. LÓGICA DE ALMACENAMIENTO ---
     function guardarCarrito() {
-        if (!isOrderLoaded) {
-            localStorage.setItem('blackwoodCart', JSON.stringify(cartList));
-        }
+        if (!isOrderLoaded) localStorage.setItem('blackwoodCart', JSON.stringify(cartList));
     }
 
     function leerCarrito() {
         const cartGuardado = localStorage.getItem('blackwoodCart');
-        if (cartGuardado) {
-            return JSON.parse(cartGuardado);
-        }
-        return [];
+        return cartGuardado ? JSON.parse(cartGuardado) : [];
     }
     
     function getOrderNumber() {
@@ -48,10 +39,9 @@
         return num;
     }
 
-    // --- 3. FUNCIONES DEL CARRITO (Renderizado) ---
+    // --- 3. FUNCIONES DE RENDERIZADO ---
     function updateSummary() {
         if (!summarySubtotal) return; 
-
         let subtotal, iva, total;
         
         if (isOrderLoaded) {
@@ -68,15 +58,11 @@
         summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
         summaryIVA.textContent = `$${iva.toFixed(2)}`;
         summaryTotal.textContent = `$${(total).toFixed(2)}`;
-        
-        if (paymentModalTotalEl) {
-            paymentModalTotalEl.textContent = `$${(total).toFixed(2)}`;
-        }
+        if (paymentModalTotalEl) paymentModalTotalEl.textContent = `$${(total).toFixed(2)}`;
     }
 
     function renderCart(items = cartList) {
         if (!cartContent) return; 
-
         cartContent.innerHTML = '';
         if (items.length === 0) {
             cartContent.innerHTML = '<p class="empty-cart">El carrito está vacío</p>';
@@ -109,30 +95,15 @@
     
     function mostrarEstadoPedido(pedido) {
         if (!statusPill) return;
+        let estadoClass = '', estadoTexto = '', pagoTexto = '';
         
-        let estadoClass = '';
-        let estadoTexto = '';
-        let pagoTexto = '';
+        if (pedido.estado.toLowerCase() === 'terminado') { estadoClass = 'status-terminado'; estadoTexto = 'Terminado'; } 
+        else { estadoClass = 'status-proceso'; estadoTexto = 'Proceso'; }
         
-        if (pedido.estado.toLowerCase() === 'terminado') {
-            estadoClass = 'status-terminado';
-            estadoTexto = 'Terminado';
-        } else {
-            estadoClass = 'status-proceso';
-            estadoTexto = 'Proceso';
-        }
+        if (pedido.metodo_pago === 'Tarjeta') { estadoClass = 'status-pagado'; pagoTexto = 'Pago con Tarjeta'; } 
+        else { pagoTexto = 'Pagar en Efectivo'; }
         
-        if (pedido.metodo_pago === 'Tarjeta') {
-            estadoClass = 'status-pagado';
-            pagoTexto = 'Pago con Tarjeta';
-        } else {
-            pagoTexto = 'Pagar en Efectivo';
-        }
-        
-        if (pedido.estado.toLowerCase() === 'terminado') {
-             pagoTexto = pedido.metodo_pago;
-             estadoClass = 'status-terminado';
-        }
+        if (pedido.estado.toLowerCase() === 'terminado') { pagoTexto = pedido.metodo_pago; estadoClass = 'status-terminado'; }
 
         statusPill.className = 'cart-status-pill';
         statusPill.classList.add(estadoClass);
@@ -140,12 +111,34 @@
         statusPill.style.display = 'block';
     }
 
-    // --- 4. FUNCIONES DE MANIPULACIÓN (LA "API" interna) ---
+    // --- 4. FUNCIONES DE MANIPULACIÓN ---
     
     function agregarProducto(producto) {
         if (isOrderLoaded) vaciarCarrito();
         
+        let stockMaximo = 9999; 
+        if (inventarioGlobal[producto.idp] !== undefined) {
+            stockMaximo = inventarioGlobal[producto.idp];
+        }
+
         const existingProduct = cartList.find(item => item.cartKey === producto.cartKey);
+        let cantidadEnCarrito = existingProduct ? existingProduct.qty : 0;
+        
+        // VALIDACIÓN CON SWEETALERT
+        if ((cantidadEnCarrito + producto.qty) > stockMaximo) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `No puedes agregar más. Solo hay ${stockMaximo} unidades en stock.`,
+                    confirmButtonColor: '#c68644'
+                });
+            } else {
+                alert(`Stock Insuficiente: Solo quedan ${stockMaximo}`);
+            }
+            return; 
+        }
+
         if (existingProduct) {
             existingProduct.qty += producto.qty;
         } else {
@@ -156,19 +149,39 @@
     }
     
     function eliminarProducto(index) {
-        const idx = parseInt(index);
-        cartList.splice(idx, 1);
+        cartList.splice(index, 1);
         guardarCarrito();
         renderCart();
     }
 
     function modificarCantidad(index, accion) {
         const idx = parseInt(index);
+        const item = cartList[idx];
+
         if (accion === 'plus') {
-            cartList[idx].qty += 1;
+            let stockMaximo = 9999;
+            if (inventarioGlobal[item.idp] !== undefined) {
+                stockMaximo = inventarioGlobal[item.idp];
+            }
+
+            if ((item.qty + 1) > stockMaximo) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: `Has alcanzado el límite. Solo quedan ${stockMaximo} en stock.`,
+                        confirmButtonColor: '#c68644'
+                    });
+                } else {
+                    alert(`Límite alcanzado. Stock: ${stockMaximo}`);
+                }
+                return; 
+            }
+            item.qty += 1;
+
         } else if (accion === 'minus') {
-            cartList[idx].qty -= 1;
-            if (cartList[idx].qty <= 0) {
+            item.qty -= 1;
+            if (item.qty <= 0) {
                 eliminarProducto(idx);
                 return;
             }
@@ -183,32 +196,23 @@
         isOrderLoaded = false;
         guardarCarrito(); 
         renderCart();
-        
         localStorage.removeItem('blackwoodOrderNum');
-        if (orderNumberEl) {
-            orderNumberEl.textContent = getOrderNumber();
-        }
-        if (statusPill) {
-            statusPill.style.display = 'none';
-        }
-        if (cartElement) {
-            cartElement.classList.remove('order-loaded');
-        }
+        if (orderNumberEl) orderNumberEl.textContent = getOrderNumber();
+        if (statusPill) statusPill.style.display = 'none';
+        if (cartElement) cartElement.classList.remove('order-loaded');
         setPaymentMode(false);
     }
     
     function setPaymentMode(isChoosing) {
-        if (isChoosing) {
-            cartElement.classList.add('payment-active');
-        } else {
-            cartElement.classList.remove('payment-active');
-        }
+        if (isChoosing) cartElement.classList.add('payment-active');
+        else cartElement.classList.remove('payment-active');
     }
     
     function procesarPago(metodoPago, tokenStripe = null) {
-        if (cartList.length === 0) {
-            alert("El carrito está vacío.");
-            return;
+        if (cartList.length === 0) { 
+            if(typeof Swal !== 'undefined') Swal.fire("Carrito Vacío", "Agrega productos antes de pagar.", "info");
+            else alert("El carrito está vacío."); 
+            return; 
         }
 
         payEfectivoButton.disabled = true;
@@ -222,7 +226,6 @@
             token: tokenStripe
         };
 
-        // Ruta corregida a la API
         fetch('../Carrito/registrar_pedido.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -231,15 +234,27 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert("¡Gracias por tu compra! Tu pedido es el #" + data.nuevoPedidoId);
+                if(typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: "success",
+                        title: "¡Pedido Registrado!",
+                        text: "El pedido #" + data.nuevoPedidoId + " ha sido procesado.",
+                        confirmButtonColor: '#28a745'
+                    });
+                } else {
+                    alert("¡Gracias por tu compra! Pedido #" + data.nuevoPedidoId);
+                }
+                cargarInventarioDesdeAPI(); 
                 vaciarCarrito(); 
             } else {
-                alert("Hubo un error con el pago: " + data.error);
+                if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "Error", text: data.error });
+                else alert("Error: " + data.error);
             }
         })
         .catch(error => {
-            console.error('Error de fetch:', error);
-            alert("Error de conexión. No se pudo procesar el pedido.");
+            console.error('Error:', error);
+            if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "Error", text: "Error de conexión." });
+            else alert("Error de conexión.");
         })
         .finally(() => {
             payEfectivoButton.disabled = false;
@@ -251,12 +266,9 @@
     }
 
     function buscarPedido() {
-        const pedidoId = prompt("Por favor, ingresa el número de pedido:");
-        if (!pedidoId || pedidoId.trim() === '') {
-            return;
-        }
+        const pedidoId = prompt("Número de pedido:");
+        if (!pedidoId || pedidoId.trim() === '') return;
 
-        // Ruta corregida a la API
         fetch('../Carrito/buscar_pedido.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -274,76 +286,75 @@
                 mostrarEstadoPedido(pedido);
                 setPaymentMode(false);
             } else {
-                alert("Error: " + data.error);
+                if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "No encontrado", text: data.error });
+                else alert("Error: " + data.error);
             }
         })
-        .catch(error => {
-            console.error('Error de fetch:', error);
-            alert("Error de conexión. No se pudo buscar el pedido.");
+        .catch(error => { 
+            console.error(error); 
+            if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "Error", text: "Error de conexión." });
+            else alert("Error de conexión.");
         });
     }
 
-    // --- FUNCIONES DEL MODAL DE STRIPE ---
+    async function cargarInventarioDesdeAPI() {
+        try {
+            const response = await fetch('../Productos/api.php'); 
+            const data = await response.json();
+            
+            if (data.success && data.productos) {
+                data.productos.forEach(prod => {
+                    inventarioGlobal[prod.idp] = parseInt(prod.STOCK);
+                });
+                console.log("Inventario cargado:", inventarioGlobal);
+            }
+        } catch (error) {
+            console.error("No se pudo cargar el inventario:", error);
+        }
+    }
+
+    function cargarSweetAlert() {
+        return new Promise((resolve, reject) => {
+            if (typeof Swal !== 'undefined') {
+                resolve();
+            } else {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                script.onload = resolve;
+                script.onerror = () => {
+                    console.error("No se pudo cargar SweetAlert2.");
+                    resolve(); 
+                };
+                document.head.appendChild(script);
+            }
+        });
+    }
+
+    // --- STRIPE ---
     function inicializarStripe() {
         try {
             stripe = Stripe(stripePublicKey);
             const elements = stripe.elements();
-            
-            const style = {
-                base: {
-                    color: '#332a23',
-                    fontFamily: '"Poppins", system-ui, sans-serif',
-                    fontSize: '16px',
-                    '::placeholder': {
-                        color: '#bfa77a'
-                    }
-                },
-                invalid: {
-                    color: '#dc3545',
-                    iconColor: '#dc3545'
-                }
-            };
-            
+            const style = { base: { color: '#332a23', fontFamily: '"Poppins", sans-serif', fontSize: '16px' } };
             cardElement = elements.create('card', { style: style });
             cardElement.mount('#card-element');
-            
             cardElement.on('change', (event) => {
-                if (event.error) {
-                    cardErrorsEl.textContent = event.error.message;
-                } else {
-                    cardErrorsEl.textContent = '';
-                }
+                cardErrorsEl.textContent = event.error ? event.error.message : '';
             });
-
         } catch (error) {
-            console.error("Error al inicializar Stripe. ¿Pusiste la clave publicable?", error);
-            if (payTarjetaButton) {
-                payTarjetaButton.disabled = true;
-                payTarjetaButton.textContent = "Error de Stripe";
-            }
+            console.error("Stripe error:", error);
+            if(payTarjetaButton) { payTarjetaButton.disabled = true; payTarjetaButton.textContent = "Error Stripe"; }
         }
     }
     
-    function mostrarModalPago() {
-        if (!paymentModalOverlay) return;
-        updateSummary(); 
-        paymentModalOverlay.classList.remove('payment-modal-hidden');
-    }
-    
-    function ocultarModalPago() {
-        if (!paymentModalOverlay) return;
-        paymentModalOverlay.classList.add('payment-modal-hidden');
-        if (cardElement) cardElement.clear(); 
-        if (cardErrorsEl) cardErrorsEl.textContent = '';
-    }
+    function mostrarModalPago() { if(paymentModalOverlay) { updateSummary(); paymentModalOverlay.classList.remove('payment-modal-hidden'); } }
+    function ocultarModalPago() { if(paymentModalOverlay) { paymentModalOverlay.classList.add('payment-modal-hidden'); if(cardElement) cardElement.clear(); } }
     
     async function manejarSubmitPago(e) {
         e.preventDefault();
         submitPaymentBtn.disabled = true;
         submitPaymentBtn.textContent = "Procesando...";
-
         const { token, error } = await stripe.createToken(cardElement);
-
         if (error) {
             cardErrorsEl.textContent = error.message;
             submitPaymentBtn.disabled = false;
@@ -354,24 +365,19 @@
         }
     }
 
-    // --- 5. INICIALIZACIÓN Y EVENT LISTENERS ---
-    
+    // --- INICIO ---
     async function init() {
+        await cargarSweetAlert(); // Asegurar que cargue
+
         const placeholder = document.getElementById('carrito-placeholder');
-        if (!placeholder) {
-            console.error("No se encontró #carrito-placeholder.");
-            return;
-        }
+        if (!placeholder) return;
 
         try {
-            // "Cache buster" para forzar la recarga del HTML
             const cacheBuster = "?v=" + new Date().getTime();
             const response = await fetch('../Carrito/carrito.html' + cacheBuster);
-
             const html = await response.text();
             placeholder.innerHTML = html;
             
-            // Asignar selectores (todos)
             cartElement = document.querySelector('#carrito-placeholder .cart');
             cartContent = document.querySelector('#carrito-placeholder .cart-content');
             summarySubtotal = document.querySelector('#carrito-placeholder .summary-subtotal');
@@ -387,7 +393,6 @@
             searchIcon = document.querySelector('#carrito-placeholder .order-search-icon');
             statusPill = document.querySelector('#carrito-placeholder .cart-status-pill');
             
-            // Selectores del Modal de Stripe
             paymentModalOverlay = document.querySelector('#carrito-placeholder #payment-modal-overlay');
             paymentModalTotalEl = document.querySelector('#carrito-placeholder #payment-modal-total');
             submitPaymentBtn = document.querySelector('#carrito-placeholder #submit-payment-btn');
@@ -396,22 +401,14 @@
             
             cartList = leerCarrito();
             renderCart();
+            if(orderNumberEl) orderNumberEl.textContent = getOrderNumber();
             
-            if(orderNumberEl) {
-                orderNumberEl.textContent = getOrderNumber();
-            }
-            
-            if (submitPaymentBtn && cardErrorsEl && typeof Stripe === 'function') {
-                 inicializarStripe();
-            } else {
-                console.error("No se encontraron los elementos del modal de Stripe o Stripe.js no se cargó.");
-                if(payTarjetaButton) payTarjetaButton.disabled = true;
-            }
+            await cargarInventarioDesdeAPI();
 
-            // --- Asignar todos los listeners (con chequeo de existencia) ---
-            
+            if (submitPaymentBtn && typeof Stripe === 'function') inicializarStripe();
+
             if (searchIcon) searchIcon.addEventListener('click', buscarPedido);
-
+            
             if (cartContent) cartContent.addEventListener('click', e => {
                 if (isOrderLoaded) return;
                 if (e.target.classList.contains('qty-btn-cart')) {
@@ -422,59 +419,71 @@
                     eliminarProducto(e.target.dataset.idx);
                 }
             });
-
+            
             if (payButton) payButton.addEventListener('click', () => {
                 if (isOrderLoaded) return; 
-                if (cartList.length === 0) {
-                    alert("El carrito está vacío.");
-                    return;
+                if (cartList.length === 0) { 
+                    if(typeof Swal !== 'undefined') Swal.fire("Carrito vacío", "", "info");
+                    else alert("Carrito vacío");
+                    return; 
                 }
                 setPaymentMode(true); 
             });
             
-            if (payEfectivoButton) payEfectivoButton.addEventListener('click', () => {
-                procesarPago('Efectivo');
-            });
-            
-            if (payTarjetaButton) payTarjetaButton.addEventListener('click', () => {
-                mostrarModalPago();
-            });
-            
-            if (cancelPayButton) cancelPayButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                setPaymentMode(false);
-            });
-            
-            if (cancelPaymentModalBtn) cancelPaymentModalBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                ocultarModalPago();
-                setPaymentMode(false);
-            });
-            
+            if (payEfectivoButton) payEfectivoButton.addEventListener('click', () => procesarPago('Efectivo'));
+            if (payTarjetaButton) payTarjetaButton.addEventListener('click', mostrarModalPago);
+            if (cancelPayButton) cancelPayButton.addEventListener('click', (e) => { e.preventDefault(); setPaymentMode(false); });
+            if (cancelPaymentModalBtn) cancelPaymentModalBtn.addEventListener('click', (e) => { e.preventDefault(); ocultarModalPago(); });
             if (submitPaymentBtn) submitPaymentBtn.addEventListener('click', manejarSubmitPago);
-
+            
+            // --- AQUÍ ESTÁ LA MODIFICACIÓN PARA "ELIMINAR TODO" CON ANIMACIÓN ---
             if (clearCartButton) clearCartButton.addEventListener('click', (e) => {
                 e.preventDefault();
+                // Verificamos si el carrito tiene algo
                 if (cartList.length > 0 || isOrderLoaded) {
-                    if (confirm("¿Estás seguro de que quieres limpiar la pantalla?")) {
-                        vaciarCarrito();
+                    // Usamos SweetAlert en lugar de confirm()
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: "Se eliminarán todos los productos del carrito.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#c68644', // Tu color de marca
+                            cancelButtonColor: '#777',
+                            confirmButtonText: 'Sí, limpiar',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                vaciarCarrito();
+                                Swal.fire({
+                                    title: "¡Limpio!",
+                                    text: "El carrito ha sido vaciado.",
+                                    icon: "success",
+                                    confirmButtonColor: '#c68644',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    } else {
+                        // Fallback por si acaso
+                        if (confirm("¿Estás seguro de que quieres limpiar la pantalla?")) {
+                            vaciarCarrito();
+                        }
                     }
                 }
             });
 
         } catch (error) {
-            console.error('Error al cargar el HTML del carrito:', error);
-            placeholder.innerHTML = "<p>Error al cargar carrito.</p>";
+            console.error('Error init carrito:', error);
+            placeholder.innerHTML = "<p>Error cargando carrito.</p>";
         }
     }
 
-    // --- 6. EXPONER LA API GLOBAL ---
     window.CarritoAPI = {
         agregar: agregarProducto,
         vaciar: vaciarCarrito
     };
 
-    // --- 7. INICIO AUTOMÁTICO ---
     document.addEventListener('DOMContentLoaded', init);
-
 })();

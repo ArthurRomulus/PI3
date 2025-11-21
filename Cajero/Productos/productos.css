@@ -14,35 +14,39 @@
 /* ========== RESET BASICO ========== */
 *{box-sizing: border-box}
 html,body{height:100%}
+
 body{
   margin:0;
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: var(--page-bg);
+  /* CORRECCIÓN 1: El fondo del body es igual al de la barra para evitar huecos visuales */
+  background: var(--sidebar-bg); 
   color: var(--text-dark);
   height: 100vh;
   overflow: hidden;
 }
 
-/* ========== LAYOUT ========== */
+/* ========== LAYOUT (Igual a Inicio) ========== */
 .container{
   display: grid;
   grid-template-columns: 90px 1fr 180px;
   height: 100vh;
-  gap: 18px;
-  padding: 12px;
-  background: var(--sidebar-bg);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  min-width: 900px;
   
-  /* --- LÍNEA AÑADIDA PARA LA SOLUCIÓN --- */
-  box-sizing: border-box; 
+  /* CORRECCIÓN 2: Mismo espaciado que en Inicio.css */
+  gap: 16px;
+  padding: 16px; 
+  
+  background: var(--sidebar-bg);
+  
+  /* CORRECCIÓN 3: Quitamos bordes curvos y sombra al contenedor general */
+  border-radius: 0;
+  box-shadow: none;
+  
+  min-width: 900px;
 }
-
-
 
 /* ========== MAIN ========== */
 .main{
+  /* El contenido principal mantiene sus curvas y fondo claro */
   padding: 0;
   background: var(--page-bg);
   border-radius: 18px;
@@ -143,12 +147,10 @@ body{
 .products{
   margin-top:18px;
   display:grid;
-  /* CORREGIDO: Mantiene el tamaño original de las tarjetas */
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
   gap:16px;
   padding: 0 18px 18px 18px;
 }
-
 
 /* ======================================= */
 /* === ESTILO PARA NUEVAS PRODUCT CARDS === */
@@ -171,8 +173,6 @@ body{
   padding: 0 4px;
 }
 
-/* --- REGLAS CORREGIDAS PARA LAS ETIQUETAS --- */
-/* 1. Estilo base para TODAS las etiquetas (sin color de fondo) */
 .card-tag {
   color: var(--white);
   padding: 4px 10px;
@@ -180,17 +180,8 @@ body{
   font-size: 12px;
   font-weight: 700;
 }
-
-/* 2. Color específico para bebidas calientes */
-.card-tag.tag-caliente {
-  background-color: #e54d4d; /* Rojo */
-}
-
-/* 3. Color específico para bebidas frías */
-.card-tag.tag-frio {
-  background-color: #5c9ed6; /* Azul */
-}
-/* --- FIN DE LAS REGLAS CORREGIDAS --- */
+.card-tag.tag-caliente { background-color: #e54d4d; }
+.card-tag.tag-frio { background-color: #5c9ed6; }
 
 .card-price {
   background-color: #f0e2d0;
@@ -201,7 +192,6 @@ body{
   font-weight: 800;
 }
 
-/* --- IMAGEN DEL PRODUCTO (CORREGIDO Y CUADRADO) --- */
 .card-image {
   background-color: var(--white);
   border: 2px solid #D3B89A;
@@ -211,14 +201,14 @@ body{
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 120px; /* Tamaño fijo para que no sea enorme */
-  overflow: hidden; /* Oculta el desborde */
+  height: 120px; 
+  overflow: hidden; 
 }
 .card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Estira/recorta para rellenar */
-  object-position: center; /* Centra la imagen */
+  object-fit: cover; 
+  object-position: center; 
 }
 
 .card-options {
@@ -361,7 +351,7 @@ body{
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1200px){
   .container{ 
-    grid-template-columns: 90px 1fr 250px; /* Carrito más ancho */
+    grid-template-columns: 90px 1fr 250px; 
   }
 }
 @media (max-width: 900px){
@@ -375,44 +365,29 @@ body{
   .container{ grid-template-columns: 1fr; }
   .sidebar{ display:none; }
   .header h1{ font-size:18px; }
-  .products{ grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } /* Corregido: tamaño de tarjetas en móvil */
+  .products{ grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 }
 
-/* --- ESTILOS PARA EL HIGHLIGHT (VERSIÓN "POP") --- */
-
+/* --- ESTILOS PARA EL HIGHLIGHT --- */
 .product-highlight {
   position: relative;
   z-index: 10;
-  /* CAMBIO: Animación más rápida */
   animation: pop-highlight 0.6s ease-out; 
 }
 
 @keyframes pop-highlight {
-  0% {
-    transform: scale(1) translateY(0);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-  40% {
-    /* El "salto": crece 10% y sube 8px */
-    transform: scale(1.1) translateY(-8px); 
-    box-shadow: 0 12px 30px rgba(198, 134, 68, 0.7);
-  }
-  100% {
-    /* Vuelve a su lugar */
-    transform: scale(1) translateY(0);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
+  0% { transform: scale(1) translateY(0); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  40% { transform: scale(1.1) translateY(-8px); box-shadow: 0 12px 30px rgba(198, 134, 68, 0.7); }
+  100% { transform: scale(1) translateY(0); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 }
 
-/* --- (NUEVO) Estilo para Listbox Deshabilitado --- */
+/* --- Listbox Deshabilitado --- */
 .option-select select:disabled {
-  background-color: #f0e2d0; /* Un beige más claro */
+  background-color: #f0e2d0; 
   color: var(--muted);
   opacity: 0.7;
   cursor: not-allowed;
 }
-
 .option-select select:disabled::after {
-  /* Oculta la flecha 'V' si está deshabilitado */
   display: none;
 }
