@@ -22,13 +22,32 @@ $zonaHorariaActual = $_SESSION['zona_horaria'] ?? '(UTC -06:00) Guadalajara, CDM
 
 // función fallback si no hay avatar todavía
 function getAvatarSrc($avatar, $nombre) {
+
     if (!empty($avatar)) {
-        return htmlspecialchars($avatar);
+
+        // Normalizar rutas relativas tipo ../../images/profiles/xxx.jpg
+        if (str_starts_with($avatar, "../")) {
+            // Quitar los ../ iniciales
+            $avatar = ltrim($avatar, "./");
+            // Convertir a ruta desde raíz del proyecto
+            $ruta = "/PI3/" . $avatar;
+        } else {
+            // Si ya viene en formato normal (/PI3/images/...)
+            $ruta = $avatar;
+        }
+
+        // Verificar en el servidor
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $ruta)) {
+            return htmlspecialchars($ruta);
+        }
     }
-    // avatar genérico con iniciales
+
+    // Si no existe → avatar genérico
     return "https://ui-avatars.com/api/?name=" . urlencode($nombre) .
            "&background=DCC0B9&color=531607";
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">

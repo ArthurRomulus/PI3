@@ -35,7 +35,7 @@ if ($totalGeneral === null) {
 try {
     $pdo->beginTransaction();
 
-    // 5. Lógica de Pago
+    // 5. Lógica de Pago (Stripe)
     $id_cargo_stripe = null;
     
     if ($metodoPago === 'Tarjeta') {
@@ -60,29 +60,22 @@ try {
     }
 
     // 6. Insertar en la tabla `pedidos`
-    // --- ¡¡CORRECCIÓN CLAVE!! ---
-    
-    // Verificamos si el 'userid' está en la sesión (creado por tu Login)
     if (!isset($_SESSION['userid'])) {
         throw new Exception("Error de sesión. No se pudo identificar al cajero. Por favor, inicia sesión de nuevo.");
     }
     
-    // Leemos el ID del cajero que ha iniciado sesión
     $id_cajero_actual = $_SESSION['userid']; 
     
     $sql_pedido = "INSERT INTO pedidos (userid, total, estado, metodo_pago, tipo_pedido, id_pago_stripe) 
-                   VALUES (?, ?, 'Proceso', ?, 'En Local', ?)";
+                    VALUES (?, ?, 'Proceso', ?, 'En Local', ?)";
     
     $stmt_pedido = $pdo->prepare($sql_pedido);
-    // Usamos el ID de la sesión en lugar de un número fijo
     $stmt_pedido->execute([$id_cajero_actual, $totalGeneral, $metodoPago, $id_cargo_stripe]); 
-    // --------------------------------
-    
     $id_pedido = $pdo->lastInsertId();
 
     // 7. Preparar la consulta para `pedido_items`
     $sql_item = "INSERT INTO pedido_items (id_pedido, id_producto, cantidad, precio_unitario, modificadores_desc) 
-                 VALUES (?, ?, ?, ?, ?)";
+                  VALUES (?, ?, ?, ?, ?)";
     $stmt_item = $pdo->prepare($sql_item);
 
     // 8. Recorrer el carrito e insertar cada item
@@ -97,11 +90,27 @@ try {
             $descripcion
         ]);
     }
+    
+    // ----------------------------------------------------------------
+    // 9. 🚀 DESCONTAR STOCK DE LA TABLA `productos` 🚀
+    // ----------------------------------------------------------------
+    $sql_descontar_stock = "UPDATE productos SET STOCK = STOCK - ? WHERE idp = ?";
+    $stmt_descontar = $pdo->prepare($sql_descontar_stock);
 
-    // 9. Si todo salió bien, confirmamos la transacción
+    foreach ($cart as $item) {
+        // Usamos $item['qty'] para la cantidad y $item['idp'] para el ID del producto
+        $stmt_descontar->execute([
+            $item['qty'],
+            $item['idp']
+        ]);
+    }
+    // ----------------------------------------------------------------
+    // ----------------------------------------------------------------
+
+    // 10. Si todo salió bien (pago, pedido, detalles, stock), confirmamos la transacción
     $pdo->commit();
 
-    // 10. Devolver respuesta de éxito
+    // 11. Devolver respuesta de éxito
     echo json_encode([
         'success' => true, 
         'nuevoPedidoId' => $id_pedido
