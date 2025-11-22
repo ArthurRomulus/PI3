@@ -1,4 +1,7 @@
 
+<?php
+session_start();
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -20,7 +23,7 @@
 
 <div class="content">
 
-    <?php include '../AdminProfileSesion.php';
+    <?php
     
         if (!isset($_SESSION['userid'])) {
             header("Location: ../../General/login.php"); 
