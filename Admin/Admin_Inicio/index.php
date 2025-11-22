@@ -134,8 +134,8 @@ $cajeros = $conn->query("SELECT COUNT(*) AS total FROM empleados_cajeros")->fetc
   <?php include "../AdminProfileSesion.php"; include "../date.php"; ?>
 
   <div class="text">
-    <p>¡Se le da la bienvenida al panel de control!</p>
-    <p>¿Retomamos desde donde lo dejamos?</p>
+    <p data-translate="Se le da la bienvenida al panel de control!">¡Se le da la bienvenida al panel de control!</p>
+    <p data-translate="¿Retomamos desde donde lo dejamos?">¿Retomamos desde donde lo dejamos?</p>
   </div>
 
   <!-- CONTENEDOR COMPLETO -->
@@ -143,29 +143,29 @@ $cajeros = $conn->query("SELECT COUNT(*) AS total FROM empleados_cajeros")->fetc
 
     <!-- IZQUIERDA (Gráfica) -->
     <div class="stats-box">
-      <h2>Ventas por Producto</h2>
+      <h2 data-translate="Ventas por Producto">Ventas por Producto</h2>
       <canvas id="chartProductos"></canvas>
     </div>
 
     <!-- DERECHA (Tarjetas) -->
     <div class="side-cards">
       <div class="card">
-        Usuarios Totales
+        <span data-translate="Usuarios Totales">Usuarios Totales</span>
         <span><?php echo $totalUsuarios; ?></span>
       </div>
 
       <div class="card">
-        Productos Totales
+        <span data-translate="Productos Totales">Productos Totales</span>
         <span><?php echo $totalProductos; ?></span>
       </div>
 
 <div class="card">
-      Administradores
+      <span data-translate="Administradores">Administradores</span>
       <span><?php echo $admins; ?></span>
   </div>
 
   <div class="card">
-      Cajeros
+      <span data-translate="Cajeros">Cajeros</span>
       <span><?php echo $cajeros; ?></span>
   </div>
 
@@ -174,38 +174,44 @@ $cajeros = $conn->query("SELECT COUNT(*) AS total FROM empleados_cajeros")->fetc
   </div>
 </div>
 
-<script>
-const ctx = document.getElementById('chartProductos').getContext('2d');
+<span id="label-cantidad-vendida" data-translate="Cantidad vendida" style="display:none;">
+  Cantidad vendida
+</span>
 
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?php echo json_encode($productos); ?>,
-        datasets: [{
-            label: 'Cantidad vendida',
-            data: <?php echo json_encode($vendidos, JSON_NUMERIC_CHECK); ?>,
-            borderWidth: 2
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            x: {
-                ticks: { color: 'white' }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: { color: 'white' }
-            }
+<script>
+window.addEventListener("load", async () => {
+    // Esperar a que la traducción termine
+    if (window.applyTranslation) {
+        await window.applyTranslation(window.currentLang);
+    }
+
+    const ctx = document.getElementById('chartProductos').getContext('2d');
+    const labelTraducido = document.getElementById('label-cantidad-vendida').textContent;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($productos); ?>,
+            datasets: [{
+                label: labelTraducido,
+                data: <?php echo json_encode($vendidos, JSON_NUMERIC_CHECK); ?>,
+                borderWidth: 2
+            }]
         },
-        plugins: {
-            legend: {
-                labels: { color: 'white' }
+        options: {
+            responsive: true,
+            scales: {
+                x: { ticks: { color: 'white' } },
+                y: { beginAtZero: true, ticks: { color: 'white' } }
+            },
+            plugins: {
+                legend: { labels: { color: 'white' } }
             }
         }
-    }
+    });
 });
 </script>
 
+<script src="../../translate.js"></script>
 </body>
 </html>
