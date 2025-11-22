@@ -158,7 +158,9 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   margin-top: 30px;
-  
+  /* Mantener espacio visible aunque no haya promociones */
+  min-height: 420px;
+  align-items: start; /* evita centrar tarjetas cuando hay pocas */
 }
 
 /* --- Diseño de tarjetas --- */

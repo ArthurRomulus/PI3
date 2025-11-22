@@ -1110,3 +1110,33 @@ body.dark-mode .modal-opciones button:hover {
   background-color: #707070; /*botones más claros al pasar el ratón */
 }
 
+body.dark-mode .rating-estrellas label:hover,
+body.dark-mode .rating-estrellas label:hover ~ label,
+body.dark-mode .rating-estrellas input[type="radio"]:checked ~ label {
+  color: #868686; /* Color "encendido" (claro) */
+}
+
+body.dark-mode .promedio-estrellas .estrellas-mostradas .estrella.rellena {
+  color: #868686;
+}
+
+body.dark-mode .desglose-label,
+body.dark-mode .desglose-porcentaje,
+body.dark-mode .desglose-conteo{
+  color: #ffffff;
+}
+
+body.dark-mode .desglose-barra-fondo{
+  background-color: #555;
+  border: color #555;
+}
+
+body.dark-mode .desglose-barra-relleno{
+  background-color: #ffffff;
+}
+
+body.dark-mode .meta .time,
+body.dark-mode .card__text,
+body.dark-mode .card__footer .act{
+    color: #ffffff;
+}

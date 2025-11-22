@@ -86,3 +86,12 @@
   background: #f9f9f9;
   cursor: pointer;
 }
+
+/* Mantener espacio visible en la página de Personal aunque no haya usuarios */
+#graphic {
+    min-height: 420px;
+    display: flex; /* asegurar que el contenedor siga comportándose como layout */
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start; /* evita centrar verticalmente las tarjetas */
+}

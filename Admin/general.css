@@ -71,12 +71,15 @@
     border-radius: 50px;
     display: flex;
     flex-direction: column;
+    gap: 20px;
     overflow-y: auto;
+    min-height: 420px !important;
     max-height: 635px;
     height: max-content;
     margin-top: 15px;
     scrollbar-width: auto;
     scrollbar-color: #8c8f96 #D7D7D7;
+    justify-content: flex-start;
 }
 
 .content::-webkit-scrollbar {
@@ -167,8 +170,7 @@ input:checked + .slider:before {
 /* Aplicar fondo oscuro tanto a html como a body y forzarlo con !important */
 html.dark-mode,
 body.dark-mode{
-    background: linear-gradient(180deg,#2c2c2c 0%, #121416 100%) !important;
-    background-color: #0f1113 !important;
+    background: #2c2c2c !important;
     color: #ddd !important;
     min-height: 100vh !important;
     -webkit-font-smoothing: antialiased !important;
@@ -704,7 +706,6 @@ body.dark-mode body{
 body.dark-mode .contenedor-estadisticas,
 body.dark-mode .content {
     background: #0f1214;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
     border: 1px solid rgba(255,255,255,0.03);
 }
 
@@ -768,4 +769,12 @@ body.dark-mode .grafica-barras::-webkit-scrollbar-thumb {
 /* Sombra más profunda para barras en modo oscuro */
 body.dark-mode .barra > div {
     box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+}
+
+body.dark-mode .product-stock {
+    color: #fff;
+}
+
+body.dark-mode .product-card.add-product {
+    color: #fff;
 }
