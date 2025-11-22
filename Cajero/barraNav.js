@@ -60,7 +60,8 @@ function cargarBarraNav() {
                 display: flex;
                 flex-direction: column; align-items: center; gap: 2px; 
                 border-radius: 0; 
-                height: 100%;
+                height: auto; 
+                min-height: 100%;
             }
             .logo {
                 position: absolute; 
@@ -152,11 +153,11 @@ function cargarBarraNav() {
                     </span>
                     <span class="nav-text" data-translate="Perfil">Perfil</span>
                 </a>
-                <div class="lang-switch">
-                    <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
-                    <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
-                </div>
             </nav>
+            <div class="lang-switch">
+                <img src="../../Images/es_flag.png" id="btn-es" class="lang-flag active">
+                <img src="../../Images/uk_flag.png" id="btn-en" class="lang-flag">
+            </div>
         </aside>
     `;
 
