@@ -14,19 +14,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* Estilos para las píldoras de estado en la tabla */
-        .status-pill {
-            padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; color: #fff; text-align: center; display: inline-block;
-        }
-        /* Estas clases DEBEN coincidir con los estados que vienen de tu BD (sin espacios) */
-        .status-Proceso { background-color: #ffc107; color: #332a23; } /* Amarillo */
-        .status-Finalizado { background-color: #28a745; } /* Verde (Usado para 'Finalizado' en tu BD) */
-        .status-Pendiente { background-color: #007bff; } /* Azul (Usado para 'Pendiente' en tu BD) */
-        .status-Cancelado { background-color: #dc3545; } /* Rojo */
-        .status-Completado { background-color: #28a745; } /* Verde (Alternativa si usas 'Completado') */
-
-
-        /* Estilos para el Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); }
         .modal-content { background-color: var(--card-bg); margin: 10% auto; padding: 25px; width: 90%; max-width: 450px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
         .close-button { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
@@ -114,42 +101,80 @@
     </div>
 </div>
 
-
 <script src="../barraNav.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const currentPage = window.location.pathname.split("/").pop();
         if(typeof cargarBarraNav === 'function') cargarBarraNav(currentPage);
         
-        // Cargar datos al iniciar y configurar un intervalo de actualización (opcional)
+        // Cargar datos y configurar intervalo
         cargarDatosDashboard(); 
-        setInterval(cargarDatosDashboard, 10000); // Actualiza cada 10 segundos
+        setInterval(cargarDatosDashboard, 10000); 
+
+        // Configurar fecha
+        const dateElement = document.querySelector('.date');
+        if (dateElement) {
+            const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            const f = new Date();
+            dateElement.textContent = `${dias[f.getDay()]}, ${f.getDate()} de ${meses[f.getMonth()]} de ${f.getFullYear()}`;
+        }
+
+        // --- LÓGICA DEL MODAL DE CORTE ---
+        const modal = document.getElementById("corteModal");
+        const btnAbrir = document.getElementById("btnAbrirCorte");
+        const spanCerrar = document.querySelector(".close-button");
+
+        btnAbrir.onclick = () => modal.style.display = "block";
+        spanCerrar.onclick = () => modal.style.display = "none";
+        window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
     });
 
+    // --- 1. FUNCIÓN DE CARGA DE DATOS ---
     function cargarDatosDashboard() {
         fetch('get_datos_dashboard.php')
         .then(response => response.json())
         .then(data => {
             if(data.success) {
-                // 1. Actualizar tarjetas superiores
                 document.getElementById('dash-ventas').textContent = '$' + parseFloat(data.ventas_hoy).toFixed(2);
                 document.getElementById('dash-pedidos').textContent = data.conteo_pedidos;
 
-                // 2. Actualizar tabla de pedidos
                 const tbody = document.getElementById('tabla-pedidos-body');
                 tbody.innerHTML = '';
+                
                 if (data.pedidos.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Sin pedidos en este turno</td></tr>';
                 } else {
                     data.pedidos.forEach(p => {
-                        // **CORRECCIÓN CLAVE:** Eliminamos cualquier carácter no alfanumérico para crear la clase CSS
-                        // Si el estado es "En Proceso", se convierte en "status-EnProceso"
-                        // Si el estado es "Finalizado", se convierte en "status-Finalizado"
-                        const estadoClase = 'status-' + p.estado.replace(/[^a-zA-Z0-9]/g, ''); 
-                        
+                        // Limpiamos estado (fallback a "En espera" si viene vacío)
+                        let estadoReal = p.estado ? p.estado.trim() : '';
+                        if(estadoReal === '') estadoReal = 'En espera'; 
+
+                        const minutos = p.minutos ? parseInt(p.minutos) : 0; 
+                        const claseColor = obtenerClaseColor(estadoReal);
+
+                        // Lógica de Alerta: Solo "En espera" + tiempo
+                        let claseAnimacion = "";
+                        let iconoAlerta = "";
+                        if (estadoReal.toLowerCase().includes('espera') && minutos > 15) {
+                            claseAnimacion = "animacion-alerta"; 
+                            iconoAlerta = `<span class="icono-retraso" title="Cliente esperando hace ${minutos} mins">⚠️⏳</span>`;
+                        }
+
+                        // Select
+                        const selectHTML = `
+                            <select class="select-estado ${claseColor} ${claseAnimacion}" 
+                                    onchange="cambiarEstado(${p.id_pedido}, this)">
+                                <option value="En espera" ${estadoReal === 'En espera' ? 'selected' : ''}>En espera</option>
+                                <option value="En preparación" ${estadoReal === 'En preparación' ? 'selected' : ''}>En preparación</option>
+                                <option value="Completado" ${estadoReal === 'Completado' ? 'selected' : ''}>Completado</option>
+                            </select>
+                            ${iconoAlerta}
+                        `;
+
                         let row = `<tr>
                             <td>#${p.id_pedido}</td>
-                            <td><span class="status-pill ${estadoClase}">${p.estado}</span></td>
+                            <td style="display:flex; align-items:center; gap:5px;">${selectHTML}</td>
                             <td>${p.metodo_pago}</td>
                             <td>${p.hora}</td>
                         </tr>`;
@@ -157,7 +182,6 @@
                     });
                 }
 
-                // 3. Actualizar alertas de inventario
                 const ul = document.getElementById('lista-alertas');
                 ul.innerHTML = '';
                 if (data.alertas.length === 0) {
@@ -169,36 +193,52 @@
                 }
             } else {
                 console.error("Error API:", data.error);
-                document.getElementById('tabla-pedidos-body').innerHTML = '<tr><td colspan="4" style="text-align:center; color: red;">Error al cargar pedidos.</td></tr>';
-                document.getElementById('lista-alertas').innerHTML = '<li style="color: red;">Error al cargar alertas.</li>';
+            }
+        })
+        .catch(err => console.error("Error fetch:", err));
+    }
+
+    // --- 2. FUNCIONES AUXILIARES DE COLOR ---
+    function obtenerClaseColor(status) {
+        if (!status) return '';
+        const s = status.toLowerCase();
+        if (s.includes('espera')) return 'estilo-rojo';
+        if (s.includes('prepara')) return 'estilo-azul';
+        if (s.includes('completa')) return 'estilo-verde';
+        return '';
+    }
+
+    // --- 3. ACTUALIZAR ESTADO (BACKEND) ---
+    function cambiarEstado(idPedido, selectElement) {
+        const nuevoEstado = selectElement.value;
+        const nuevaClase = obtenerClaseColor(nuevoEstado);
+        selectElement.className = `select-estado ${nuevaClase}`;
+
+        fetch('update_estado.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_pedido: idPedido, nuevo_estado: nuevoEstado })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                const Toast = Swal.mixin({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, timerProgressBar: true
+                });
+                Toast.fire({ icon: 'success', title: 'Actualizado' });
+            } else {
+                Swal.fire('Error', 'No se guardó: ' + data.error, 'error');
+                cargarDatosDashboard(); 
             }
         })
         .catch(err => {
-            console.error("Error fetch:", err);
-            document.getElementById('tabla-pedidos-body').innerHTML = '<tr><td colspan="4" style="text-align:center; color: red;">Error de conexión.</td></tr>';
-            document.getElementById('lista-alertas').innerHTML = '<li style="color: red;">Error de conexión.</li>';
+            console.error(err);
+            Swal.fire('Error', 'Error de conexión', 'error');
         });
     }
 
-    // --- LÓGICA DE FECHA Y MODAL ---
-    const dateElement = document.querySelector('.date');
-    if (dateElement) {
-        const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-        const fechaActual = new Date();
-        dateElement.textContent = `${dias[fechaActual.getDay()]}, ${fechaActual.getDate()} de ${meses[fechaActual.getMonth()]} de ${fechaActual.getFullYear()}`;
-    }
-
-    const modal = document.getElementById("corteModal");
-    const btnAbrir = document.getElementById("btnAbrirCorte");
-    const spanCerrar = document.querySelector(".close-button");
+    // --- 4. LÓGICA RESTAURADA DEL BOTÓN DE CORTE ---
     const formCorte = document.getElementById("corteForm");
-
-    btnAbrir.onclick = () => modal.style.display = "block";
-    spanCerrar.onclick = () => modal.style.display = "none";
-    window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
-
-    // --- ENVIAR CORTE AL BACKEND ---
     formCorte.addEventListener("submit", function(event) {
         event.preventDefault();
 
@@ -209,6 +249,8 @@
             gastosRetiros: parseFloat(document.getElementById("gastosRetiros").value) || 0,
             conteoReal: parseFloat(document.getElementById("conteoReal").value) || 0
         };
+
+        const modal = document.getElementById("corteModal");
 
         fetch('realizar_corte.php', {
             method: 'POST',
