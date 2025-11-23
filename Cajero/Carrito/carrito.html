@@ -1,6 +1,6 @@
 <aside class="cart">
     <div class="order-pill">
-        <div class="order-title">Número de Pedido</div>
+        <div class="order-title" data-translate="Número de Pedido">Número de Pedido</div>
         <div class="order-number-display">
             <input type="number" id="order-input" class="order-input" placeholder="---" min="1">
             <i class="fas fa-search order-search-icon" title="Buscar Pedido (Enter)"></i>
@@ -15,30 +15,30 @@
 
     <div class="cart-bottom">
         <div class="summary">
-            <div class="row"><span>Sub Total:</span> <span class="summary-subtotal">$0.00</span></div>
+            <div class="row"><span data-translate="Sub Total:">Sub Total:</span> <span class="summary-subtotal">$0.00</span></div>
             <div class="row"><span>IVA:</span> <span class="summary-iva">$0.00</span></div>
-            <div class="row total"><span>Total:</span> <span class="summary-total">$0.00</span></div>
+            <div class="row total"><span data-translate="Total:">Total:</span> <span class="summary-total">$0.00</span></div>
         </div>
         <div class="payment-container">
-            <button class="pay">PAGAR</button>
+            <button class="pay" data-translate="PAGAR">PAGAR</button>
             <div class="payment-choice">
-                <button class="pay-method btn-efectivo">Efectivo</button>
-                <button class="pay-method btn-tarjeta">Tarjeta</button>
-                <a href="#" class="cart-cancel-payment">Cancelar</a>
+                <button class="pay-method btn-efectivo" data-translate="Efectivo">Efectivo</button>
+                <button class="pay-method btn-tarjeta" data-translate="Tarjeta">Tarjeta</button>
+                <a href="#" class="cart-cancel-payment" data-translate="Cancelar">Cancelar</a>
             </div>
         </div>
-        <a href="#" class="cart-clear-all">Eliminar todo</a>
+        <a href="#" class="cart-clear-all" data-translate="Eliminar todo">Eliminar todo</a>
     </div>
 
     <div id="payment-modal-overlay" class="payment-modal-hidden">
         <div id="payment-modal">
-            <h3>Pago con Tarjeta</h3>
-            <p>Ingresa los datos de la tarjeta.</p>
+            <h3 data-translate="Pago con Tarjeta">Pago con Tarjeta</h3>
+            <p data-translate="Ingresa los datos de la tarjeta.">Ingresa los datos de la tarjeta.</p>
             <div id="card-element"></div>
             <button id="submit-payment-btn" class="pay">
                 Pagar <span id="payment-modal-total">$0.00</span>
             </button>
-            <button id="cancel-payment-modal-btn">Cancelar</button>
+            <button id="cancel-payment-modal-btn" data-translate="Cancelar">Cancelar</button>
             <div id="card-errors" role="alert"></div>
         </div>
     </div>

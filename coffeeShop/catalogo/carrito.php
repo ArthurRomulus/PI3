@@ -2,6 +2,7 @@
 // carrito.php
 session_start();
 include "../../conexion.php"; // Asegúrate que este incluye conecta bien
+include "../nav_bar.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,13 +49,15 @@ include "../../conexion.php"; // Asegúrate que este incluye conecta bien
 <body>
   <div class="cart-wrap">
     <div class="cart-top">
-      <h1>Tu carrito <span id="cart-count" class="badge">0</span></h1>
-      <button id="btn-clear" class="btn">Vaciar</button>
+      <h1 data-translate="Tu carrito">Tu carrito <span id="cart-count" class="badge">0</span></h1>
+      <button id="btn-clear" class="btn" data-translate="Vaciar">Vaciar</button>
+
+
     </div>
 
     <table class="cart-table">
       <thead>
-        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th class="right">Subtotal</th></tr>
+        <tr><th data-translate="Producto">Producto</th><th data-translate="Precio">Precio</th><th data-translate="Cantidad">Cantidad</th><th class="right" data-translate="Subtotal">Subtotal</th></tr>
       </thead>
       <tbody id="cart-body"><tr><td colspan="4">Cargando…</td></tr></tbody>
       <tfoot>
@@ -63,26 +66,79 @@ include "../../conexion.php"; // Asegúrate que este incluye conecta bien
     </table>
 
     <div style="margin-top:16px; text-align:right;">
-      <a href="../catalogo/catalogo.php" class="btn">Seguir comprando</a>
-      <button id="btn-pagar" class="btn btn-dark">Pagar</button>
+      <a href="../catalogo/catalogo.php" class="btn" data-translate="Seguir comprando">Seguir comprando</a>
+      <button id="btn-pagar" class="btn btn-dark" data-translate="Pagar">Pagar</button>
     </div>
   </div>
 
   <div id="payment-modal-overlay">
       <div id="payment-modal">
-          <h2 style="margin-top:0; font-size: 1.2rem;">Pago con Tarjeta</h2>
-          <p>Total a pagar: <strong id="modal-total-amount">$0.00</strong></p>
+          <h2 style="margin-top:0; font-size: 1.2rem;" data-translate="Pago con Tarjeta">Pago con Tarjeta</h2>
+          <p>
+            <span data-translate="Total a pagar:">Total a pagar:</span>
+            <strong id="modal-total-amount">$0.00</strong>
+        </p>
+
           
           <div id="card-element"></div>
           <div id="card-errors" role="alert"></div>
 
           <div class="modal-btns">
-              <button id="btn-cancel-modal" class="btn">Cancelar</button>
-              <button id="btn-confirm-payment" class="btn btn-dark">Confirmar Pago</button>
+              <button id="btn-cancel-modal" class="btn" data-translate="Cancelar">Cancelar</button>
+              <button id="btn-confirm-payment" class="btn btn-dark" data-translate="Confirmar Pago">Confirmar Pago</button>
           </div>
       </div>
   </div>
+<style>
+    /* --- Footer Principal (de index.php) --- */
+body.dark-mode .site-footer {
+    background-color: #1a1a1a;
+    color: #b0b0b0;
+    border-top: 1px solid #333;
+}
 
+body.dark-mode .footer-logo a,
+body.dark-mode .footer-links a {
+    color: #e0e0e0;
+}
+
+body.dark-mode .footer-links a:hover {
+    color: #fff;
+}
+
+body.dark-mode .footer-bottom p {
+    color: #888;
+}
+
+body.dark-mode .footer-menu a {
+    color: #ffffff;
+}
+
+body.dark-mode .footer-logo {
+    color: #ffffff;
+}
+
+body.dark-mode .cs-bottom .cs-line {
+  background: #ffffff; /* Un marrón claro/visible */
+}
+body.dark-mode .site-footer::after{
+    background: #ffffff;
+}
+
+/* Modo oscuro para botón "Pagar" en carrito */
+body.dark-mode #btn-pagar {
+    background-color: #888; /* color claro que resalte sobre fondo oscuro */
+    color: #252525;            /* texto oscuro */
+    border: 1px solid #b8a081; /* borde sutil */
+    transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode #btn-pagar:hover {
+    background-color: #e0d5d2; /* aclarar al pasar el mouse */
+    color: #252525;
+}
+
+</style>
 <script>
 // ==========================================
 // 1. FUNCIÓN HELPER "J" CON SWEETALERT
@@ -142,7 +198,7 @@ async function loadCart(){
   c.textContent = d.items ? d.items.reduce((a,b)=>a+b.qty,0) : 0;
   
   if(!d.items || !d.items.length){
-      body.innerHTML=`<tr><td colspan="4" style="text-align:center; padding:20px;">Tu carrito está vacío ☕</td></tr>`;
+      body.innerHTML=`<tr><td colspan="4" style="text-align:center; padding:20px;" data-translate="Tu carrito está vacío ☕">Tu carrito está vacío ☕</td></tr>`;
       t.textContent='$0.00 MXN';
       return;
   }
@@ -265,5 +321,6 @@ loadCart();
     }
 })();
 </script>
+<script src="../../translate.js"></script>
 </body>
 </html>

@@ -68,7 +68,7 @@
         if (!cartContent) return; 
         cartContent.innerHTML = '';
         if (items.length === 0) {
-            cartContent.innerHTML = '<p class="empty-cart">El carrito está vacío</p>';
+            cartContent.innerHTML = '<p class="empty-cart" data-translate="El carrito está vacío">El carrito está vacío</p>';
         } else {
             items.forEach((item, idx) => {
                 const div = document.createElement('div');
@@ -78,8 +78,8 @@
                 div.innerHTML = `
                     <div class="cart-thumb"><img src="${item.imgSrc}" alt="${item.name}"></div>
                     <div class="cart-info">
-                        <div class="cart-title">${item.name}</div>
-                        <div class="cart-desc">${optionsDesc}</div>
+                        <div class="cart-title" data-translate="${item.name}">${item.name}</div>
+                        <div class="cart-desc" data-translate="${optionsDesc}">${optionsDesc}</div>
                         <div class="cart-price">$${(item.price * item.qty).toFixed(2)}</div> 
                     </div>
                     <div class="cart-qty">
@@ -88,7 +88,7 @@
                             <div class="qty-num">${item.qty.toString().padStart(2, '0')}</div>
                             <button class="qty-btn-cart" data-idx="${idx}" data-action="plus" ${isOrderLoaded ? 'disabled' : ''}>+</button>
                         </div>
-                        ${!isOrderLoaded ? `<a href="#" class="cart-item-delete" data-idx="${idx}">Eliminar</a>` : ''}
+                        ${!isOrderLoaded ? `<a href="#" class="cart-item-delete" data-idx="${idx}" data-translate="Eliminar">Eliminar</a>` : ''}
                     </div>`;
                 cartContent.appendChild(div);
             });
