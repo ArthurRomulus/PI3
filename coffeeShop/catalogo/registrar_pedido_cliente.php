@@ -63,14 +63,17 @@ try {
                  VALUES (?, ?, ?, ?, ?)";
     $stmt_item = $pdo->prepare($sql_item);
 
-    // 4. Descontar Stock
-    $sql_stock = "UPDATE productos SET STOCK = STOCK - ? WHERE idp = ?";
-    $stmt_stock = $pdo->prepare($sql_stock);
+    // 4. Descontar Stock y Aumentar Ventas
+    // Modificamos la consulta para restar STOCK y sumar a ventas
+    $sql_stock = "UPDATE productos SET STOCK = STOCK - ?, ventas = ventas + ? WHERE idp = ?";
+
 
     foreach ($cart as $id => $item) {
         $descripcion = ($item['nombre'] ?? '') . ' ' . ($item['tamano'] ?? '');
         
-        // Insertar detalle
+
+        // Insertar detalle en pedido_items
+
         $stmt_item->execute([
             $id_pedido,
             $item['id'],
@@ -79,9 +82,14 @@ try {
             $descripcion
         ]);
 
-        // Descontar stock
-        $stmt_stock->execute([$item['qty'], $item['id']]);
-    }
+        // Ejecutar actualización de productos
+        // Pasamos 3 parámetros: [cantidad a restar, cantidad a sumar, id del producto]
+        $stmt_stock->execute([
+            $item['qty'],  // Resta al STOCK
+            $item['qty'],  // Suma a ventas
+            $item['id']    // ID del producto (WHERE idp = ?)
+        ]);
+
 
     $pdo->commit();
     
