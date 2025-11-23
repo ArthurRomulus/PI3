@@ -63,7 +63,7 @@ $categoria_result = $conn->query($categoria_query);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coffee-Shop • Catálogo</title>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="../inicio/Style.css" />
   <link rel="stylesheet" href="catalogo.css" />
   <link href="../general.css" rel="stylesheet"/>
