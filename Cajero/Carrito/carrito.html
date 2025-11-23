@@ -2,8 +2,8 @@
     <div class="order-pill">
         <div class="order-title">Número de Pedido</div>
         <div class="order-number-display">
-            <span class="order-number">901</span>
-            <i class="fas fa-search order-search-icon" title="Buscar Pedido"></i>
+            <input type="number" id="order-input" class="order-input" placeholder="---" min="1">
+            <i class="fas fa-search order-search-icon" title="Buscar Pedido (Enter)"></i>
         </div>
     </div>
     
@@ -12,6 +12,7 @@
 
     <div class="cart-content">
         </div>
+
     <div class="cart-bottom">
         <div class="summary">
             <div class="row"><span>Sub Total:</span> <span class="summary-subtotal">$0.00</span></div>
@@ -33,15 +34,11 @@
         <div id="payment-modal">
             <h3>Pago con Tarjeta</h3>
             <p>Ingresa los datos de la tarjeta.</p>
-            
             <div id="card-element"></div>
-            
             <button id="submit-payment-btn" class="pay">
                 Pagar <span id="payment-modal-total">$0.00</span>
             </button>
-            
             <button id="cancel-payment-modal-btn">Cancelar</button>
-            
             <div id="card-errors" role="alert"></div>
         </div>
     </div>
