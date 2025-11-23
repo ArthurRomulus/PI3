@@ -66,12 +66,14 @@ try {
     // 4. Descontar Stock y Aumentar Ventas
     // Modificamos la consulta para restar STOCK y sumar a ventas
     $sql_stock = "UPDATE productos SET STOCK = STOCK - ?, ventas = ventas + ? WHERE idp = ?";
-    $stmt_stock = $pdo->prepare($sql_stock);
+
 
     foreach ($cart as $id => $item) {
         $descripcion = ($item['nombre'] ?? '') . ' ' . ($item['tamano'] ?? '');
         
+
         // Insertar detalle en pedido_items
+
         $stmt_item->execute([
             $id_pedido,
             $item['id'],
@@ -87,7 +89,7 @@ try {
             $item['qty'],  // Suma a ventas
             $item['id']    // ID del producto (WHERE idp = ?)
         ]);
-    }
+
 
     $pdo->commit();
     
