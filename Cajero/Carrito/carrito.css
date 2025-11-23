@@ -399,3 +399,53 @@
   display: none;
   opacity: 0;
 }
+
+/* Estilo para el input del número de pedido */
+.order-number-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.6); /* Fondo semitransparente */
+    border-radius: 8px;
+    padding: 4px 8px;
+}
+
+.order-input {
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #000000; /* Azul fuerte como en tu imagen */
+    background: transparent;
+    border: none;
+    width: 80px;
+    text-align: center;
+    outline: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Quitar las flechas del input number en Chrome/Safari/Edge */
+.order-input::-webkit-outer-spin-button,
+.order-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.order-input {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Icono de lupa */
+.order-search-icon {
+    font-size: 1.2rem;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+.order-search-icon:hover {
+    color: #333;
+    transform: scale(1.1);
+}

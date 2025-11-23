@@ -1,6 +1,6 @@
 /*
   CARRITO MODULAR DE BLACKWOOD COFFEE
-  (Con Validación de Stock, SweetAlert2 en Todo y Rutas Corregidas)
+  (Con Input de Pedido Editable y Búsqueda Integrada)
 */
 (function() {
     // --- 1. VARIABLES GLOBALES ---
@@ -9,15 +9,15 @@
     let isOrderLoaded = false; 
     const IVA_RATE = 0.16;
     
-    // MAPA DE INVENTARIO: { id_producto: cantidad_stock }
+    // MAPA DE INVENTARIO
     let inventarioGlobal = {}; 
 
-    // --- Variables de Stripe ---
+    // Variables de Stripe
     const stripePublicKey = 'pk_test_51SSiVI6xsnAsFl7HGfd0lPd7bm5TLSTDuZS4MdGMHLkIXFz2O0SfJMe1V7SgzObmSWdXN0PinoRnCKfVuGrFYSgi003W0zORcA';
     let stripe, cardElement, paymentModalOverlay, paymentModalTotalEl, submitPaymentBtn, cancelPaymentModalBtn, cardErrorsEl;
     
-    // Selectores UI
-    let cartElement, cartContent, summarySubtotal, summaryIVA, summaryTotal, payButton, orderNumberEl, clearCartButton, searchIcon, statusPill;
+    // Selectores UI (orderNumberEl ahora será el INPUT)
+    let cartElement, cartContent, summarySubtotal, summaryIVA, summaryTotal, payButton, orderInputEl, clearCartButton, searchIcon, statusPill;
     let payEfectivoButton, payTarjetaButton, cancelPayButton;
 
     // --- 2. LÓGICA DE ALMACENAMIENTO ---
@@ -30,13 +30,16 @@
         return cartGuardado ? JSON.parse(cartGuardado) : [];
     }
     
-    function getOrderNumber() {
-        let num = localStorage.getItem('blackwoodOrderNum');
-        if (!num) {
-            num = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
-            localStorage.setItem('blackwoodOrderNum', num);
-        }
+    function generarNuevoNumeroPedido() {
+        // Solo generamos uno nuevo si no estamos viendo uno cargado
+        let num = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+        // Guardamos temporalmente por si recargan la página
+        localStorage.setItem('blackwoodOrderNum', num);
         return num;
+    }
+
+    function getStoredOrderNumber() {
+        return localStorage.getItem('blackwoodOrderNum') || generarNuevoNumeroPedido();
     }
 
     // --- 3. FUNCIONES DE RENDERIZADO ---
@@ -81,11 +84,11 @@
                     </div>
                     <div class="cart-qty">
                         <div class="cart-qty-controls">
-                            <button class="qty-btn-cart" data-idx="${idx}" data-action="minus">-</button>
+                            <button class="qty-btn-cart" data-idx="${idx}" data-action="minus" ${isOrderLoaded ? 'disabled' : ''}>-</button>
                             <div class="qty-num">${item.qty.toString().padStart(2, '0')}</div>
-                            <button class="qty-btn-cart" data-idx="${idx}" data-action="plus">+</button>
+                            <button class="qty-btn-cart" data-idx="${idx}" data-action="plus" ${isOrderLoaded ? 'disabled' : ''}>+</button>
                         </div>
-                        <a href="#" class="cart-item-delete" data-idx="${idx}">Eliminar</a>
+                        ${!isOrderLoaded ? `<a href="#" class="cart-item-delete" data-idx="${idx}">Eliminar</a>` : ''}
                     </div>`;
                 cartContent.appendChild(div);
             });
@@ -97,13 +100,28 @@
         if (!statusPill) return;
         let estadoClass = '', estadoTexto = '', pagoTexto = '';
         
-        if (pedido.estado.toLowerCase() === 'terminado') { estadoClass = 'status-terminado'; estadoTexto = 'Terminado'; } 
-        else { estadoClass = 'status-proceso'; estadoTexto = 'Proceso'; }
+        // Normalización básica
+        const estado = pedido.estado ? pedido.estado.toLowerCase() : '';
+        const metodo = pedido.metodo_pago ? pedido.metodo_pago.toLowerCase() : '';
+
+        if (estado.includes('terminado') || estado.includes('completado')) { 
+            estadoClass = 'status-terminado'; 
+            estadoTexto = 'Terminado'; 
+        } else { 
+            estadoClass = 'status-proceso'; 
+            estadoTexto = 'Proceso'; 
+        }
         
-        if (pedido.metodo_pago === 'Tarjeta') { estadoClass = 'status-pagado'; pagoTexto = 'Pago con Tarjeta'; } 
-        else { pagoTexto = 'Pagar en Efectivo'; }
+        if (metodo.includes('tarjeta')) { 
+            pagoTexto = 'Pago con Tarjeta'; 
+        } else { 
+            pagoTexto = 'Pago en Efectivo'; 
+        }
         
-        if (pedido.estado.toLowerCase() === 'terminado') { pagoTexto = pedido.metodo_pago; estadoClass = 'status-terminado'; }
+        // Si ya está pagado (terminado), mostramos verde
+        if (estado.includes('terminado') || estado.includes('completado')) {
+             estadoClass = 'status-terminado'; 
+        }
 
         statusPill.className = 'cart-status-pill';
         statusPill.classList.add(estadoClass);
@@ -114,7 +132,14 @@
     // --- 4. FUNCIONES DE MANIPULACIÓN ---
     
     function agregarProducto(producto) {
-        if (isOrderLoaded) vaciarCarrito();
+        if (isOrderLoaded) {
+             // Si hay un pedido cargado y el usuario agrega algo nuevo, asumimos que quiere empezar una orden nueva
+             if(confirm("Estás viendo un pedido pasado. ¿Quieres iniciar una nueva venta?")) {
+                 vaciarCarrito();
+             } else {
+                 return;
+             }
+        }
         
         let stockMaximo = 9999; 
         if (inventarioGlobal[producto.idp] !== undefined) {
@@ -124,18 +149,8 @@
         const existingProduct = cartList.find(item => item.cartKey === producto.cartKey);
         let cantidadEnCarrito = existingProduct ? existingProduct.qty : 0;
         
-        // VALIDACIÓN CON SWEETALERT
         if ((cantidadEnCarrito + producto.qty) > stockMaximo) {
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: `No puedes agregar más. Solo hay ${stockMaximo} unidades en stock.`,
-                    confirmButtonColor: '#c68644'
-                });
-            } else {
-                alert(`Stock Insuficiente: Solo quedan ${stockMaximo}`);
-            }
+            alerta("error", "Oops...", `No puedes agregar más. Solo hay ${stockMaximo} unidades en stock.`);
             return; 
         }
 
@@ -155,6 +170,8 @@
     }
 
     function modificarCantidad(index, accion) {
+        if (isOrderLoaded) return; // No editar pedidos cargados
+
         const idx = parseInt(index);
         const item = cartList[idx];
 
@@ -165,16 +182,7 @@
             }
 
             if ((item.qty + 1) > stockMaximo) {
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: `Has alcanzado el límite. Solo quedan ${stockMaximo} en stock.`,
-                        confirmButtonColor: '#c68644'
-                    });
-                } else {
-                    alert(`Límite alcanzado. Stock: ${stockMaximo}`);
-                }
+                alerta("error", "Límite alcanzado", `Solo quedan ${stockMaximo} en stock.`);
                 return; 
             }
             item.qty += 1;
@@ -196,8 +204,11 @@
         isOrderLoaded = false;
         guardarCarrito(); 
         renderCart();
-        localStorage.removeItem('blackwoodOrderNum');
-        if (orderNumberEl) orderNumberEl.textContent = getOrderNumber();
+        
+        // Generar nuevo número de pedido fresco
+        const nuevoNum = generarNuevoNumeroPedido();
+        if (orderInputEl) orderInputEl.value = nuevoNum;
+        
         if (statusPill) statusPill.style.display = 'none';
         if (cartElement) cartElement.classList.remove('order-loaded');
         setPaymentMode(false);
@@ -208,10 +219,64 @@
         else cartElement.classList.remove('payment-active');
     }
     
+    // --- BÚSQUEDA DE PEDIDO ---
+    function buscarPedido() {
+        // Leer valor del INPUT
+        const pedidoId = orderInputEl.value.trim();
+        
+        if (!pedidoId) {
+            alerta("warning", "Atención", "Por favor ingresa un número de pedido.");
+            return;
+        }
+
+        // UI Feedback
+        searchIcon.classList.add('fa-spin'); // Si usas FontAwesome, esto lo hace girar
+
+        fetch('../Carrito/buscar_pedido.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pedido_id: pedidoId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            searchIcon.classList.remove('fa-spin');
+            
+            if (data.success) {
+                const pedido = data.pedido;
+                isOrderLoaded = true;
+                
+                // Actualizar UI
+                cartElement.classList.add('order-loaded');
+                
+                // Cargar datos
+                totalGeneral = pedido.total;
+                renderCart(pedido.items); // Renderizará los items, pero sin botones de eliminar por el flag isOrderLoaded
+                
+                mostrarEstadoPedido(pedido);
+                setPaymentMode(false);
+                
+                // Notificación suave
+                const Toast = Swal.mixin({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, timerProgressBar: true
+                });
+                Toast.fire({ icon: 'success', title: `Pedido #${pedidoId} cargado` });
+
+            } else {
+                alerta("error", "No encontrado", data.error);
+                // Si falla, podemos limpiar el input o dejarlo para que el usuario corrija
+            }
+        })
+        .catch(error => { 
+            searchIcon.classList.remove('fa-spin');
+            console.error(error); 
+            alerta("error", "Error", "Error de conexión al buscar el pedido.");
+        });
+    }
+
     function procesarPago(metodoPago, tokenStripe = null) {
+        // ... (Código igual al anterior, solo cambia alertas)
         if (cartList.length === 0) { 
-            if(typeof Swal !== 'undefined') Swal.fire("Carrito Vacío", "Agrega productos antes de pagar.", "info");
-            else alert("El carrito está vacío."); 
+            alerta("info", "Carrito Vacío", "Agrega productos antes de pagar.");
             return; 
         }
 
@@ -223,7 +288,10 @@
             carrito: cartList,
             total: totalGeneral,
             metodo: metodoPago,
-            token: tokenStripe
+            token: tokenStripe,
+            // Enviamos el ID que está en el input, aunque el backend generará el autoincrement real.
+            // Esto es solo visual por si quisieras guardarlo como referencia manual.
+            id_visual: orderInputEl.value 
         };
 
         fetch('../Carrito/registrar_pedido.php', {
@@ -246,15 +314,15 @@
                 }
                 cargarInventarioDesdeAPI(); 
                 vaciarCarrito(); 
+                // Después de vaciar, ponemos el NUEVO ID generado para el siguiente
+                if(orderInputEl) orderInputEl.value = generarNuevoNumeroPedido();
             } else {
-                if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "Error", text: data.error });
-                else alert("Error: " + data.error);
+                alerta("error", "Error", data.error);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "Error", text: "Error de conexión." });
-            else alert("Error de conexión.");
+            alerta("error", "Error", "Error de conexión.");
         })
         .finally(() => {
             payEfectivoButton.disabled = false;
@@ -265,66 +333,33 @@
         });
     }
 
-    function buscarPedido() {
-        const pedidoId = prompt("Número de pedido:");
-        if (!pedidoId || pedidoId.trim() === '') return;
-
-        fetch('../Carrito/buscar_pedido.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pedido_id: pedidoId })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                const pedido = data.pedido;
-                isOrderLoaded = true;
-                cartElement.classList.add('order-loaded');
-                totalGeneral = pedido.total;
-                renderCart(pedido.items);
-                orderNumberEl.textContent = pedido.id_pedido;
-                mostrarEstadoPedido(pedido);
-                setPaymentMode(false);
-            } else {
-                if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "No encontrado", text: data.error });
-                else alert("Error: " + data.error);
-            }
-        })
-        .catch(error => { 
-            console.error(error); 
-            if(typeof Swal !== 'undefined') Swal.fire({ icon: "error", title: "Error", text: "Error de conexión." });
-            else alert("Error de conexión.");
-        });
+    // Helper para alertas
+    function alerta(icono, titulo, texto) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({ icon: icono, title: titulo, text: texto, confirmButtonColor: '#c68644' });
+        } else {
+            alert(texto);
+        }
     }
 
     async function cargarInventarioDesdeAPI() {
         try {
             const response = await fetch('../Productos/api.php'); 
             const data = await response.json();
-            
             if (data.success && data.productos) {
-                data.productos.forEach(prod => {
-                    inventarioGlobal[prod.idp] = parseInt(prod.STOCK);
-                });
-                console.log("Inventario cargado:", inventarioGlobal);
+                data.productos.forEach(prod => { inventarioGlobal[prod.idp] = parseInt(prod.STOCK); });
             }
-        } catch (error) {
-            console.error("No se pudo cargar el inventario:", error);
-        }
+        } catch (error) { console.error("Error inventario:", error); }
     }
 
     function cargarSweetAlert() {
-        return new Promise((resolve, reject) => {
-            if (typeof Swal !== 'undefined') {
-                resolve();
-            } else {
+        return new Promise((resolve) => {
+            if (typeof Swal !== 'undefined') resolve();
+            else {
                 const script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
                 script.onload = resolve;
-                script.onerror = () => {
-                    console.error("No se pudo cargar SweetAlert2.");
-                    resolve(); 
-                };
+                script.onerror = resolve;
                 document.head.appendChild(script);
             }
         });
@@ -338,13 +373,8 @@
             const style = { base: { color: '#332a23', fontFamily: '"Poppins", sans-serif', fontSize: '16px' } };
             cardElement = elements.create('card', { style: style });
             cardElement.mount('#card-element');
-            cardElement.on('change', (event) => {
-                cardErrorsEl.textContent = event.error ? event.error.message : '';
-            });
-        } catch (error) {
-            console.error("Stripe error:", error);
-            if(payTarjetaButton) { payTarjetaButton.disabled = true; payTarjetaButton.textContent = "Error Stripe"; }
-        }
+            cardElement.on('change', (event) => { cardErrorsEl.textContent = event.error ? event.error.message : ''; });
+        } catch (error) { console.error("Stripe error:", error); }
     }
     
     function mostrarModalPago() { if(paymentModalOverlay) { updateSummary(); paymentModalOverlay.classList.remove('payment-modal-hidden'); } }
@@ -367,7 +397,7 @@
 
     // --- INICIO ---
     async function init() {
-        await cargarSweetAlert(); // Asegurar que cargue
+        await cargarSweetAlert(); 
 
         const placeholder = document.getElementById('carrito-placeholder');
         if (!placeholder) return;
@@ -384,9 +414,11 @@
             summaryIVA = document.querySelector('#carrito-placeholder .summary-iva');
             summaryTotal = document.querySelector('#carrito-placeholder .summary-total');
             payButton = document.querySelector('#carrito-placeholder .pay');
-            orderNumberEl = document.querySelector('#carrito-placeholder .order-number');
+            
+            // REFERENCIA AL NUEVO INPUT
+            orderInputEl = document.querySelector('#carrito-placeholder .order-input');
+            
             clearCartButton = document.querySelector('#carrito-placeholder .cart-clear-all');
-            paymentChoiceDiv = document.querySelector('#carrito-placeholder .payment-choice');
             payEfectivoButton = document.querySelector('#carrito-placeholder .btn-efectivo');
             payTarjetaButton = document.querySelector('#carrito-placeholder .btn-tarjeta');
             cancelPayButton = document.querySelector('#carrito-placeholder .cart-cancel-payment');
@@ -401,13 +433,26 @@
             
             cartList = leerCarrito();
             renderCart();
-            if(orderNumberEl) orderNumberEl.textContent = getOrderNumber();
+            
+            // Inicializar el input con número guardado o nuevo
+            if(orderInputEl) orderInputEl.value = getStoredOrderNumber();
             
             await cargarInventarioDesdeAPI();
 
             if (submitPaymentBtn && typeof Stripe === 'function') inicializarStripe();
 
+            // EVENTOS DE BÚSQUEDA
             if (searchIcon) searchIcon.addEventListener('click', buscarPedido);
+            
+            // Escuchar tecla ENTER en el input
+            if (orderInputEl) {
+                orderInputEl.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault(); // Evitar submit de forms si los hubiera
+                        buscarPedido();
+                    }
+                });
+            }
             
             if (cartContent) cartContent.addEventListener('click', e => {
                 if (isOrderLoaded) return;
@@ -423,8 +468,7 @@
             if (payButton) payButton.addEventListener('click', () => {
                 if (isOrderLoaded) return; 
                 if (cartList.length === 0) { 
-                    if(typeof Swal !== 'undefined') Swal.fire("Carrito vacío", "", "info");
-                    else alert("Carrito vacío");
+                    alerta("info", "Carrito vacío", "Agrega productos antes de continuar.");
                     return; 
                 }
                 setPaymentMode(true); 
@@ -436,47 +480,27 @@
             if (cancelPaymentModalBtn) cancelPaymentModalBtn.addEventListener('click', (e) => { e.preventDefault(); ocultarModalPago(); });
             if (submitPaymentBtn) submitPaymentBtn.addEventListener('click', manejarSubmitPago);
             
-            // --- AQUÍ ESTÁ LA MODIFICACIÓN PARA "ELIMINAR TODO" CON ANIMACIÓN ---
             if (clearCartButton) clearCartButton.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Verificamos si el carrito tiene algo
                 if (cartList.length > 0 || isOrderLoaded) {
-                    // Usamos SweetAlert en lugar de confirm()
-                    if (typeof Swal !== 'undefined') {
+                     if (typeof Swal !== 'undefined') {
                         Swal.fire({
-                            title: '¿Estás seguro?',
-                            text: "Se eliminarán todos los productos del carrito.",
+                            title: '¿Limpiar todo?',
+                            text: "Se eliminarán los productos actuales.",
                             icon: 'warning',
                             showCancelButton: true,
-                            confirmButtonColor: '#c68644', // Tu color de marca
+                            confirmButtonColor: '#c68644',
                             cancelButtonColor: '#777',
-                            confirmButtonText: 'Sí, limpiar',
-                            cancelButtonText: 'Cancelar'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                vaciarCarrito();
-                                Swal.fire({
-                                    title: "¡Limpio!",
-                                    text: "El carrito ha sido vaciado.",
-                                    icon: "success",
-                                    confirmButtonColor: '#c68644',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
-                            }
-                        });
+                            confirmButtonText: 'Sí, limpiar'
+                        }).then((result) => { if (result.isConfirmed) vaciarCarrito(); });
                     } else {
-                        // Fallback por si acaso
-                        if (confirm("¿Estás seguro de que quieres limpiar la pantalla?")) {
-                            vaciarCarrito();
-                        }
+                        if (confirm("¿Limpiar carrito?")) vaciarCarrito();
                     }
                 }
             });
 
         } catch (error) {
             console.error('Error init carrito:', error);
-            placeholder.innerHTML = "<p>Error cargando carrito.</p>";
         }
     }
 

@@ -92,16 +92,21 @@ try {
     }
     
     // ----------------------------------------------------------------
-    // 9. 🚀 DESCONTAR STOCK DE LA TABLA `productos` 🚀
+    // 9. 🚀 ACTUALIZAR STOCK Y VENTAS EN LA TABLA `productos` 🚀
     // ----------------------------------------------------------------
-    $sql_descontar_stock = "UPDATE productos SET STOCK = STOCK - ? WHERE idp = ?";
-    $stmt_descontar = $pdo->prepare($sql_descontar_stock);
+    
+    // Modificamos la consulta para hacer dos cosas:
+    // 1. STOCK = STOCK - ? (Resta la cantidad comprada)
+    // 2. ventas = ventas + ? (Suma la cantidad comprada al contador de ventas)
+    $sql_actualizar_producto = "UPDATE productos SET STOCK = STOCK - ?, ventas = ventas + ? WHERE idp = ?";
+    $stmt_actualizar = $pdo->prepare($sql_actualizar_producto);
 
     foreach ($cart as $item) {
-        // Usamos $item['qty'] para la cantidad y $item['idp'] para el ID del producto
-        $stmt_descontar->execute([
-            $item['qty'],
-            $item['idp']
+        // Ejecutamos la consulta pasando los parámetros en orden:
+        $stmt_actualizar->execute([
+            $item['qty'],  // Para restar al STOCK
+            $item['qty'],  // Para sumar a ventas
+            $item['idp']   // El ID para saber qué producto actualizar
         ]);
     }
     // ----------------------------------------------------------------
