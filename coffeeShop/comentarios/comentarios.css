@@ -928,3 +928,39 @@ body{
 .cs-legal__links a{ color:#3d2e27; text-decoration:none; font-weight:700; }
 .cs-legal__links a:hover{ text-decoration:underline; }
 .sep{ color:#886e63; }
+
+/* ================================================= */
+/* === JERARQUÍA DE COMENTARIOS (Anidamiento) === */
+/* ================================================= */
+
+/* Contenedor de las respuestas: las empuja a la derecha */
+.replies-container {
+    margin-top: 15px;
+    margin-left: 50px; /* Espacio alineado con el avatar del padre */
+    padding-left: 20px; /* Espacio interno */
+    border-left: 3px solid var(--borde); /* Línea visual de conexión */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre respuestas */
+}
+
+/* Estilo específico para las tarjetas que son respuesta */
+.card--reply {
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo sutilmente diferente */
+    border: none; /* Quitamos bordes pesados si el padre ya tiene */
+    box-shadow: none; /* Menos sombra para que no compita */
+    padding: 10px 0 0 0; /* Reducimos padding */
+}
+
+/* La línea de conexión en el hover (opcional, bonito detalle) */
+.replies-container:hover {
+    border-left-color: var(--cafe);
+}
+
+/* Responsive: En móviles reducimos la sangría para no perder espacio */
+@media (max-width: 600px) {
+    .replies-container {
+        margin-left: 20px;
+        padding-left: 10px;
+    }
+}

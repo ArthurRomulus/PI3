@@ -6,25 +6,13 @@ body {
     background-color: #d7d7d7;
 }
 
-/* --- Contenido principal --- */
 .content {
-    margin-left: 220px;
-    padding: 20px;
-    flex: 1;
-    position: relative;
-    z-index: 1;
-    background-color: #C0C0C0;
-    border-radius: 50px;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    min-height: 420px;
-    max-height: 635px;
-    height: max-content;
-    margin-top: 15px;
-    scrollbar-width: auto;
-    scrollbar-color: #8c8f96 #D7D7D7;
-    max-width: 1260px;
+    position: relative;      /* Referencia para elementos absolutos internos */
+    display: flex;           /* Usamos Flexbox */
+    flex-direction: column;  /* Ordenamos todo en columna (uno bajo otro) */
+    justify-content: flex-start;
+    gap: 15px;               /* Espacio automático entre el título, texto y perfil */
+    padding-top: 30px;       /* Un poco de aire en la parte superior */
 }
 
 .content::-webkit-scrollbar {
@@ -58,9 +46,10 @@ html, body {
 
 /* --- Títulos --- */
 .content h1 {
-    font-size: 40px;
+    position: relative;
+    top: auto; 
     margin: 0;
-    color: #FFFFFF;
+    width: 100%;             /* Que ocupe todo el ancho */
 }
 
 .content h2 {
@@ -274,11 +263,12 @@ html, body {
 }
 
 /* --- Contenedor para el interruptor de tema en Perfil --- */
-.profile-theme-switch-container {
+.profile-theme-lang-container {
     position: absolute;
-    top: 25px;   /* Distancia desde arriba */
-    right: 30px; /* Distancia desde la derecha */
-    z-index: 3; /* Para que esté por encima de todo */
+    top: 25px;
+    right: 30px;
+    margin: 0;
+    z-index: 10;
 }
 
 .profile-theme-lang-container {

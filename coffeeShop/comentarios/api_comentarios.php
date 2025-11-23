@@ -1,226 +1,255 @@
 <?php
-session_start(); // <-- CAMBIO 1: Iniciar sesión
+// Evitar que errores/warnings de PHP se impriman en el JSON y lo rompan
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING); 
+ini_set('display_errors', 0);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 header('Content-Type: application/json; charset=utf-8');
-// require_once __DIR__ . '/../conexion.php'; // <-- Ruta antigua
-require_once __DIR__ . '/../../conexion.php'; // <-- CAMBIO 2: Ruta corregida
+
+// Ajusta esta ruta si es necesario (../../ o ../)
+require_once __DIR__ . '/../../conexion.php'; 
 
 $respuesta = ['success' => false, 'data' => [], 'error' => ''];
 
 try {
     $metodo = $_SERVER['REQUEST_METHOD'];
     
-    // Obtenemos el ID del usuario de la sesión
+    // Obtenemos el ID del usuario de la sesión (si existe)
     $id_usuario_logueado = isset($_SESSION['userid']) ? (int)$_SESSION['userid'] : null;
 
     if ($metodo === 'POST') {
         
-        // Comprobamos la 'action' para saber qué hacer
+        // 1. Obtenemos la acción de forma segura
         $action = $_POST['action'] ?? 'create';
 
+        // 2. RECUPERACIÓN SEGURA DE VARIABLES (AQUÍ ESTÁ LA SOLUCIÓN)
+        // Usamos 'isset' para preguntar si existe antes de leer.
+        // Si no existe, le asignamos NULL automáticamente.
+        
+        $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : 'Anónimo';
+        $comentario = isset($_POST['comentario']) ? $_POST['comentario'] : '';
+        
+        // CORRECCIÓN DEL PARENT_ID:
+        // Verificamos si existe Y si no está vacío. Si falla, asignamos NULL.
+        $parent_id = (isset($_POST['parent_id']) && $_POST['parent_id'] !== '') 
+                     ? (int)$_POST['parent_id'] 
+                     : NULL;
         // ===============================================
-        // === ACCIÓN 1: CREAR UN "ME GUSTA" ===
+        // === ACCIÓN 1: LIKE / UNLIKE ===
         // ===============================================
-        if ($action === 'like') {
+        if ($action === 'like' || $action === 'unlike') {
             
             if (empty($_POST['id_resena'])) {
-                throw new Exception('ID de reseña no proporcionado.');
+                throw new Exception('Falta el ID de la reseña.');
             }
             $id_resena = (int)$_POST['id_resena'];
-
-            $sql_like = "UPDATE resena SET likes = likes + 1 WHERE idr = ?";
-            $stmt_like = $conn->prepare($sql_like);
-            $stmt_like->bind_param("i", $id_resena);
             
-            if (!$stmt_like->execute()) {
-                throw new Exception('Error al guardar el like: ' . $stmt_like->error);
+            // Lógica simple: sumar o restar
+            // (Nota: Idealmente aquí verificarías si el usuario ya dio like en una tabla aparte 'resena_likes')
+            if ($action === 'like') {
+                $sql = "UPDATE resena SET likes = likes + 1 WHERE idr = ?";
+            } else {
+                $sql = "UPDATE resena SET likes = GREATEST(0, likes - 1) WHERE idr = ?";
             }
-            
-            $stmt_like->close();
-            $respuesta['success'] = true;
 
-        } 
-        // ===============================================
-        // === ACCIÓN 1.5: QUITAR UN "ME GUSTA" ===
-        // ===============================================
-        elseif ($action === 'unlike') {
-            
-            if (empty($_POST['id_resena'])) {
-                throw new Exception('ID de reseña no proporcionado.');
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $id_resena);
+            if (!$stmt->execute()) {
+                throw new Exception('Error al actualizar like: ' . $stmt->error);
             }
-            $id_resena = (int)$_POST['id_resena'];
-
-            // Usamos GREATEST(0, ...) para evitar que los likes bajen de 0
-            $sql_unlike = "UPDATE resena SET likes = GREATEST(0, likes - 1) WHERE idr = ?";
-            $stmt_unlike = $conn->prepare($sql_unlike);
-            $stmt_unlike->bind_param("i", $id_resena);
+            $stmt->close();
             
-            if (!$stmt_unlike->execute()) {
-                throw new Exception('Error al quitar el like: ' . $stmt_unlike->error);
-            }
-            
-            $stmt_unlike->close();
             $respuesta['success'] = true;
         }
+
         // ===============================================
-        // === ACCIÓN 2: CREAR UNA "RESPUESTA" ===
+        // === ACCIÓN 2: RESPONDER A UN COMENTARIO ===
         // ===============================================
         elseif ($action === 'reply') {
 
-            if (empty($_POST['nombre']) || empty($_POST['comentario']) || empty($_POST['parent_id'])) {
-                throw new Exception('El nombre, comentario y parent_id son obligatorios.');
-            }
-            $nombre = $_POST['nombre'];
-            $comentario = $_POST['comentario'];
-            $parent_id = (int)$_POST['parent_id'];
+            // Recogemos datos de forma segura
+            $nombre = $_POST['nombre'] ?? 'Anónimo';
+            $comentario = $_POST['comentario'] ?? '';
+            $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
 
-            // --- CAMBIO 3: Guardamos el userid ---
-            $sql = "INSERT INTO resena (nombre, comentario, parent_id, likes, userid) VALUES (?, ?, ?, 0, ?)";
+            if (empty($comentario)) { throw new Exception('El comentario no puede estar vacío.'); }
+            if (!$parent_id) { throw new Exception('Falta el ID del comentario padre.'); }
+
+            $sql = "INSERT INTO resena (nombre, comentario, parent_id, likes, userid, fecha) VALUES (?, ?, ?, 0, ?, NOW())";
             $stmt = $conn->prepare($sql);
+            // "ssii": string, string, int, int
             $stmt->bind_param("ssii", $nombre, $comentario, $parent_id, $id_usuario_logueado);
-            // --- FIN CAMBIO ---
             
-            if (!$stmt->execute()) { throw new Exception('Error al guardar la respuesta: ' . $stmt->error); }
+            if (!$stmt->execute()) { throw new Exception('Error al guardar respuesta: ' . $stmt->error); }
             
             $nuevo_id = $conn->insert_id;
             
-            // Obtenemos la foto de perfil del usuario logueado para devolverla
-            $avatar_src = null;
+            // Buscamos la foto del usuario para devolverla al JS inmediatamente
+            $avatar_src = 'assest/default-avatar.png'; // Valor por defecto si no tiene
             if ($id_usuario_logueado) {
-                $stmt_avatar = $conn->prepare("SELECT profilescreen FROM usuarios WHERE userid = ?");
-                $stmt_avatar->bind_param("i", $id_usuario_logueado);
-                $stmt_avatar->execute();
-                $resultado_avatar = $stmt_avatar->get_result();
-                if ($fila_avatar = $resultado_avatar->fetch_assoc()) {
-                    $avatar_src = $fila_avatar['profilescreen'];
+                $stmt_av = $conn->prepare("SELECT profilescreen FROM usuarios WHERE userid = ?");
+                $stmt_av->bind_param("i", $id_usuario_logueado);
+                $stmt_av->execute();
+                $res_av = $stmt_av->get_result();
+                if ($row = $res_av->fetch_assoc()) {
+                     // Si la ruta en BD es solo "foto.png", el JS le agrega "../images/"
+                    $avatar_src = $row['profilescreen']; 
                 }
-                $stmt_avatar->close();
+                $stmt_av->close();
             }
 
             $respuesta['success'] = true;
+            // Devolvemos el objeto completo para que JS lo pinte sin recargar
             $respuesta['data'] = [
                 'idr' => $nuevo_id,
                 'nombre' => $nombre,
                 'comentario' => $comentario,
                 'parent_id' => $parent_id,
                 'calificacion' => null,
-                'fecha' => date('Y-m-d H:i:s'), // Fecha actual
+                'fecha' => date('Y-m-d H:i:s'),
                 'imagen_url' => null,
                 'etiquetas' => null,
                 'likes' => 0,
                 'userid' => $id_usuario_logueado,
-                'profilescreen' => $avatar_src // <-- Devolvemos la foto para el JS
+                'profilescreen' => $avatar_src,
+                'respuestas' => []
             ];
             $stmt->close();
         }
+
         // ===============================================
-        // === ACCIÓN 3: CREAR UN "COMENTARIO" (Principal) ===
+        // === ACCIÓN 3: CREAR COMENTARIO NUEVO (Padre) ===
         // ===============================================
         else {
+            // Acción por defecto 'create'
             
-            if (empty($_POST['nombre']) || empty($_POST['comentario']) || empty($_POST['calificacion'])) {
-                throw new Exception('El nombre, comentario y calificación son obligatorios.');
-            }
-            $nombre = $_POST['nombre'];
-            $comentario = $_POST['comentario'];
-            $calificacion = isset($_POST['calificacion']) ? (int)$_POST['calificacion'] : null;
-            $imagen_url_db = null;
-            $etiquetas_array = isset($_POST['etiquetas']) && is_array($_POST['etiquetas']) ? $_POST['etiquetas'] : [];
-            $etiquetas = implode(', ', $etiquetas_array);
-            if (empty($etiquetas)) { $etiquetas = null; }
+            $nombre = $_POST['nombre'] ?? 'Anónimo';
+            $comentario = $_POST['comentario'] ?? '';
+            $calificacion = !empty($_POST['calificacion']) ? (int)$_POST['calificacion'] : 0;
+            
+            if (empty($comentario)) { throw new Exception('Escribe un comentario.'); }
+            if ($calificacion < 1) { throw new Exception('Selecciona una calificación.'); }
 
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-                $directorio_subidas = __DIR__ . '/../../uploads/comentarios/'; 
-                if (!file_exists($directorio_subidas)) { mkdir($directorio_subidas, 0777, true); }
-                $nombre_archivo = uniqid() . '-' . basename($_FILES['imagen']['name']);
-                $ruta_archivo = $directorio_subidas . $nombre_archivo;
-                $tipo_archivo = strtolower(pathinfo($ruta_archivo, PATHINFO_EXTENSION));
-                if (!in_array($tipo_archivo, ['jpg', 'png', 'jpeg'])) { throw new Exception('Solo JPG, JPEG, PNG.'); }
-                if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_archivo)) {
-                    $imagen_url = "uploads/comentarios/" . $nombre_archivo;
-                } else { throw new Exception('Error al mover archivo.'); }
+            // Procesar Etiquetas
+            $etiquetas = null;
+            if (isset($_POST['etiquetas']) && is_array($_POST['etiquetas'])) {
+                $etiquetas = implode(', ', $_POST['etiquetas']);
             }
+
+            // Procesar Imagen
+            $imagen_url = null; // Inicializamos en null para evitar errores
             
-            // --- CAMBIO 4: Guardamos el userid ---
-            $sql = "INSERT INTO resena (nombre, comentario, calificacion, imagen_url, etiquetas, likes, userid) VALUES (?, ?, ?, ?, ?, 0, ?)";
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
+                $directorio = __DIR__ . '/../../uploads/comentarios/'; 
+                if (!file_exists($directorio)) { mkdir($directorio, 0777, true); }
+                
+                $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+                if (!in_array($ext, ['jpg', 'png', 'jpeg', 'webp'])) {
+                    throw new Exception('Formato de imagen no permitido.');
+                }
+                
+                $nombre_archivo = uniqid() . '.' . $ext;
+                $ruta_destino = $directorio . $nombre_archivo;
+                
+                if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_destino)) {
+                    // Guardamos la ruta relativa para usarla en el src del img
+                    $imagen_url = "uploads/comentarios/" . $nombre_archivo;
+                }
+            }
+
+            $sql = "INSERT INTO resena (nombre, comentario, calificacion, imagen_url, etiquetas, likes, userid, fecha) VALUES (?, ?, ?, ?, ?, 0, ?, NOW())";
             $stmt = $conn->prepare($sql);
+            // "ssissi": string, string, int, string(null), string(null), int
             $stmt->bind_param("ssissi", $nombre, $comentario, $calificacion, $imagen_url, $etiquetas, $id_usuario_logueado);
-            // --- FIN CAMBIO ---
             
-            if (!$stmt->execute()) { throw new Exception('Error al guardar: ' . $stmt->error); }
+            if (!$stmt->execute()) { throw new Exception('Error al guardar comentario: ' . $stmt->error); }
+            
             $respuesta['success'] = true;
             $respuesta['data'] = ['id' => $conn->insert_id];
             $stmt->close();
         }
 
     } elseif ($metodo === 'GET') {
-        // --- OBTENER DATOS ---
-
         // ===============================================
-        // === CAMBIO 5: UNIR (JOIN) CON TABLA USUARIOS ===
+        // === OBTENER LISTA Y ESTADÍSTICAS ===
         // ===============================================
+        
+        // Traemos también la foto de perfil (profilescreen) haciendo JOIN
         $sql_lista = "SELECT r.*, u.profilescreen 
                       FROM resena r
                       LEFT JOIN usuarios u ON r.userid = u.userid
                       ORDER BY r.fecha DESC";
-        // ===============================================
         
-        $resultado_lista = $conn->query($sql_lista);
-        if (!$resultado_lista) { throw new Exception('Error lista: ' . $conn->error); }
+        $resultado = $conn->query($sql_lista);
+        if (!$resultado) { throw new Exception('Error BD: ' . $conn->error); }
         
-        // 2. Construir un árbol anidado (comentarios padres con sus respuestas)
-        $comentarios_planos = [];
-        $comentarios_anidados = [];
+        $todos = [];
+        $padres = [];
 
-        // Primero, creamos un mapa de todos los comentarios por su ID
-        while ($fila = $resultado_lista->fetch_assoc()) {
-            $fila['respuestas'] = []; // Añadimos un array para las respuestas
-            $comentarios_planos[$fila['idr']] = $fila;
+        // 1. Convertir resultado a array indexado por ID
+        while ($fila = $resultado->fetch_assoc()) {
+            $fila['respuestas'] = []; // Preparamos array de hijos
+            $todos[$fila['idr']] = $fila;
         }
-        $resultado_lista->free();
 
-        // Segundo, asignamos cada comentario a su padre
-        foreach ($comentarios_planos as $idr => &$comentario) {
-            // Si tiene un parent_id Y ese padre existe en nuestro mapa...
-            if ($comentario['parent_id'] && isset($comentarios_planos[$comentario['parent_id']])) {
-                // Lo añadimos al array 'respuestas' de su padre
-                $comentarios_planos[$comentario['parent_id']]['respuestas'][] = &$comentario;
+        // 2. Armar el árbol (meter hijos dentro de padres)
+        foreach ($todos as $id => &$com) {
+            $pid = $com['parent_id'];
+            if ($pid && isset($todos[$pid])) {
+                // Es hijo, lo agregamos al array de respuestas del padre
+                $todos[$pid]['respuestas'][] = &$com;
             } else {
-                // Si no tiene padre, es un comentario principal
-                $comentarios_anidados[] = &$comentario;
+                // Es padre (o huérfano), va a la lista principal
+                if (!$pid) { // Solo si parent_id es null o 0
+                    $padres[] = &$com;
+                }
             }
         }
-        unset($comentario); // Rompemos la referencia
+        
+        // 3. Estadísticas (Promedio, conteos)
+        // Solo contamos los padres (parent_id IS NULL o 0) para no inflar el promedio con respuestas
+        $sql_stats = "SELECT 
+                        COUNT(*) as total,
+                        AVG(calificacion) as promedio,
+                        SUM(calificacion=5) as c5,
+                        SUM(calificacion=4) as c4,
+                        SUM(calificacion=3) as c3,
+                        SUM(calificacion=2) as c2,
+                        SUM(calificacion=1) as c1
+                      FROM resena 
+                      WHERE (parent_id IS NULL OR parent_id = 0) AND calificacion > 0";
+        
+        $res_stats = $conn->query($sql_stats);
+        $data_stats = $res_stats->fetch_assoc();
 
-        // 3. Obtener estadísticas (sin cambios)
-        $sql_stats = "SELECT COUNT(idr) as total_resenas, AVG(calificacion) as promedio_calificacion,
-                        SUM(CASE WHEN calificacion = 5 THEN 1 ELSE 0 END) as conteo_5,
-                        SUM(CASE WHEN calificacion = 4 THEN 1 ELSE 0 END) as conteo_4,
-                        SUM(CASE WHEN calificacion = 3 THEN 1 ELSE 0 END) as conteo_3,
-                        SUM(CASE WHEN calificacion = 2 THEN 1 ELSE 0 END) as conteo_2,
-                        SUM(CASE WHEN calificacion = 1 THEN 1 ELSE 0 END) as conteo_1
-                    FROM resena WHERE calificacion BETWEEN 1 AND 5 AND parent_id IS NULL"; // <-- Solo contamos los padres
-        $resultado_stats = $conn->query($sql_stats);
-        if (!$resultado_stats) { throw new Exception('Error stats: ' . $conn->error); }
-        $stats = $resultado_stats->fetch_assoc();
-        $resultado_stats->free();
-        $conteo_por_estrella = ['5'=>(int)$stats['conteo_5'],'4'=>(int)$stats['conteo_4'],'3'=>(int)$stats['conteo_3'],'2'=>(int)$stats['conteo_2'],'1'=>(int)$stats['conteo_1']];
-
-        // 4. Combinar todo
-        $respuesta['success'] = true;
-        $respuesta['data'] = [
-            'lista_completa' => $comentarios_anidados, // <-- Enviamos la lista ANIDADA
-            'stats' => ['total' => (int)$stats['total_resenas'], 'promedio' => round((float)$stats['promedio_calificacion'], 1), 'conteo' => $conteo_por_estrella]
+        $stats = [
+            'total' => (int)$data_stats['total'],
+            'promedio' => round((float)$data_stats['promedio'], 1),
+            'conteo' => [
+                '5' => (int)$data_stats['c5'],
+                '4' => (int)$data_stats['c4'],
+                '3' => (int)$data_stats['c3'],
+                '2' => (int)$data_stats['c2'],
+                '1' => (int)$data_stats['c1']
+            ]
         ];
 
-    } else {
-        throw new Exception('Método no permitido');
+        $respuesta['success'] = true;
+        $respuesta['data'] = [
+            'lista_completa' => $padres, // Enviamos solo los padres (que ya contienen a sus hijos)
+            'stats' => $stats
+        ];
     }
 
 } catch (Exception $e) {
-    http_response_code(500);
+    http_response_code(500); // Error del servidor
+    $respuesta['success'] = false;
     $respuesta['error'] = $e->getMessage();
 }
 
 $conn->close();
-echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+echo json_encode($respuesta);
 ?>

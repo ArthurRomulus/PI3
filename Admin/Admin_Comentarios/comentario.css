@@ -4,9 +4,7 @@
     flex-direction: column;
     gap: 20px;
     padding: 25px;
-    background-color: #F7F8FA;
     border-radius: 20px;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
     /* Mantener espacio visible incluso cuando no hay comentarios */
     min-height: 420px;
 }
