@@ -3,9 +3,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php'; // Si usas Composer
- require 'phpmailer/src/PHPMailer.php'; // Si lo agregaste manualmente
-require 'phpmailer/src/Exception.php';
- require 'phpmailer/src/SMTP.php';
+ require 'PHPMailer/src/PHPMailer.php'; // Si lo agregaste manualmente
+require 'PHPMailer/src/Exception.php';
+ require 'PHPMailer/src/SMTP.php';
 
 $mail = new PHPMailer(true);
 
