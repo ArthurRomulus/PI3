@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if ($_SESSION == null) {
+    header("location: ../../General/login.php");
+    exit();
+}
+
 ?>
 
 <link rel="stylesheet" href="../AdminProfileSesion.css">
