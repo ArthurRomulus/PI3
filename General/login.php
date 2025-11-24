@@ -171,20 +171,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="steam"></div>
 
       <div class="form-container" id="formContainer">
-        <h2 id="formTitle">☕ Iniciar Sesión</h2>
+        <h2 id="formTitle" data-translate="☕ Iniciar Sesión">☕ Iniciar Sesión</h2>
+
+        <div class="lang-flags">
+        <img src="../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
+        <span class="lang-divider"></span>
+        <img src="../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
+    </div>
+    <style>
+      /* ====== IDIOMAS ====== */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-divider {
+  width: 1px;
+  height: 18px;
+  background: #531607;
+  opacity: 0.6;
+  margin-top:15px;
+}
+
+.lang-flag {
+  width: 35px;
+  height: 25px;
+  cursor: pointer;
+  opacity: 0.7;
+  border-radius: 3px;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  margin-top: 18px;
+}
+
+.lang-flag:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.lang-flag.active {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(133, 73, 5, 0.8);
+}
+
+      </style>
 
         <?php if (!empty($error_message)): ?>
           <div class="mensaje-error"><?php echo $error_message; ?></div>
         <?php endif; ?>
 
         <form id="loginForm" method="POST" action="login.php">
-          <input type="email" name="email" placeholder="Email" required>
-          <input type="password" name="password" placeholder="Contraseña" required>
-          <button type="submit">Iniciar Sesión</button>
+          <input type="email" name="email" data-translate-placeholder="Correo electrónico" placeholder="Correo electrónico" required>
+          <input type="password" name="password" data-translate-placeholder="Contraseña" placeholder="Contraseña" required>
+          <button type="submit" data-translate="Iniciar Sesión">Iniciar Sesión</button>
         </form>
 
-        <a href="AskEmail.php" class="toggle-btn">Olvide la contraseña</a>
-        <a href="registro.php" class="toggle-btn">¿No tienes cuenta? Regístrate</a>
+        <a href="AskEmail.php" class="toggle-btn" data-translate="Olvide la contraseña"> Olvide la contraseña</a>
+        <a href="registro.php" class="toggle-btn" data-translate="¿No tienes cuenta? Regístrate"> ¿No tienes cuenta? Regístrate </a>
+
       </div>
     </div>
   </div>
@@ -194,5 +238,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </a>
 </body>
 </html>
-
+<script src="../translate.js"></script>
 

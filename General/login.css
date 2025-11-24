@@ -234,7 +234,7 @@ body::before {
 /* --- ESTE ES EL CAMBIO --- */
 /* Enlace al registro (renombrado de .link a .toggle-btn) */
 .toggle-btn {
-  display: inline-block; /* Para que respete los márgenes */
+  display: block; /* Para que respete los márgenes */
   margin-top: 25px;  /* Aumentado de 12px para "bajarlo" */
   font-size: 14px;
   color: #fff;

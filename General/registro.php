@@ -174,7 +174,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="coffee-top"></div>
       <div class="handle"></div>
       <div class="form-container" id="formContainer">
-        <h2 id="formTitle">☕ Registrarse</h2>
+        <h2 id="formTitle" data-translate="☕ Registrarse">☕ Registrarse</h2>
+
+         <div class="lang-flags">
+        <img src="../Images/es_flag.png" id="btn-es" class="lang-flag active" alt="Español" title="Español">
+        <span class="lang-divider"></span>
+        <img src="../Images/uk_flag.png" id="btn-en" class="lang-flag" alt="English" title="English">
+    </div>
+    <style>
+      /* ====== IDIOMAS ====== */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-divider {
+  width: 1px;
+  height: 18px;
+  background: #531607;
+  opacity: 0.6;
+  margin-top:15px;
+}
+
+.lang-flag {
+  width: 35px;
+  height: 25px;
+  cursor: pointer;
+  opacity: 0.7;
+  border-radius: 3px;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  margin-top: 18px;
+}
+
+.lang-flag:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.lang-flag.active {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(133, 73, 5, 0.8);
+}
+
+      </style>
 
         <form id="registerForm" method="POST" action="registro.php">
 
@@ -182,17 +225,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mensaje-error"><?php echo $error_message; ?></div>
           <?php endif; ?>
 
-          <input type="text" name="username" placeholder="Usuario" required>
-          <input type="email" name="email" placeholder="Correo" required>
-          <input type="password" name="password" placeholder="Contraseña" required>
-          <input type="password" name="confirm_password" placeholder="Confirmar contraseña" required>
-          <button type="submit">Registrar</button>
+          <input type="text" name="username" data-translate-placeholder="Usuario" placeholder="Usuario" required>
+          <input type="email" name="email" data-translate-placeholder="Correo electrónico" placeholder="Correo electrónico" required>
+          <input type="password" name="password" data-translate-placeholder="Contraseña" placeholder="Contraseña" required>
+          <input type="password" name="confirm_password" data-translate-placeholder="Confirmar contraseña" placeholder="Confirmar contraseña" required>
+          <button type="submit" data-translate="Registrarse">Registrarse</button>
           <div class="terms-container">
             <input type="checkbox" name="terms" required>
-            <span>Acepto los <a href="#" id="openModal" style="color:#f0a474; text-decoration:underline;">términos y condiciones</a></span>
+             <span data-translate="Acepto los">Acepto los</span>
+
+    <a href="#" id="openModal" 
+       style="color:#f0a474; text-decoration:underline;"
+       data-translate="términos y condiciones">
+       términos y condiciones
+    </a>
           </div>
         </form>
-        <a href="login.php" class="toggle-btn">¿Ya tienes cuenta? Inicia sesión</a>
+        <a href="login.php" class="toggle-btn" data-translate="¿Ya tienes cuenta? Inicia sesión">¿Ya tienes cuenta? Inicia sesión</a>
       </div>
     </div>
   </div>
@@ -204,81 +253,114 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div class="modal-content">
     <span class="close">&times;</span>
     <div class="modal-body">
-      <h2>Términos y Condiciones</h2>
+      <h2 data-translate="Términos y Condiciones">Términos y Condiciones</h2>
       <p>
-        <h3>AVISO DE PRIVACIDAD INTEGRAL</h3>
-  <p><strong>Blackwood Coffee</strong><br>
-  Fecha de actualización: <strong>22 de octubre de 2025</strong></p>
-
-  <h3>I. IDENTIDAD Y DOMICILIO DEL RESPONSABLE</h3>
+        <h3 data-translate="AVISO DE PRIVACIDAD INTEGRAL">AVISO DE PRIVACIDAD INTEGRAL</h3>
   <p>
+  <strong>Blackwood Coffee</strong><br>
+
+  <span data-translate="Fecha de actualización:">
+      Fecha de actualización:
+  </span>
+
+  <strong data-translate="22 de octubre de 2025">
+      22 de octubre de 2025
+  </strong>
+</p>
+
+
+  <h3 data-translate="I. IDENTIDAD Y DOMICILIO DEL RESPONSABLE">I. IDENTIDAD Y DOMICILIO DEL RESPONSABLE</h3>
+  <p data-translate="Blackwood Coffee, con domicilio en Universidad de Colima, Campus El Naranjo, Facultad de Ingeniería Electromecánica, es responsable del tratamiento y protección de los datos personales que se recaben, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).">
   Blackwood Coffee, con domicilio en Universidad de Colima, Campus El Naranjo, Facultad de Ingeniería Electromecánica, es responsable del tratamiento y protección de los datos personales que se recaben, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).
   </p>
 
-  <h3>II. DATOS PERSONALES OBJETO DE TRATAMIENTO</h3>
-  <p>Los datos personales recabados son:</p>
+  <h3 data-translate="II. DATOS PERSONALES OBJETO DE TRATAMIENTO">II. DATOS PERSONALES OBJETO DE TRATAMIENTO</h3>
+  <p data-translate="los datos personales recabados son:">Los datos personales recabados son:</p>
   <ul>
-  <li>Identificación y contacto: nombre, correo electrónico, teléfono y usuario.</li>
-  <li>Datos fiscales: RFC (solo si solicita factura).</li>
-  <li>Datos administrativos del sistema interno.</li>
+  <li data-translate="Identificación y contacto: nombre, correo electrónico, teléfono y usuario.">Identificación y contacto: nombre, correo electrónico, teléfono y usuario.</li>
+  <li data-translate="Datos fiscales: RFC (solo si solicita factura).">Datos fiscales: RFC (solo si solicita factura).</li>
+  <li data-translate="Datos administrativos del sistema interno.">Datos administrativos del sistema interno.</li>
   </ul>
-  <p>No se solicitan datos sensibles.</p>
+  <p data-translate="No se solicitan datos sensibles.">No se solicitan datos sensibles.</p>
 
-  <h3>III. FINALIDADES DEL TRATAMIENTO</h3>
-  <p><strong>Primarias (obligatorias):</strong></p>
+  <h3 data-translate="III. FINALIDADES DEL TRATAMIENTO">III. FINALIDADES DEL TRATAMIENTO</h3>
+  <p><strong data-translate="Primas (obligatorias):">Primarias (obligatorias):</strong></p>
   <ul>
-  <li>Gestionar pedidos y compras.</li>
-  <li>Emitir comprobantes fiscales.</li>
-  <li>Identificar al usuario.</li>
-  <li>Gestionar pagos y operaciones comerciales.</li>
-  <li>Administración interna.</li>
+  <li data-translate="Gestionar pedidos y compras.">Gestionar pedidos y compras.</li>
+  <li data-translate="Emitir comprobantes fiscales.">Emitir comprobantes fiscales.</li>
+  <li data-translate="Identificar al usuario.">Identificar al usuario.</li>
+  <li data-translate="Gestionar pagos y operaciones comerciales.">Gestionar pagos y operaciones comerciales.</li>
+  <li data-translate="Administración interna.">Administración interna.</li>
+
   </ul>
 
-  <p><strong>Secundarias (opcionales):</strong></p>
+  <p><strong data-translate="Secundarias (opcionales):">Secundarias (opcionales):</strong></p>
   <ul>
-  <li>Promociones y descuentos.</li>
-  <li>Encuestas y análisis estadísticos.</li>
-  <li>Uso de contenido visual en eventos.</li>
+  <li data-translate="Promociones y descuentos.">Promociones y descuentos.</li>
+  <li data-translate="Encuestas y análisis estadísticos.">Encuestas y análisis estadísticos.</li>
+  <li data-translate="Uso de contenido visual en eventos.">Uso de contenido visual en eventos.</li>
+
   </ul>
-  <p>Puede negar el uso secundario enviando correo a: <strong>privacidad@blackwoodcoffee.mx</strong></p>
+  <p>
+  <span data-translate="Puede negar el uso secundario enviando correo a:">
+    Puede negar el uso secundario enviando correo a:
+  </span>
+  <strong>coffeeshopPIE3@gmail.com</strong>
+</p>
 
-  <h3>IV. FUNDAMENTO LEGAL</h3>
-  <p>Artículos aplicables de LFPDPPP y su Reglamento.</p>
 
-  <h3>V. TRANSFERENCIA DE DATOS PERSONALES</h3>
-  <p>Únicamente a:</p>
+  <h3 data-translate="IV. FUNDAMENTO LEGAL">IV. FUNDAMENTO LEGAL</h3>
+  <p data-translate="Artículos aplicables de LFPDPPP y su Reglamento.">Artículos aplicables de LFPDPPP y su Reglamento.</p>
+
+  <h3 data-translate="V. TRANSFERENCIA DE DATOS PERSONALES">V. TRANSFERENCIA DE DATOS PERSONALES</h3>
+  <p data-translate="Únicamente a:">Únicamente a:</p>
   <ul>
-  <li>Autoridades fiscales y administrativas.</li>
-  <li>Proveedores de servicios tecnológicos y administrativos.</li>
+  <li data-translate="Autoridades fiscales y administrativas."> Autoridades fiscales y administrativas.</li>
+  <li data-translate="Proveedores de servicios tecnológicos y administrativos.">Proveedores de servicios tecnológicos y administrativos. </li>
+
   </ul>
-  <p>No habrá transferencias adicionales sin autorización.</p>
+  <p data-translate="No habrá transferencias adicionales sin autorización.">No habrá transferencias adicionales sin autorización.</p>
 
-  <h3>VI. DERECHOS ARCO</h3>
-  <p>Puede solicitar acceso, rectificación, cancelación u oposición mediante correo: <strong>privacidad@blackwoodcoffee.mx</strong></p>
+  <h3 data-translate="VI. DERECHOS ARCO">VI. DERECHOS ARCO</h3>
+  <p>
+    <span data-translate="Puede solicitar acceso, rectificación, cancelación u oposición mediante correo:">
+    Puede solicitar acceso, rectificación, cancelación u oposición mediante correo:
+  </span>
+  <strong>coffeeshopPIE3@gmail.com</strong>
+  </p>
 
-  <h3>VII. REVOCACIÓN DEL CONSENTIMIENTO</h3>
-  <p>Puede revocar su consentimiento enviando solicitud vía correo.</p>
+  <h3 data-translate="VII. REVOCACIÓN DEL CONSENTIMIENTO">VII. REVOCACIÓN DEL CONSENTIMIENTO</h3>
+  <p data-translate="Puede revocar su consentimiento enviando solicitud vía correo.">Puede revocar su consentimiento enviando solicitud vía correo.</p>
 
-  <h3>VIII. LIMITACIÓN DE USO O DIVULGACIÓN</h3>
-  <p>Puede solicitarlo por correo indicando nombre y medio a excluir.</p>
+  <h3 data-translate="VIII. LIMITACIÓN DE USO O DIVULGACIÓN">VIII. LIMITACIÓN DE USO O DIVULGACIÓN</h3>
+  <p data-translate="Puede solicitarlo por correo indicando nombre y medio a excluir.">Puede solicitarlo por correo indicando nombre y medio a excluir.</p>
 
-  <h3>IX. MEDIDAS DE SEGURIDAD</h3>
-  <p>Blackwood Coffee aplica medidas técnicas, administrativas y físicas para proteger sus datos.</p>
+  <h3 data-translate="IX. MEDIDAS DE SEGURIDAD">IX. MEDIDAS DE SEGURIDAD</h3>
+  <p data-translate="Blackwood Coffee aplica medidas técnicas, administrativas y físicas para proteger sus datos.">Blackwood Coffee aplica medidas técnicas, administrativas y físicas para proteger sus datos.</p>
 
-  <h3>X. USO DE COOKIES</h3>
-  <p>Este sitio utiliza cookies para mejorar la experiencia del usuario. Puede desactivarlas en su navegador.</p>
+  <h3 data-translate="X. USO DE COOKIES">X. USO DE COOKIES</h3>
+  <p data-translate="Este sitio utiliza cookies para mejorar la experiencia del usuario. Puede desactivarlas en su navegador.">Este sitio utiliza cookies para mejorar la experiencia del usuario. Puede desactivarlas en su navegador.</p>
 
-  <h3>XI. CAMBIOS AL AVISO DE PRIVACIDAD</h3>
-  <p>El documento podrá actualizarse y se notificará mediante medios oficiales.</p>
+  <h3 data-translate="XI. CAMBIOS AL AVISO DE PRIVACIDAD">XI. CAMBIOS AL AVISO DE PRIVACIDAD</h3>
+  <p data-translate="El documento podrá actualizarse y se notificará mediante medios oficiales.">El documento podrá actualizarse y se notificará mediante medios oficiales.</p>
 
-  <h3>XII. CONSENTIMIENTO</h3>
-  <p>Al utilizar nuestro servicio, usted reconoce que ha leído y aceptado este aviso de privacidad.</p>
+  <h3 data-translate="XII. CONSENTIMIENTO">XII. CONSENTIMIENTO</h3>
+  <p data-translate="Al utilizar nuestro servicio, usted reconoce que ha leído y aceptado este aviso de privacidad.">Al utilizar nuestro servicio, usted reconoce que ha leído y aceptado este aviso de privacidad.</p>
 
-  <p><strong>Última actualización:</strong> 22 de octubre de 2025</p>
+  <p>
+  <strong data-translate="Última actualización:">Última actualización:</strong> 
+  <span data-translate="22 de octubre de 2025">22 de octubre de 2025</span>
+</p>
+
 
   <hr>
 
-  <p><strong>Por favor, lea cuidadosamente antes de registrar su cuenta.</strong></p>
+  <p>
+  <strong data-translate="Por favor, lea cuidadosamente antes de registrar su cuenta.">
+    Por favor, lea cuidadosamente antes de registrar su cuenta.
+  </strong>
+</p>
+
       </p> 
     </div>
   </div>
@@ -307,6 +389,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   });
 </script>
-
+<script src="../translate.js"></script>
 </body>
 </html>

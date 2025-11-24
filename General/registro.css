@@ -1,21 +1,22 @@
-/* Contenedor de términos y condiciones */
 .terms-container {
-  display: inline-flex; /* Cambiamos a inline-flex */
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 5px; /* Puedes ajustar este espacio si lo necesitas */
+  gap: 5px;
   color: #ffffff;
   font-size: 15px;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-  /* Eliminamos width: 90%; */
-  position: relative;
-  z-index: 2;
 }
 
-.terms-container span {
+.terms-container input[type="checkbox"] {
+  margin: 0 4px 0 0;
+}
+
+.terms-container span,
+.terms-container a {
   white-space: nowrap;
 }
+
 
 body {
   background-image: url("../images/cafe360.jpg");
