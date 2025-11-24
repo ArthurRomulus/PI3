@@ -46,25 +46,63 @@
     const categoriaAttr = grid.getAttribute("data-categoria") || "";
 
     function renderCard(p) {
-      const sku = (p.idp ?? "").toString();
-      const disponible = Number(p.STOCK ?? 0) > 0;
-      const img = resolveImgPath(p.ruta_imagen);
-      const precioTotal = Number(p.precio_total ?? p.precio_base ?? 0).toFixed(2);
+  const sku = (p.idp ?? "").toString();
+  const disponible = Number(p.STOCK ?? 0) > 0;
+  const img = resolveImgPath(p.ruta_imagen);
+  const precioTotal = Number(p.precio_total ?? p.precio_base ?? 0).toFixed(2);
+  
+  // ✅ AGREGADO: Variables que faltaban
+  const nombreProducto = escapeHtml(p.namep ?? "Producto");
+  const descripcion = escapeHtml(p.descripcion ?? "");
+  const categorias = Array.isArray(p.categorias) 
+    ? p.categorias.map(c => c.nombre || c).join(', ') 
+    : (p.categorias ?? "Sin categoría");
+  const stockText = disponible ? "Disponible" : "Agotado";
+  
+  // ✅ AGREGADO: Serializar listboxes correctamente
+  const listboxesJSON = JSON.stringify(p.listboxes || [])
+    .replace(/'/g, '&apos;')
+    .replace(/"/g, '&quot;');
 
-      return `
-        <article class="ts-card" data-id="${sku}" data-name="${p.namep || ""}" data-price="${precioTotal}" data-foto="${img}" data-listboxes='${JSON.stringify(p.listboxes || [])}'>
-          <div class="ts-stage"><img src="${img}" alt="${p.namep || ""}" onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';" /></div>
-          <h4 class="ts-name">${p.namep || ""} <small style="opacity:.7">• SKU ${sku || "—"}</small></h4>
-          <p class="ts-desc">${p.descripcion || ""}</p>
-          <p class="ts-categoria">${ (p.categorias || []).map(c => c.nombre).join(', ') || 'Sin categoría' }</p>
-          <p class="ts-stock"><strong>Stock:</strong> ${p.STOCK ?? 0}</p>
-          <div class="ts-info">
-            <span>${disponible ? 'Disponible' : 'No disponible'}</span>
-            <span class="ts-price">$${precioTotal} MXN</span>
-            <button class="ts-cart" ${disponible ? "" : "disabled"}>🛒</button>
-          </div>
-      </article>`;
-    }
+  return `
+    <article class="ts-card" 
+         data-id="${sku}" 
+         data-name="${nombreProducto}" 
+         data-price="${precioTotal}" 
+         data-foto="${img}" 
+         data-listboxes='${listboxesJSON}'>
+  
+      <div class="ts-stage">
+        <img src="${img}" 
+             alt="${nombreProducto}" 
+             onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';" />
+      </div>
+
+      <h4 class="ts-name" data-translate="${nombreProducto}">
+        ${nombreProducto} <small style="opacity:.7">• SKU ${sku || "—"}</small>
+      </h4>
+
+      <p class="ts-desc" data-translate="${descripcion}">
+        ${descripcion}
+      </p>
+
+      <p class="ts-categoria" data-translate="${categorias}">
+        ${categorias}
+      </p>
+
+      <p class="ts-stock">
+        <strong data-translate="Stock">Stock:</strong> ${p.STOCK ?? 0}
+      </p>
+
+      <div class="ts-info">
+        <span data-translate="${stockText}">${stockText}</span>
+        <span class="ts-price">
+          <span data-translate="Precio">Precio:</span> $${precioTotal} MXN
+        </span>
+        <button class="ts-cart" ${disponible ? "" : "disabled"}>🛒</button>
+      </div>
+    </article>`;
+}
 
     async function cargarCategoria(cat) {
       const u = new URL("./get_productos.php", location.href);
@@ -189,47 +227,63 @@
       }
 
       async function loadMiniCart() {
-        const d = await j(CART_API + "?action=list");
-        if (!d || !d.ok) return; 
+  const d = await j(CART_API + "?action=list");
+  if (!d || !d.ok) return; 
 
-        if (!d.items.length) {
-          list.innerHTML = "";
-          if (emptyMsg) emptyMsg.style.display = "block";
-          totalEl.textContent = fmt(0);
-          await refreshBadge();
-          return;
-        }
+  if (!d.items.length) {
+    list.innerHTML = "";
+    if (emptyMsg) emptyMsg.style.display = "block";
+    totalEl.textContent = fmt(0);
+    await refreshBadge();
+    return;
+  }
 
-        if (emptyMsg) emptyMsg.style.display = "none";
-        list.innerHTML = d.items.map(p => `
-          <li class="mc-item" data-id="${p.id}">
-            <img class="mc-img" src="${p.foto || IMG_PLACEHOLDER}" onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';">
-            <div>
-              <p class="mc-name">${p.nombre || "Producto"}</p>
-              <div class="mc-meta">${fmt(p.precio)} c/u</div>
-              <div class="mc-qty">
-                <button type="button" class="qty-minus">−</button>
-                <input type="text" value="${p.qty}" readonly>
-                <button type="button" class="qty-plus">+</button>
-              </div>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:end;gap:8px;">
-              <div class="mc-price">${fmt(p.subtotal)}</div>
-              <button type="button" class="mc-close mc-del">🗑</button>
-            </div>
-          </li>
-        `).join("");
+  if (emptyMsg) emptyMsg.style.display = "none";
+  
+  // ✅ AGREGADO: Generar HTML con data-translate
+  list.innerHTML = d.items.map(p => `
+    <li class="mc-item" data-id="${p.id}">
+      <img class="mc-img" 
+           src="${p.foto || IMG_PLACEHOLDER}" 
+           onerror="this.onerror=null;this.src='${IMG_PLACEHOLDER}';">
+      <div>
+        <!-- ✅ Nombre del producto traducible -->
+        <p class="mc-name" data-translate="${escapeHtml(p.nombre || 'Producto')}">
+          ${p.nombre || "Producto"}
+        </p>
+        
+        <div class="mc-meta">${fmt(p.precio)} c/u</div>
+        
+        <div class="mc-qty">
+          <button type="button" class="qty-minus">−</button>
+          <input type="text" value="${p.qty}" readonly>
+          <button type="button" class="qty-plus">+</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:end;gap:8px;">
+        <div class="mc-price">${fmt(p.subtotal)}</div>
+        <button type="button" class="mc-close mc-del">🗑</button>
+      </div>
+    </li>
+  `).join("");
 
-        totalEl.textContent = fmt(d.total);
+  totalEl.textContent = fmt(d.total);
 
-        list.querySelectorAll(".mc-item").forEach((li) => {
-          const id = li.dataset.id;
-          li.querySelector(".qty-minus")?.addEventListener("click", () => updateQty(id, -1));
-          li.querySelector(".qty-plus")?.addEventListener("click", () => updateQty(id, +1));
-          li.querySelector(".mc-del")?.addEventListener("click", () => setQty(id, 0));
-        });
-        await refreshBadge();
-      }
+  // Eventos de botones (igual)
+  list.querySelectorAll(".mc-item").forEach((li) => {
+    const id = li.dataset.id;
+    li.querySelector(".qty-minus")?.addEventListener("click", () => updateQty(id, -1));
+    li.querySelector(".qty-plus")?.addEventListener("click", () => updateQty(id, +1));
+    li.querySelector(".mc-del")?.addEventListener("click", () => setQty(id, 0));
+  });
+  
+  await refreshBadge();
+
+  // ✅ AGREGADO: Aplicar traducciones después de renderizar
+  if (typeof applyTranslation === 'function' && typeof window.currentLang !== 'undefined') {
+    applyTranslation(window.currentLang);
+  }
+}
 
       async function setQty(id, qty) {
         const r = await j(CART_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "update", id, qty: Math.max(0, qty) }) });
@@ -284,7 +338,7 @@
       const btnCerrarModal = document.getElementById("btnCerrarModal");
       if (btnCerrarModal) btnCerrarModal.addEventListener("click", () => { document.getElementById("modalOpciones").style.display = "none"; });
 
-      document.addEventListener("click", async (e) => {
+document.addEventListener("click", async (e) => {
   const btn = e.target.closest(".ts-cart");
   if (!btn) return;
 
@@ -299,48 +353,32 @@
     listboxes: card.dataset.listboxes ? JSON.parse(card.dataset.listboxes) : [],
   });
 
-  // Si la carta NO trae listboxes (como en Más vendidos),
-  // pedimos la customización al backend
-  if (!p.listboxes || !p.listboxes.length) {
-    try {
-      const res = await fetch(`../catalogo/get_customizacion.php?idp=${encodeURIComponent(p.id)}`);
-
-      const data = await res.json();
-
-      if (data.ok && Array.isArray(data.groups)) {
-        // Adaptamos el formato de get_customizacion (groups/items) al formato que usa el modal (listboxes/opciones)
-        p.listboxes = data.groups.map((g) => ({
-          nombre: g.label,
-          opciones: (g.items || []).map((it) => ({
-            opcion: it.nombre,   // ej. "Leche entera", "Almendra", etc.
-          })),
-        }));
-      }
-    } catch (err) {
-      console.error("Error cargando customización", err);
-    }
-  }
-
   const opcionesWrap = document.getElementById("modalOpcionesWrap");
   if (!opcionesWrap) return;
 
   opcionesWrap.innerHTML = "";
 
+  // Generar las listboxes
   (p.listboxes || []).forEach((lb) => {
     const opts = (lb.opciones || []).map((opt) => {
       const val = opt.opcion || opt.nombre;
-      return `<option value="${val}">${val}</option>`;
+      return `<option value="${val}" data-translate="${val}">${val}</option>`;
     }).join("");
 
     opcionesWrap.innerHTML += `
       <div class="modal-field">
-        <label>${lb.nombre}</label>
+        <label data-translate="${lb.nombre}">${lb.nombre}</label>
         <select>${opts}</select>
       </div>`;
   });
 
   document.getElementById("modalProductoNombre").textContent = "Personalizar " + p.nombre;
   document.getElementById("modalOpciones").style.display = "flex";
+
+  // ✅ AGREGADO: Aplicar traducciones al contenido del modal
+  if (typeof applyTranslation === 'function' && typeof window.currentLang !== 'undefined') {
+    applyTranslation(window.currentLang);
+  }
 });
 
 
