@@ -122,7 +122,7 @@ body {
 }
 
 
-/*primera seccion*/
+/primera seccion/
 .hero-sabor {
   /* mantiene el mismo fondo */
   background-color: #DCC0B9;
@@ -158,7 +158,7 @@ body {
   max-width: 48ch;
   text-align: justify;      /* como en la maqueta */
   margin-left: 50px;
-  margin-top: 100px; /*separa mi texto del titulo*/
+  margin-top: 100px; /separa mi texto del titulo/
 }
 
 .hero-imagen img {
@@ -167,7 +167,7 @@ body {
   height: auto;
   display: block;
   margin-inline: auto;
-  filter: drop-shadow(15px 20px 12px rgba(0, 0, 0, 0.6));/*sombra de imagen*/
+  filter: drop-shadow(15px 20px 12px rgba(0, 0, 0, 0.6));/sombra de imagen/
 }
 
 /* Línea delgada bajo la sección (igual estilo que usas) */
@@ -396,7 +396,7 @@ body {
   border-radius: 2px;
   opacity: .6;
 }
-/*acerca de nosotros seccion1*/
+/acerca de nosotros seccion1/
 /* ===== Acerca de Nosotros ===== */
 .about{
   background-color: #DCC0B9;
@@ -442,7 +442,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 14px 28px rgba(0,0,0,.18);
   object-fit: cover;   
-  margin-left: 45px;               /*cambiar direccion de la imagen*/
+  margin-left: 45px;               /cambiar direccion de la imagen/
 }
 
 
@@ -532,7 +532,7 @@ body {
   place-items: center;
   box-shadow: 0 4px 12px rgba(0,0,0,.1);
 }
-/*imagenes-iconos de mision y vision*/
+/imagenes-iconos de mision y vision/
 .mv-icon img {
   width: 60%;
   height: auto;
@@ -548,7 +548,7 @@ body {
     display: none; /* quita divisor en móvil */
   }
 }
-/*seccion 3 cuadrado con iconos*/
+/seccion 3 cuadrado con iconos/
 .features {
   background-color: #DCC0B9;
   padding: 50px 20px;
@@ -594,7 +594,7 @@ body {
   color: #531607;
 }
 
-/*----tercera parte nuestros servicios----*/
+/----tercera parte nuestros servicios----/
 /* ================== NUESTROS SERVICIOS ================== */
 :root{
   --coffee:#6a4b44;;           /* color de marca */
@@ -1112,7 +1112,7 @@ body {
   .delivery__title{ font-size: 1.9rem; }
 }
 
-/*seccion 4 disfr y experiencia*/
+/seccion 4 disfr y experiencia/
 /* ===== Sección CTA Experiencia ===== */
 /* Subir la sección de experiencia */
 .cta-experience{
@@ -1428,60 +1428,4 @@ body {
   display:inline-block; min-width:18px; padding:2px 6px;
   border-radius:999px; background:#ffede0; font-weight:700; font-size:12px;
   vertical-align:middle;
-}
-
-/* ===== MODO OSCURO PARA CARRITO ===== */
-body.dark-mode {
-    background-color: #121212;
-    color: #e0e0e0;
-}
-
-body.dark-mode .cart-wrap {
-    background-color: #1e1e1e;
-}
-
-body.dark-mode .cart-table {
-    background-color: #1e1e1e;
-    border-color: #333;
-}
-
-body.dark-mode .cart-table th {
-    background-color: #2a2a2a;
-    color: #fff;
-}
-
-body.dark-mode .cart-table td {
-    border-bottom: 1px solid #333;
-    color: #ddd;
-}
-
-body.dark-mode .cart-top h1,
-body.dark-mode .cart-top .badge {
-    color: #fff;
-}
-
-body.dark-mode .btn {
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #555;
-}
-
-body.dark-mode .btn-dark {
-    background-color: #6a2b16;
-    color: #fff;
-}
-
-body.dark-mode #payment-modal {
-    background-color: #1e1e1e;
-    color: #fff;
-}
-
-body.dark-mode #card-element {
-    background-color: #2a2a2a;
-    color: #fff;
-    border-color: #555;
-}
-
-body.dark-mode #card-errors {
-    color: #ff6b6b;
 }

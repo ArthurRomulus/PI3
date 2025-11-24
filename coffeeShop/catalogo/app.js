@@ -284,98 +284,73 @@
       const btnCerrarModal = document.getElementById("btnCerrarModal");
       if (btnCerrarModal) btnCerrarModal.addEventListener("click", () => { document.getElementById("modalOpciones").style.display = "none"; });
 
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".ts-cart");
-        if (!btn) return;
-        const card = btn.closest(".ts-card");
-        if (!card) return;
+      document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".ts-cart");
+  if (!btn) return;
 
-        const p = (window.__productoSeleccionado = {
-          id: card.dataset.id,
-          nombre: card.dataset.name,
-          precio: parseFloat(card.dataset.price || 0),
-          foto: card.dataset.foto,
-          listboxes: card.dataset.listboxes ? JSON.parse(card.dataset.listboxes) : [],
-        });
+  const card = btn.closest(".ts-card");
+  if (!card) return;
 
-        const opcionesWrap = document.getElementById("modalOpcionesWrap");
-        opcionesWrap.innerHTML = "";
-        (p.listboxes || []).forEach((lb) => {
-          opcionesWrap.innerHTML += `<div class="modal-field"><label>${lb.nombre}</label><select>${lb.opciones.map(opt => `<option value="${opt.opcion}">${opt.opcion}</option>`).join("")}</select></div>`;
-        });
+  const p = (window.__productoSeleccionado = {
+    id: card.dataset.id,
+    nombre: card.dataset.name,
+    precio: parseFloat(card.dataset.price || 0),
+    foto: card.dataset.foto,
+    listboxes: card.dataset.listboxes ? JSON.parse(card.dataset.listboxes) : [],
+  });
 
-        document.getElementById("modalProductoNombre").textContent = "Personalizar " + p.nombre;
-        document.getElementById("modalOpciones").style.display = "flex";
-      });
+  // Si la carta NO trae listboxes (como en Más vendidos),
+  // pedimos la customización al backend
+  if (!p.listboxes || !p.listboxes.length) {
+    try {
+      const res = await fetch(`../catalogo/get_customizacion.php?idp=${encodeURIComponent(p.id)}`);
+
+      const data = await res.json();
+
+      if (data.ok && Array.isArray(data.groups)) {
+        // Adaptamos el formato de get_customizacion (groups/items) al formato que usa el modal (listboxes/opciones)
+        p.listboxes = data.groups.map((g) => ({
+          nombre: g.label,
+          opciones: (g.items || []).map((it) => ({
+            opcion: it.nombre,   // ej. "Leche entera", "Almendra", etc.
+          })),
+        }));
+      }
+    } catch (err) {
+      console.error("Error cargando customización", err);
+    }
+  }
+
+  const opcionesWrap = document.getElementById("modalOpcionesWrap");
+  if (!opcionesWrap) return;
+
+  opcionesWrap.innerHTML = "";
+
+  (p.listboxes || []).forEach((lb) => {
+    const opts = (lb.opciones || []).map((opt) => {
+      const val = opt.opcion || opt.nombre;
+      return `<option value="${val}">${val}</option>`;
+    }).join("");
+
+    opcionesWrap.innerHTML += `
+      <div class="modal-field">
+        <label>${lb.nombre}</label>
+        <select>${opts}</select>
+      </div>`;
+  });
+
+  document.getElementById("modalProductoNombre").textContent = "Personalizar " + p.nombre;
+  document.getElementById("modalOpciones").style.display = "flex";
+});
+
 
       refreshBadge();
     }
-
-    function cargarTopVendidos() {
-      const grid = document.getElementById("topSellingGrid");
-      if (!grid) return;
-      fetch("get_top_selling.php")
-      .then((res) => res.json())
-      .then((json) => {
-        if (!json.success) {
-          console.error("Error API:", json.error);
-          return;
-        }
-        grid.innerHTML = "";
-        json.data.forEach((prod) => {
-          let imgSrc = prod.imagen || prod.ruta_imagen || "../../Images/placeholder.png";
-          // Agregué el listener onClick directamente al botón del HTML generado
-          grid.innerHTML += `
-            <article class="mv2-card">
-                <div class="mv2-peach"></div>
-                <div class="mv2-img-wrap"><img src="${imgSrc}" alt="${escapeHtml(prod.nombre||"")}"></div>
-                <div class="mv2-body">
-                    <h3 class="mv2-title">${escapeHtml(prod.nombre||"")}</h3>
-                    <p class="mv2-stock"><span>Stock:</span> ${prod.STOCK||0}</p>
-                    <div class="mv2-footer">
-                        <div class="mv2-price-pill">$${Number(prod.precio||0).toFixed(2)} MXN</div>
-                        <button class="mv2-cart-btn" data-idp="${prod.id||prod.idp}">🛒</button>
-                    </div>
-                </div>
-            </article>`;
-        });
-      }).catch(console.error);
-    }
-
-    // Listener delegado para Top Vendidos (igual que antes, pero asegurado)
-    document.addEventListener("click", async (e) => {
-        const btn = e.target.closest(".mv2-cart-btn");
-        if(!btn) return;
-        const idp = btn.dataset.idp;
-        // Reutilizar lógica fetch manual simple para Top Vendidos
-        try {
-            const res = await fetch(CART_API, {
-                method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "add", id: idp, qty: 1 })
-            });
-            const json = await res.json();
-            if(json.ok) {
-                // Actualizar badge
-                const badge = document.querySelector("#nav-cart-count");
-                if(badge) {
-                    const c = await fetch(CART_API + "?action=count").then(r=>r.json());
-                    if(c.ok) badge.textContent = c.count;
-                }
-                // Abrir carrito si es posible
-                const drawer = $("#mini-cart");
-                if(drawer) drawer.classList.add("is-open");
-            } else {
-                if(typeof Swal !== 'undefined') Swal.fire({icon:'error', title:'Oops...', text:json.error, confirmButtonColor:'#6a2b16'});
-                else alert(json.error);
-            }
-        } catch(err) { console.error(err); }
-    });
 
     function boot() {
       initFiltro?.();
       initProductosAJAX?.();
       initMiniCart();
-      cargarTopVendidos();
     }
 
     if (document.readyState !== "loading") boot();

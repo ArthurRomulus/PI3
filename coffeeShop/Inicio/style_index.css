@@ -34,7 +34,7 @@
   max-width: 48ch;
   text-align: justify;      /* como en la maqueta */
   margin-left: 50px;
-  margin-top: 100px; /*separa mi texto del titulo*/
+  margin-top: 100px; 
 }
 
 .hero-imagen img {
@@ -43,7 +43,7 @@
   height: auto;
   display: block;
   margin-inline: auto;
-  filter: drop-shadow(15px 20px 12px rgba(0, 0, 0, 0.6));/*sombra de imagen*/
+  filter: drop-shadow(15px 20px 12px rgba(0, 0, 0, 0.6));
 }
 
 /* Icono decorativo bajo el subtitulo en Sabor que inspira */
@@ -66,7 +66,7 @@
 }
 
 
-/*------------------seccion 2 Mas vendidos------------*/
+/*------------------seccion 2 Mas vendidos------------/*
 
 
 /* Título con líneas café a los lados para 'Más Vendidos' */
@@ -74,7 +74,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 190px;
 }
 .ts-title-text {
   font-family: 'ADLaM Display', cursive;
@@ -117,18 +117,30 @@
 
 
 
+/* CONTENEDOR DE MÁS VENDIDOS */
+.ts-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
 /* Tarjeta */
 .ts-card {
   position: relative;
   background: #5d3a31;
   border-radius: 16px;
-  padding: 170px 16px 40px;   /* top grande = espacio para el stage */
+  padding: 170px 16px 40px;   /* espacio para la imagen flotando */
   box-shadow: 0 10px 26px rgba(201, 45, 45, 0.2);
   overflow: visible;
   color: #ffffff;
   text-align: center;
-}
 
+  /* IMPORTANTE: ancho fijo como en catálogo */
+  width: 340px;
+  margin-inline: auto;
+}
 /* Escenario (rectángulo rosita donde entra la foto) */
 .ts-stage {
   position: absolute;
@@ -991,219 +1003,3 @@
   border-radius: 24px;
   z-index: 0;
 }
-
-/* Imagen del producto */
-.mv2-img-wrap {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 220px;
-  height: 160px;
-  z-index: 2;
-}
-
-.mv2-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 24px;
-  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5);
-}
-
-/* Cuerpo */
-.mv2-body {
-  position: relative;
-  z-index: 3;
-}
-
-/* Título */
-.mv2-title {
-  margin-top: 3.2rem;
-  margin-bottom: 0.3rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-/* Línea 2 (100% espresso corto) */
-.mv2-sub {
-  margin: 0;
-  font-size: 0.85rem;
-}
-
-/* Categorías */
-.mv2-cat {
-  margin: 0.5rem 0 0.3rem;
-  font-size: 0.85rem;
-}
-
-/* Stock */
-.mv2-stock {
-  margin: 0.2rem 0 1rem;
-  font-size: 0.85rem;
-}
-
-.mv2-stock span {
-  font-weight: 700;
-}
-
-/* Footer: precio + carrito */
-.mv2-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-}
-
-/* Pastilla de precio */
-.mv2-price-pill {
-  background: #f8c5ac;
-  color: #2b1b17;
-  padding: 0.45rem 1.1rem;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-/* Botón carrito */
-.mv2-cart-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: #f8d9c6;
-  cursor: pointer;
-  font-size: 1.05rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
-}
-/* Sección Más vendidos */
-.ts-section {
-  padding: 60px 20px 80px;
-  background-color: #DCC0B9;
-}
-
-/* GRID centrado y con ancho máximo */
-#topSellingGrid {
-  max-width: 900px;                  /* limita el ancho */
-  margin: 2rem auto 0;               /* centra el grid */
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2rem;
-  justify-items: center;
-}
-
-/* ====== CARD estilo Espresso ====== */
-
-.mv2-card {
-  position: relative;
-  background: #4a2e25;
-  border-radius: 32px;
-  padding: 5.3rem 1.7rem 1.8rem;
-  color: #faeadf;
-  text-align: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-  overflow: visible;
-}
-
-/* Panel durazno pequeño */
-.mv2-peach {
-  position: absolute;
-  top: 55px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 65%;
-  height: 90px;
-  background: #e3a193;
-  border-radius: 24px;
-  z-index: 0;
-}
-
-/* Imagen */
-.mv2-img-wrap {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 220px;
-  height: 160px;
-  z-index: 2;
-}
-
-.mv2-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 24px;
-  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5);
-}
-
-/* Cuerpo */
-.mv2-body { position: relative; z-index: 3; }
-
-.mv2-title {
-  margin-top: 3.2rem;
-  margin-bottom: 0.3rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.mv2-sub {
-  margin: 0;
-  font-size: 0.85rem;
-}
-
-.mv2-cat {
-  margin: 0.5rem 0 0.3rem;
-  font-size: 0.85rem;
-}
-
-.mv2-stock {
-  margin: 0.2rem 0 1rem;
-  font-size: 0.85rem;
-}
-.mv2-stock span { font-weight: 700; }
-
-/* Footer */
-.mv2-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-}
-
-.mv2-price-pill {
-  background: #f8c5ac;
-  color: #2b1b17;
-  padding: 0.45rem 1.1rem;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.mv2-cart-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: #f8d9c6;
-  cursor: pointer;
-  font-size: 1.05rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
-}
-
-
-/* Responsive */
-@media (max-width: 980px){
-  .delivery__wrap{ grid-template-columns:1fr; }
-  .delivery__map{ aspect-ratio: 16/9; }
-}
-@media (max-width: 560px){
-  .delivery__title{ font-size: 1.9rem; }
-}
-

@@ -3,8 +3,20 @@ session_start();
 header('Content-Type: application/json; charset=UTF-8');
 
 // --- 1. CONEXIÓN GLOBAL AL INICIO ---
-// Esto asegura que $mysqli esté disponible para todas las funciones
-require_once __DIR__ . '/db.php'; 
+// Usamos la MISMA conexion.php que en catalogo.php
+require_once __DIR__ . "/../../conexion.php";
+
+// Aseguramos que exista $conn y lo aliasamos a $mysqli para reutilizar el código
+if (!isset($conn) || !($conn instanceof mysqli)) {
+    http_response_code(500);
+    echo json_encode([
+        'ok'    => false,
+        'error' => 'Error de conexión: DB no inicializada desde conexion.php'
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+$mysqli = $conn; // 👉 ahora todo el código que usa $mysqli funciona igual que catalogo.php
 
 if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
   $_SESSION['cart'] = [];
@@ -163,7 +175,7 @@ switch ($action) {
     if (($en_carrito + $qty) > $stock) {
         fail("No puedes agregar más. Solo hay $stock disponibles.");
     }
-    // ---------------------------aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    // ---------------------------
 
     if ($precio <= 0 || $nombre === '' || $foto === null) {
       $info = fetch_product_info($id, null, null);
@@ -200,7 +212,7 @@ switch ($action) {
         $stock = get_real_stock($id);
         if ($qty > $stock) fail("Límite de stock alcanzado ($stock).");
     }
-    // --------------------------------aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    // --------------------------------
 
     if ($qty <= 0) { unset($_SESSION['cart'][$id]); ok(['message'=>'Eliminado','id'=>$id]); }
     else { $_SESSION['cart'][$id]['qty'] = $qty; }

@@ -6,8 +6,87 @@ if (session_status() === PHP_SESSION_NONE) {
 // bandera limpia para usar después en el footer
 $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === true;
 
+?><?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+include "../../conexion.php"; // ajusta la ruta si cambia
+
+// TOP 3 productos (por VENTAS; si aún no usas esa columna, puedes ordenar por idp)
+$sqlTop = "SELECT p.*, GROUP_CONCAT(c.nombrecategoria SEPARATOR ', ') AS categorias
+           FROM productos p
+           LEFT JOIN producto_categorias pc ON p.idp = pc.idp
+           LEFT JOIN categorias c ON pc.id_categoria = c.id_categoria
+           GROUP BY p.idp
+           ORDER BY p.VENTAS DESC
+           LIMIT 3";
+
+$resTop = $conn->query($sqlTop);
+
+$topVendidos = [];
+if ($resTop) {
+    while ($row = $resTop->fetch_assoc()) {
+        $topVendidos[] = $row;
+    }
+}
 ?>
+
+<?php
+include "../../conexion.php";
+
+function getListboxesProducto(mysqli $conn, int $idp): array {
+    $listboxes = [];
+
+    // Listboxes asociados al producto
+    $qLB = $conn->prepare("
+        SELECT lb.id AS id, lb.nombre AS nombre
+        FROM producto_listbox pl
+        INNER JOIN listboxes lb ON pl.listbox_id = lb.id
+        WHERE pl.producto_id = ?
+    ");
+    $qLB->bind_param('i', $idp);
+    $qLB->execute();
+    $resLB = $qLB->get_result();
+
+    while ($lb = $resLB->fetch_assoc()) {
+
+        // Opciones de cada listbox
+        $qOps = $conn->prepare("
+            SELECT id, valor AS opcion, precio
+            FROM listbox_opciones
+            WHERE listbox_id = ?
+            ORDER BY valor ASC
+        ");
+        $qOps->bind_param('i', $lb['id']);
+        $qOps->execute();
+        $resOps = $qOps->get_result();
+
+        $opciones = [];
+        while ($op = $resOps->fetch_assoc()) {
+            $opciones[] = [
+                'id'     => (int)$op['id'],
+                'opcion' => $op['opcion'],
+                'precio' => (float)$op['precio'],
+            ];
+        }
+        $qOps->close();
+
+        $listboxes[] = [
+            'id'       => (int)$lb['id'],
+            'nombre'   => $lb['nombre'], // aquí tienes nombres como "Tipo de café", "Tipo de leche"
+            'opciones' => $opciones
+        ];
+    }
+    $qLB->close();
+
+    return $listboxes;
+}
+?>
+
+
+
+
 
 
 <!DOCTYPE html>
@@ -22,6 +101,8 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
     <link rel="icon" href="../../Images/logotipocafes.png" />
     <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Montaga&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="../catalogo/catalogo.css" />
+    <link rel="stylesheet" href="../catalogo/catalogo.css" />
     <link href="../general.css" rel="stylesheet"/>
     
   </head>
@@ -56,81 +137,107 @@ $usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === tr
       </div>
     </section>
 <!-- Decoración de iconos y líneas arriba de envíos -->
-    <!--segunda parte(mas vendidos)-->
-    <section class="ts-section">
-      <div class="ts-title-line">
-        <span class="ts-line"></span>
-        <span class="ts-title-text" data-translate="Más Vendidos">Más Vendidos</span>
-        <span class="ts-line"></span>
-      </div>
-      <!-- Iconos sueltos en el lienzo de Más Vendidos -->
-      <img src="../../Images/iconcofe.png" alt="Icono café" style="width:40px; margin-right:12px;" />
-      <img src="../../Images/iconcofe2.png" alt="Icono café 2" style="width:40px;" />
-
-      <div class="ts-grid">
-        <!-- Tarjeta 1 -->
-        <article class="ts-card"
-  data-id="frappe_clasico"
-  data-name="Frappe Clásico"
-  data-price="20.00"
-  data-foto="../../Images/FrappeClasic.png">
-  <div class="ts-stage">
-    <img src="../../Images/FrappeClasic.png" alt="Frappe Clásico" />
-    <div class="ts-rate"><strong>4.9</strong> ★</div>
+<!--segunda parte(mas vendidos)-->
+<section class="ts-section">
+  <div class="ts-title-line">
+    <span class="ts-line"></span>
+    <span class="ts-title-text" data-translate="Más Vendidos">Más Vendidos</span>
+    <span class="ts-line"></span>
   </div>
-  <h4 class="ts-name">Frappe Clásico</h4>
-  <p class="ts-desc">20% Expresso<br>40% Milk</p>
-  <div class="ts-info">
-    <span>20 OZ.</span>
-    <span class="ts-price">$20.00</span>
-    <button class="ts-cart">🛒</button>
+
+  <!-- Iconos sueltos en el lienzo de Más Vendidos -->
+  <img src="../../Images/iconcofe.png" alt="Icono café" style="width:40px; margin-right:12px;" />
+  <img src="../../Images/iconcofe2.png" alt="Icono café 2" style="width:40px;" />
+
+<div class="hotdrinks__grid" id="topSellingGrid">
+
+
+  <?php if (count($topVendidos) > 0): ?>
+    <?php foreach ($topVendidos as $producto): 
+      $img = $producto['ruta_imagen'] ?? '../../images/placeholder.png';
+    ?>
+      <article class="ts-card"
+        data-id="<?= htmlspecialchars($producto['idp']) ?>"
+        data-name="<?= htmlspecialchars($producto['namep']) ?>"
+        data-price="<?= htmlspecialchars($producto['precio']) ?>"
+        data-foto="<?= htmlspecialchars($img) ?>"
+      >
+        <div class="ts-stage">
+          <img 
+            src="<?= htmlspecialchars($img) ?>"
+            alt="<?= htmlspecialchars($producto['namep']) ?>"
+            onerror="this.onerror=null;this.src='../../images/placeholder.png';"
+          />
+        </div>
+
+        <h4 class="ts-name" data-translate="<?= htmlspecialchars($producto['namep'] ?? '', ENT_QUOTES) ?>">
+          <?= htmlspecialchars($producto['namep'] ?? '') ?>
+        </h4>
+
+        <p class="ts-desc" data-translate="<?= htmlspecialchars($producto['descripcion'] ?? '', ENT_QUOTES) ?>">
+          <?= htmlspecialchars($producto['descripcion'] ?? '') ?>
+        </p>
+
+        <span data-translate="<?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>">
+          <?= htmlspecialchars($producto['categorias'] ?? 'Sin categoría') ?>
+        </span>
+
+       <!-- STOCK (igual que catálogo) -->
+<p class="ts-stock">
+  <strong>Stock:</strong> <?= htmlspecialchars($producto['STOCK']) ?>
+</p>
+
+<!-- FILA INFERIOR: disponible + precio + carrito -->
+<div class="ts-info">
+  <span>
+    <?= ($producto['STOCK'] > 0) ? 'Disponible' : 'No disponible' ?>
+  </span>
+
+  <span class="ts-price">
+    $<?= number_format($producto['precio'], 2) ?> MXN
+  </span>
+
+  <button class="ts-cart" <?= ($producto['STOCK'] > 0) ? '' : 'disabled' ?>>
+    🛒
+  </button>
+</div>
+
+      </article>
+    <?php endforeach; ?>
+
+  <?php else: ?>
+    <p style="grid-column:1/-1; text-align:center; opacity:.7; padding:16px;" data-translate="No hay productos para mostrar.">
+      No hay productos para mostrar.
+    </p>
+  <?php endif; ?>
+
+</div>
+
+<!-- MODAL DE OPCIONES DINÁMICO -->
+<div class="modal-opciones" id="modalOpciones" style="display:none;">
+  <div class="modal-content">
+    
+    <h3 id="modalProductoNombre" data-translate="Personalizar producto">Personalizar producto</h3>
+
+    <!-- AQUÍ SE GENERAN LAS LISTBOXES DESDE LA BD -->
+    <div id="modalOpcionesWrap"></div>
+    <!-- SELECT DE TAMAÑO -->
+    <label style="font-weight:bold; margin-top:10px;" data-translate="Tamaño">Tamaño</label>
+    <select id="selectTamaño" style="width:100%; padding:8px; border-radius:6px; margin-top:5px;">
+        <option value="Chico" data-translate="Pequeño">Pequeño</option>
+        <option value="Mediano" data-translate="Mediano">Mediano</option>
+        <option value="Grande" data-translate="Grande">Grande</option>
+    </select>
+
+
+    <button id="btnAgregarModal" data-translate="Agregar al carrito">Agregar al carrito</button>
+    <button id="btnCerrarModal" data-translate="Cancelar">Cancelar</button>
+
   </div>
-</article>
+</section>
 
 
-        <!-- Tarjeta 2 -->
-        <article class="ts-card">
-          <div class="ts-stage">
-            <img
-              src="../../Images/Panini_pavo_queso.png"
-              alt="Panini Pavo y Queso"
-            />
-            <div class="ts-rate"><strong>4.8</strong> ★</div>
-          </div>
-          <h4 class="ts-name">Panini Pavo y Queso</h4>
-          <p class="ts-desc">
-            Contiene: pan tostado, pavo, queso, lechuga, jitomate, cebolla
-          </p>
-          <div class="ts-info">
-            <span>120 Gr.</span>
-            <span class="ts-price">$20.00</span>
-            <button class="ts-cart">🛒</button>
-          </div>
-        </article>
-
-        <!-- Tarjeta 3 -->
-        <article class="ts-card">
-          <div class="ts-stage">
-            <img src="../../Images/FrapCaramel.png" alt="Frappe Caramel" />
-            <div class="ts-rate"><strong>4.7</strong> ★</div>
-          </div>
-          <h4 class="ts-name">Frappe Caramel</h4>
-          <p class="ts-desc">20% Caramelo<br />40% Milk</p>
-          <div class="ts-info">
-            <span>20 OZ.</span>
-            <span class="ts-price">$20.00</span>
-            <button class="ts-cart">🛒</button>
-          </div>
-        </article>
-      </div>
-
-      <!-- Botón Catálogo -->
-      <div class="catalogo-btn">
-        <a href="../catalogo/catalogo.php">
-          <span data-translate="Catalogo">Catalogo</span>
-          <img src="../../Images/catalogicon.png" alt="Icono Catalogo" />
-        </a>
-      </div>
+</div>
 
     </section>
     <!--tercera parte(nuestros servicios)-->
@@ -256,8 +363,8 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
       <h1 class="promo__price" data-translate="Desde $45 MXN">Desde $45 MXN</h1>
 
       <div class="promo__cta">
-        <a href="#visit" class="btn btn--dark" data-translate="Visítanos">Visítanos</a>
-        <a href="#menu" class="btn btn--light" data-translate="Conoce el menú">Conoce el menú</a>
+        <a href="../acercade/acercade.php" class="btn btn--dark" data-translate="Visítanos">Visítanos</a>
+        <a href="../../Images/menu_pi3.png" class="btn btn--light" data-translate="Conoce el menú">Conoce el menú</a>
       </div>
 
       <!-- Sticker debajo de los botones -->
@@ -269,7 +376,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
 
     <!-- Imagen bebida -->
     <div class="promo__img">
-      <img src="../../Images/FrappMoka.png" alt="Frappé Moka" loading="lazy">
+      <img src="../../Images/frappe_moka.png" alt="Frappé Moka" loading="lazy">
     </div>
 
     <!-- Sticker extra al fondo -->
@@ -278,116 +385,6 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
   </div>
 </section>
 
-
-    <!-- ================== Otros PRODUCTOS ================== -->
-
-<section class="our-products" id="our-products">
-  <div class="op-wrap">
-    <h2 class="op-title">
-      <span data-translate="Otros Productos">Otros Productos</span>
-    </h2>
-
-    <div class="op-grid">
-  <!-- Card 1 -->
-  <article class="op-card">
-    <div class="op-media"
-         style="--bg-opacity:.22; --bg-scale:1.15; --bg-rotate:-6deg; --bg-x:0%; --bg-y:20%; --bg-blur:1.5px; --bag-width:62%;">
-      <!-- Fondo -->
-      <img class="op-bg" src="../../Images/flor.png" alt="" aria-hidden="true" />
-      <!-- Bolsa -->
-      <img class="op-bag" src="../../Images/empaque_capucchino.png" alt="Cappuccino bag" loading="lazy" />
-    </div>
-
-    <div class="op-body">
-      <h3 class="op-name">Cappuccino</h3>
-      <p class="op-desc">Bolsa de 250 g con notas de cacao y toque cremoso.</p>
-      <div class="op-buttons">
-        <a class="op-btn" href="#">Ver más</a>
-        <button class="op-cart-btn">Agregar al carrito</button>
-      </div>
-    </div>
-  </article>
-
-  <!-- Card 2 -->
-  <article class="op-card">
-    <div class="op-media"
-         style="--bg-opacity:.18; --bg-scale:1.05; --bg-rotate:5deg; --bg-x:-10%; --bg-y:10%; --bg-blur:1px; --bag-width:58%;">
-      <img class="op-bg" src="../../Images/fondo_granos.png" alt="" aria-hidden="true" />
-      <img class="op-bag" src="../../Images/empaque_blackcoffee.png" alt="Black Coffee bag" loading="lazy" />
-    </div>
-
-    <div class="op-body">
-      <h3 class="op-name">Black Coffee</h3>
-      <p class="op-desc">Tostado intenso 100% arábica, aroma profundo.</p>
-      <div class="op-buttons">
-        <a class="op-btn" href="#">Ver más</a>
-        <button class="op-cart-btn">Agregar al carrito</button>
-      </div>
-    </div>
-  </article>
-
-      <!-- Card 3 -->
-<article class="op-card">
-  <div class="op-media"
-       style="--bg-opacity:.20; --bg-scale:1.10; --bg-rotate:2deg; --bg-x:-5%; --bg-y:15%; --bg-blur:1px; --bag-width:60%;">
-    <!-- Fondo -->
-    <img class="op-bg" src="../../Images/fondo_pods.png" alt="" aria-hidden="true" />
-    <!-- Bolsa -->
-    <img class="op-bag" src="../../Images/empaque_pods.png" alt="Pods bag" loading="lazy" />
-  </div>
-
-  <div class="op-body">
-    <h3 class="op-name">Pods</h3>
-    <p class="op-desc">
-      Bolsa de 300 g de café en pods, compatibles con máquinas de espresso.
-      Café de origen premium con tueste medio, manteniendo la frescura.
-    </p>
-    <div class="op-buttons">
-      <a class="op-btn" href="#" data-translate="Ver más">Ver más</a>
-      <button class="op-cart-btn" data-translate="Agregar al carrito">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H19M7 13l1.5-6h9.6M9 21a1 1 0 100-2 1 1 0 000 2zm10 0a1 1 0 100-2 1 1 0 000 2z"/>
-        </svg>
-        Agregar al carrito
-      </button>
-    </div>
-  </div>
-</article>
-
-<!-- Card 4 -->
-<article class="op-card">
-  <div class="op-media"
-       style="--bg-opacity:.18; --bg-scale:1.08; --bg-rotate:-4deg; --bg-x:0%; --bg-y:12%; --bg-blur:1px; --bag-width:60%;">
-    <!-- Fondo -->
-    <img class="op-bg" src="../../Images/flor5.png" alt="" aria-hidden="true" />
-    <!-- Bolsa -->
-    <img class="op-bag" src="../../Images/empaque_moccaa.png" alt="Mokka bag" loading="lazy" />
-  </div>
-
-  <div class="op-body">
-    <h3 class="op-name">Mokka</h3>
-    <p class="op-desc">
-      Bolsa de 340 g sabor Mokka, perfil dulce con notas de chocolate oscuro.
-      Ideal para postres o para disfrutar frío con leche vegetal.
-    </p>
-    <div class="op-buttons">
-      <a class="op-btn" href="#" data-translate="Ver más">Ver más</a>
-      <button class="op-cart-btn" data-translate="Agregar al carrito">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H19M7 13l1.5-6h9.6M9 21a1 1 0 100-2 1 1 0 000 2z"/>
-        </svg>
-        Agregar al carrito
-      </button>
-    </div>
-  </div>
-</article>
-
-
-    </div>
-  </div>
-</section>
 
 
 <!-- ================== ENVIOS MANZANILLO ================== -->
@@ -410,7 +407,7 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
   Rápido, fresco y con la misma<br>calidad que en tienda
       </p>
 
-      <a href="#ubicaciones" class="btn btn--dark" data-translate="ver ubicaciones de entrega">
+      <a href="../acercade/acercade.php" class="btn btn--dark" data-translate="ver ubicaciones de entrega">
         <img src="../../Images/locationicon.png" alt="" class="btn__icon" />
         ver ubicaciones de entrega
       </a>
@@ -430,8 +427,8 @@ Ven, siéntate, disfruta y deja que cada sorbo te recuerde que los mejores días
 
 
   <!-- Elementos decorativos opcionales -->
-  <img src="../../Images/coffee.png" alt="" class="delivery__icon delivery__icon--left" aria-hidden="true" />
-  <img src="../../Images/bean1.png"   alt="" class="delivery__icon delivery__icon--bottom" aria-hidden="true" />
+  <img src="../../Images/coffee.png" alt="" class="delivery_icon delivery_icon--left" aria-hidden="true" />
+  <img src="../../Images/bean1.png"   alt="" class="delivery_icon delivery_icon--bottom" aria-hidden="true" />
 
        <!-- Decoración inferior -->
       <div class="cta-decor">
