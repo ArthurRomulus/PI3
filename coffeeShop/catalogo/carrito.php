@@ -2,7 +2,9 @@
 // carrito.php
 session_start();
 include "../../conexion.php"; // Asegúrate que este incluye conecta bien
+$usuarioLogueado = !empty($_SESSION['logueado']) && $_SESSION['logueado'] === true;
 include "../nav_bar.php";
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -49,11 +51,12 @@ include "../nav_bar.php";
 <body>
   <div class="cart-wrap">
     <div class="cart-top">
-      <h1 data-translate="Tu carrito">Tu carrito <span id="cart-count" class="badge">0</span></h1>
-      <button id="btn-clear" class="btn" data-translate="Vaciar">Vaciar</button>
-
-
-    </div>
+  <h1>
+    <span data-translate="Tu carrito">Tu carrito</span>
+    <span id="cart-count" class="badge">0</span>
+  </h1>
+  <button id="btn-clear" class="btn" data-translate="Vaciar">Vaciar</button>
+</div>
 
     <table class="cart-table">
       <thead>
