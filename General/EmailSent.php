@@ -2,7 +2,6 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // Si usas Composer
  require 'PHPMailer/src/PHPMailer.php'; // Si lo agregaste manualmente
 require 'PHPMailer/src/Exception.php';
  require 'PHPMailer/src/SMTP.php';
