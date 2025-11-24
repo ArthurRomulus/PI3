@@ -14,6 +14,7 @@ if (session_status() === PHP_SESSION_NONE) {
 include "../../conexion.php"; // ajusta la ruta si cambia
 
 // TOP 3 productos (por VENTAS; si aún no usas esa columna, puedes ordenar por idp)
+// TOP 3 productos con sus listboxes
 $sqlTop = "SELECT p.*, GROUP_CONCAT(c.nombrecategoria SEPARATOR ', ') AS categorias
            FROM productos p
            LEFT JOIN producto_categorias pc ON p.idp = pc.idp
@@ -27,6 +28,8 @@ $resTop = $conn->query($sqlTop);
 $topVendidos = [];
 if ($resTop) {
     while ($row = $resTop->fetch_assoc()) {
+        // ✅ AGREGADO: Obtener listboxes para cada producto
+        $row['listboxes'] = getListboxesProducto($conn, (int)$row['idp']);
         $topVendidos[] = $row;
     }
 }
@@ -153,15 +156,19 @@ function getListboxesProducto(mysqli $conn, int $idp): array {
 
 
   <?php if (count($topVendidos) > 0): ?>
-    <?php foreach ($topVendidos as $producto): 
-      $img = $producto['ruta_imagen'] ?? '../../images/placeholder.png';
-    ?>
-      <article class="ts-card"
-        data-id="<?= htmlspecialchars($producto['idp']) ?>"
-        data-name="<?= htmlspecialchars($producto['namep']) ?>"
-        data-price="<?= htmlspecialchars($producto['precio']) ?>"
-        data-foto="<?= htmlspecialchars($img) ?>"
-      >
+  <?php foreach ($topVendidos as $producto): 
+    $img = $producto['ruta_imagen'] ?? '../../images/placeholder.png';
+    //Serializar listboxes
+    $listboxesJSON = json_encode($producto['listboxes'] ?? [], JSON_UNESCAPED_UNICODE);
+  ?>
+    <article class="ts-card"
+      data-id="<?= htmlspecialchars($producto['idp']) ?>"
+      data-name="<?= htmlspecialchars($producto['namep']) ?>"
+      data-price="<?= htmlspecialchars($producto['precio']) ?>"
+      data-foto="<?= htmlspecialchars($img) ?>"
+      data-listboxes='<?= htmlspecialchars($listboxesJSON, ENT_QUOTES) ?>'
+    >
+      <!-- resto del HTML igual -->
         <div class="ts-stage">
           <img 
             src="<?= htmlspecialchars($img) ?>"
@@ -189,9 +196,10 @@ function getListboxesProducto(mysqli $conn, int $idp): array {
 
 <!-- FILA INFERIOR: disponible + precio + carrito -->
 <div class="ts-info">
-  <span>
+  <span data-translate="<?= ($producto['STOCK'] > 0) ? 'Disponible' : 'No disponible' ?>">
     <?= ($producto['STOCK'] > 0) ? 'Disponible' : 'No disponible' ?>
-  </span>
+</span>
+
 
   <span class="ts-price">
     $<?= number_format($producto['precio'], 2) ?> MXN

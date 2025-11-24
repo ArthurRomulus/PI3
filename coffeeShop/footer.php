@@ -15,7 +15,7 @@
   <h3 data-translate="Noticias y actualizaciones">Noticias y actualizaciones</h3>
   <form class="cs-news" action="#" method="post">
           <label class="sr-only" for="newsletter" data-translate="Correo electrónico">Correo electrónico</label>
-          <input id="newsletter" type="email" placeholder="correo electrónico" required data-translate="Correo electrónico"/>
+          <input id="newsletter" type="email" placeholder="correo electrónico" required data-translate-placeholder="Correo electrónico"/>
           <button type="submit" class="cs-btn" data-translate="Suscribir">Suscribir</button>
         </form>
       </section>

@@ -208,7 +208,9 @@ async function loadCart(){
       <td>
           <div style="display:flex;gap:10px;align-items:center">
              <img src="${it.foto||'assest/placeholder.png'}" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
-             <div><strong>${it.nombre}</strong></div>
+             <div data-translate="${it.nombre}">
+                <strong>${it.nombre}</strong>
+            </div>
           </div>
       </td>
       <td>$${Number(it.precio).toFixed(2)} MXN</td>

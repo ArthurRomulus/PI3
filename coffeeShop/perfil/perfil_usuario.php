@@ -133,7 +133,10 @@ $miembroDesde = '—';
         <main class="main">
           <div class="panel">
             <div class="inner">
-              <h1>¡Hola, <?php echo htmlspecialchars($nombre); ?>!</h1>
+              <h1>
+                <span data-translate="¡Hola,">¡Hola,</span> 
+                <?php echo htmlspecialchars($nombre); ?>!
+              </h1>
               <p class="hello" data-translate="Bienvenido a tu perfil. Aquí puedes consultar tu información
                 personal y actividad dentro del sistema Coffee-Shop ☕">
                 Bienvenido a tu perfil. Aquí puedes consultar tu información
