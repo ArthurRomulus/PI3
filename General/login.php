@@ -190,7 +190,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 
   <a href="../coffeeShop/inicio/index.php" class="logo-fijo">
-    <img src="../images/home.png" alt="Logo Blackwood Coffee" display>
+    <img src="../images/home.png" alt="Logo Blackwood Coffee">
   </a>
 </body>
 </html>
