@@ -220,8 +220,8 @@ if ($usuarioLogueado) {
       </p>
 
       <div class="hero-cta">
-        <a href="#visitanos" class="btn btn-primary" data-translate="Visítanos">Visítanos</a>
-        <a href="#menu" class="btn btn-ghost" data-translate="Conoce el menú">Conoce el menú</a>
+        <a href="../acercade/acercade.php" class="btn btn--dark" data-translate="Visítanos">Visítanos</a>
+        <a href="../../Images/menu_pi3.png" class="btn btn--light" data-translate="Conoce el menú">Conoce el menú</a>
       </div>
     </div>
 
