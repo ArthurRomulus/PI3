@@ -3,13 +3,16 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php'; // Si usas Composer
-// require 'phpmailer/src/PHPMailer.php'; // Si lo agregaste manualmente
-// require 'phpmailer/src/Exception.php';
-// require 'phpmailer/src/SMTP.php';
+ require 'phpmailer/src/PHPMailer.php'; // Si lo agregaste manualmente
+require 'phpmailer/src/Exception.php';
+ require 'phpmailer/src/SMTP.php';
 
 $mail = new PHPMailer(true);
 
 $email = $_POST['email'];
+
+require 'vendor/autoload.php';
+
 
 include "../conexion.php";
 
@@ -72,8 +75,43 @@ if ($email) {
         $enl = "http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/RecoverPassword.php?token=$nT";
         $mail->isHTML(true);
         $mail->Subject = 'Reset password.';
-        $mail->Body    = "<h1>Correo de recuperacion de contraseña</h1> Este es un correo de recuperacion de contraseña. Si no fuiste tu, ignora el mensaje. <br> Este es tu token, no se lo muestres a nadie.
-        <br> <p><a href='$enl'><button>Reiniciar contraseña</button></a></p> <br>";
+$mail->Body = '
+<div style="width:100%; background:#f4f4f4; padding:30px 0; font-family:Arial, sans-serif;">
+  <div style="max-width:550px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.15);">
+    
+    <div style="text-align:center;">
+      <img src="cid:logo_cafe" alt="Logo" style="width:150px; margin-bottom:20px;">
+    </div>
+
+    <h2 style="text-align:center; color:#333;">Recuperación de contraseña</h2>
+
+    <p style="font-size:15px; color:#444; line-height:1.5;">
+      Hola,<br><br>
+      Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en <strong>Coffeeshop</strong>.
+      Si no solicitaste este cambio, simplemente ignora este mensaje.
+    </p>
+
+    <p style="font-size:15px; color:#444;">Haz clic en el siguiente botón para continuar:</p>
+
+    <div style="text-align:center; margin:25px 0;">
+      <a href="' . $enl . '" 
+      style="text-decoration:none; padding:14px 25px; background:#6f4e37; color:white; font-size:16px; border-radius:8px; display:inline-block;">
+        Restablecer contraseña
+      </a>
+    </div>
+
+    <p style="font-size:13px; color:#777; text-align:center;">
+      Este enlace expirará en 1 hora.<br>
+      Por seguridad, no compartas este correo con nadie.
+    </p>
+
+  </div>
+</div>
+';
+
+$mail->AddEmbeddedImage('../Images/logo.png', 'logo_cafe');
+
+
         $mail->AltBody = 'Este es el texto plano del mensaje.';
 
         $mail->send();
@@ -84,6 +122,12 @@ if ($email) {
           header("location: AskEmail.php?s=failed");
 
     }
+  } else {
+                  header("location: AskEmail.php?s=failedNoexist");
+
   }
-}
+  }
+
+
+
 ?>
