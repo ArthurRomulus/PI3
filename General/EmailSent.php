@@ -85,7 +85,7 @@ $mail->Body = '
 
     <p style="font-size:15px; color:#444; line-height:1.5;">
       Hola,<br><br>
-      Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en <strong>Coffeeshop</strong>.
+      Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en <strong>Blackwood Coffee</strong>.
       Si no solicitaste este cambio, simplemente ignora este mensaje.
     </p>
 
