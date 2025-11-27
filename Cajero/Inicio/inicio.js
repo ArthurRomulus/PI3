@@ -134,9 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const type = card.dataset.type; 
 
                 if (type === 'producto' && id) {
-                    window.location.href = `../Productos/productos.html?id=${id}`;
+                    window.location.href = `../Productos/productos.php?id=${id}`;
                 } else if (type === 'promocion' && id) {
-                    window.location.href = `../Promocion/promociones.html?id=${id}`;
+                    window.location.href = `../Promocion/promociones.php?id=${id}`;
                 }
             });
         });
