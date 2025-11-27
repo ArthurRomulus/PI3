@@ -19,28 +19,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 2. Validaciones
     // a) Verificar que las contraseñas coincidan
-    if ($password !== $confirm_password) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_message = "El correo electrónico no tiene un formato válido.";
+    } 
+    // b) Validar que sea de un dominio conocido
+    else {
+        // Extraer el dominio del email (lo que viene después de @)
+        $domain = substr(strrchr($email, "@"), 1);
+        
+        // Lista de dominios válidos y confiables
+        $valid_domains = [
+            'gmail.com', 
+            'hotmail.com', 
+            'outlook.com', 
+            'outlook.es',
+            'yahoo.com', 
+            'yahoo.es',
+            'live.com',
+            'live.com.mx',
+            'icloud.com',
+            'hotmail.es',
+            'protonmail.com',
+            'zoho.com',
+            'aol.com',
+            'mail.com',
+            'gmx.com',
+            'yandex.com',
+            'ucol.mx',  // Por si es de la universidad
+            'estudiantes.ucol.mx'
+        ];
+        
+        if (!in_array(strtolower($domain), $valid_domains)) {
+            $error_message = "Por favor, utiliza un correo electrónico de un proveedor válido (Gmail, Outlook, Yahoo, etc.).";
+        }
+    }
+    // c) Verificar que las contraseñas coincidan
+    if (empty($error_message) && $password !== $confirm_password) {
         $error_message = "Las contraseñas no coinciden.";
     } 
-    // b) Verificar que la contraseña tenga una longitud mínima
-    elseif (strlen($username) < 6 && strlen($username) < 150) {
-        $error_message = "El nombre de usuario debe de tener entre 6 y 150 caracteres.";
-
+    // d) Verificar longitud del username
+    elseif (empty($error_message) && (strlen($username) < 6 || strlen($username) > 150)) {
+        $error_message = "El nombre de usuario debe tener entre 6 y 150 caracteres.";
     }
-    elseif (strlen($password) < 6) {
+    // e) Verificar longitud de la contraseña
+    elseif (empty($error_message) && strlen($password) < 6) {
         $error_message = "La contraseña debe tener al menos 6 caracteres.";
-    } else {
-        // c) Verificar si el email ya existe
+    } 
+    // f) Validar que el email no contenga caracteres sospechosos
+    elseif (empty($error_message) && preg_match('/[<>\"\'%;()&]/', $email)) {
+        $error_message = "El correo contiene caracteres no permitidos.";
+    }
+
+    // g) Si pasó todas las validaciones anteriores, verificar en la BD
+    if (empty($error_message)) {
+        // Verificar si el email ya existe
         $sql = "SELECT userid FROM usuarios WHERE email = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        $stmt->store_result(); // Necesario para comprobar num_rows
+        $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
             $error_message = "El correo electrónico ya está registrado.";
         } else {
-            // d) Verificar si el nombre de usuario ya existe
+            // Verificar si el username ya existe
             $sql_user = "SELECT userid FROM usuarios WHERE username = ?";
             $stmt_user = $conn->prepare($sql_user);
             $stmt_user->bind_param("s", $username);
@@ -59,38 +101,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // 3. Si no hay errores, proceder a insertar el usuario
+   // 3. Si no hay errores, proceder a insertar el usuario
     if (empty($error_message)) {
         
-        // Cifrar la contraseña ANTES de guardarla
+        // Cifrar la contraseña
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
         
-        // Preparar la sentencia de inserción
-        // Asignamos rol '2' (usuario normal) y status '1' (activo) por defecto
-        $sql_insert = "INSERT INTO usuarios (username, email, password, role, status) VALUES (?, ?, ?, 1, 1)";
+        // Insertar usuario SIN VERIFICAR
+        $sql_insert = "INSERT INTO usuarios (username, email, password, role, status, verificado) VALUES (?, ?, ?, 1, 1, 0)";
         $stmt_insert = $conn->prepare($sql_insert);
         
         if ($stmt_insert) {
-            // Vincular parámetros: s = string
             $stmt_insert->bind_param("sss", $username, $email, $hashed_password);
             
-            // Ejecutar la inserción
             if ($stmt_insert->execute()) {
-                // --- INICIO DE SESIÓN AUTOMÁTICO ---
-                
-                // 1. Obtenemos el ID del usuario que acabamos de crear
                 $new_user_id = $conn->insert_id;
-
-                // 2. Creamos las variables de sesión para el usuario
-                $_SESSION['userid'] = $new_user_id;
-                $_SESSION['username'] = $username;
-                $_SESSION['email'] = $email;
-                $_SESSION['role'] = 1; // Rol asignado por defecto
-
-                // 3. Redirigimos al usuario a la página de bienvenida
-                header("Location: ../coffeeShop/inicio/index.php");
-                exit();
-                // --- FIN DE INICIO DE SESIÓN AUTOMÁTICO ---
+                
+                // Generar token de verificación
+                $token = bin2hex(random_bytes(32));
+                $expira = date('Y-m-d H:i:s', strtotime('+24 hours'));
+                
+                // Guardar token
+                $sql_token = "INSERT INTO tokens_verificacion (userid, token, expira_en) VALUES (?, ?, ?)";
+                $stmt_token = $conn->prepare($sql_token);
+                $stmt_token->bind_param("iss", $new_user_id, $token, $expira);
+                $stmt_token->execute();
+                
+                // IMPORTANTE: Cambia 'tudominio.com' por tu dominio real
+                // Si estás en localhost, usa: http://localhost/tu_proyecto/verificar_email.php
+                $link_verificacion = "http://localhost/coffeeShop/verificar_email.php?token=" . $token;
+                
+                // Enviar email
+                $asunto = "Verifica tu cuenta - Blackwood Coffee";
+                $mensaje = "
+                <html>
+                <head>
+                    <style>
+                        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+                        .container { background-color: white; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto; }
+                        .header { text-align: center; color: #8B4513; }
+                        .button {
+                            display: inline-block;
+                            padding: 15px 30px;
+                            background-color: #8B4513;
+                            color: white !important;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            margin: 20px 0;
+                        }
+                        .footer { color: #666; font-size: 12px; margin-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <h1 class='header'>☕ ¡Bienvenido a Blackwood Coffee!</h1>
+                        <p>Hola <strong>$username</strong>,</p>
+                        <p>Gracias por registrarte. Para completar tu registro y poder acceder a tu cuenta, necesitas verificar tu correo electrónico.</p>
+                        <p style='text-align: center;'>
+                            <a href='$link_verificacion' class='button'>Verificar mi cuenta</a>
+                        </p>
+                        <p>O copia y pega este enlace en tu navegador:</p>
+                        <p style='word-break: break-all; background-color: #f4f4f4; padding: 10px; border-radius: 5px;'>$link_verificacion</p>
+                        <p class='footer'>Este enlace expirará en 24 horas.<br>Si no te registraste en Blackwood Coffee, ignora este mensaje.</p>
+                    </div>
+                </body>
+                </html>
+                ";
+                
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $headers .= 'From: Blackwood Coffee <noreply@blackwoodcoffee.com>' . "\r\n";
+                
+                // Intentar enviar el email
+                if (mail($email, $asunto, $mensaje, $headers)) {
+                    // Email enviado exitosamente
+                    $_SESSION['registro_exitoso'] = true;
+                    $_SESSION['email_verificacion'] = $email;
+                    header("Location: email_enviado.php");
+                    exit();
+                } else {
+                    $error_message = "Error al enviar el correo de verificación. Inténtalo de nuevo.";
+                }
                 
             } else {
                 $error_message = "Hubo un error al crear la cuenta. Inténtalo de nuevo.";
@@ -101,7 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
-    // Cerrar la conexión principal
+    // Cerrar la conexión
     if (isset($conn)) {
         $conn->close();
     }

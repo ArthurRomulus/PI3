@@ -39,39 +39,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = $result->fetch_assoc();
             
             // Verificamos contraseña con password_verify
-            if (password_verify($password, $user['password'])) {
-                // ✅ Login correcto
+if (password_verify($password, $user['password'])) {
+    
+    // NUEVA VALIDACIÓN: Verificar si el email está verificado (asumiendo que 'verificado' es el nombre de la columna en tu BD)
+    if ($user['verificado'] == 0) {
+        // El usuario no está verificado (asumimos 0 = no verificado)
+        $error_message = "Debes verificar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.";
+    } else {
+        // ✅ Todo correcto: Contraseña correcta Y Email verificado. Crear sesión.
 
-                // Guardamos datos del usuario en la sesión
-                $_SESSION['userid']         = $user['userid'];
-                $_SESSION['email']          = $user['email'];
-                $_SESSION['username']       = $user['username'];
-                $_SESSION['role']           = $user['role'];
-                $_SESSION['profilescreen']  = $user['profilescreen'];
-                // NUEVOS CAMPOS → también a la sesión
-                $_SESSION['apellido']       = $user['apellido'] ?? '';
-                $_SESSION['telefono']       = $user['telefono'] ?? '';
-                $_SESSION['fecha_nac']      = $user['fecha_nac'] ?? '';
-                $_SESSION['zona_horaria']   = $user['zona_horaria'] ?? '';
+        // Guardamos datos del usuario en la sesión
+        $_SESSION['userid'] = $user['userid'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['profilescreen'] = $user['profilescreen'];
+        // NUEVOS CAMPOS → también a la sesión
+        $_SESSION['apellido'] = $user['apellido'] ?? '';
+        $_SESSION['telefono'] = $user['telefono'] ?? '';
+        $_SESSION['fecha_nac'] = $user['fecha_nac'] ?? '';
+        $_SESSION['zona_horaria'] = $user['zona_horaria'] ?? '';
 
-                // ✅ Bandera de sesión iniciada
-                $_SESSION['logueado']       = true;
+        // ✅ Bandera de sesión iniciada
+        $_SESSION['logueado'] = true;
 
-                // Redirección según rol
-                if ($user['role'] == 4) {
-                    header("Location: ../Admin/Admin_Inicio/index.php");
-                } elseif ($user['role'] == 2) {
-                    header("Location: ../Cajero/Inicio/Inicio.html");
-                } else {
-                    // Usuario normal / cliente
-                    header("Location: ../coffeeShop/inicio/index.php");
-                }
+        // Redirección según rol
+        if ($user['role'] == 4) {
+            header("Location: ../Admin/Admin_Inicio/index.php");
+        } elseif ($user['role'] == 2) {
+            header("Location: ../Cajero/Inicio/Inicio.html");
+        } else {
+            // Usuario normal / cliente
+            header("Location: ../coffeeShop/inicio/index.php");
+        }
 
-                exit(); // Detener ejecución después de redirigir
-            } else {
-                // Contraseña incorrecta
-                $error_message = "Contraseña incorrecta o email incorrecto.";
-            }
+        exit(); // Detener ejecución después de redirigir
+    }
+} else {
+    // Contraseña incorrecta
+    $error_message = "Contraseña incorrecta o email incorrecto.";
+}
         } else {
             // Usuario no encontrado
             $error_message = "Contraseña incorrecta o email incorrecto.";
