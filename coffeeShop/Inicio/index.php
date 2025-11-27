@@ -141,6 +141,16 @@ function getListboxesProducto(mysqli $conn, int $idp): array {
     </section>
 <!-- Decoración de iconos y líneas arriba de envíos -->
 <!--segunda parte(mas vendidos)-->
+
+<section class="ts-section">
+
+<?php 
+include "carrusel.php";
+?>
+<!-- MODAL DE OPCIONES DINÁMICO -->
+</section>
+
+
 <section class="ts-section">
   <div class="ts-title-line">
     <span class="ts-line"></span>
