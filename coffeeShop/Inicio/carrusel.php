@@ -184,9 +184,12 @@ include "../../conexion.php";
 
 <div class="ts-title-line">
   <span class="ts-line"></span>
-  <span class="ts-title-text">Promociones</span>
+  <span class="ts-title-text" data-translate = "Promociones">Promociones</span>
   <span class="ts-line"></span>
 </div>
+
+<script src="../../translate.js"></script>
+
 
 
 <!-- ===================== -->
@@ -229,16 +232,24 @@ include "../../conexion.php";
             echo '<div class="expira">¡Expira pronto!</div>';
         }
 
-        echo '<div class="overlay">
-                <h3>'.$r["nombrePromo"].'</h3>
-                <div class="descuento">'.
-                  ($r["tipo_descuento"] == "porcentaje" ? $r["valor_descuento"].'% de descuento' : '$'.$r["valor_descuento"].' menos').
-                '</div>
-                <div class="fechas">
-                   Válido: '.$r["fechaInicio"].' → '.$r["fechaFin"].'
-                </div>
-              </div>
-            </div>';
+echo '<div class="overlay">
+       <h3 data-translate="'.$r["nombrePromo"].'">'.$r["nombrePromo"].'</h3>
+
+        <div class="descuento" data-translate="'.
+          ( $r["tipo_descuento"] == "porcentaje" 
+              ? $r["valor_descuento"].'% discount' 
+              : '$'.$r["valor_descuento"].' off' ).'">'.
+          ( $r["tipo_descuento"] == "porcentaje" 
+              ? $r["valor_descuento"].'% discount' 
+              : '$'.$r["valor_descuento"].' off' ).
+        '</div>
+
+        <div class="fechas" data-translate="Valid: '.$r["fechaInicio"].' → '.$r["fechaFin"].'">
+           Valid: '.$r["fechaInicio"].' → '.$r["fechaFin"].'
+        </div>
+      </div>
+    </div>';
+
     }
     ?>
     </div>
