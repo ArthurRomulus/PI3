@@ -5,7 +5,7 @@
 header("Content-Type: application/json");
 
 // Configura tus credenciales de Azure
-$apiKey = "7hkuEdZNmT8tKyrsAg1WB0lM0tnBJ4SN8umm9qsLsR2CviWokwUKJQQJ99BKACYeBjFXJ3w3AAAbACOGN4M4"; // ⚠️ Reemplaza con tu clave real
+$apiKey = ""; // ⚠️ Reemplaza con tu clave real
 $region = "eastus";           // Usa la región que aparece en tu recurso
 $endpoint = "https://api.cognitive.microsofttranslator.com/";
 
